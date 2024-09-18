@@ -1,0 +1,63 @@
+.tagWrap {
+  padding: 0 0.32rem 1.44rem;
+
+  .tagHeader {
+    display: flex;
+    align-items: center;
+    height: 0.80rem;
+    // position: sticky;
+    top: 0.87rem;
+  }
+
+  .keywordBox {
+    padding-top: 0.16rem;
+
+    .title {
+      min-height: 0.48rem;
+      color: #FF375F;
+      font-size: 0.36rem;
+      font-weight: bold;
+      line-height: 0.48rem;
+      margin-bottom: 0.16rem;
+    }
+
+    .sub {
+      font-size: 0.26rem;
+      line-height: 0.32rem;
+      font-weight: 400;
+      color: $m_tag_color;
+      white-space: pre-wrap;
+
+      span {
+        color: $theme_color;
+      }
+    }
+  }
+
+  .keywordConnect {
+
+    .keywordConnectTitle {
+      margin-bottom: 0.16rem;
+      font-size: 0.32rem;
+      color: $pc_crumbs_color;
+      line-height: 0.4rem;
+    }
+
+    .keywordConnectItem {
+      height: 0.44rem;
+      border-radius: 0.22rem;
+      line-height: 0.44rem;
+      display: inline-block;
+      font-size: 0.32rem;
+      margin: 0 0.24rem 0.24rem 0;
+      padding: 0 0.16rem;
+      background: $pc_detail_bg;
+      color: $theme_color;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+  }
+
+}

@@ -1,0 +1,157 @@
+.episodeListBox {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-bottom: 0.52rem;
+  .topInfo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.28rem;
+    height: 0.32rem;
+
+    .episodeTitle {
+      font-size: 0.28rem;
+      font-weight: bold;
+      color: $pc_home_name_color;
+      line-height: 0.32rem;
+    }
+    .allCounts {
+      color: $pc_home_intro_color;
+      font-size: 0.16rem;
+      line-height: 0.22rem;
+      margin-left: 0.18rem;
+    }
+  }
+  .listInfo {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-column-gap: 0.1rem;
+
+    .listItem {
+      position: relative;
+      height: 1.25rem;
+      width: 2.28rem;
+      display: flex;
+      border-radius: 0.08rem;
+      padding: 0.04rem;
+      margin-bottom: 0.08rem;
+      background: $pc_series_bg;
+      border: $pc_series_border;
+
+      .imgBox {
+        flex-shrink: 0;
+        width: 0.88rem;
+        height: 1.17rem;
+        border-radius: 0.03rem;
+      }
+
+      .imageMark {
+        position: absolute;
+        top: 0.04rem;
+        left: 0.04rem;
+        z-index: 9;
+        background-color: rgba(0,0,0,0.5);
+        width: 0.88rem;
+        height: 1.17rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .lockIcon {
+          width: 0.24rem;
+          height: 0.24rem;
+          transition: all 0.3s;
+        }
+
+        &:hover {
+          .lockIcon {
+            transform: scale(1.1);
+          }
+        }
+      }
+
+      .rightIntro {
+        display: flex;
+        flex-direction: column;
+        width: 120rem;
+        justify-content: space-between;
+        padding: 0.16rem 0.08rem;
+
+        .title {
+          font-size: 0.14rem;
+          line-height: 0.2rem;
+          color: $pc_crumbs_color;
+          font-weight: 500;
+          height: 0.4rem;
+          width: 1.2rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          word-wrap: break-word;
+        }
+        .pageNum {
+          color: $pc_series_color;
+          line-height: 0.16rem;
+          font-size: 0.14rem;
+        }
+      }
+
+      &:hover {
+        .imgBox {
+          .imageItem {
+            transform: scale(1.1);
+          }
+        }
+      }
+    }
+    .viewMore {
+      color: $pc_series_color;
+      font-weight: 500;
+      font-size: 0.16rem;
+      height: 100%;
+      width: 100%;
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+
+      .moreIcon {
+        margin-left: 0.04rem;
+        width: 0.16rem;
+        height: 0.16rem;
+      }
+    }
+  }
+  .tabBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.32rem;
+
+    .tabItem {
+      height: 0.4rem;
+      width: 0.72rem;
+      background-color: $type_tag_color;
+      border-radius: 4px;
+      color: rgba(255, 255, 255, .9);
+      font-weight: 500;
+      font-size: 0.14rem;
+      text-align: center;
+      line-height: 0.4rem;
+      margin-right: 0.08rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: $theme_color;
+      }
+    }
+
+    .tabItemActive {
+      background-color: $theme_color;
+    }
+  }
+}

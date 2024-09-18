@@ -1,0 +1,59 @@
+.language {
+  position: relative;
+
+  :global {
+    .adm-popover {
+      //--background: #292929;
+      border-radius: 0.08rem;
+    }
+    .adm-popover-arrow {
+      color: $pc_popover_bg !important;
+    }
+    .adm-popover-inner {
+      padding: 0.08rem 0;
+      border-radius: 4px;
+      width: 1.84rem;
+      background-color: $pc_popover_bg;
+    }
+
+    .adm-popover-menu-list {
+      min-width: auto;
+    }
+
+    .adm-popover-menu-item {
+      padding-left: 0;
+    }
+
+    .adm-popover-menu-item-text {
+      width: 100%;
+      height: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.24rem;
+      font-weight: 400;
+      color: $pc_home_name_color;
+      transition: all .3s;
+      padding: 0;
+    }
+  }
+}
+
+.rightBox {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+
+  .languageIcon {
+    margin: 0 0.04rem 0 0;
+    width: 0.32rem;
+    height: 0.32rem;
+  }
+
+  span {
+    margin-left: 0.04rem;
+    font-size: 0.28rem;
+    font-weight: 500;
+    color: $pc_home_name_color;
+  }
+}

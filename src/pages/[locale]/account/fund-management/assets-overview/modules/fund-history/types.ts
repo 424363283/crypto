@@ -1,0 +1,14 @@
+export enum FUND_HISTORY_TAB_KEY {
+    MOVE_RECORD = '0', // 划转记录
+    FIAT_CURRENCY_RECORD = '1',
+    RECHARGE_RECORD = '2',
+    WITHDRAW_RECORD = '3',
+    TRANSFER_RECORD = '4',
+    FLASH_EXCHANGE_RECORD = '5',
+  }
+  export enum EXPORTS_TYPE {
+    DEPOSIT_FIAT = 'DEPOSIT_FIAT', // 充值
+    DEPOSIT_CRYPTO = 'DEPOSIT_CRYPTO', // 提币
+    WITHDRAW_CRYPTO = 'WITHDRAW_CRYPTO', // 现货交易
+  }
+  

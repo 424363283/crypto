@@ -1,0 +1,70 @@
+.tagWrap {
+  background-color: $theme_bg;
+
+  .container {
+    width: 14.4rem;
+    margin: 0 auto;
+    background-color: $theme_main_bg;
+    height: 100%;
+    min-height: calc(100vh - 3rem);
+    padding-bottom: 0.88rem;
+
+    .tagHeader {
+      display: flex;
+      align-items: center;
+      height: 0.80rem;
+      padding: 0 0.12rem;
+      border-bottom: $pc_detail_header_border;
+    }
+  }
+
+  .keywordBox {
+    padding: 0.24rem 0.12rem 0.32rem;
+
+    .title {
+      font-size: 0.28rem;
+      color: $theme_color;
+      font-weight: bold;
+      line-height: 0.32rem;
+    }
+
+    .sub {
+      margin: 0.1rem 0 0.3rem;
+      font-size: 0.14rem;
+      font-weight: 400;
+      color: $pc_crumbs_color;
+      line-height: 0.16rem;
+      white-space: pre-wrap;
+      span {
+        opacity: 1;
+        color: $theme_color;
+      }
+    }
+
+    .keywordConnect {
+
+      .keywordConnectTitle {
+        margin-bottom: 0.08rem;
+        font-size: 0.14rem;
+        font-weight: bold;
+        color: $pc_crumbs_color;
+        line-height: 0.16rem;
+      }
+
+      .keywordConnectItem {
+        display: inline-block;
+        font-size: 0.16rem;
+        padding: 0.06rem 0.08rem;
+        margin-right: 0.16rem;
+        background: $pc_detail_bg;
+        border-radius: 16px;
+        color: $theme_color;
+        margin-bottom: 0.16rem;
+      }
+    }
+  }
+
+  .tagListBox {
+    padding: 0 0.12rem 0.32rem;
+  }
+}

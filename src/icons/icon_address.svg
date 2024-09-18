@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>E2743794-788D-4C21-92E9-1C9F8D6EE6A4</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#90B5FF" offset="0%"></stop>
+            <stop stop-color="#4572CC" offset="100%"></stop>
+        </linearGradient>
+        <path d="M6.23960427,0.00235552764 C2.80285804,0.00235552764 0.0141331658,2.83157977 0.0141331658,6.32913003 C0.0141331658,7.66589196 0.425015704,8.90902952 1.12327261,9.93010364 C1.1571608,9.98888191 1.18775126,10.0465923 1.22927136,10.0988222 L5.4691897,15.5253298 C5.68118719,15.8094535 5.96091394,15.9455245 6.24067211,15.9455245 C6.52043028,15.9455245 6.7990892,15.8094692 7.01108668,15.5253455 L11.2520886,10.0988379 C11.2914259,10.0465766 11.3231156,9.98996545 11.3536903,9.9366206 C12.0541614,8.91229585 12.4661275,7.67132538 12.4661275,6.33019786 C12.4639604,2.83154837 9.67853329,0.00235552764 6.23960427,0.00235552764 L6.23960427,0.00235552764 Z M6.23960427,8.86111809 C4.8638191,8.86111809 3.74918342,7.72575377 3.74918342,6.33021357 C3.74918342,4.93249058 4.8638191,3.7981941 6.23960427,3.7981941 C7.6142902,3.7981941 8.72999372,4.93249058 8.72999372,6.33021357 C8.72999372,7.72573807 7.61538945,8.86111809 6.23960427,8.86111809 L6.23960427,8.86111809 Z" id="path-2"></path>
+        <filter x="-56.2%" y="-31.4%" width="212.4%" height="187.8%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.182492841   0 0 0 0 0.341676236   0 0 0 0 0.660043025  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon_address">
+            <circle id="椭圆形" fill="url(#linearGradient-1)" cx="12" cy="12" r="12"></circle>
+            <g id="地址-(1)" transform="translate(6.000000, 4.000000)" fill-rule="nonzero">
+                <g id="形状">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                    <use fill="#FFFFFF" xlink:href="#path-2"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

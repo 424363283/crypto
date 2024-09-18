@@ -1,0 +1,120 @@
+.swiperBox {
+  padding-top: 0.24rem;
+  margin-bottom: 0.56rem;
+  overflow: initial;
+
+  :global {
+
+    .adm-swiper-indicator {
+      transform: translate(-50%, 16px);
+    }
+
+    .adm-page-indicator {
+      --active-dot-color: #FF375F !important;
+      --dot-color: rgba(255,255,255,0.12) !important;
+      --dot-border-radius: 50% !important;
+      --active-dot-border-radius: 50% !important;
+    }
+
+    .adm-page-indicator-dot {
+      width: 0.16rem;
+      height: 0.06rem;
+      border-radius: 0.03rem;
+      background: $m_swiper_dot_bg !important;
+    }
+
+    .adm-page-indicator-dot-active {
+      background: $theme_color !important;
+    }
+  }
+}
+
+.content {
+  height: 3.16rem;
+  padding: 0 0.08rem;
+
+  .swiperItem {
+    width: 100%;
+    height: 2.94rem;
+    display: flex;
+    flex-direction: row;
+    background-color: $pc_detail_bg;
+    border-radius: 0.08rem;
+    position: relative;
+
+    .contentImgBox {
+      width: 2.18rem;
+      height: 2.94rem;
+      flex-shrink: 0;
+      border-radius: 0.08rem;
+    }
+  }
+}
+
+
+.rightCard {
+  padding: 0.16rem 0.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .rightCardTop {
+    max-width: 4rem;
+
+    .bookName {
+      font-size: 0.28rem;
+      font-weight: 500;
+      color: $pc_home_name_color;
+      line-height: 0.4rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      word-wrap: break-word;
+      margin-bottom: 0.16rem;
+    }
+
+    .chapterCount {
+      display: block;
+      font-size: 0.22rem;
+      font-weight: 400;
+      color: $pc_home_name_color;
+      line-height: 0.3rem;
+      margin-bottom: 0.16rem;
+    }
+
+    .intro {
+      font-size: 0.24rem;
+      font-weight: 400;
+      color: $pc_series_color;
+      line-height: 0.33rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      word-wrap: break-word;
+    }
+  }
+
+  .rightCardBottom {
+    overflow: hidden;
+    max-width: 4.5rem;
+    max-height: 0.36rem;
+    font-size: 0.22rem;
+    font-weight: 400;
+    color: $pc_nav_color;
+    grid-gap: 0.08rem;
+    display: flex;
+    flex-wrap: wrap;
+
+    .rightTag {
+      flex-shrink: 0;
+      padding: 0.03rem 0.12rem;
+      background-color: $pc_detail_bg;
+      border-radius: 0.18rem;
+    }
+  }
+
+}

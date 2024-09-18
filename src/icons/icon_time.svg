@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>8E2E9741-CEF7-4B1D-9CF1-E8C4CDEB329F</title>
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon_time">
+            <rect id="矩形" fill="#D8D8D8" opacity="0" x="0" y="0" width="12" height="12"></rect>
+            <g id="时间" fill="#7A8599" fill-rule="nonzero">
+                <path d="M6,0 C2.6915,0 0,2.6915 0,6 C0,9.3085 2.6915,12 6,12 C9.3085,12 12,9.3085 12,6 C12,2.6915 9.3085,0 6,0 Z M6,11 C3.243,11 1,8.757 1,6 C1,3.243 3.243,1 6,1 C8.757,1 11,3.243 11,6 C11,8.757 8.757,11 6,11 Z" id="形状"></path>
+                <path d="M8.324,7.4705 L6.25,6.271 L6.25,3 C6.25,2.724 6.026,2.5 5.75,2.5 C5.474,2.5 5.25,2.724 5.25,3 L5.25,6.5 C5.25,6.6855 5.4805,6.841 5.6305,6.927 C5.672,6.9895 5.786,7.046 5.8555,7.086 L7.918,8.336 C8.157,8.474 8.416,8.392 8.554,8.153 C8.692,7.914 8.5635,7.6085 8.324,7.4705 L8.324,7.4705 Z" id="路径"></path>
+            </g>
+        </g>
+    </g>
+</svg>

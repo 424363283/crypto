@@ -1,0 +1,1 @@
+rsync -aP -e "ssh -p 19630" dev@aws-file-server:/usr/upload/.next.tar.gz . && rm -rf /opt/apps/xk/swap/.next && tar zxvf .next.tar.gz

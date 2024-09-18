@@ -1,0 +1,25 @@
+{
+  "ret": 200,
+  "data": {
+      "versionNo": 1004,
+      "list": [
+          {
+              "categoryId": 3,
+              "name": "电影"
+          },
+          {
+              "categoryId": 4,
+              "name": "电视剧"
+          },
+          {
+              "categoryId": 5,
+              "name": "综艺"
+          },
+          {
+              "categoryId": 6,
+              "name": "动漫"
+          }
+      ]
+  },
+  "msg": "ok"
+}

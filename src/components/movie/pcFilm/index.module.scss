@@ -1,0 +1,233 @@
+.detailWrap {
+  width: 14.4rem;
+  margin: 0 auto;
+  background-color: $theme_main_bg;
+  min-height: calc(100vh - 3rem);
+
+  .detailHeader {
+    background-color: $theme_main_bg;
+    display: flex;
+    align-items: center;
+    height: 0.80rem;
+    padding: 0 0.12rem;
+    border-bottom: $pc_detail_header_border
+    //position: sticky;
+    //top: 0.8rem;
+    //z-index: 1;
+  }
+
+  .container {
+    padding: 0 0.12rem;
+  }
+
+}
+
+
+.detailBox {
+  padding-left: 0.08rem;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  // column-gap: 0.4rem;
+  margin-top: 0.76rem;
+  // border: 1px solid red;
+  margin-bottom: 0.48rem;
+  background: $pc_detail_bg;
+  border-radius: 0.08rem;
+  .detailBookCoverBox {
+    margin-top: -0.5rem;
+    width: 3.15rem;
+    height: 4.2rem;
+    overflow: hidden;
+    border-radius: 0.08rem;
+    display: flex;
+    align-items: center;
+    // border: 1px solid red;
+
+    .detailBookCover {
+      width: 100%;
+      height: auto;
+      min-height: 100%;
+      background: url("../../public/images/dramaboxapp/defaultFilm.png") 0 0 / 100% 100% no-repeat;
+    }
+
+    .detailBookCoverNew {
+      width: 100%;
+      height: auto;
+      min-height: 100%;
+      background: url("../../public/images/dramabox/defaultFilm.png") 0 0 / 100% 100% no-repeat;
+    }
+  }
+
+
+  .detailBoxRight {
+    padding: 0.32rem 0.32rem 0.32rem 0.16rem;
+    position: relative;
+    flex: 1;
+    // border: 1px solid pink;
+    height: 3.78rem;
+
+    .detailBoxRightTop {
+      .bookName {
+        display: block;
+        width: 9rem;
+        font-size: 0.24rem;
+        font-weight: 500;
+        color: $pc_home_name_color;
+        line-height: 0.32rem;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        margin-bottom: 0.08rem;
+      }
+
+      .chapterCount {
+        display: block;
+        width: 9rem;
+        font-size: 0.13rem;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 0.18rem;
+        margin-bottom: 0.2rem;
+      }
+
+      .intro {
+        display: block;
+        margin-bottom: 0.12rem;
+        font-size: 0.14rem;
+        font-weight: 400;
+        color: $pc_nav_color;
+        line-height: 0.2rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 7;
+        word-wrap: break-word;
+        width: 10.59rem;
+      }
+      .epiNum {
+        font-size: 0.14rem;
+        line-height: 0.2rem;
+        color: $pc_nav_color;
+        margin-bottom: 0.12rem;
+      }
+
+      .tagsContent {
+        font-size: 0.12rem;
+        font-weight: 400;
+        grid-gap: 0.08rem;
+        display: flex;
+
+        .tagItem {
+          border-radius: 0.12rem;
+          padding: 0.04rem 0.1rem;
+          color: $pc_nav_color;
+          background-color: $pc_detail_bg;
+        }
+      }
+    }
+
+
+    .detailBottom {
+      position: absolute;
+      left: 0.24rem;
+      bottom: 0.32rem;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+
+      .shareBox {
+        margin-left: 0.4rem;
+        height: 0.4rem;
+        display: flex;
+        align-items: center;
+
+        .shareLabel {
+          font-size: 0.18rem;
+          font-weight: 500;
+          color: #FFFFFF;
+          margin-right: 0.1rem;
+        }
+
+        .shareIcon {
+          width: 0.4rem;
+          height: 0.4rem;
+          border-radius: 50%;
+          margin-right: 0.1rem;
+          cursor: pointer;
+        }
+
+        .copyTip {
+          position: relative;
+
+          .tip {
+            position: absolute;
+            display: none;
+            bottom: 0.56rem;
+            left: -0.3rem;
+            height: 0.4rem;
+            line-height: 0.4rem;
+            padding: 0 0.2rem;
+            background: rgba(0,0,0,.8);
+            border-radius: 0.06rem;
+            font-size: 0.16rem;
+            font-weight: 400;
+            color: #fff;
+            white-space: nowrap;
+
+            &:after {
+              content: " ";
+              position: absolute;
+              width: 0;
+              height: 0;
+              border: 6px solid transparent;
+              border-top-color: rgba(0,0,0,.8);
+              bottom: -0.13rem;
+              left: 0.4rem;
+            }
+          }
+
+          &:hover {
+            .tip {
+              display: block;
+            }
+          }
+        }
+      }
+
+      .playBtn {
+        font-size: 0.18rem;
+        font-weight: 500;
+        color: #FFFFFF;
+        background: linear-gradient(270deg, #FF871F 0%, #FF0045 48%, #F40065 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
+        width: 1.5rem;
+        height: 0.48rem;
+        border-radius: 0.08rem;
+        margin-right: 0.4rem;
+
+        .playIcon {
+          margin-right: 0.06rem;
+          width: 0.28rem;
+          height: 0.28rem;
+        }
+      }
+    }
+  }
+}
+
+.recommendBox {
+
+  .titleText {
+    font-size: 0.28rem;
+    font-weight: bold;
+    color: rgba(255,255,255,0.9);
+    line-height: 0.28rem;
+    margin-bottom: 0.24rem;
+  }
+}

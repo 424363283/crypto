@@ -1,0 +1,102 @@
+.rightBox {
+  width: 3.04rem;
+  height: 8.68rem;
+  overflow-y: scroll;
+  border-radius: 0.08rem;
+  padding: 0.08rem 0.12rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  .rightTop {
+    display: flex;
+    align-items: center;
+    .title {
+      font-size: 0.2rem;
+      font-weight: 500;
+      line-height: 0.24rem;
+      color: $pc_home_name_color;
+    }
+    .current {
+      line-height: 0.2rem;
+      color: $pc_series_color;
+      font-size: 0.14rem;
+      margin-left: 0.08rem;
+    }
+  }
+
+  .allEpo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 0.08rem;
+    padding-top: 0.08rem;
+
+    .listItem {
+      height: 1.45rem;
+      width: 0.88rem;
+      // border: 1px solid orange;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 0.03rem;
+      margin-bottom: 0.08rem;
+      position: relative;
+
+      .imgBox {
+        width: 0.88rem;
+        height: 1.17rem;
+        border-radius: 0.03rem;
+      }
+      .imageMark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 9;
+        background-color: rgba(0,0,0,0.5);
+        width: 0.88rem;
+        height: 1.17rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .lockIcon {
+          width: 0.24rem;
+          height: 0.24rem;
+          transition: all 0.3s;
+        }
+
+        &:hover {
+          .lockIcon {
+            transform: scale(1.1);
+          }
+        }
+      }
+
+      .linkText {
+        display: inline-block;
+        font-size: 0.14rem;
+        line-height: 0.2rem;
+        width: 100%;
+        color: $pc_crumbs_color;
+        text-align: center;
+        padding-top: 0.08rem;
+      }
+
+      .active {
+        font-weight: 500;
+        color: $theme_color;
+      }
+
+      &:hover {
+        .imgBox {
+          .imgItem {
+            transform: scale(1.1);
+          }
+        }
+
+      }
+    }
+  }
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

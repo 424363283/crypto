@@ -1,0 +1,75 @@
+.footerBox {
+  height: 5.76rem;
+  background-color: $pc_footer_bg;
+  padding: 0 0.32rem 0.48rem;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+
+  .agreementItem {
+    border-bottom: 1px solid $nav_border_color;
+    height: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.20rem;
+    font-weight: 400;
+    color: $pc_nav_color;
+
+    .agreementIcon {
+      width: 0.24rem;
+      height: 0.24rem;
+    }
+  }
+
+
+  .footerContent {
+    font-size: 0.2rem;
+    font-weight: 400;
+    color: $pc_series_color;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .logoBox {
+      margin: 0.4rem auto 0;
+      height: 0.4rem;
+      width: 1.81rem;
+    }
+
+    .community {
+      margin-top: 0.2rem;
+      display: flex;
+      justify-content: space-between;
+
+      .communityLabel {
+        font-weight: 500;
+        margin-right: 0.1rem;
+      }
+
+      .communityItem {
+        padding: 0 0.1rem;
+        display: inline-block;
+        color: $pc_series_color;
+      }
+
+    }
+
+    .fmail {
+      margin: 0.25rem 0 0.2rem;
+      display: block;
+      text-align: center;
+      line-height: 0.28rem;
+      color: $pc_series_color;
+    }
+
+    .fText {
+      text-align: center;
+      margin-top: 0.08rem;
+      line-height: 0.28rem;
+    }
+
+  }
+}

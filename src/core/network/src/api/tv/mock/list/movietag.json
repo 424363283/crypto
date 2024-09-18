@@ -1,0 +1,405 @@
+{
+  "ret": 200,
+  "data": {
+      "list": [
+          {
+              "name": "排序标签",
+              "list": [
+                  {
+                      "isTopDisplay": true,
+                      "index": 0,
+                      "classifyId": 0,
+                      "classifyName": "最新上传",
+                      "isDefaultSelect": true
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 0,
+                      "classifyId": 1,
+                      "classifyName": "人气最高",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 0,
+                      "classifyId": 2,
+                      "classifyName": "评分最高",
+                      "isDefaultSelect": false
+                  }
+              ],
+              "classifyId": "0",
+              "ishow": false,
+              "isfixed": false
+          },
+          {
+              "name": "二级标签",
+              "list": [
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 0,
+                      "classifyName": "全部类型",
+                      "isDefaultSelect": true
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 19,
+                      "classifyName": "喜剧",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 20,
+                      "classifyName": "爱情",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 21,
+                      "classifyName": "动作",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 22,
+                      "classifyName": "犯罪",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 23,
+                      "classifyName": "科幻",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 24,
+                      "classifyName": "奇幻",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 25,
+                      "classifyName": "冒险",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 26,
+                      "classifyName": "灾难",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 27,
+                      "classifyName": "惊悚",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 123,
+                      "classifyName": "恐怖",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 28,
+                      "classifyName": "剧情",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 29,
+                      "classifyName": "战争",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 30,
+                      "classifyName": "歌舞",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 31,
+                      "classifyName": "经典",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 32,
+                      "classifyName": "悬疑",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 113,
+                      "classifyName": "动画",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 124,
+                      "classifyName": "同性",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": true,
+                      "index": 1,
+                      "classifyId": 125,
+                      "classifyName": "网络电影",
+                      "isDefaultSelect": false
+                  }
+              ],
+              "classifyId": "0",
+              "ishow": false,
+              "isfixed": false
+          },
+          {
+              "name": "地区",
+              "list": [
+                  {
+                      "isTopDisplay": false,
+                      "index": 2,
+                      "classifyId": 0,
+                      "classifyName": "全部地区",
+                      "isDefaultSelect": true
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 2,
+                      "classifyId": 1,
+                      "classifyName": "大陆",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 2,
+                      "classifyId": 2,
+                      "classifyName": "香港",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 2,
+                      "classifyId": 3,
+                      "classifyName": "台湾",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 2,
+                      "classifyId": 4,
+                      "classifyName": "日本",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 2,
+                      "classifyId": 5,
+                      "classifyName": "韩国",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 2,
+                      "classifyId": 6,
+                      "classifyName": "欧美",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 2,
+                      "classifyId": 7,
+                      "classifyName": "英国",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 2,
+                      "classifyId": 8,
+                      "classifyName": "泰国",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 2,
+                      "classifyId": 9,
+                      "classifyName": "其它",
+                      "isDefaultSelect": false
+                  }
+              ],
+              "classifyId": "0",
+              "ishow": false,
+              "isfixed": false
+          },
+          {
+              "name": "语言",
+              "list": [
+                  {
+                      "isTopDisplay": false,
+                      "index": 3,
+                      "classifyId": 0,
+                      "classifyName": "全部语言",
+                      "isDefaultSelect": true
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 3,
+                      "classifyId": 1,
+                      "classifyName": "国语",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 3,
+                      "classifyId": 2,
+                      "classifyName": "粤语",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 3,
+                      "classifyId": 3,
+                      "classifyName": "英语",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 3,
+                      "classifyId": 4,
+                      "classifyName": "韩语",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 3,
+                      "classifyId": 5,
+                      "classifyName": "日语",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 3,
+                      "classifyId": 6,
+                      "classifyName": "西班牙语",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 3,
+                      "classifyId": 7,
+                      "classifyName": "法语",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 3,
+                      "classifyId": 8,
+                      "classifyName": "德语",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 3,
+                      "classifyId": 9,
+                      "classifyName": "意大利语",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 3,
+                      "classifyId": 10,
+                      "classifyName": "泰国语",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 3,
+                      "classifyId": 11,
+                      "classifyName": "其它",
+                      "isDefaultSelect": false
+                  }
+              ],
+              "classifyId": "0",
+              "ishow": false,
+              "isfixed": false
+          },
+          {
+              "name": "年份",
+              "list": [
+                  {
+                      "isTopDisplay": false,
+                      "index": 4,
+                      "classifyId": 0,
+                      "classifyName": "全部年份",
+                      "isDefaultSelect": true
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 4,
+                      "classifyId": 1,
+                      "classifyName": "今年",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 4,
+                      "classifyId": 2,
+                      "classifyName": "去年",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 4,
+                      "classifyId": 3,
+                      "classifyName": "更早",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 4,
+                      "classifyId": 4,
+                      "classifyName": "90年代",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 4,
+                      "classifyId": 5,
+                      "classifyName": "80年代",
+                      "isDefaultSelect": false
+                  },
+                  {
+                      "isTopDisplay": false,
+                      "index": 4,
+                      "classifyId": 6,
+                      "classifyName": "怀旧",
+                      "isDefaultSelect": false
+                  }
+              ],
+              "classifyId": "0",
+              "ishow": false,
+              "isfixed": false
+          }
+      ]
+  },
+  "msg": null
+}

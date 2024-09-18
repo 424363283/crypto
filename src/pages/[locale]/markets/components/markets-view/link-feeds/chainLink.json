@@ -1,0 +1,525 @@
+{
+    "1INCH/USD": {
+        "dec": 8,
+        "proxy": "0x443C5116CdF663Eb387e72C688D276e702135C87",
+        "sponsors": [
+            "synthetix",
+            "loopring",
+            "openlaw"
+        ],
+        "digit": 4
+    },
+    "AAVE/USD": {
+        "dec": 8,
+        "proxy": "0x72484B12719E23115761D5DA1646945632979bB6",
+        "sponsors": [
+            "aave",
+            "lendhub",
+            "unfederal_reserve"
+        ],
+        "digit": 2
+    },
+    "ADA/USD": {
+        "dec": 8,
+        "proxy": "0x882554df528115a743c4537828DA8D5B58e52544",
+        "sponsors": [
+            "synthetix",
+            "netvrk"
+        ],
+        "digit": 4
+    },
+    "ALCX/USD": {
+        "dec": 8,
+        "proxy": "0x5DB6e61B6159B20F068dc15A47dF2E5931b14f29",
+        "sponsors": []
+    },
+    "ALGO/USD": {
+        "dec": 8,
+        "proxy": "0x03Bc6D9EFed65708D35fDaEfb25E87631a0a3437",
+        "sponsors": [],
+        "digit": 4
+    },
+    "BADGER/USD": {
+        "dec": 8,
+        "proxy": "0xF626964Ba5e81405f47e8004F0b276Bb974742B5",
+        "sponsors": [],
+        "digit": 2
+    },
+    "BAL/USD": {
+        "dec": 8,
+        "proxy": "0xD106B538F2A868c28Ca1Ec7E298C3325E0251d66",
+        "sponsors": [],
+        "digit": 2
+    },
+    "BAT/USD": {
+        "dec": 8,
+        "proxy": "0x2346Ce62bd732c62618944E51cbFa09D985d86D2",
+        "sponsors": [],
+        "digit": 4
+    },
+    "BCH/USD": {
+        "dec": 8,
+        "proxy": "0x327d9822e9932996f55b39F557AEC838313da8b7",
+        "sponsors": [
+            "synthetix",
+            "celsius",
+            "divergence"
+        ],
+        "digit": 2
+    },
+    "BHD/USD": {
+        "dec": 8,
+        "proxy": "0xC5c770ae2efDF0DBC2FB366fb3833dAc2A20BF2F",
+        "sponsors": []
+    },
+    "BNB/USD": {
+        "dec": 8,
+        "proxy": "0x82a6c4AF830caa6c97bb504425f6A66165C2c26e",
+        "sponsors": [
+            "synthetix",
+            "dyp",
+            "divergence"
+        ],
+        "digit": 2
+    },
+    "BNT/USD": {
+        "dec": 8,
+        "proxy": "0xF5724884b6E99257cC003375e6b844bC776183f9",
+        "sponsors": [],
+        "digit": 3
+    },
+    "BOND/USD": {
+        "dec": 8,
+        "proxy": "0x58527C2dCC755297bB81f9334b80b2B6032d8524",
+        "sponsors": [],
+        "digit": 2
+    },
+    "BSV/USD": {
+        "dec": 8,
+        "proxy": "0x8803DD6705F0d38e79790B02A2C43594A0538D22",
+        "sponsors": [],
+        "digit": 2
+    },
+    "BTC/USD": {
+        "dec": 8,
+        "proxy": "0xc907E116054Ad103354f2D350FD2514433D57F6f",
+        "sponsors": [
+            "synthetix",
+            "gamerhash",
+            "sandbank"
+        ],
+        "digit": 2
+    },
+    "BTG/USD": {
+        "dec": 8,
+        "proxy": "0x2f2C605F28DE314bc579a7c0FDf85536529E9825",
+        "sponsors": [],
+        "digit": 2
+    },
+    "BZRX/USD": {
+        "dec": 8,
+        "proxy": "0x6b7D436583e5fE0874B7310b74D29A13af816860",
+        "sponsors": [],
+        "digit": 4
+    },
+    "CEL/USD": {
+        "dec": 8,
+        "proxy": "0xc9ECF45956f576681bDc01F79602A79bC2667B0c",
+        "sponsors": []
+    },
+    "CHF/USD": {
+        "dec": 8,
+        "proxy": "0xc76f762CedF0F78a439727861628E0fdfE1e70c2",
+        "sponsors": []
+    },
+    "CLP/USD": {
+        "dec": 8,
+        "proxy": "0xf238A5fB3A15aB4b063B3894Fab30442620b70B9",
+        "sponsors": []
+    },
+    "COMP/USD": {
+        "dec": 8,
+        "proxy": "0x2A8758b7257102461BC958279054e372C2b1bDE6",
+        "sponsors": [
+            "synthetix",
+            "mcdex",
+            "divergence"
+        ],
+        "digit": 2
+    },
+    "CRV/USD": {
+        "dec": 8,
+        "proxy": "0x336584C8E6Dc19637A5b36206B1c79923111b405",
+        "sponsors": [
+            "divergence",
+            "phuture",
+            "sonar"
+        ],
+        "digit": 4
+    },
+    "CTX/USD": {
+        "dec": 8,
+        "proxy": "0xE039D4aA72A0C0d6d0218E650c1eBD6B2675A575",
+        "sponsors": []
+    },
+    "DASH/USD": {
+        "dec": 8,
+        "proxy": "0xD94427eDee70E4991b4b8DdCc848f2B58ED01C0b",
+        "sponsors": [
+            "synthetix",
+            "celsius"
+        ],
+        "digit": 2
+    },
+    "DODO/USD": {
+        "dec": 8,
+        "proxy": "0x59161117086a4C7A9beDA16C66e40Bdaa1C5a8B6",
+        "sponsors": [
+            "phuture"
+        ],
+        "digit": 4
+    },
+    "DOGE/USD": {
+        "dec": 8,
+        "proxy": "0xbaf9327b6564454F4a3364C33eFeEf032b4b4444",
+        "sponsors": [],
+        "digit": 8
+    },
+    "DOT/USD": {
+        "dec": 8,
+        "proxy": "0xacb51F1a83922632ca02B25a8164c10748001BdE",
+        "sponsors": [
+            "synthetix",
+            "option_panda",
+            "lendhub"
+        ],
+        "digit": 4
+    },
+    "DPI/USD": {
+        "dec": 8,
+        "proxy": "0x2e48b7924FBe04d575BA229A59b64547d9da16e9",
+        "sponsors": []
+    },
+    "EOS/USD": {
+        "dec": 8,
+        "proxy": "0xd6285F06203D938ab713Fa6A315e7d23247DDE95",
+        "sponsors": [
+            "synthetix",
+            "celsius"
+        ],
+        "digit": 4
+    },
+    "ETC/USD": {
+        "dec": 8,
+        "proxy": "0xDf3f72Be10d194b58B1BB56f2c4183e661cB2114",
+        "sponsors": [
+            "synthetix",
+            "celsius",
+            "divergence"
+        ],
+        "digit": 4
+    },
+    "ETH/USD": {
+        "dec": 8,
+        "proxy": "0xF9680D99D6C9589e2a93a78A04A279e509205945",
+        "sponsors": [
+            "synthetix",
+            "loopring",
+            "openlaw"
+        ],
+        "digit": 2
+    },
+    "FARM/USD": {
+        "dec": 8,
+        "proxy": "0xDFb138ba3A6CCe675A6F5961323Be31eE42E40ff",
+        "sponsors": [],
+        "digit": 1
+    },
+    "FRAX/USD": {
+        "dec": 8,
+        "proxy": "0x00DBeB1e45485d53DF7C2F0dF1Aa0b6Dc30311d3",
+        "sponsors": []
+    },
+    "FXS/USD": {
+        "dec": 8,
+        "proxy": "0x6C0fe985D3cAcbCdE428b84fc9431792694d0f51",
+        "sponsors": [
+            "set_protocol"
+        ],
+        "digit": 4
+    },
+    "HBAR/USD": {
+        "dec": 8,
+        "proxy": "0xC5878bDf8a89FA3bF0DC8389ae8EE6DE601D01bC",
+        "sponsors": [],
+        "digit": 4
+    },
+    "HT/USD": {
+        "dec": 8,
+        "proxy": "0x6F8F9e75C0285AecE30ADFe1BCc1955f145d971A",
+        "sponsors": [
+            "option_panda",
+            "lendhub",
+            "divergence"
+        ],
+        "digit": 4
+    },
+    "ICP/USD": {
+        "dec": 8,
+        "proxy": "0x84227A76a04289473057BEF706646199D7C58c34",
+        "sponsors": [],
+        "digit": 2
+    },
+    "ILS/USD": {
+        "dec": 8,
+        "proxy": "0x8d5eB34C509261533235b91350d359EdcB969D33",
+        "sponsors": []
+    },
+    "KNC/USD": {
+        "dec": 8,
+        "proxy": "0x10e5f3DFc81B3e5Ef4e648C4454D04e79E1E41E2",
+        "sponsors": [
+            "synthetix",
+            "celsius",
+            "phuture"
+        ],
+        "digit": 4
+    },
+    "LINK/USD": {
+        "dec": 8,
+        "proxy": "0xd9FFdb71EbE7496cC440152d43986Aae0AB76665",
+        "sponsors": [
+            "set_protocol",
+            "linkpool",
+            "dydx"
+        ],
+        "digit": 4
+    },
+    "LPT/USD": {
+        "dec": 8,
+        "proxy": "0xBAaF11CeDA1d1Ca9Cf01748F8196653c9656a400",
+        "sponsors": [],
+        "digit": 2
+    },
+    "LTC/USD": {
+        "dec": 8,
+        "proxy": "0xEB99F173cf7d9a6dC4D889C2Ad7103e8383b6Efa",
+        "sponsors": [
+            "synthetix",
+            "celsius"
+        ],
+        "digit": 2
+    },
+    "LUNA/USD": {
+        "dec": 8,
+        "proxy": "0x1248573D9B62AC86a3ca02aBC6Abe6d403Cd1034",
+        "sponsors": [],
+        "digit": 2
+    },
+    "MANA/USD": {
+        "dec": 8,
+        "proxy": "0xA1CbF3Fe43BC3501e3Fc4b573e822c70e76A7512",
+        "sponsors": [],
+        "digit": 4
+    },
+    "MATIC/USD": {
+        "dec": 8,
+        "proxy": "0xAB594600376Ec9fD91F8e885dADF0CE036862dE0",
+        "sponsors": [
+            "bonded_finance",
+            "unfederal_reserve",
+            "cook_finance"
+        ],
+        "digit": 4
+    },
+    "MFT/USD": {
+        "dec": 8,
+        "proxy": "0x6E53C1c22427258BE55aE985a65c0C87BB631F9C",
+        "sponsors": [],
+        "digit": 6
+    },
+    "MIM/USD": {
+        "dec": 8,
+        "proxy": "0xd133F916e04ed5D67b231183d85Be12eAA018320",
+        "sponsors": []
+    },
+    "MIOTA/USD": {
+        "dec": 8,
+        "proxy": "0x7d620D05c317A426903596432A5ca83375dC8d2A",
+        "sponsors": []
+    },
+    "MKR/USD": {
+        "dec": 8,
+        "proxy": "0xa070427bF5bA5709f70e98b94Cb2F435a242C46C",
+        "sponsors": [
+            "set_protocol",
+            "cook_finance",
+            "dolphins_finance"
+        ],
+        "digit": 2
+    },
+    "MXN/USD": {
+        "dec": 8,
+        "proxy": "0x171b16562EA3476F5C61d1b8dad031DbA0768545",
+        "sponsors": []
+    },
+    "NEO/USD": {
+        "dec": 8,
+        "proxy": "0x74b3587A23eE786A43C8529c2e98D3C05a8fb1fB",
+        "sponsors": [],
+        "digit": 2
+    },
+    "OHM/USD": {
+        "dec": 8,
+        "proxy": "0xa8B05B6337040c0529919BDB51f6B40A684eb08C",
+        "sponsors": []
+    },
+    "OMG/USD": {
+        "dec": 8,
+        "proxy": "0x93FfEE768F74208a7b9f2a4426f0F6BCbb1D09de",
+        "sponsors": [
+            "set_protocol"
+        ],
+        "digit": 4
+    },
+    "OMR/USD": {
+        "dec": 8,
+        "proxy": "0x0E12b79A6E5c919F89246edEdb2d6413a8890a54",
+        "sponsors": []
+    },
+    "QUICK/USD": {
+        "dec": 8,
+        "proxy": "0xa058689f4bCa95208bba3F265674AE95dED75B6D",
+        "sponsors": [],
+        "digit": 1
+    },
+    "SAND/USD": {
+        "dec": 8,
+        "proxy": "0x3D49406EDd4D52Fb7FFd25485f32E073b529C924",
+        "sponsors": [],
+        "digit": 4
+    },
+    "SNX/USD": {
+        "dec": 8,
+        "proxy": "0xbF90A5D9B6EE9019028dbFc2a9E50056d5252894",
+        "sponsors": [
+            "synthetix",
+            "mcdex",
+            "celsius"
+        ],
+        "digit": 4
+    },
+    "SOL/USD": {
+        "dec": 8,
+        "proxy": "0x10C8264C0935b3B9870013e057f330Ff3e9C56dC",
+        "sponsors": [
+            "wrapped"
+        ],
+        "digit": 2
+    },
+    "SUSHI/USD": {
+        "dec": 8,
+        "proxy": "0x49B0c695039243BBfEb8EcD054EB70061fd54aa0",
+        "sponsors": [
+            "compound",
+            "divergence",
+            "dolphins_finance"
+        ],
+        "digit": 4
+    },
+    "THETA/USD": {
+        "dec": 8,
+        "proxy": "0x38611b09F8f2D520c14eA973765C225Bf57B9Eac",
+        "sponsors": [],
+        "digit": 3
+    },
+    "TRX/USD": {
+        "dec": 8,
+        "proxy": "0x307cCF7cBD17b69A487b9C3dbe483931Cf3E1833",
+        "sponsors": [
+            "synthetix"
+        ],
+        "digit": 7
+    },
+    "UMA/USD": {
+        "dec": 8,
+        "proxy": "0x33D9B1BAaDcF4b26ab6F8E83e9cb8a611B2B3956",
+        "sponsors": [],
+        "digit": 3
+    },
+    "UNI/USD": {
+        "dec": 8,
+        "proxy": "0xdf0Fb4e4F928d2dCB76f438575fDD8682386e13C",
+        "sponsors": [
+            "synthetix",
+            "lendhub",
+            "cook_finance"
+        ],
+        "digit": 4
+    },
+    "VET/USD": {
+        "dec": 8,
+        "proxy": "0xD78bc11ef3256e3CE9dC0DF0fa7be9E9afc07f95",
+        "sponsors": [],
+        "digit": 5
+    },
+    "XLM/USD": {
+        "dec": 8,
+        "proxy": "0x692AE5510cA9070095A496dbcFBCDA99D4024Cd9",
+        "sponsors": [],
+        "digit": 4
+    },
+    "XMR/USD": {
+        "dec": 8,
+        "proxy": "0xBE6FB0AB6302B693368D0E9001fAF77ecc6571db",
+        "sponsors": [
+            "synthetix"
+        ],
+        "digit": 2
+    },
+    "XRP/USD": {
+        "dec": 8,
+        "proxy": "0x785ba89291f676b5386652eB12b30cF361020694",
+        "sponsors": [
+            "synthetix",
+            "celsius",
+            "divergence"
+        ],
+        "digit": 4
+    },
+    "XTZ/USD": {
+        "dec": 8,
+        "proxy": "0x691e26AB58ff05800E028b0876A41B720b26FC65",
+        "sponsors": [
+            "synthetix",
+            "rampdefi"
+        ],
+        "digit": 4
+    },
+    "YFI/USD": {
+        "dec": 8,
+        "proxy": "0x9d3A43c111E7b2C6601705D9fcF7a70c95b1dc55",
+        "sponsors": [
+            "synthetix",
+            "unfederal_reserve",
+            "ox_nodes"
+        ],
+        "digit": 2
+    },
+    "ZEC/USD": {
+        "dec": 8,
+        "proxy": "0xBC08c639e579a391C4228F20d0C29d0690092DF0",
+        "sponsors": [
+            "wrapped"
+        ],
+        "digit": 2
+    },
+    "ZRX/USD": {
+        "dec": 8,
+        "proxy": "0x6EA4d89474d9410939d429B786208c74853A5B47",
+        "sponsors": [
+            "phuture"
+        ],
+        "digit": 4
+    }
+}

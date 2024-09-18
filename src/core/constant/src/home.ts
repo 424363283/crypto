@@ -1,0 +1,1 @@
+export type HomeListType = 'drama' | "movie" | "show" | "banner" | "hot" | "anime"

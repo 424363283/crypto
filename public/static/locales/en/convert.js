@@ -1,0 +1,22 @@
+var appLang = {
+    "小额兑换·大宗交易": "Convert & OTC Portal",
+    "BTC、ETH、数字货币快捷兑换": "Convert BTC, ETH and other crypto",
+    "第一步": "Step 1",
+    "选择需要兑换的币种": "Choose Crypto",
+    "第二步": "Step 2",
+    "输入需要兑换的数量": "Enter Amount",
+    "第三步": "Step 3",
+    "开始兑换": "Convert",
+    "Past 24Hours": "Past 24Hours",
+    "成交量": "Volume",
+    "卖出____1": "From",
+    "最大": "Max",
+    "可用": "Available",
+    "请输入卖出数量": "Enter Amount",
+    "全部": "All",
+    "买入____1": "To",
+    "请输入买入数量": "Enter Amount",
+    "价格参考": "Reference Price",
+    "兑换": "Convert",
+    "兑换成功": "Success"
+}

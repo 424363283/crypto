@@ -1,0 +1,41 @@
+.keywordsWrap {
+  padding-bottom: 0.5rem;
+  min-height: calc(100vh - 3rem);
+  background-color: $theme_main_bg;
+  width: 14.4rem;
+  margin: 0 auto;
+
+  .keywordsHeader {
+    display: flex;
+    align-items: center;
+    height: 0.80rem;
+    padding: 0 0.12rem;
+    border-bottom: $pc_detail_header_border;
+  }
+
+  .keywordBox {
+    padding: 0.20rem 0.12rem 0.40rem;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 0.2rem;
+    column-gap: 0.16rem;
+
+    .keywordItem {
+      flex-shrink: 0;
+      height: 0.32rem;
+      line-height: 0.32rem;
+      text-align: center;
+      border-radius: 0.16rem;
+      padding: 0 0.08rem;
+      background: $pc_detail_bg;
+      font-size: 0.16rem;
+      color: $theme_color;
+      font-weight: 400;
+      max-width: 4rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}

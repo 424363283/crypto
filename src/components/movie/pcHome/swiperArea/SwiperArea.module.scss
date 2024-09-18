@@ -1,0 +1,193 @@
+.swiperWrap {
+  padding: 0.2rem 0 0.6rem;
+
+  .swiperBox {
+    height: 4.6rem;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    grid-gap: 0.2rem;
+
+    .leftCard {
+      width: 8.92rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: row;
+      background-color: $pc_home_swiper_bg;
+      border-radius: 0.04rem;
+      overflow: hidden;
+
+      .leftCardImg {
+        flex-shrink: 0;
+        width: 3.45rem;
+        height: 4.6rem;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        border-radius: 0.04rem;
+      }
+
+      .leftCardContent {
+        padding: 0.2rem 0.2rem 0.28rem;
+        height: 4.6rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 1;
+
+        .leftCardContentTop {
+          max-width: 5.07rem;
+
+          .leftBookName {
+            display: block;
+            font-size: 0.24rem;
+            font-weight: 500;
+            color: $pc_home_name_color;
+            line-height: 0.32rem;
+            margin-bottom: 0.2rem;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            word-wrap: break-word;
+            overflow: hidden;
+          }
+
+          .chapterCount {
+            display: inline-block;
+            font-size: 0.14rem;
+            font-weight: 400;
+            color: $pc_home_name_color;
+            line-height: 0.2rem;
+            margin-bottom: 0.2rem;
+          }
+
+          .intro {
+            display: inline-block;
+            font-size: 0.14rem;
+            font-weight: 400;
+            color: $pc_home_intro_color;
+            line-height: 0.2rem;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 10;
+            word-wrap: break-word;
+            overflow: hidden;
+          }
+        }
+      }
+
+      &:hover {
+        transition: background-color 0.3s;
+        background-color: $pc_home_swiper_bg_hover;
+
+        .leftCardContent {
+          .leftCardContentTop {
+            .leftBookName {
+              transition: color 0.3s;
+              color: $theme_color;
+            }
+          }
+        }
+      }
+    }
+
+    .rightCard {
+      display: flex;
+      flex-direction: column;
+      grid-gap: 0.2rem;
+
+      .rightCardItem {
+        width: 5.28rem;
+        height: 2.2rem;
+        background-color: $pc_home_swiper_bg;
+        border-radius: 0.04rem;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+
+        .rightCardItemImg {
+          width: 1.65rem;
+          height: 2.2rem;
+          flex-shrink: 0;
+          position: relative;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          border-radius: 0.04rem;
+        }
+
+        .rightCardContent {
+          padding: 0.2rem 0.2rem 0.2rem 0.16rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          flex: 1;
+
+          .rightCardContentTop {
+            max-width: 3.25rem;
+
+            .bookName {
+              display: block;
+              font-size: 0.24rem;
+              font-weight: 500;
+              color: $pc_home_name_color;
+              line-height: 0.32rem;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 2;
+              word-wrap: break-word;
+              overflow: hidden;
+              margin-bottom: 0.08rem;
+            }
+
+            .chapterCount {
+              font-size: 0.14rem;
+              font-weight: 400;
+              color: $pc_home_name_color;
+              line-height: 0.2rem;
+              margin-bottom: 0.08rem;
+              display: block;
+            }
+
+            .intro {
+              display: block;
+              font-size: 0.14rem;
+              font-weight: 400;
+              color: $pc_home_intro_color;
+              line-height: 0.2rem;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 2;
+              word-wrap: break-word;
+            }
+          }
+        }
+
+        &:hover {
+          transition: background-color 0.3s;
+          background-color: $pc_home_swiper_bg_hover;
+
+          .rightCardContent {
+            .rightCardContentTop {
+              .bookName {
+                transition: color 0.3s;
+                color: $theme_color;
+              }
+            }
+          }
+        }
+
+      }
+    }
+  }
+}
+
+

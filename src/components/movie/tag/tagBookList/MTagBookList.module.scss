@@ -1,0 +1,84 @@
+.listBox {
+  margin-top: 0.32rem;
+  padding-bottom: 0.24rem;
+
+  .listItem {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
+    //height: 1.72rem;
+    margin-bottom: 0.16rem;
+
+    .bookImage {
+      width: 1.65rem;
+      height: 2.20rem;
+      border-radius: 0.08rem;
+      overflow: hidden;
+    }
+
+    .bookInfo {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-left: 0.16rem;
+
+      .bookName {
+        max-width: 5.05rem;
+        color: $pc_home_name_color;
+        font-size: 0.32rem;
+        font-weight: 500;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .bookLabels {
+        margin-top: 0.16rem;
+        max-width: 5.05rem;
+        height: 0.38rem;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        flex-wrap: wrap;
+        overflow: hidden;
+        gap: 0.12rem;
+
+        .bookLabel {
+          display: inline-block;
+          max-width: 3rem;
+          padding: 0.05rem 0.12rem;
+          font-size: 0.22rem;
+          font-weight: 400;
+          color: $pc_nav_color;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          background: $pc_detail_bg;
+          border-radius: 0.18rem;
+        }
+      }
+
+      .intro {
+        max-width: 5.05rem;
+        margin-top: 0.16rem;
+        font-size: 0.24rem;
+        color: $pc_nav_color;
+        line-height: 0.32rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        word-wrap: break-word;
+      }
+
+    }
+  }
+}
+
+
+
+
+

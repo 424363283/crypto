@@ -1,0 +1,45 @@
+.emptyBox {
+  position: relative;
+  padding-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  .emptyIcon {
+    width: 3.2rem;
+    height: 2.4rem;
+  }
+
+  .emptyIntro {
+    font-size: 0.16rem;
+    font-weight: 400;
+    color: $pc_series_color;
+    text-align: center;
+    margin: 0.08rem auto 0.48rem;
+    line-height: 0.34rem;
+  }
+}
+
+.mEmptyBox {
+  position: relative;
+  padding-top: 2.98rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  .emptyIcon {
+    width: 3.2rem;
+    height: 2.4rem;
+  }
+
+  .emptyIntro {
+    font-size: 0.28rem;
+    font-weight: 400;
+    color: $pc_series_color;
+    text-align: center;
+    margin: 0.24rem auto 0.48rem;
+    line-height: 0.34rem;
+  }
+}

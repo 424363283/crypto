@@ -1,0 +1,34 @@
+.navBox {
+  position: fixed;
+  z-index: 10;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1.11rem;
+  display: flex;
+  justify-content: space-around;
+  background-color: $theme_main_bg;
+
+  .episodesIcon, .playIcon, .downloadIcon {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+
+    .navIcon {
+      width: 0.64rem;
+      height: 0.64rem;
+    }
+
+    span {
+      font-size: 0.28rem;
+      line-height: 0.32rem;
+      color: $pc_nav_color;
+      padding-top: 0.04rem;
+    }
+
+    .playTxt {
+      color: #FF375F;
+    }
+  }
+}

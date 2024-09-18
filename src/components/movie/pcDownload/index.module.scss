@@ -1,0 +1,48 @@
+.downloadWrap {
+  width: 12rem;
+  margin: 0 auto;
+  padding-bottom: 1rem;
+  min-height: calc(100vh - 3rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .downloadHeader {
+    margin-bottom: 0.15rem;
+
+    .downloadTitle {
+      text-align: center;
+      font-size: 0.28rem;
+      margin: 0.6rem 0 0.28rem;
+      font-weight: 500;
+      color: $pc_home_name_color;
+      line-height: 0.4rem;
+    }
+
+    .downloadContent {
+      padding: 0 0.8rem;
+      text-align: center;
+      font-size: 0.18rem;
+      font-weight: 400 !important;
+      line-height: 0.32rem;
+      white-space: pre-wrap;
+      color: $pc_home_intro_color;
+    }
+  }
+
+  .downloadMain {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    column-gap: 0.06rem;
+
+    .downloadCover {
+      width: 6.68rem;
+      height: 6.28rem;
+    }
+  }
+}
+
+
+

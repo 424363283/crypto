@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>685C8B84-C932-4829-8857-D14699016D8B</title>
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon_eth">
+            <rect id="矩形" fill="#D8D8D8" opacity="0" x="0" y="0" width="24" height="24"></rect>
+            <g id="ETH" transform="translate(6.000000, 3.000000)" fill-rule="nonzero">
+                <polygon id="路径" fill="#60809E" points="5.27143999 12.5184215 0.0179776278 9.11865234 5.27143999 6.78555575"></polygon>
+                <polygon id="路径" fill="#97A4C6" points="5.27143999 0.0179776278 0.0179776278 9.11865234 5.27143999 6.78555575"></polygon>
+                <polygon id="路径" fill="#6782A0" points="5.27543501 0.0179776278 10.5288974 9.11865234 5.27543501 6.78555575"></polygon>
+                <polygon id="路径" fill="#446B8B" points="5.27543501 12.5184215 10.5288974 9.11865234 5.27543501 6.78555575"></polygon>
+                <polygon id="路径" fill="#95A1C1" points="5.2734375 17.9196999 0.0179776278 10.3551136 0.019975142 10.3551136 5.2734375 13.7528853 5.27743253 13.7528853"></polygon>
+                <polygon id="路径" fill="#57708A" points="5.2734375 17.9196999 10.5288974 10.3551136 10.5268999 10.3551136 5.2734375 13.7528853 5.26944247 13.7528853"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

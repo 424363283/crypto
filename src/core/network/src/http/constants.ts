@@ -1,0 +1,1 @@
+export const TO_GMT8_API = ['/api/spot/private/account/deposit_records', '/api/spot/private/account/withdraw_records', '/api/spot/private/account/convert_history', '/api/spot/private/order/history_orders', '/api/spot/private/order/history_order_deals', '/api/lite/private/order/history_orders'];

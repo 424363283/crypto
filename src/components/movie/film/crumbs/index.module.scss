@@ -1,0 +1,33 @@
+.crumbsWrap {
+  height: 0.8rem;
+  width: 100%;
+  padding: 0 0.32rem;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+
+  .crumbsItem {
+    font-size: 0.24rem;
+    display: flex;
+    align-items: center;
+    margin-right: 0.12rem;
+    font-weight: 400;
+    color: rgba(255,255,255,0.6);
+    line-height: 0.33rem;
+
+    .crumbsIcon {
+      margin-left: 0.12rem;
+      width: 0.24rem;
+      height: 0.24rem;
+    }
+  }
+
+  .crumbsItemTxt {
+    font-size: 0.24rem;
+    display: flex;
+    align-items: center;
+    margin-right: 0.1rem;
+    font-weight: 400;
+    color: rgba(255,255,255,0.6);
+  }
+}

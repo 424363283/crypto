@@ -1,0 +1,1 @@
+export { TradeThemeProvider } from './src/theme/trade'

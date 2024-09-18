@@ -1,0 +1,136 @@
+.browseWrap {
+  padding: 0.4rem 0 0.6rem;
+  background-color: $theme_main_bg;
+  min-height: calc(100vh - 3rem);
+
+  .container {
+    width: 14.4rem;
+    margin: 0 auto;
+  }
+
+  .browseHeader {
+    width: 100%;
+    min-height: 0.4rem;
+    background-color: $pc_home_swiper_bg;
+    border-radius: 0.04rem;
+    margin-bottom: 0.4rem;
+
+    .tabBox {
+      background: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: row;
+      padding: 0.12rem 0 0.12rem 0.32rem;
+      height: 0.8rem;
+      position: fixed;
+      top: 0.88rem;
+      left: 0;
+      z-index: 9;
+      width: 100%;
+
+      .tabContent {
+        :global {
+
+          .adm-tabs-tab-list {
+            //column-gap: 0.16rem !important;
+            //gap: 0.16rem !important;
+          }
+
+          .adm-tabs-tab-line {
+            display: none;
+          }
+
+          .adm-tabs-tab-wrapper {
+            padding: 0;
+            margin-right: 0.16rem;
+          }
+
+          .adm-tabs-tab {
+            padding: 0.12rem 0.24rem;
+            background: rgba(255,255,255,0.12);
+            border-radius: 0.08rem;
+            font-size: 0.24rem;
+            font-weight: 500;
+            color: #FF375F;
+            line-height: 0.33rem;
+          }
+
+          .adm-tabs-header {
+            border-bottom: none;
+          }
+
+          .adm-tabs-tab {
+            a {
+              color: $pc_home_name_color;
+            }
+          }
+
+          .adm-tabs-tab-active {
+            a {
+              color: $theme_color;
+            }
+          }
+
+          .adm-tabs-header-mask-right {
+            //background: linear-gradient(to left, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0));
+            background: linear-gradient(270deg, #000000 0%, rgba(0,0,0,0) 100%);
+          }
+          .adm-tabs-header-mask-left {
+            //background: linear-gradient(to left, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0));
+            background: linear-gradient(90deg, #000000 0%, rgba(0,0,0,0) 100%);
+          }
+        }
+      }
+    }
+
+    .tabsBox {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-row-gap: 0.1rem;
+      grid-column-gap: 0.1rem;
+      align-items: center;
+      overflow-x: auto;
+
+      .tabItem, .tabItemActive {
+        padding: 0 0.1rem;
+        min-width: 1.4rem;
+        height: 0.4rem;
+        border-radius: 0.04rem;
+        font-size: 0.16rem;
+        font-weight: 400;
+        //overflow: hidden;
+        //white-space: nowrap;
+        //text-overflow: ellipsis;
+        white-space: break-spaces;
+        color: $pc_home_name_color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255,255,255,0);
+        transition: all 0.3s;
+
+        &:hover {
+          color: $theme_color;
+        }
+      }
+
+      .tabItemActive {
+        color: $theme_color;
+        font-weight: 500;
+        background-color: $pc_home_swiper_bg_hover;
+      }
+    }
+  }
+
+  .browseContent {
+    position: relative;
+    z-index: 9;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
+

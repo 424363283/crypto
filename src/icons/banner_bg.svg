@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1576px" height="598px" viewBox="0 0 1576 598" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>25E22D5B-2CBF-42D5-ADD1-87CE57AE7683</title>
+    <defs>
+        <path d="M60,0 L1516,0 C1549.13708,1.04533964e-13 1576,26.862915 1576,60 L1576,598 L1576,598 L0,598 L0,60 C-4.05812251e-15,26.862915 26.862915,-1.0182436e-15 60,0 Z" id="path-1"></path>
+        <linearGradient x1="-1.11022302e-14%" y1="50%" x2="100%" y2="50%" id="linearGradient-3">
+            <stop stop-color="#CEEAFF" offset="0%"></stop>
+            <stop stop-color="#DBCCFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="-1.11022302e-14%" y1="50%" x2="100%" y2="50%" id="linearGradient-4">
+            <stop stop-color="#CEEAFF" offset="0%"></stop>
+            <stop stop-color="#DBCCFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="4.51475377%" y1="42.8012027%" x2="100%" y2="56.212739%" id="linearGradient-5">
+            <stop stop-color="#CEEAFF" offset="0%"></stop>
+            <stop stop-color="#DBCCFF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="主页" transform="translate(-52.000000, -52.000000)">
+            <g id="banner_bg" transform="translate(52.000000, 52.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="bg" fill="#FFFFFF" xlink:href="#path-1"></use>
+                <g id="编组-9" mask="url(#mask-2)">
+                    <g transform="translate(788.000000, 419.000000) scale(-1, 1) translate(-788.000000, -419.000000) ">
+                        <polygon id="bg备份-4" fill="url(#linearGradient-3)" opacity="0.159999996" points="2.18713936e-14 0 1576 -1.38430933e-15 1576 838 0 240"></polygon>
+                        <polygon id="bg备份-3" fill="url(#linearGradient-4)" opacity="0.100000001" points="2.18713936e-14 0 1576 -1.38430933e-15 1576 718 0 120"></polygon>
+                        <polygon id="bg备份" fill="url(#linearGradient-5)" opacity="0.100000001" points="0 0 1576 0 1576 598"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

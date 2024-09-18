@@ -1,0 +1,19 @@
+{
+  "ret": 200,
+  "data": {
+      "list": [
+          {
+              "filterList": null,
+              "type": 95,
+              "name": "体育",
+              "needRefresh": false,
+              "pullUp": false,
+              "isMore": false,
+              "pageCount": 1,
+              "list": [],
+              "bannerList": []
+          }
+      ]
+  },
+  "msg": null
+}

@@ -1,0 +1,81 @@
+.moreWrap {
+  width: 14.4rem;
+  margin: 0 auto;
+  min-height: calc(100vh - 3rem);
+
+  .backHead {
+    position: sticky;
+    width: 100%;
+    height: 0.8rem;
+    top: 0.8rem;
+    left: 0;
+    background-color: $m_nav_bg;
+    backdrop-filter: blur(10px);
+    z-index: 999;
+
+    .backBox {
+      height: 0.8rem;
+      border-bottom: $pc_detail_header_border;
+
+      .backBoxLink {
+        display: inline-block;
+        position: relative;
+        padding: 0.27rem 0.2rem 0.22rem;
+
+        .backIcon, .backIconActive {
+          width: 0.16rem;
+          height: 0.16rem;
+          transform: rotate(180deg);
+          position: absolute !important;
+          left: 0.03rem;
+          top: 0.34rem;
+          z-index: 9;
+          opacity: 1;
+          transition: opacity 0.3s;
+        }
+
+        .backIconActive {
+          opacity: 0;
+        }
+
+        span {
+          font-size: 0.18rem;
+          font-weight: 500;
+          color: $pc_home_name_color;
+          line-height: 0.29rem;
+          transition: color 0.3s;
+        }
+
+        &:hover {
+          .backIcon {
+            opacity: 0;
+          }
+
+          .backIconActive {
+            opacity: 1;
+          }
+
+          span {
+            color: $theme_color;
+          }
+        }
+      }
+    }
+  }
+
+  .moreContent {
+    padding-top: 0.5rem;
+
+    .moreBookList {
+      padding-bottom: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+}
+
+
+
+
+

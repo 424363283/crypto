@@ -1,0 +1,42 @@
+.navHead {
+  height: 0.88rem;
+  padding: 0.2rem 0.32rem;
+  margin-bottom: 0.4rem;
+
+  .navClose {
+    width: 0.48rem;
+    height: 0.48rem;
+  }
+}
+
+.navMenu {
+
+  .navItem {
+    display: block;
+    width: 100%;
+    padding: 0 0.26rem;
+    height: 1.2rem;
+
+    .navItemTxt {
+      display: block;
+      font-weight: 500;
+      color: $pc_home_name_color;
+      font-size: 0.28rem;
+      line-height: 1.2rem;
+      text-align: center;
+      border-bottom: 1px solid $nav_border_color;
+    }
+  }
+
+  .navItemActive {
+    background: $pc_nav_hover;
+
+    .navItemTxt {
+      color: $theme_color;
+      border-bottom: none;
+    }
+  }
+}
+
+
+

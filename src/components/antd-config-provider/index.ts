@@ -1,0 +1,1 @@
+export { AntdLanguageConfigProvider } from './language-config-provider'

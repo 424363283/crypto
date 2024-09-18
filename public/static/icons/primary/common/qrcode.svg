@@ -1,0 +1,19 @@
+<svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="path-1-inside-1_6232_55252" fill="white">
+<rect x="1" y="1" width="3.5" height="3.5" rx="0.25"/>
+</mask>
+<rect x="1" y="1" width="3.5" height="3.5" rx="0.25" stroke="#C5C5C4" stroke-width="1.5" mask="url(#path-1-inside-1_6232_55252)"/>
+<mask id="path-2-inside-2_6232_55252" fill="white">
+<rect x="1" y="5.5" width="3.5" height="3.5" rx="0.25"/>
+</mask>
+<rect x="1" y="5.5" width="3.5" height="3.5" rx="0.25" stroke="#C5C5C4" stroke-width="1.5" mask="url(#path-2-inside-2_6232_55252)"/>
+<mask id="path-3-inside-3_6232_55252" fill="white">
+<rect x="5.5" y="1" width="3.5" height="3.5" rx="0.25"/>
+</mask>
+<rect x="5.5" y="1" width="3.5" height="3.5" rx="0.25" stroke="#C5C5C4" stroke-width="1.5" mask="url(#path-3-inside-3_6232_55252)"/>
+<path d="M5.5 5.75C5.5 5.61193 5.61193 5.5 5.75 5.5H6.25C6.38807 5.5 6.5 5.61193 6.5 5.75V7H5.75C5.61193 7 5.5 6.88807 5.5 6.75V5.75Z" fill="#C5C5C4"/>
+<path d="M5.5 8.25C5.5 8.11193 5.61193 8 5.75 8H6.5V8.75C6.5 8.88807 6.38807 9 6.25 9H5.75C5.61193 9 5.5 8.88807 5.5 8.75V8.25Z" fill="#C5C5C4"/>
+<path d="M8 8H8.75C8.88807 8 9 8.11193 9 8.25V8.75C9 8.88807 8.88807 9 8.75 9H8.25C8.11193 9 8 8.88807 8 8.75V8Z" fill="#C5C5C4"/>
+<path d="M8 5.75C8 5.61193 8.11193 5.5 8.25 5.5H8.75C8.88807 5.5 9 5.61193 9 5.75V6.75C9 6.88807 8.88807 7 8.75 7H8V5.75Z" fill="#C5C5C4"/>
+<rect x="6.5" y="7" width="1.5" height="1" fill="#C5C5C4"/>
+</svg>

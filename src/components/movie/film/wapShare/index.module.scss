@@ -1,0 +1,34 @@
+.shareBox {
+  height: 1rem;
+  border-top: 0.08rem solid $m_episode_nav_border;
+  background-color: $theme_main_bg;
+  padding-left: 0.32rem;
+  display: flex;
+  align-items: center;
+
+  .shareLabel {
+    margin-right: 0.2rem;
+    color: $pc_home_name_color;
+    font-size: 0.32rem;
+  }
+
+  .shareIconBox {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    overflow-x: auto;
+    padding-right: 0.6rem;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .shareIcon {
+      width: 0.6rem;
+      height: 0.6rem;
+      border-radius: 50%;
+      margin-right: 0.2rem;
+      cursor: pointer;
+    }
+  }
+}

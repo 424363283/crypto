@@ -1,0 +1,179 @@
+@import "./common.scss";
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+p,
+blockquote,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+pre,
+form,
+fieldset,
+legend,
+button,
+input,
+textarea,
+th,
+td {
+  margin: 0;
+  padding: 0;
+}
+body,
+button,
+input,
+select,
+textarea {
+  font: 12px/1.5, arial, \5b8b\4f53;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 100%;
+}
+address,
+cite,
+dfn,
+em,
+var {
+  font-style: normal;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: couriernew, courier, monospace;
+}
+small {
+  font-size: 12px;
+}
+ul,
+ol {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+}
+sup {
+  vertical-align: text-top;
+}
+sub {
+  vertical-align: text-bottom;
+}
+legend {
+  color: #000;
+}
+fieldset,
+img {
+  border: 0;
+}
+button,
+input,
+select,
+textarea {
+  font-size: 100%;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+html,
+body {
+  height: 100%;
+  background: #f9f9f9;
+}
+
+body {
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+  background: #f9f9f9;
+  // overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+@include screen(1080);
+@include screen(960);
+@include screen(750);
+@include screen(640);
+@include screen(600);
+@include screen(540);
+@include screen(480);
+@include screen(414);
+@include screen(400);
+@include screen(375);
+.posR {
+  position: relative;
+}
+
+.cBlue{
+  color:#153dd2;
+}
+.cOrange{
+  color:#E64600;
+}
+.cRed{
+  color:#f24a6a;
+}
+.cGreen{
+  color:#35bf64;
+}
+/* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+@font-face {
+  font-family: 'iconfont';
+  /* Project id 4419245 */
+  src: url('//at.alicdn.com/t/c/font_4419245_cbrs0nrfwbb.woff2?t=1706198853431') format('woff2'),
+      url('//at.alicdn.com/t/c/font_4419245_cbrs0nrfwbb.woff?t=1706198853431') format('woff'),
+      url('//at.alicdn.com/t/c/font_4419245_cbrs0nrfwbb.ttf?t=1706198853431') format('truetype');
+}
+
+.fIco {
+  font-family: iconfont;
+}
+
+.my-icon-hint::before {
+  content: '\e64c';
+}
+
+.fB {
+  font-weight: bold;
+}
+
+.textH1 {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.mt20 {
+  margin-top: 10px;
+}
+
+.w {
+  padding: 0 15px;
+  box-sizing: border-box;
+}

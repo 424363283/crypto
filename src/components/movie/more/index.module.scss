@@ -1,0 +1,44 @@
+.moreWrap {
+  padding: 0 0.32rem 1.44rem;
+  position: relative;
+
+  .crumbsBox {
+    width: 100%;
+    height: 0.8rem;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    column-gap: 0.12rem;
+
+    .crumbsActiveItem {
+      padding: 0.24rem 0;
+      font-size: 0.24rem;
+      font-weight: 500;
+      color: $pc_crumbs_color;
+      line-height: 0.33rem;
+    }
+
+    .crumbsIcon {
+      width: 0.24rem;
+      height: 0.24rem;
+    }
+
+    .crumbsItem {
+      padding: 0.24rem 0;
+      font-size: 0.24rem;
+      font-weight: 400;
+      color: $pc_crumbs_color;
+      line-height: 0.33rem;
+    }
+  }
+}
+
+.noMore {
+  margin-top: 0.2rem;
+  width: 100%;
+  text-align: center;
+  color: lightgray;
+  font-size: 0.32rem;
+  font-weight: 400;
+  padding-bottom: 1.6rem;
+}

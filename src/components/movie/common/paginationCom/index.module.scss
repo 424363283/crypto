@@ -1,0 +1,58 @@
+.pageContent {
+  text-align: center;
+  font-size: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+
+  .normalLi, .activePage, .prevNoMore, .prevBtn, .nextNoMore, .nextBtn, .omission {
+    width: 0.4rem;
+    height: 0.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0.04rem;
+    box-sizing: border-box;
+    font-size: 0.14rem;
+    cursor: pointer;
+    border-radius: 0.04rem;
+    color: $pc_home_name_color;
+    background-color: $pc_home_swiper_bg;
+    transition: all 0.3s;
+
+    &:hover {
+      background-color: $pc_page_active;
+    }
+  }
+
+  .activePage {
+    color: rgba(255, 255, 255, 0.9);
+    background-color: $theme_color;
+  }
+
+  .prevNextIcon {
+    width: 0.14rem;
+    height: 0.14rem;
+  }
+
+  .prevBtn, .prevNoMore {
+    .prevNextIcon {
+      width: 0.14rem;
+      height: 0.14rem;
+      transform: rotate(180deg);
+    }
+  }
+
+  .omission {
+    border: none !important;
+    margin: 0 0.04rem;
+    background-color: $pc_home_swiper_bg !important;
+    cursor: default;
+  }
+
+  .prevNoMore, .nextNoMore {
+    cursor: not-allowed;
+    background-color: $pc_home_swiper_bg !important;
+  }
+}

@@ -1,0 +1,60 @@
+.downloadWrap {
+  padding: 0.32rem 0.32rem 1.76rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  .downloadHead {
+    font-size: 0.38rem;
+    font-weight: 500;
+    color: $pc_home_name_color;
+    line-height: 0.53rem;
+    text-align: center;
+    height: 1.7rem;
+    padding-bottom: 0.64rem;
+  }
+
+  .downloadCover {
+    width: 4.4rem;
+    height: 4.4rem;
+  }
+
+  .downloadBtn {
+    width: 4.58rem;
+    height: 0.88rem;
+    margin: 0.64rem auto;
+    border-radius: 0.08rem;
+    background: linear-gradient(90deg, #F40065 0%, #FF871F 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+
+    .downloadBtnIcon {
+      width: 0.48rem;
+      height: 0.48rem;
+      margin-right: 0.08rem;
+    }
+
+    span {
+      font-size: 0.34rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+    }
+  }
+
+  .downloadContent {
+    position: relative;
+    z-index: 9;
+    font-size: 0.28rem;
+    font-weight: 400;
+    line-height: 0.40rem;
+    margin-bottom: 0.24rem;
+    white-space: pre-wrap;
+    color: $pc_home_intro_color;
+  }
+}
+
+
+
+

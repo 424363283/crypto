@@ -1,0 +1,64 @@
+.crumbsWrap {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+
+  .crumbItem {
+    flex-shrink: 0;
+    font-size: 0.18rem;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    margin-right: 0.08rem;
+    line-height: 0.28rem;
+    transition: all 0.3s;
+
+    a {
+      color: $pc_crumbs_color;
+      max-width: 3.5rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      transition: color 0.3s;
+
+      &:hover {
+        color: $theme_color;
+        font-weight: 400;
+      }
+    }
+
+
+    .lastTxt {
+      color: $pc_crumbs_color;
+      font-weight: 400;
+      max-width: 3.5rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .crumbIcon {
+      margin-left: 0.08rem;
+      width: 0.16rem;
+      height: 0.16rem;
+    }
+
+  }
+
+}
+
+.crumbsWrapWap {
+  width: 100%;
+  overflow: hidden;
+
+  .crumbItem {
+    font-size: 0.24rem;
+    line-height: 0.29rem;
+
+    .crumbIcon {
+      margin-left: 0.08rem;
+      width: 0.24rem;
+      height: 0.24rem;
+    }
+  }
+}

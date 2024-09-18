@@ -1,0 +1,307 @@
+.episodeHeader {
+  background-color: $theme_main_bg;
+  display: flex;
+  align-items: center;
+  height: 0.80rem;
+  padding: 0 0.32rem;
+}
+
+.mEpibox {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1.11rem;
+
+  .videoContainer {
+    display: flex;
+    flex-direction: column;
+
+    .videoArea {
+      height: 6.4rem;
+      width: 100%;
+      margin-bottom: 0.16rem;
+      position: relative;
+      padding: 0 0.05rem;
+
+      .videoPlace {
+        height: 6.4rem;
+        width: 100%;
+      }
+
+      .downloads {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 19;
+        background: #000000;
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+
+        .errBg {
+          width: 100%;
+          height: auto;
+          // filter: opacity(0.5);
+          filter: brightness(0.4);
+          position: absolute;
+          left: 0;
+        }
+
+        .downInfo {
+          position: relative;
+          z-index: 9;
+          max-width: 5.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+
+          .downTip {
+            font-size: 0.32rem;
+            line-height: 0.42rem;
+            font-weight: 400;
+            color: #FFFFFF;
+            text-align: center;
+            margin-bottom: 0.32rem;
+          }
+
+          .btnDown {
+            background: linear-gradient(270deg, #FF871F 0%, #FF0045 48%, #F40065 100%);
+            border-radius: 0.44rem;
+            height: 0.88rem;
+            padding: 0 0.52rem;
+            font-weight: 500;
+            font-size: .32rem;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+
+            .btnIcon {
+              width: 0.4rem;
+              height: 0.4rem;
+              margin-right: 0.16rem;
+            }
+
+            span {
+              white-space: nowrap;
+            }
+          }
+        }
+      }
+    }
+
+    .videoIntro {
+      width: 100%;
+      padding: 0 0.32rem;
+
+      .videoTit {
+        font-size: 0.32rem;
+        color: $pc_crumbs_color;
+        line-height: 0.42rem;
+        font-weight: 500;
+        margin-bottom: 0.08rem;
+
+        span {
+          &::before {
+            content: " - ";
+          }
+        }
+      }
+
+      .videoScore {
+        display: flex;
+        align-items: center;
+
+        .epoImg {
+          width: 0.4rem;
+          height: 0.4rem;
+        }
+
+        .epoScore {
+          padding-top: 0.03rem;
+          font-size: 0.2rem;
+          font-weight: 500;
+          color: $pc_crumbs_color;
+          line-height: 0.18rem;
+        }
+      }
+
+      .videoTag {
+        margin-bottom: 0.08rem;
+        display: flex;
+        margin-top: 0.16rem;
+
+        .tagItem {
+          color: $pc_nav_color;
+          font-size: 0.22rem;
+          line-height: 0.26rem;
+          padding: 0.05rem 0.12rem;
+          margin-right: 0.12rem;
+          background: $pc_detail_bg;
+          backdrop-filter: blur(20px);
+          border-radius: 0.18rem;
+
+        }
+      }
+
+      .introText {
+        color: $pc_series_color;
+        line-height: 0.4rem;
+        font-size: 0.28rem;
+        margin-bottom: 0.24rem;
+        position: relative;
+
+        a {
+          position: absolute;
+          right: 0.32rem;
+          bottom: 0;
+          z-index: 9;
+          text-align: right;
+          width: 0.9rem;
+          font-size: 0.28rem;
+          font-weight: 400;
+          color: $pc_crumbs_color;
+          line-height: 0.34rem;
+        }
+
+        .expand, .retract {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          width: 1.2rem;
+          height: 0.4rem;
+          background: linear-gradient(270deg, $theme_main_bg 0%, transparent 100%);
+
+          .moreIcon {
+            margin-left: 0.02rem;
+            width: 0.24rem;
+            height: 0.24rem;
+          }
+        }
+
+        .retract {
+          .moreIcon {
+            margin-left: 0;
+            transform: rotate(180deg);
+          }
+        }
+      }
+
+    }
+  }
+
+  .epiList {
+    border-top: 0.08rem solid $m_episode_nav_border;
+    padding: 0.32rem 0.32rem 0.48rem 0.32rem;
+
+    .titleList {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.16rem;
+
+      .titleLeft {
+        font-size: 0.32rem;
+        line-height: 0.38rem;
+        font-weight: 500;
+        color: $pc_crumbs_color;
+      }
+
+      .titleRight {
+        color: $pc_series_color;
+        font-size: 0.28rem;
+        line-height: 0.4rem;
+        margin-left: 0.04rem;
+      }
+    }
+
+    .epilistBox {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-row-gap: 0.09rem;
+      grid-column-gap: 0.08rem;
+
+      .epiOuter {
+        background: $pc_series_bg;
+        border-radius: 0.08rem;
+        border: 0.01rem solid $pc_detail_bg;
+        width: 1.3rem;
+        height: 1rem;
+        text-align: center;
+        line-height: 1rem;
+        color: $pc_crumbs_color;
+        font-weight: bold;
+
+        .epiItem {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          display: inline-block;
+          color: $pc_crumbs_color;
+
+          .epiItemIcon {
+            position: absolute !important;
+            width: 0.24rem;
+            height: 0.24rem;
+            right: 0.08rem;
+            top: 0.08rem;
+          }
+        }
+
+        .epiItemMask {
+          color: $pc_series_color
+        }
+
+        .epiItemActive {
+          color: $theme_color
+        }
+      }
+    }
+  }
+
+  .mightLike {
+
+  }
+
+  .navBox {
+    position: fixed;
+    z-index: 10;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1.11rem;
+    display: flex;
+    justify-content: space-around;
+    background-color: #000;
+
+    .episodesIcon, .playIcon, .downloadIcon {
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      align-items: center;
+
+      .navIcon {
+        width: 0.64rem;
+        height: 0.64rem;
+      }
+
+      span {
+        font-size: 0.28rem;
+        line-height: 0.32rem;
+        color: $pc_crumbs_color;
+        padding-top: 0.04rem;
+      }
+
+      .playTxt {
+        color: #FF375F;
+      }
+    }
+  }
+}
+
+.customclass {
+  border: 1px solid red;
+}

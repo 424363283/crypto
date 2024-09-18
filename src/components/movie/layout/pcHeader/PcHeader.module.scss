@@ -1,0 +1,189 @@
+.navOccupy {
+  width: 100%;
+  height: 0.8rem;
+}
+
+.navWrap {
+  width: 100%;
+  height: 0.8rem;
+  background: $pc_nav_bg;
+  backdrop-filter: blur(10px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  border-bottom: $pc_nav_border;
+
+  .navContent {
+    width: 14.4rem;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+
+    .navLeft {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+
+      .logoTxtBox {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .logoTxt {
+          width: 1.68rem;
+          height: 0.4rem;
+          //margin-right: 0.1rem;
+        }
+
+        .logoIcon {
+          width: 0.4rem;
+          height: 0.4rem;
+          margin-right: 0.08rem;
+        }
+
+        span {
+          font-size: 0.24rem;
+          font-weight: 500;
+          color: $logo_color;
+        }
+      }
+    }
+  }
+}
+
+.navBox {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+
+  .navItem, .navItemActive {
+    height: 100%;
+    padding: 0.2rem 0.25rem;
+    display: flex;
+    align-items: center;
+    font-weight: 400;
+    font-size: 0.18rem;
+    color: $pc_nav_color;
+
+    .navItemLabel {
+      display: inline-block;
+      padding: 0.04rem 0.1rem;
+      word-break: keep-all;
+      min-width: 1rem;
+      text-align: center;
+    }
+
+    &:hover {
+      color: $theme_color;
+      //font-weight: 500;
+    }
+
+    &:hover .navItemLabel {
+      background-color: $pc_nav_hover;
+      border-radius: 0.03rem;
+    }
+  }
+
+  .navItemActive {
+    color: $theme_color;
+    font-weight: 500;
+  }
+}
+
+.navItemIcon {
+  width: 0.12rem;
+  height: 0.12rem;
+  margin-left: 0.08rem;
+  transition: all 0.3s;
+}
+
+.language {
+  margin-left: 0.25rem;
+  height: 0.8rem;
+  padding: 0.23rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  cursor: pointer;
+  position: relative;
+
+  :global {
+    .adm-popover {
+      top: 0.5rem;
+    }
+
+    .adm-popover-menu-list {
+      min-width: 1.2rem;
+    }
+
+    .adm-popover-inner {
+      padding: 0.12rem 0;
+      border-radius: 4px;
+      width: 1.3rem;
+      background: $pc_popover_bg;
+    }
+
+    .adm-popover-arrow {
+      color: $pc_popover_bg !important;
+    }
+
+    .adm-popover-menu-item {
+      padding-left: 0;
+    }
+
+    .adm-popover-menu-item-text {
+      width: 100%;
+      height: 0.36rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.14rem;
+      font-weight: 400;
+      color: $pc_home_name_color;
+      transition: all .3s;
+      padding: 0;
+
+      &:hover {
+        color: $theme_color;
+      }
+    }
+
+    .adm-popover-menu-item:active:not(.adm-popover-menu-item-disabled) {
+      background-color: transparent;
+
+      &:after {
+        display: none;
+      }
+    }
+  }
+
+  .languageBox, .languageBoxActive {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    padding: 0.04rem 0.1rem;
+    border-radius: 0.03rem;
+    min-width: 1.2rem;
+
+    .navItemTxt {
+      font-size: 0.18rem;
+      font-weight: 400;
+      color: $pc_nav_color;
+      user-select: none;
+    }
+  }
+
+  .languageBoxActive {
+    background-color: $pc_nav_hover;
+
+    .navItemTxt {
+      color: $theme_color;
+      font-weight: 500;
+    }
+  }
+}

@@ -1,0 +1,22 @@
+.titleWrap {
+  padding: 0 0.32rem 0.16rem 0.32rem;
+  .title {
+    font-size: 0.3rem;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    line-height: 0.48rem;
+    color: $pc_crumbs_color;
+  }
+
+  .moreBox {
+    padding-left: 0.2rem;
+
+    .moreIcon {
+      width: 0.32rem;
+      height: 0.32rem;
+    }
+  }
+}
+
+

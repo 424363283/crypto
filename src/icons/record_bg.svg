@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="208px" height="102px" viewBox="0 0 208 102" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>B9769951-3D39-4FED-9774-40284F953C55</title>
+    <defs>
+        <linearGradient x1="32.0000385%" y1="67.8133259%" x2="32.0000385%" y2="30.4584811%" id="linearGradient-1">
+            <stop stop-color="#FFFFFF" stop-opacity="0.2" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-8.7%" y="-17.6%" width="117.3%" height="135.3%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="6" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+    </defs>
+    <g id="页面-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.5">
+        <g id="记录" transform="translate(-240.000000, -144.000000)" fill="url(#linearGradient-1)">
+            <g id="编组-11" transform="translate(240.000000, 144.000000)">
+                <polygon id="矩形" filter="url(#filter-2)" points="8.5154106e-14 0 208 0 8.5154106e-14 102"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

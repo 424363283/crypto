@@ -1,0 +1,1 @@
+export {Lang} from './page-lang'

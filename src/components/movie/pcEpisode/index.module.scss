@@ -1,0 +1,227 @@
+.episodeWrap {
+  width: 14.4rem;
+  margin: 0 auto;
+  background-color: $theme_main_bg;
+  min-height: calc(100vh - 3rem);
+
+  .episodeHeader {
+    background-color: $theme_main_bg;
+    display: flex;
+    align-items: center;
+    height: 0.80rem;
+    padding: 0 0.12rem;
+    //position: sticky;
+    //top: 0.8rem;
+    //z-index: 1;
+  }
+
+  .videoBox {
+    display: flex;
+    margin-bottom: 0.48rem;
+
+    .leftVideo {
+      width: 11.24rem;
+
+      .videoContainer {
+        height: 7.08rem;
+        width: 11.24rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 0.08rem;
+        overflow: hidden;
+        position: relative;
+
+        :global {
+
+          .xgplayer-poster {
+            background-size: auto 100%;
+          }
+
+          .xgplayer-error {
+            display: none !important;
+          }
+        }
+
+        .downloads {
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          top: 0;
+          left: 0;
+          z-index: 9;
+          text-align: center;
+
+          .errBg {
+            width: auto;
+            height: 100%;
+          }
+
+          .downloadMark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 9;
+            height: 100%;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+          }
+        }
+
+        .downInfo {
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 9999;
+          height: 100%;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+
+          .downTip {
+            font-size: 0.2rem;
+            color: #FFFFFF;
+            margin-bottom: 0.24rem;
+            max-width: 3.5rem;
+            text-align: center;
+          }
+
+          .btnDown {
+            background: linear-gradient(270deg, #FF871F 0%, #FF0045 48%, #F40065 100%);
+            border-radius: 0.24rem;
+            height: 0.48rem;
+            line-height: 0.48rem;
+            cursor: pointer;
+            padding: 0 0.24rem;
+            font-size: 0.18rem;
+            font-weight: 500;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 2.5rem;
+
+            .btnIcon {
+              width: 0.22rem;
+              height: 0.22rem;
+              margin-right: 0.08rem;
+            }
+          }
+        }
+      }
+
+      .videoInfo {
+        width: 11.24rem;
+        padding: 0 0.12rem;
+
+        .videoTitle {
+          margin-top: 0.24rem;
+          font-size: 0.28rem;
+          line-height: 0.32rem;
+          color: $pc_home_name_color;
+          font-weight: 500;
+          margin-bottom: 0.12rem;
+
+          span {
+            &::before {
+              content: " - ";
+            }
+          }
+        }
+
+        .videoStar {
+          display: flex;
+          // border: 1px solid red;
+          align-items: center;
+          margin-bottom: 0.12rem;
+
+          .imageStar {
+            width: 0.24rem;
+            height: 0.24rem;
+          }
+
+          .videoScore {
+            font-size: 0.14rem;
+            line-height: 0.18rem;
+            color: $pc_crumbs_color;
+          }
+        }
+
+        .videoDesc {
+          color: $pc_nav_color;
+          width: 11rem;
+          display: block;
+          font-size: 0.14rem;
+          font-weight: 400;
+          line-height: 0.20rem;
+          margin-bottom: 0.2rem;
+          position: relative;
+          word-break: break-word;
+
+
+          a {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            z-index: 9;
+            text-align: right;
+            width: 0.9rem;
+            height: 0.24rem;
+            font-size: 0.14rem;
+            font-weight: 400;
+            color: $pc_crumbs_color;
+          }
+
+          .extend, .retract {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 0.9rem;
+            background: $pc_extend_bg;
+            color: $pc_crumbs_color;
+            line-height: 0.3rem;
+
+            .moreIcon {
+              margin-left: 0.02rem;
+              width: 0.16rem;
+              height: 0.16rem;
+            }
+
+          }
+
+          .retract {
+            .moreIcon {
+              margin-left: 0;
+              transform: rotate(180deg);
+            }
+          }
+        }
+
+        .tagBox {
+          font-size: 0.12rem;
+          font-weight: 400;
+          color: $pc_nav_color;
+          grid-gap: 0.08rem;
+          display: flex;
+          margin-bottom: 0.1rem;
+
+          .tagItem {
+            border-radius: 0.12rem;
+            padding: 0.04rem 0.1rem;
+            color: $pc_nav_color;
+            background-color: $pc_detail_bg;
+
+            &:hover {
+              transition: color 0.3s;
+              color: $theme_color;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .bottomBox {
+    padding: 0 0.12rem;
+  }
+}

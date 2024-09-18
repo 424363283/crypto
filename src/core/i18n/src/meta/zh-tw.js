@@ -1,0 +1,48 @@
+const metaLang = {
+    "index": {
+        "title": "永續合約圖表 | YMEX (Y-MEX)",
+        "description": "在YMEX(Y-MEX) 交易{coin}，這是一家領先的加密衍生品交易所，提供150+的永續合約配對，高達200X的槓桿。深入深度流動性，享受低手續費的好處。",
+        "keywords": "{coin} 永續, 200X 槓桿, 150+ 交易配對, YMEX, Y-MEX, 比特幣, BTC, 以太坊, ETH, 永續交易, 加密衍生品, 低手續費, 深度流動性"
+    },
+    "swap": {
+        "title": "永續合約圖表 | YMEX (Y-MEX)",
+        "description": "在YMEX(Y-MEX) 交易{coin}，這是一家領先的加密衍生品交易所，提供150+的永續合約配對，高達200X的槓桿。深入深度流動性，享受低手續費的好處。",
+        "keywords": "{coin} 永續, 200X 槓桿, 150+ 交易配對, YMEX, Y-MEX, 比特幣, BTC, 以太坊, ETH, 永續交易, 加密衍生品, 低手續費, 深度流動性"
+    },
+    "convert": {
+        "title": "即時加密貨幣轉換器 | YMEX (Y-MEX)",
+        "description": "體驗YMEX (Y-MEX) 轉換器帶來的無縫加密到加密的交換。輕鬆轉換比特幣、altcoins和其他資產。享受無麻煩的自動加密貨幣轉換。",
+        "keywords": "YMEX, Y-MEX, 加密轉換, Altcoin 交換, 即時互換, 最佳匯率, Banxa, Transak, 無手續費"
+    },
+   "tv/home": {
+        "title": "影视站点 | (Y-MEX)",
+        "description": "首页-體驗XK影视站点 (Y-MEX) 更多精彩视频。",
+        "keywords": "Y-MEX, 影视, 电视剧, 免费观看, VIP"
+    },
+    "tv/hot": {
+        "title": "影视站点 | (Y-MEX)",
+        "description": "热播-體驗XK影视站点 (Y-MEX) 更多精彩视频。",
+        "keywords": "Y-MEX, 影视, 电视剧, 免费观看, VIP"
+    },
+    "tv/find": {
+        "title": "影视站点 | (Y-MEX)",
+        "description": "发现-體驗XK影视站点 (Y-MEX) 更多精彩视频。",
+        "keywords": "Y-MEX, 影视, 电视剧, 免费观看, VIP"
+    },
+    "tv/my": {
+        "title": "影视站点 | (Y-MEX)",
+        "description": "我的-體驗XK影视站点 (Y-MEX) 更多精彩视频。",
+        "keywords": "Y-MEX, 影视, 电视剧, 免费观看, VIP"
+    },
+    "tv/watch": {
+        "title": "影视站点 | (Y-MEX)",
+        "description": "观看视频-體驗XK影视站点 (Y-MEX) 更多精彩视频。",
+        "keywords": "Y-MEX, 影视, 电视剧, 免费观看, VIP"
+    },
+    "tv/filter": {
+        "title": "影视站点 | (Y-MEX)",
+        "description": "观看视频-體驗XK影视站点 (Y-MEX) 更多精彩视频。",
+        "keywords": "Y-MEX, 影视, 电视剧, 免费观看, VIP"
+    }
+} 
+export  default metaLang;

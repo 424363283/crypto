@@ -1,0 +1,32 @@
+.imageBox, .imageScaleBox {
+  position: relative;
+  overflow: hidden;
+  display: block;
+
+  .imageItem {
+    width: 100%;
+    height: 100%;
+    transition: all 0.5s;
+    background: url("../../../public/images/dramaboxapp/defaultFilm.png") 0 0 / 100% 100% no-repeat;
+  }
+
+  .imageItemNew {
+    width: 100%;
+    height: 100%;
+    transition: all 0.5s;
+    background: url("../../../public/images/dramabox/defaultFilm.png") 0 0 / 100% 100% no-repeat;
+  }
+}
+
+.imageScaleBox {
+
+  &:hover {
+    .imageItem {
+      transform: scale(1.1);
+    }
+
+    .imageItemNew {
+      transform: scale(1.1);
+    }
+  }
+}

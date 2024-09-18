@@ -1,0 +1,63 @@
+import { blueColorMap } from '../blue/color';
+import { GlobalBlueVarStyle } from '../blue/var';
+import { colorMap } from './color';
+import { GlobalVarStyle } from './var';
+/**
+ * --color-red   - 涨颜色
+ * --color-green - 跌颜色
+ * --skin-color-active - 激活颜色，选中颜色
+ * --skin-primary-color - 主色调
+ * --skin-hover-font-color - hover字体颜色
+ */
+export const GlobalThemeStyle = ({ children }: any) => {
+  const getThemeColors = (colors: typeof colorMap | typeof blueColorMap, theme: 'dark' | 'light') => {
+    return Object.entries(colors).reduce((acc, [key, value]) => `${acc} ${key}: ${value[theme]};`, '');
+  };
+  return (
+    <>
+      {children}
+      <style jsx global>
+        {`
+          :root[theme='dark'] {
+            :global(.v2-pc-andtd-message-notice-content) {
+              background-color: #212836;
+              span:nth-child(2) {
+                color: #fff;
+              }
+            }
+            ${getThemeColors(colorMap, 'dark')}
+          }
+          :root[theme='light'] {
+            ${getThemeColors(colorMap, 'light')}
+          }
+          .main-fall {
+            color: var(--color-red);
+          }
+          .main-raise {
+            color: var(--color-green);
+          }
+          .hide-scroll-bar {
+            scrollbar-width: none;
+            &::-webkit-scrollbar {
+              display: none;
+            }
+          }
+          .error-input-border {
+            border: 1px solid #f04e3f !important;
+          }
+          .main-red {
+            color: var(--color-red) !important;
+          }
+          .main-green {
+            color: var(--color-green) !important;
+          }
+          .main-yellow {
+            color: var(--color-red) !important;
+          }
+        `}
+      </style>
+      <GlobalVarStyle />
+      <GlobalBlueVarStyle />
+    </>
+  );
+};

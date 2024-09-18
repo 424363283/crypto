@@ -1,0 +1,6 @@
+export enum SPOT_HISTORY_TAB_KEY {
+    CURRENT_COMMISSION = '0',
+    HISTORY_COMMISSION = '1',
+    HISTORY_TRANSACTION = '2',
+  }
+  

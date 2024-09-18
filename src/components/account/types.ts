@@ -1,0 +1,16 @@
+export enum TAB_TYPE {
+  EMAIL_LOGIN,
+  USERNAME_LOGIN,
+  PHONE_LOGIN,
+    EMAIL_FORGET,
+    PHONE_FORGET,
+    EMAIL_REGISTER,
+    PHONE_REGISTER,
+    FORGET_RECEIVE_CAPTCHA,
+  }
+  export enum INPUT_VERIFICATION_CODE_TYPE {
+    EMAIL = 'email',
+    PHONE = 'phone',
+    USERNAME = 'username',
+  }
+  

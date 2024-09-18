@@ -1,0 +1,10 @@
+.pcWrap {
+  width: 14.4rem;
+  margin: 0 auto;
+  min-height: calc(100vh - 2.6rem);
+}
+
+.mWrap {
+  background-color: $theme_main_bg;
+  min-height: calc(100vh - 2.08rem);
+}

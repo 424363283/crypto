@@ -1,0 +1,56 @@
+.titleWrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.28rem;
+  height: 0.57rem;
+}
+
+.titleBox {
+  display: flex;
+  flex-direction: column;
+
+  .titleText {
+    font-size: 0.24rem;
+    font-weight: 900;
+    color: $pc_home_name_color;
+    line-height: 0.29rem;
+  }
+}
+
+.moreBox {
+  justify-content: flex-end;
+  min-width: 1rem;
+  height: 100%;
+  font-size: 0.16rem;
+  color: $pc_home_name_color;
+  font-weight: 400 !important;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s;
+
+  .moreIcon {
+    width: 0.15rem;
+    height: 0.15rem;
+  }
+
+  .moreActiveIcon {
+    width: 0.15rem;
+    height: 0.15rem;
+    display: none;
+  }
+
+  &:hover {
+    color: $theme_color;
+
+    .moreIcon {
+      display: none;
+    }
+
+    .moreActiveIcon {
+      display: block;
+    }
+  }
+}
+
+

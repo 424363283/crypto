@@ -1,0 +1,122 @@
+{
+  "ret": 200,
+  "data": {
+      "versionNo": 20240111,
+      "list": [
+          {
+              "categoryId": 0,
+              "name": "首页",
+              "type": 0,
+              "index": 1,
+              "routeName": ""
+          },
+          {
+              "categoryId": 3,
+              "name": "电影",
+              "type": 1,
+              "index": 2,
+              "routeName": "movie"
+          },
+          {
+              "categoryId": 4,
+              "name": "电视剧",
+              "type": 1,
+              "index": 3,
+              "routeName": "drama"
+          },
+          {
+              "categoryId": 5,
+              "name": "综艺",
+              "type": 1,
+              "index": 4,
+              "routeName": "variety"
+          },
+          {
+              "categoryId": 6,
+              "name": "动漫",
+              "type": 1,
+              "index": 5,
+              "routeName": "anime"
+          },
+          {
+              "categoryId": 95,
+              "name": "体育",
+              "type": 1,
+              "index": 6,
+              "routeName": "sport"
+          },
+          {
+              "categoryId": 7,
+              "name": "纪录片",
+              "type": 1,
+              "index": 7,
+              "routeName": "documentary"
+          },
+          {
+              "categoryId": "chinese",
+              "name": "华人",
+              "type": 2,
+              "index": 9,
+              "routeName": "chinese",
+              "styleType": 0
+          },
+          {
+              "categoryId": "games",
+              "name": "游戏",
+              "type": 2,
+              "index": 4,
+              "routeName": "games",
+              "styleType": 0
+          },
+          {
+              "categoryId": "news",
+              "name": "新闻",
+              "type": 2,
+              "index": 1,
+              "routeName": "news",
+              "styleType": 0
+          },
+          {
+              "categoryId": "yule",
+              "name": "娱乐",
+              "type": 2,
+              "index": 2,
+              "routeName": "yule",
+              "styleType": 0
+          },
+          {
+              "categoryId": "life",
+              "name": "生活",
+              "type": 2,
+              "index": 3,
+              "routeName": "life",
+              "styleType": 0
+          },
+          {
+              "categoryId": "music",
+              "name": "音乐",
+              "type": 2,
+              "index": 5,
+              "routeName": "music",
+              "styleType": 0
+          },
+          {
+              "categoryId": "fashion",
+              "name": "时尚",
+              "type": 2,
+              "index": 6,
+              "routeName": "fashion",
+              "styleType": 0
+          },
+          {
+              "categoryId": "tech",
+              "name": "科技",
+              "type": 2,
+              "index": 8,
+              "routeName": "tech",
+              "styleType": 0
+          }
+      ]
+  },
+  "msg": null
+}

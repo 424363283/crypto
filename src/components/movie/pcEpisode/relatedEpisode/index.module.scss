@@ -1,0 +1,98 @@
+.relatedEpisode {
+  position: relative;
+  margin-bottom: 0.24rem;
+
+  .relatedTitle {
+    font-size: 0.28rem;
+    line-height: 0.32rem;
+    color: $pc_home_name_color;
+    font-weight: bold;
+    margin-bottom: 0.24rem;
+  }
+
+  .listInfo {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-column-gap: 0.1rem;
+    margin-bottom: 0.48rem;
+
+    .listItem {
+      position: relative;
+      height: 1.25rem;
+      width: 2.28rem;
+      display: flex;
+      border-radius: 0.08rem;
+      padding: 0.04rem;
+      margin-bottom: 0.08rem;
+      border: $pc_series_border;
+      background: $pc_series_bg;
+
+      .imgBox {
+        flex-shrink: 0;
+        width: 0.88rem;
+        height: 1.17rem;
+        border-radius: 0.03rem;
+      }
+
+      .imageMark {
+        position: absolute;
+        top: 0.04rem;
+        left: 0.04rem;
+        z-index: 9;
+        background-color: rgba(0,0,0,0.5);
+        width: 0.88rem;
+        height: 1.17rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .lockIcon {
+          width: 0.24rem;
+          height: 0.24rem;
+          transition: all 0.3s;
+        }
+
+        &:hover {
+          .lockIcon {
+            transform: scale(1.1);
+          }
+        }
+      }
+
+      .rightIntro {
+        display: flex;
+        flex-direction: column;
+        width: 120rem;
+        justify-content: space-between;
+        padding: 0.16rem 0.08rem;
+        .title {
+          font-size: 0.14rem;
+          line-height: 0.2rem;
+          color: $pc_crumbs_color;
+          font-weight: 500;
+          height: 0.4rem;
+          width: 1.2rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          word-wrap: break-word;
+        }
+        .pageNum {
+          color: $pc_series_color;
+          line-height: 0.16rem;
+          font-size: 0.14rem;
+        }
+      }
+
+      &:hover {
+        .imgBox {
+          .imageItem {
+            transform: scale(1.1);
+          }
+        }
+      }
+    }
+  }
+}

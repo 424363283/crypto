@@ -1,0 +1,1 @@
+yarn build && tar zcvf .next.tar.gz .next && mv .next.tar.gz build/.next.tar.gz && scp -P  19630 -r  build/.next.tar.gz  dev@aws-file-server:/usr/upload/

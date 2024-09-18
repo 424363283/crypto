@@ -1,0 +1,71 @@
+.storeBox {
+  width: 4.4rem;
+  min-height: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: $pc_footer_bg;
+  border-radius: 0.04rem;
+  padding: 0.28rem;
+
+  .storeTitle {
+    text-align: center;
+    font-size: 0.4rem;
+    font-weight: bold;
+    color: $pc_home_name_color;
+    line-height: 0.48rem;
+  }
+
+  .storeSub {
+    text-align: center;
+    font-size: 0.14rem;
+    font-weight: 400;
+    color: $pc_home_intro_color;
+    line-height: 0.2rem;
+    margin: 0.04rem 0 0.2rem;
+  }
+
+  .storeContent {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    .qrCode {
+      width: 1.68rem !important;
+      height: 1.68rem !important;
+      border: 0.01rem solid #DBDBDB;
+      padding: 0.04rem;
+      background-color: #FFFFFF;
+      border-radius: 0.02rem;
+    }
+
+    .copyTxt {
+      margin: 0.2rem 0 0.12rem 0;
+      font-size: 0.12rem;
+      font-weight: 400;
+      text-align: center;
+      color: $pc_home_intro_color;
+      line-height: 0.17rem;
+      white-space: pre-wrap;
+    }
+
+    .clickToCopy {
+      font-size: 0.12rem;
+      font-weight: 400;
+      color: $theme_color;
+      text-decoration: underline;
+      cursor: pointer;
+      line-height: 0.16rem;
+      text-align: center;
+    }
+  }
+
+}
+
+
+
+
+
+
+

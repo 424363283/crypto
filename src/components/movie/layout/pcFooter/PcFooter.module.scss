@@ -1,0 +1,73 @@
+.footerWrap {
+  position: relative;
+  background-color: $pc_footer_bg;
+  height: 2.2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .company {
+    margin-top: 0.2rem;
+    font-size: 0.16rem;
+    font-weight: 400;
+    color: $pc_footer_color2;
+  }
+
+  .footerBox {
+
+    .footerLabel {
+      font-size: 0.22rem;
+      font-weight: bold;
+      color: $pc_footer_color1;
+    }
+
+    .footerLink {
+      display: flex;
+      flex-direction: column;
+
+      .otherBtn {
+        margin-top: 0.12rem;
+        font-size: 0.16rem;
+        font-weight: 400;
+        color: $pc_footer_color2;
+        transition: all 0.3s;
+        text-decoration: underline !important;
+
+        &:hover {
+          color: $theme_color;
+          opacity: 0.9;
+        }
+      }
+    }
+
+    .fmail {
+      display: inline-block;
+      font-weight: 400;
+      color: $pc_footer_color2;
+      transition: all 0.3s;
+      font-size: 0.16rem !important;
+      margin-top: 0.12rem;
+
+      &:hover {
+        color: $theme_color;
+        opacity: 0.9;
+      }
+    }
+
+    .community {
+      display: flex;
+      flex-direction: column;
+    }
+
+  }
+
+  .footerContent {
+    min-width: 14.4rem;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+  }
+}
