@@ -62,7 +62,11 @@ const styles = css`
         margin-left: 30px;
       }
       :global(.active-tab) {
-        border-bottom: 2px solid var(--skin-color-active);
+        background: #782CE8;
+        color: #FFFFFF;
+        padding: 3px 6px;
+        border-radius: 11.5px;
+        /* border-bottom: 2px solid var(--skin-color-active); */
       }
     }
     .tabs-content {

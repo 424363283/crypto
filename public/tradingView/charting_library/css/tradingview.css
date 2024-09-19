@@ -1,0 +1,16 @@
+html.theme-dark #drawing-toolbar {
+  background-color: var(--fill-primary-bg, #121212);;
+}
+
+html.theme-dark .chart-page {
+  /* background-color: #000000; */
+  background-color:var(--fill-primary-bg, #121212);
+}
+
+html.theme-light #drawing-toolbar {
+  background-color: #FFFFFF;
+}
+
+html.theme-light .chart-page {
+  background-color: #FFFFFF;
+}

@@ -1,0 +1,245 @@
+/* 默认是黑色主题 */
+
+.theme-dark:root {
+  /* --tv-color-platform-background: #d1c4e9;
+  --tv-color-pane-background: rgb(251, 223, 244);
+  --tv-color-pane-background-secondary: rgb(249, 185, 233);
+  --tv-color-toolbar-button-background-hover: rgb(244, 143, 177);
+  --tv-color-toolbar-button-background-secondary-hover: red;
+  --tv-color-toolbar-button-background-expanded: rgb(244, 143, 177);
+  --tv-color-toolbar-button-text: rgb(136, 24, 79);
+  --tv-color-toolbar-button-text-hover: rgb(74, 20, 140);
+  --tv-color-toolbar-button-text-active: red;
+  --tv-color-toolbar-button-text-active-hover: red;
+  --tv-color-item-active-text: rgb(6, 6, 255);
+  --tv-color-toolbar-toggle-button-background-active: red;
+  --tv-color-toolbar-toggle-button-background-active-hover: magenta; */
+  --fill-primary-bg: #121212;
+  --tv-color-platform-background: var(--fill-primary-bg, #121212);
+  --tv-color-pane-background: var(--fill-primary-bg, #121212);
+  --tv-color-toolbar-button-text: #adb1b8;
+  --tv-color-toolbar-button-background-hover: transparent;
+  --tv-color-toolbar-button-text-hover: #fff;
+  --tv-color-toolbar-button-text-active: #f7a600;
+  --tv-color-toolbar-button-text-active-hover: #ffc35c;
+  --tv-color-toolbar-toggle-button-background-active: #fff;
+  --tv-color-toolbar-toggle-button-background-active-hover: #fff;
+}
+
+html {
+  --fill-primary-bg : #121212;
+}
+
+html.theme-dark [class^='intervalTitle-'] {
+  color: var(--tv-color-toolbar-button-text-active, #F08834)
+}
+
+html.theme-dark #drawing-toolbar {
+  background-color: var(--fill-primary-bg, #121212)!important;
+}
+
+/*
+  工具栏区域色值
+  按钮hover背景色 --tv-color-toolbar-button-background-hover
+  按钮文字颜色 --tv-color-toolbar-button-text
+  按钮文字hover色 --tv-color-toolbar-button-text
+*/
+html.theme-dark .chart-page .chart-container-border {
+    background-color:  var(--fill-primary-bg, #121212);
+}
+
+html.theme-dark [class^='container-'] [class^='background-'] {
+  stroke: #404347 !important;
+  fill: #101014 !important;
+}
+
+html.theme-light [class^='container-'] [class^='arrow-'] {
+  stroke: #fff !important;
+}
+
+html.theme-light [class^='container-']:hover [class^='background-'] {
+  stroke: #fff !important;
+  fill: #fff !important;
+}
+
+html.theme-light [class^='container-']:hover [class^='arrow-'] {
+  stroke: #101014 !important;
+}
+
+html.theme-dark .bb-tv-wd [class^='dialog-'] {
+  background-color: #16171a;
+}
+html.theme-dark .bb-tv-wd [class^='main-'] {
+  color: #fff;
+  margin: 0 0 0 32px;
+}
+html.theme-dark .bb-tv-wd .bb-tv-wd__title {
+  background: #202124;
+  color: #71757a;
+}
+
+/* 以下是tooltip */
+.theme-dark:root .common-tooltip__body-356XFpBj {
+  color: #adb1b8;
+  background-color: #16171a;
+  box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.24);
+}
+
+.theme-light:root .common-tooltip__body-356XFpBj {
+  color: #81858c;
+  background-color: #fff;
+  box-shadow: 4px 4px 20px rgba(18, 18, 20, 0.1);
+}
+
+/* 解决白天黑夜模式下k线tooltip的三角形颜色问题 */
+.theme-dark:root .common-tooltip__ear-holder-yIJjpvgu::after {
+  border-color: #16171a;
+}
+
+.theme-light:root .common-tooltip__ear-holder-yIJjpvgu::after {
+  border-color: #fff;
+}
+
+/* 左侧工具栏提示框三角形 */
+.theme-light:root .common-tooltip__ear-holder--after-BnAcuW1N::after,
+.theme-light:root .common-tooltip__ear-holder--before-oXq5sFXr::after,
+.theme-dark:root .common-tooltip__ear-holder--after-BnAcuW1N::after,
+.theme-dark:root .common-tooltip__ear-holder--before-oXq5sFXr::after {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+}
+
+/* 底部工具栏提示框三角形 */
+.theme-dark:root  .common-tooltip__ear-holder--above-1D8FkNkw::after,
+.theme-dark:root  .common-tooltip__ear-holder--below-1rmzWejA::after,
+.theme-light:root  .common-tooltip__ear-holder--above-1D8FkNkw::after,
+.theme-light:root  .common-tooltip__ear-holder--below-1rmzWejA::after {
+  border-right-color: transparent;
+  border-left-color: transparent;
+}
+
+.paneSeparator-ZR_yhubO {
+  opacity: 0.2;
+  background-color: #717171 !important;
+}
+.theme-light .paneSeparator-ZR_yhubO {
+  opacity: 0.2;
+  background-color: #9FA1A6 !important;
+}
+
+/* 以上是tooltip */
+/* demoAccount mask */
+.theme-dark.k-line-demo-account:root table.chart-markup-table tr:first-of-type td.pane canvas:nth-child(2)  {
+  background-image: url(//s1.bycsi.com/bybit/deadpool/01b70553f30311edbc4bc60635b792dd.svg);
+}
+.theme-light.k-line-demo-account:root table.chart-markup-table tr:first-of-type td.pane canvas:nth-child(2)  {
+  background-image: url(//s1.bycsi.com/bybit/deadpool/f27ce9f10b6f11eebdc72a133fcf998d.svg);
+}
+.k-line-demo-account:root table.chart-markup-table tr:first-of-type td.pane canvas:nth-child(2) {
+  background-repeat: no-repeat;
+  background-position: left 30px bottom 50px;
+}
+
+.dateRangeWrapper-yS_7EK1i {
+  display: none;
+}
+
+/* dialog样式 */
+.bb-tv-wd [class^='main-'] {
+  margin: 0 0 0 32px;
+}
+
+.bb-tv-wd [class^='content-'] {
+  height: 270px;
+  overflow: auto;
+  padding-top: 0;
+}
+.bb-tv-wd [class^='title-'] {
+  margin-top: 12px;
+}
+.bb-tv-wd [class^='footer-'] {
+  display: none;
+}
+.bb-tv-wd .bb-tv-wd__table {
+  font-weight: 400;
+  font-size: 12px;
+}
+.bb-tv-wd .bb-tv-wd__title {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+}
+.bb-tv-wd__table td {
+  padding: 8px 12px;
+  line-height: 18px;
+}
+
+[class^='tabs-'] {
+  display: none;
+}
+
+[class^='separator-'] {
+  display: none;
+}
+
+[class^='button-'] {
+  display: none;
+}
+
+.chart-page {
+  background-color: var(--fill-primary-bg) !important;
+}
+
+[class^='drawingToolbar-'] {
+  overflow: visible;
+}
+
+[class^='container-'] [class^='mirror-'] {
+   cursor: pointer;
+}
+
+.button-rgQ5VWWu{
+  padding-left: 0;
+}
+
+.series-G1_Pfvwd .titleWrapper-G1_Pfvwd .title-G1_Pfvwd{
+  font-size: 13px;
+}
+/* Left toolbar 图标大小 */
+.layout__area--left [class^='icon-'] svg {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.layout__area--left [class^='buttonIcon-'] {
+  font-size: 16px !important;
+}
+
+.legend-G1_Pfvwd:nth-of-type(1) {
+  position: absolute;
+  bottom: 50px;
+}
+
+html.theme-dark .chart-controls-bar {
+  background-color: var(--fill-primary-bg) !important ;
+}
+
+/* 设置 tv 图背景色 */
+html.theme-dark .chart-page .chart-container-border {
+  background-color: var(--fill-primary-bg);
+}
+
+
+html.theme-dark ::selection {
+  background: var(--fill-primary-bg) !important;
+}
+
+html.theme-dark .loading-indicator{
+  background: var(--fill-primary-bg) !important;
+
+}
+
+html.theme-dark .drawingToolbar-BfVZxb4b{
+  background: var(--fill-primary-bg) !important;
+}

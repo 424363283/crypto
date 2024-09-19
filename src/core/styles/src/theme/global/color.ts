@@ -7,7 +7,7 @@ export const colorMap = {
   },
   // 次要主题背景色
   '--theme-secondary-bg-color': {
-    light: '#f4f4ec',
+    light: '#ffffff',
     dark: '#202023',
   },
   '--theme-secondary-bg-color-1': {
@@ -348,4 +348,19 @@ export const colorMap = {
     dark: '#737473',
     light: '#D9D9D9',
   },
+//new 主题
+
+  // home
+  '--newtheme-home-bg-color': {
+    light: '#ffffff',
+    dark: '#ffffff',
+  },
+  '--newtheme-home-btn-color': {
+    light: '#ffffff',
+    dark: '#ffffff',
+  },
+
+
+
+
 };

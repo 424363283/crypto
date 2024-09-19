@@ -10,9 +10,8 @@ const injectRule = rule => {
     return;
   }
 };
-
-const NEXT_PUBLIC_API_URL = 'https://ymex-swap.83uvgv.com';
-const NEXT_PUBLIC_BASE_URL = 'https://ymex-swap.83uvgv.com';
+const NEXT_PUBLIC_API_URL = 'https://dev-swap.83uvgv.com';
+const NEXT_PUBLIC_BASE_URL = 'https://dev-swap.83uvgv.com';
 const nextConfig = {
 
   

@@ -6,7 +6,13 @@ import Main from './index/main';
 const Home = (): JSX.Element => {
 
   return (
-    <UniversalLayout bgColor='var(--theme-secondary-bg-color)'>
+    <UniversalLayout 
+    // bgColor='var(--theme-secondary-bg-color)'
+    bgColor='var(--newtheme-home-bg-color)'
+
+    
+   
+    >
       <Main />
     </UniversalLayout>
   );

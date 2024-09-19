@@ -43,7 +43,8 @@ export const EntryPoint = () => {
   }, []);
   const HEADER_TITLE_MAP: { [key: string]: string } = {
     [ROUTE_PATH_KEY.LOGIN]: LANG('登陆 YMEX'),
-    [ROUTE_PATH_KEY.REGISTER]: LANG('加入 YMEX'),
+    // [ROUTE_PATH_KEY.REGISTER]: LANG('加入 YMEX'),
+    [ROUTE_PATH_KEY.REGISTER]: '账号注册',
     [ROUTE_PATH_KEY.INVITE]: LANG('加入 YMEX'),
     [ROUTE_PATH_KEY.FORGET]: LANG('忘记密码'),
     [ROUTE_PATH_KEY.THIRD_REGISTER]: LANG('创建账号'),
@@ -140,6 +141,7 @@ const styles = css`
     border-radius: 12px;
     padding: 30px;
     .title {
+      text-align: center;
       
       color: var(--theme-font-color-1);
       font-size: 24px;

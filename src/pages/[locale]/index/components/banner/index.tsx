@@ -76,7 +76,9 @@ export default memo(HeaderBanner);
 const styles = css`
   .container {
     width: 100%;
-    background: var(--theme-secondary-bg-color);
+    /* background: var(--theme-secondary-bg-color); */
+    background: var(--newtheme-home-bg-color);
+
     overflow: hidden;
     p {
       padding: 0;

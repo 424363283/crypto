@@ -184,6 +184,9 @@ export default function MarketsComponent() {
 }
 
 const style = css`
+  .t-pc{
+      width: 100%;
+    }
   .table {
     .row {
       list-style: none;
@@ -298,6 +301,7 @@ const style = css`
         }
       }
     }
+  
 
     @media ${MediaInfo.tablet} {
       :global(li) {

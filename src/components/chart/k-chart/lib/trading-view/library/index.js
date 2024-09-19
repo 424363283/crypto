@@ -115,11 +115,14 @@ export class Chart {
       autosize: true,
       container: config.id,
       datafeed: this.datafeed,
-      library_path: '/static/charting_library/',
+      // library_path: '/static/charting_library/',
+      library_path: '/tradingView/charting_library/charting_library',
+
       locale: config.language || 'en',
       theme: config.theme,
       // custom_css_url: '/static/styles/charting_library.css?v=' + Date.now(),
-      custom_css_url: `/static/styles/${config.skin}/charting_library.css?v=${Date.now()}`,
+      // custom_css_url: `/static/styles/${config.skin}/charting_library.css?v=${Date.now()}`,
+      custom_css_url: `/tradingView/charting_library/styles/${config.theme}.css?v=4&hash=${new Date().getTime()}`,
       custom_font_family: 'DINPro,Microsoft YaHei',
       timezone: timezone(),
       loading_screen: {

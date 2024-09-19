@@ -1,6 +1,6 @@
 import CommonIcon from '@/components/common-icon';
 import { Desktop } from '@/components/responsive';
-// import { Zendesk } from '@/components/zendesk';
+import { Zendesk } from '@/components/zendesk';
 // import { getCommonNoticesApi } from '@/core/api';
 import { useResponsive, useResponsiveClsx } from '@/core/hooks/src/use-responsive';
 import { LANG } from '@/core/i18n/src/page-lang';
@@ -39,7 +39,7 @@ export default function Announcement() {
     5: LANG('Futures News'),
   };
   return (
-    <div className={clsx('container', setResponsiveClsx('c-pc', 'c-pad', 'c-phone'))}>
+    <div className={clsx('announcementContainer', setResponsiveClsx('c-pc', 'c-pad', 'c-phone'))}>
       <CommonIcon name='common-horn-0' className='icon' size={14} enableSkin />
       <div className='swiper_list'>
         <Swiper
@@ -104,16 +104,17 @@ export default function Announcement() {
           </Swiper>
         </Desktop>
       </div>
-      {/* <Zendesk href='/categories/5708257368591' className='more'>
+      <Zendesk href='/categories/5708257368591' className='more'>
         {LANG('更多')}&nbsp;&gt;
-      </Zendesk> */}
+      </Zendesk>
       <style jsx>{styles}</style>
     </div>
   );
 }
 
 const styles = css`
-  .container {
+  .announcementContainer {
+    width: 1200px;
     max-width: var(--const-max-page-width);
     margin: 0 auto;
     padding: 20px 0;

@@ -1,0 +1,130 @@
+.chart-page {
+  --fill-primary-bg: #fff;
+  --tv-color-platform-background: #fff;
+  --tv-color-pane-background: #fff;
+  --tv-color-toolbar-button-background-hover: transparent;
+  --tv-color-toolbar-button-text: #81858c;
+  --tv-color-toolbar-button-text-hover: #121214;
+  --tv-color-toolbar-button-text-active: #f7a600;
+  --tv-color-toolbar-button-text-active-hover: #ffc35c;
+  --tv-color-toolbar-toggle-button-background-active: #81858c;
+  --tv-color-toolbar-toggle-button-background-active-hover: #81858c;
+  background-color: var(--fill-primary-bg) !important;
+}
+
+html.theme-light [class^='intervalTitle-'] {
+  color: var(--tv-color-toolbar-button-text-active, #F08834)
+}
+
+html.theme-light #drawing-toolbar {
+  background-color: var(--fill-primary-bg)!important;
+}
+
+html.theme-light .chart-controls-bar {
+  background-color: var(--fill-primary-bg) !important;
+}
+
+html.theme-light .chart-page {
+  background-color: var(--fill-primary-bg) !important;
+}
+
+html.theme-light [class^='group-'] {
+  background-color: var(--fill-primary-bg) !important;
+}
+
+html.theme-light .bb-tv-wd [class^='dialog-'] {
+  background-color: var(--fill-primary-bg);
+}
+html.theme-light .bb-tv-wd [class^='main-'] {
+  color: #121214;
+  margin: 0 0 0 32px;
+}
+html.theme-light .bb-tv-wd .bb-tv-wd__title {
+  background: #f3f5f7;
+  color: #adb1b8;
+}
+
+html.theme-light [class^='container-'] [class^='background-'] {
+  stroke: #E9EDF2 !important;
+  fill: #fff !important;
+}
+
+html.theme-light [class^='container-'] [class^='arrow-'] {
+  stroke: #121214 !important;
+}
+
+html.theme-light [class^='container-']:hover [class^='background-'] {
+  stroke: #121214 !important;
+  fill: #121214 !important;
+}
+
+html.theme-light [class^='container-']:hover [class^='arrow-'] {
+  stroke: var(--fill-primary-bg) !important;
+}
+
+html.theme-light .loading-indicator{
+  background: var(--fill-primary-bg) !important;
+}
+
+html.theme-light ::selection {
+  background: var(--fill-primary-bg) !important;
+}
+
+.chart-page .chart-container {
+  border-color: transparent !important;
+  background-color: transparent !important;
+}
+
+.layout__area--left [class^='icon-'] svg {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.layout__area--left [class^='buttonIcon-'] {
+  font-size: 16px !important;
+}
+
+.layout__area--left [class^='scrollTop-'],
+.layout__area--left [class^='scrollBot-'] {
+  background-color: rgba(128, 128, 128, 0.2) !important;
+}
+
+.control-bar__btn {
+  opacity: 0.6;
+}
+
+.pane-legend-line.apply-overflow-tooltip.main {
+  display: none;
+}
+
+.apply-common-tooltip {
+  cursor: pointer;
+}
+.apply-common-tooltip:hover a {
+  color: var(--primary-color);
+}
+.apply-common-tooltip.selected a {
+  color: var(--primary-color);
+}
+
+._tv-dialog {
+  background: var(--fill-primary-bg);
+}
+
+._tv-button.ok {
+  background: var(--primary-color);
+}
+.button-263WXsg-.isTransparent-sRmateFl.isActive-2mI1-NUL .icon-1Y-3MM9F {
+  color: #0fc37c !important;
+}
+.item-1kRv1Pf2.isActive-1kRv1Pf2 {
+  background-color: #24272a !important;
+}
+.chart-controls-bar {
+  background-color: var(--fill-primary-bg) !important;
+  border-color: var(--fill-primary-bg) !important;
+}
+.dateRangeWrapper-yS_7EK1i .sliderRow-Tv1W7hM5,
+.dateRangeWrapper-yS_7EK1i .separator-3bp1jCsV {
+  display: none;
+}

@@ -43,7 +43,7 @@ const styles = css`
     padding: 0 16px;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid var(--skin-border-color-1);
+    /* border-bottom: 1px solid var(--skin-border-color-1); */
     width: 100%;
     overflow-x: auto;
     li {
@@ -58,8 +58,12 @@ const styles = css`
         margin-right: 48px;
       }
       &.active {
-        color: var(--theme-font-color-1);
-        border-bottom: 2px solid var(--skin-color-active);
+        /* color: var(--theme-font-color-1); */
+        color: var(--newtheme-home-btn-color);
+        border-radius: 4px;
+        background: var(--skin-primary-color);;
+        padding: 4px 24px;
+        /* border-bottom: 2px solid var(--skin-color-active); */
       }
     }
   }
