@@ -18,7 +18,7 @@ import { KeepAliveContextProvider } from '@/components/keepalive';
 
 const RootApp = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
-    console.info('%c%s', 'font-weight: bold;color: #5f55a5', `Release info: ${process.env.NEXT_PUBLIC_BUILD_TIME}`);
+    console.info('%c%s', 'font-weight: bold;color: #5f55a5', `Release info : ${process.env.NEXT_PUBLIC_BUILD_TIME}`);
   }, []);
 
   return (
