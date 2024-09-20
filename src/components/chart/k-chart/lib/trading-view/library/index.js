@@ -2,7 +2,12 @@ import { Loading } from '@/components/loading/index';
 import { kChartEmitter } from '@/core/events';
 import { RootColor } from '@/core/styles/src/theme/global/root';
 import { kHeaderStore } from '../../../components/k-header/store';
-import { widget } from './charting_library.esm.js';
+// import { widget } from './charting_library.esm.js';
+import { widget } from '../../../../../../../public/tradingView/charting_library/charting_library.esm.js';
+
+
+// import TradingView from '../../../../../public/tradingView/charting_library/charting_library';
+
 import { timezone } from './time-zome.js';
 import Datafeeds from './udf.js';
 
@@ -115,11 +120,17 @@ export class Chart {
       autosize: true,
       container: config.id,
       datafeed: this.datafeed,
-      library_path: '/static/charting_library/',
-      locale: config.language || 'en',
+      library_path: '/tradingView/charting_library/',
+      // library_path: '/static/charting_library/',
+      // locale: config?.language || 'en',
+      // locale: config?.language || 'en',
+      locale:  'en',
+
+
       theme: config.theme,
       // custom_css_url: '/static/styles/charting_library.css?v=' + Date.now(),
-      custom_css_url: `/static/styles/${config.skin}/charting_library.css?v=${Date.now()}`,
+      // custom_css_url: `/static/styles/${config.skin}/charting_library.css?v=${Date.now()}`,
+      cssUrl: `/tradingView/charting_library/styles/${config.skin}.css?v=4&hash=${new Date().getTime()}`,
       custom_font_family: 'DINPro,Microsoft YaHei',
       timezone: timezone(),
       loading_screen: {
