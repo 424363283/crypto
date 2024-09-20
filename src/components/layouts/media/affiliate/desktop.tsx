@@ -47,7 +47,7 @@ export const AffiliateDesktopLayout = ({ children }: any) => {
       setManager((draft) => {
         draft.name = 'STEVEN';
         draft.email = 'steven@y-mex.com';
-        draft.telegram = 'https://t.me/stevenbyd';
+        draft.telegram = 'https://t.me/steven';
       });
     } else {
       setManager((draft) => {
