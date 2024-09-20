@@ -7,8 +7,8 @@
   "scripts": {
     "lint": "tsc --noEmit && eslint --cache '**/*.{ts,tsx}'",
     "test": "jest",
-    "dev": " NEXT_PUBLIC_BUILD_TIME=$(date +%s) next dev",
-    "build": "NODE_ENV=production NEXT_PUBLIC_BUILD_TIME=$(date +%s) next build",
+    "dev": " NEXT_PUBLIC_BUILD_TIME=$(date \"+%Y_%m_%d %H:%H:%S\") next dev",
+    "build": "NODE_ENV=production NEXT_PUBLIC_BUILD_TIME=$(date \"+%Y_%m_%d %H:%H:%S\") next build",
     "nextbuild": "NODE_ENV=production next build && pm2 startOrRestart ecosystem.config.js",
     "export": "next export",
     "analyze": "ANALYZE=true next build",

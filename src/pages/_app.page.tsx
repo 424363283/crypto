@@ -12,12 +12,14 @@ import { AppProps } from 'next/app';
 import  ErrorBoundary  from '@/components/error/error-boundary';
 import '@/core/styles/global.scss';
 import {useRouter} from 'next/router';
+import { useEffect } from 'react';
 
 import { KeepAliveContextProvider } from '@/components/keepalive';
 
 const RootApp = ({ Component, pageProps }: AppProps) => {
-
-  const router = useRouter();
+  useEffect(() => {
+    console.info('%c%s', 'font-weight: bold;color: #5f55a5', `Release info: ${process.env.NEXT_PUBLIC_BUILD_TIME}`);
+  }, []);
 
   return (
     <AppProvider auth={pageProps.auth}>
