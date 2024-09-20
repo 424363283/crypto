@@ -21,32 +21,32 @@ const metaLang = {
     },
     "tv/home": {
         "title": "影视站点 | (Y-MEX)",
-        "description": "首页-體驗XK影视站点 (Y-MEX) 更多精彩视频。",
+        "description": "首页-體驗Ymex站点 (Y-MEX) 更多精彩视频。",
         "keywords": "Y-MEX, 影视, 电视剧, 免费观看, VIP"
     },
     "tv/hot": {
         "title": "影视站点 | (Y-MEX)",
-        "description": "热播-體驗XK影视站点 (Y-MEX) 更多精彩视频。",
+        "description": "热播-體驗Ymex站点 (Y-MEX) 更多精彩视频。",
         "keywords": "Y-MEX, 影视, 电视剧, 免费观看, VIP"
     },
     "tv/find": {
         "title": "影视站点 | (Y-MEX)",
-        "description": "发现-體驗XK影视站点 (Y-MEX) 更多精彩视频。",
+        "description": "发现-體驗Ymex站点 (Y-MEX) 更多精彩视频。",
         "keywords": "Y-MEX, 影视, 电视剧, 免费观看, VIP"
     },
     "tv/my": {
         "title": "影视站点 | (Y-MEX)",
-        "description": "我的-體驗XK影视站点 (Y-MEX) 更多精彩视频。",
+        "description": "我的-體驗Ymex站点 (Y-MEX) 更多精彩视频。",
         "keywords": "Y-MEX, 影视, 电视剧, 免费观看, VIP"
     },
     "tv/watch": {
         "title": "影视站点 | (Y-MEX)",
-        "description": "观看视频-體驗XK影视站点 (Y-MEX) 更多精彩视频。",
+        "description": "观看视频-體驗Ymex站点 (Y-MEX) 更多精彩视频。",
         "keywords": "Y-MEX, 影视, 电视剧, 免费观看, VIP"
     },
     "tv/filter": {
         "title": "影视站点 | (Y-MEX)",
-        "description": "观看视频-體驗XK影视站点 (Y-MEX) 更多精彩视频。",
+        "description": "观看视频-體驗Ymex站点 (Y-MEX) 更多精彩视频。",
         "keywords": "Y-MEX, 影视, 电视剧, 免费观看, VIP"
     }
 } 
