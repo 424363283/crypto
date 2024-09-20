@@ -212,7 +212,7 @@ var appLang = {
     "转账成功": "Successful",
     "转账": "Send",
     "收款方资讯": "Recipient",
-    "请输入收款方在XXKK星空的用户昵称": "Recipient's YMEX username",
+    "请输入收款方在Ymex星空的用户昵称": "Recipient's YMEX username",
     "转账数量（免手续费）": "Transfer Amount （0 Fee）",
     "请输入转账数量": "Enter Amount",
     "请输入资金密码": "Enter fund password",
