@@ -1,6 +1,6 @@
 import { kChartEmitter } from '@/core/events';
 import { GroupItem } from '@/core/shared';
-import { LOCAL_KEY, localStorageApi } from '@/core/store';
+import { LOCAL_KEY, localStorageApi, THEME } from '@/core/store';
 import { RootColor } from '@/core/styles/src/theme/global/root';
 import { Chart, KLineData } from './index.d';
 import { init } from './index.esm';
@@ -8,7 +8,7 @@ import { init } from './index.esm';
 import { ResolutionType } from '../../components/k-header/resolution/config';
 import { k_config } from '../config';
 import { options } from './options';
-import { KOptions, MyKlineData } from './types';
+import { CommissionOrderItemStyle, KOptions, MyKlineData, PositionOrderItemStyle } from './types';
 
 class Kline {
   private instance: Chart | null = null;
@@ -48,7 +48,7 @@ class Kline {
     this.setPriceVolumePrecision();
     this.instance?.loadMore((timestamp) => {
       if (timestamp) {
-        this.getKlineHistory(this.id, timestamp, false);
+        this.getKlineHistory(this.id, timestamp, false, () => {}, this.resolution);
       }
     });
 
@@ -77,6 +77,10 @@ class Kline {
     }
   }
 
+  public scrollToTimestamp(timestamp: number, animationDuration: number) {
+    return this.instance?.scrollToTimestamp(timestamp, animationDuration);
+  }
+
   private formatDataToKLineData(data: any): KLineData[] {
     const result = [];
     const { h, o, l, v, t, c } = data;
@@ -98,7 +102,8 @@ class Kline {
     timestamp: number,
     isFirst: boolean,
     onReady?: () => void,
-    resolution?: ResolutionType
+    resolution?: ResolutionType,
+    fromTimestamp?: number
   ): Promise<void> {
     if (!this.instance) return;
     this.id = id;
@@ -107,9 +112,9 @@ class Kline {
 
     const path = `/api/tv/tradingView/${/S.*-SUSD(T)?$/i.test(id) ? 'testnethistory' : 'history'}`;
     const __resolution = this.resolution.resolution;
-    const from = to - this._getResolutionTime(__resolution) * 500;
+    const from = fromTimestamp ?? to - this._getResolutionTime(__resolution) * 500;
     const url = path + `?symbol=${id}&resolution=${this._getResolutionValue(__resolution) + ''}&from=${from}&to=${to}`;
-    if (isFirst) {
+    if (isFirst && resolution) {
       this.instance.setStyles({
         candle: {
           // @ts-ignore
@@ -127,7 +132,7 @@ class Kline {
         this.instance?.applyNewData(result);
       } else {
         if (data.t.length > 1) {
-          this.instance?.applyMoreData(result, data.t.length > 1);
+          this.instance?.applyMoreData(result.slice(0, -1), data.t.length > 1);
         }
       }
       if (isFirst) {
@@ -497,6 +502,46 @@ class Kline {
     });
   }
 
+  // 设置持仓单
+  public setPositionOrder(orderList: PositionOrderItemStyle[]) {
+    this.instance?.setStyles({
+      positionOrder: {
+        orderList,
+        onReverseClick: (id: string) => {
+          kChartEmitter.emit(kChartEmitter.K_CHART_POSITION_REVERSE_CLICK, id);
+        },
+        onStopClick: (id: string) => {
+          kChartEmitter.emit(kChartEmitter.K_CHART_POSITION_STOP_CLICK, id);
+        },
+      },
+    });
+  }
+
+  // 设置委托单
+  public setCommissionOrder(orderList: CommissionOrderItemStyle[]) {
+    this.instance?.setStyles({
+      commissionOrder: {
+        orderList,
+        onCloseClick: (id: string) => {
+          kChartEmitter.emit(kChartEmitter.K_CHART_COMMISSION_CLOSE_CLICK, id);
+        },
+        onMoveStart: () => {
+          kChartEmitter.emit(kChartEmitter.K_CHART_COMMISSION_MOVE_START);
+        },
+        onMoveEnd: (id: string, price: number) => {
+          kChartEmitter.emit(kChartEmitter.K_CHART_COMMISSION_MOVE_END, id, price);
+        },
+      },
+    });
+  }
+
+  // 设置主题
+  public setTheme(theme: THEME) {
+    this.instance?.setStyles({
+      theme,
+    });
+  }
+
   // setShowCountdown
   public setShowCountdown(show: boolean) {
     this.instance?.setStyles({
@@ -508,6 +553,24 @@ class Kline {
             },
           },
         },
+      },
+    });
+  }
+
+  // 设置持仓单是否显示
+  public setPositionOrderVisible(visible: boolean) {
+    this.instance?.setStyles({
+      positionOrder: {
+        show: visible,
+      },
+    });
+  }
+
+  // 设置委托单是否显示
+  public setCommissionOrderVisible(visible: boolean) {
+    this.instance?.setStyles({
+      commissionOrder: {
+        show: visible,
       },
     });
   }

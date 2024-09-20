@@ -17,4 +17,29 @@ export const kChartEmitter = new (class extends EventEmitter {
   public K_CHART_SWITCH_COLOR = 'K_CHART_SWITCH_COLOR'; // 切换涨跌颜色
 
   public K_CHART_CLICK_CROSSHAIR_PRICE = 'K_CHART_CLICK_CROSSHAIR_PRICE'; // 获取图标坐标当前价格
+
+
+
+  
+  public K_CHART_POSITION_UPDATE = 'K_CHART_POSITION_UPDATE'; // 持仓数据更新
+
+  public K_CHART_POSITION_REVERSE_CLICK = 'K_CHART_POSITION_REVERSE_CLICK'; // 持仓反向开仓按钮点击
+
+  public K_CHART_POSITION_STOP_CLICK = 'K_CHART_POSITION_STOP_CLICK'; // 持仓止盈止损按钮点击
+
+  public K_CHART_JUMP_DATE = 'K_CHART_JUMP_DATE'; // 跳到指定日期
+
+  public K_CHART_SET_THEME = 'K_CHART_SET_THEME'; // 设置主题
+
+  public K_CHART_POSITION_VISIBLE = 'K_CHART_POSITION_VISIBLE'; // 设置持仓单是否显示
+
+  public K_CHART_COMMISSION_VISIBLE = 'K_CHART_COMMISSION_VISIBLE'; // 设置委托单是否显示
+
+  public K_CHART_COMMISSION_UPDATE = 'K_CHART_COMMISSION_UPDATE'; // 委托数据更新
+
+  public K_CHART_COMMISSION_CLOSE_CLICK = 'K_CHART_COMMISSION_CLOSE_CLICK'; // 委托关闭按钮点击
+
+  public K_CHART_COMMISSION_MOVE_START = 'K_CHART_COMMISSION_MOVE_START'; // 委托拖动开始
+
+  public K_CHART_COMMISSION_MOVE_END = 'K_CHART_COMMISSION_MOVE_END'; // 委托拖动结束
 })();

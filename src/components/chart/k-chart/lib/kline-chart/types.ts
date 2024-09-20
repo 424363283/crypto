@@ -7,3 +7,11 @@ export interface KOptions {
 export interface MyKlineData{
 
 }
+
+
+export interface CommissionOrderItemStyle{
+
+}
+export interface PositionOrderItemStyle{
+
+}

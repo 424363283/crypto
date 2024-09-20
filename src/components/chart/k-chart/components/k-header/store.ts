@@ -23,6 +23,7 @@ export const kHeaderStore = (qty: number) => {
         newPrice: true,
         orderBookPrice: true,
         revesePreview: false,
+        priceType: 0,
       },
       kType: KTYPE.K_LINE_CHART,
       // 选中的分辨率
@@ -231,4 +232,24 @@ export const kHeaderStore = (qty: number) => {
     }
   );
   return qtys[qty];
+};
+const globalKlineSetting = resso(
+  { priceType: 0 },
+  {
+    nameSpace: 'k-header-global-setting-v1',
+    nossr: true,
+  }
+);
+export const setKLinePriceType = (qty: number, value: number) => {
+  const store = kHeaderStore(qty);
+  store.setting = {
+    ...store.setting,
+    priceType: value,
+  };
+  globalKlineSetting.priceType = value;
+};
+export const getKLinePriceType = (qty: number) => {
+  // const { setting } = kHeaderStore(qty);
+  // return setting.priceType || 0;
+  return globalKlineSetting.priceType;
 };

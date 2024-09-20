@@ -5,17 +5,17 @@ import css from 'styled-jsx/css';
 
 export const TgDetail = ({ children }: { children: any }) => {
   const tg = [
-    ['Filipino', 'https://t.me/XKFilipino'],
-    ['English', 'https://t.me/XKEnglish/1'],
-    ['India', 'https://t.me/XKIndia'],
+    ['Filipino', 'https://t.me/YmexFilipino'],
+    ['English', 'https://t.me/YmexEnglish/1'],
+    ['India', 'https://t.me/YmexIndia'],
     ['Japanese', 'https://t.me/BityardJapanese'],
-    // ['Korea', 'https://t.me/XKKorea'],
+    // ['Korea', 'https://t.me/YmexKorea'],
   ];
   const tg2 = [
-    ['Indonesia', 'https://t.me/XKIndonesia'],
-    ['Việt Nam', 'https://t.me/XKVietNamChat'],
-    ['Russia', 'https://t.me/XKRussia'],
-    ['Turkiye', 'https://t.me/XK_Turkiye'],
+    ['Indonesia', 'https://t.me/YmexIndonesia'],
+    ['Việt Nam', 'https://t.me/YmexVietNamChat'],
+    ['Russia', 'https://t.me/YmexRussia'],
+    ['Turkiye', 'https://t.me/Ymex_Turkiye'],
   ];
 
   return (

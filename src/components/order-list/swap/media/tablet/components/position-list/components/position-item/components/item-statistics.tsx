@@ -93,13 +93,13 @@ export const ItemStatistics = ({
             </div>
             <div>{closePrice}</div>
           </div>
-          <div className='item' onClick={onTrack}>
+          {/* <div className='item' onClick={onTrack}>
             <div className='track-item'>
               {LANG('追踪出场')}
               <CommonIcon name='common-small-edit-0' width={12} height={13} enableSkin className='icon' />
             </div>
             <div>{Number(callbackValue) > 0 ? callbackValue : LANG('暂未设置')}</div>
-          </div>
+          </div> */}
         </div>
       </div>
       <style jsx>{`

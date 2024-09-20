@@ -52,7 +52,7 @@ export const DeepChart = ({ id, theme, qty }: any) => {
       <style jsx>{`
         #${'depth-chart' + qty} {
           background-color: var(--theme-trade-bg-color-2);
-          background-image: url('/static/images/trade/kline/logo.svg');
+          background-image: url('/static/images/trade/kline/logo.webp');
           background-repeat: no-repeat;
           background-position: center;
           background-size: 250px;

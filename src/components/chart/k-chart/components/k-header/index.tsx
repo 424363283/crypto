@@ -1,17 +1,21 @@
 import { ScrollXWrap } from '@/components/scroll-x-wrap';
 import { Svg } from '@/components/svg';
 import { kChartEmitter } from '@/core/events';
+import { Account } from '@/core/shared';
 import { isSwap } from '@/core/utils';
 import { useEffect } from 'react';
 import { ChartType } from './chart-type';
+import { KlineHeaderActionOrders } from './order';
 import { Resolution } from './resolution/resolution';
 import { Right } from './right';
 import { KlineHeaderActionSetting } from './setting';
 import { KTYPE, kHeaderStore } from './store';
 
-export const KHeader = ({ id, qty }: { id: string; qty: number }) => {
+export const KHeader = ({ id, qty, klineGroupMode }: { id: string; qty: number; klineGroupMode?: boolean }) => {
   const store = kHeaderStore(qty);
   const { kType, resolution } = store;
+  const isLogin = Account.isLogin;
+
   useEffect(() => {
     return () => {
       kChartEmitter.removeAllListeners();
@@ -46,8 +50,10 @@ export const KHeader = ({ id, qty }: { id: string; qty: number }) => {
               </div>
             )}
             {[KTYPE.TRADING_VIEW].includes(kType) && resolution.key != 'Line' && <ChartType qty={qty} />}
-            {/* {[KTYPE.K_LINE_CHART].includes(kType) && <KlineHeaderActionOrders store={store} />} */}
-            {[KTYPE.K_LINE_CHART].includes(kType) && <KlineHeaderActionSetting store={store} isSwap={isSwap(id)} />}
+            {[KTYPE.K_LINE_CHART].includes(kType) && isLogin && isSwap(id) && <KlineHeaderActionOrders store={store} />}
+            {!klineGroupMode && [KTYPE.K_LINE_CHART].includes(kType) && (
+              <KlineHeaderActionSetting qty={qty} store={store} isSwap={isSwap(id)} />
+            )}
             {[KTYPE.TRADING_VIEW, KTYPE.K_LINE_CHART].includes(kType) && (
               <div
                 className='action'
@@ -67,6 +73,11 @@ export const KHeader = ({ id, qty }: { id: string; qty: number }) => {
                 />
               </div>
             )}
+            {/* {!klineGroupMode && [KTYPE.K_LINE_CHART].includes(kType) && isSwap(id) && (
+              <div className='setting-bar2'>
+                <PriceType store={store} qty={qty} />
+              </div>
+            )} */}
             {[KTYPE.TRADING_VIEW].includes(kType) && (
               <div
                 className='action'
@@ -126,6 +137,20 @@ export const KHeader = ({ id, qty }: { id: string; qty: number }) => {
                   align-items: center;
                 }
               }
+            }
+          }
+          .setting-bar2 {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            &::before {
+              content: '';
+              display: block;
+              height: 14px;
+              width: 1px;
+              background-color: var(--theme-deep-border-color-1);
+              margin-right: 11px;
+              margin-left: 8px;
             }
           }
         `}

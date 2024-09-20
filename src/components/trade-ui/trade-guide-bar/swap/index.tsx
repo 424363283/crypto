@@ -23,7 +23,7 @@ const Index = ({}: {}) => {
   };
   const [step, setStep] = useState(0);
   const stepBgColor = `${isDark ? '#363a3a' : '#f2f4f6'}`;
-  let stepActiveBgColor = isDark ? '#413e25' : '#f2e9ff';
+  let stepActiveBgColor = isDark ? '#413e25' : '#fbf2d3';
   if (skin === 'blue') {
     stepActiveBgColor = 'var(--skin-primary-bg-color-opacity-3)';
   }

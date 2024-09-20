@@ -403,6 +403,17 @@ export const SWAP = {
       }
       return Number(result) < 0 ? 0 : result;
     },
+     /**
+     * 预冻结平仓手续费 vol*s/avgCostPrice*r
+     * @param {number} avgCostPrice
+     * @param {number} currentPosition
+     * @param {number} contractFactor
+     * @param {number} r
+     * @returns {number}
+     */
+     calculateFreezeClosingFee(avgCostPrice: number, currentPosition: number, contractFactor: number, r: number) {
+      return Number(currentPosition).mul(contractFactor).div(avgCostPrice).mul(r);
+    },
   },
   /********************
    ********************
@@ -636,10 +647,10 @@ export const SWAP = {
         // sell:(VOL*S*HP*MMR+VOL*S*LP*R) / [AB1+PM+VOL*S*(HP-FP)]]
         const clac = Number(ACCB).add(PM).add(income);
         
-        //console.log('marginRate>>> ACCB',ACCB,' PM',PM,' income',income,' clac=',clac); 
+        console.log('marginRate>>> ACCB',ACCB,' PM',PM,' income',income,' clac=',clac); 
 
         positionMarginRate = clac ? FCR(positionMargin) / FCR(clac) : 0;
-        //console.log('marginRate>>> positionMargin / clac',positionMargin,' / ',clac,' = ',positionMarginRate); 
+        console.log('marginRate>>> positionMargin / clac',positionMargin,' / ',clac,' = ',positionMarginRate); 
         // console.log('marginRate>>> positionMarginRate',positionMarginRate); 
 
       } else {
@@ -666,10 +677,14 @@ export const SWAP = {
       if (isBuy) {
         // 买 Vol*S*(FP -HP)
         income = Number(volume).mul(contractFactor).mul(flagPrice.sub(avgCostPrice));
+        console.log('盈亏计算 买 volume * contractFactor * (flagPrice - avgCostPrice)',volume,contractFactor,flagPrice,avgCostPrice,'=',income);
       } else {
         // 卖 Vol*S*(HP - FP)
         income = Number(volume).mul(contractFactor).mul(Number(avgCostPrice).sub(flagPrice));
+        console.log('盈亏计算 卖 volume * contractFactor * (avgCostPrice - flagPrice) ',volume,contractFactor,avgCostPrice,flagPrice,'=',income);
+
       }
+     
       return Number(income);
     },
     /**
@@ -878,15 +893,16 @@ export const SWAP = {
       }
       return Number(result) < 0 ? 0 : result;
     },
-    positionIncomeToPrice(contractFactor: number, volume: number, price: number, income: number, buy: boolean) {
-      let result;
-      const S = contractFactor;
-      if (buy) {
-        result = income.div(volume).add(price);
-      } else {
-        result = price.sub(income.div(volume));
-      }
-      return Number(result) < 0 ? 0 : result;
+    /**
+     * 预冻结平仓手续费 vol*s/avgCostPrice*r
+     * @param {number} avgCostPrice
+     * @param {number} currentPosition
+     * @param {number} contractFactor
+     * @param {number} r
+     * @returns {number}
+     */
+    calculateFreezeClosingFee(avgCostPrice: number, currentPosition: number, contractFactor: number, r: number) {
+      return Number(currentPosition).mul(contractFactor).div(avgCostPrice).mul(r);
     },
   },
   /**

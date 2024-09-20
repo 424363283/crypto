@@ -11,27 +11,33 @@ import {
   usePositionActions,
   useSortData,
 } from '@/components/order-list/swap/stores/position-list';
-import { Svg } from '@/components/svg';
 import { InfoHover } from '@/components/trade-ui/common/info-hover';
 import Tooltip from '@/components/trade-ui/common/tooltip';
 import {
   LiquidationModal,
-  ModifyMarginModal,
   ReverseConfirmModal,
   StopProfitStopLossModal,
   TrackModal,
 } from '@/components/trade-ui/order-list/swap/components/modal';
+
+// import { ModifyMarginModal } from '@/components/modal';
+
+import { kHeaderStore } from '@/components/chart/k-chart/components/k-header/store';
 import { SubButton } from '@/components/trade-ui/trade-view/components/button';
 import { WalletAvatar } from '@/components/wallet-avatar';
 import { getZendeskLink } from '@/components/zendesk';
+import { kChartEmitter } from '@/core/events';
+import { FORMULAS } from '@/core/formulas';
 import { useResponsive } from '@/core/hooks';
 import { LANG, TrLink, TradeLink } from '@/core/i18n';
 import { SUBSCRIBE_TYPES, useWs } from '@/core/network';
 import { Swap } from '@/core/shared';
+import { getCryptoData } from '@/core/shared/src/swap/modules/calculate/utils';
 import { useAppContext } from '@/core/store';
-import { formatNumber2Ceil } from '@/core/utils';
+import { formatNumber2Ceil, getUrlQueryParams } from '@/core/utils';
+import { frameRun } from '@/core/utils/src/frame-run';
 import { isSwapDemo } from '@/core/utils/src/is';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-use';
 import { LeverItem } from '../lever-item';
 import IncomeTips from './components/income-tips';
@@ -44,8 +50,12 @@ export const PositionList = ({
   assetsPage?: boolean;
   onWalletClick?: (walletData?: any) => any;
 }) => {
+  let qty = Number(getUrlQueryParams('qty'));
+  const { setting } = kHeaderStore(qty);
   const { isUsdtType, quoteId } = Swap.Trade.base;
+  const walletId = Swap.Info.getWalletId(isUsdtType);
 
+  const { onReverse } = usePositionActions();
   const {
     liquidationModalProps,
     onVisibleLiquidationModal,
@@ -75,7 +85,7 @@ export const PositionList = ({
   }
 
   const [_modalItem, setModalItem] = useState<any>(undefined);
-  const modalItem = _modalItem && list.find((v: any) => v.positionId === _modalItem.positionId);
+  const modalItem = _modalItem && list.find((v: any) => Swap.Order.positionIsSame(v, _modalItem));
   const onShare = (item: any) => {
     setModalItem(item);
   };
@@ -104,11 +114,97 @@ export const PositionList = ({
       false
     ).toFixed(isUsdtType ? 2 : Number(modalItem.basePrecision));
   }
+
+  useEffect(() => {
+      
+    const onK_CHART_POSITION_REVERSE_CLICK = (id: string) => {
+      const item = list?.find((e: any) => e.positionId === id);
+      console.log('持仓反向开仓点击了id:', id);
+      if (item) {
+        onReverse(item, ({ onConfirm }) => onVisibleReverseModal(item, onConfirm));
+      }
+    };
+
+    const onK_CHART_POSITION_STOP_CLICK = (id: string) => {
+      const item = list?.find((e: any) => e.positionId === id);
+      console.log('持仓止盈止损点击了id:', id);
+
+      if (item) {
+        onVisiblesSpslModal(item);
+      }
+    };
+
+    frameRun(() => {
+      kChartEmitter.removeAllListeners(kChartEmitter.K_CHART_POSITION_REVERSE_CLICK);
+      kChartEmitter.removeAllListeners(kChartEmitter.K_CHART_POSITION_STOP_CLICK);
+
+      kChartEmitter.on(kChartEmitter.K_CHART_POSITION_REVERSE_CLICK, (id: string) => {
+        onK_CHART_POSITION_REVERSE_CLICK(id);
+      });
+      kChartEmitter.on(kChartEmitter.K_CHART_POSITION_STOP_CLICK, (id: string) => {
+        onK_CHART_POSITION_STOP_CLICK(id);
+      });
+    });
+
+    return () => {
+      kChartEmitter.off(kChartEmitter.K_CHART_POSITION_REVERSE_CLICK, onK_CHART_POSITION_REVERSE_CLICK);
+      kChartEmitter.off(kChartEmitter.K_CHART_POSITION_STOP_CLICK, onK_CHART_POSITION_STOP_CLICK);
+    };
+  }, [list]);
+
+  useEffect(() => {
+    const action = () => {
+      frameRun(() => {
+        if (setting.positionOrder) {
+          const handleRate = (item: any) => {
+            const income = Swap.Calculate.income({
+              usdt: isUsdtType,
+              code: item.symbol?.toUpperCase(),
+              isBuy: item.side === '1',
+              avgCostPrice: Number(item.avgCostPrice),
+              volume: Number(item.currentPosition),
+            });
+            const rate = Swap.Calculate.positionROE({
+              usdt: isUsdtType,
+              data: item,
+              income: income,
+            });
+            return `${rate.toFixed(2)}%`;
+          };
+
+          kChartEmitter.emit(
+            kChartEmitter.K_CHART_POSITION_UPDATE,
+            list
+              .filter((e: { subWallet: string }) => e?.subWallet === walletId)
+              .map((item: any) => {
+                return {
+                  id: item.positionId,
+                  side: item.side,
+                  sideText: item.side === '1' ? LANG('多') : LANG('空'),
+                  openPrice: formatNumber2Ceil(
+                    item.avgCostPrice,
+                    Number(item.baseShowPrecision),
+                    item.side === '1'
+                  ).toFixed(Number(item.baseShowPrecision)),
+                  volume: item.currentPositionFormat,
+                  profitRate: handleRate(item),
+                };
+              })
+          );
+          kChartEmitter.emit(kChartEmitter.K_CHART_POSITION_VISIBLE, true);
+        } else {
+          kChartEmitter.emit(kChartEmitter.K_CHART_POSITION_VISIBLE, false);
+        }
+      });
+    };
+    action();
+  }, [setting, list, walletId]);
+
   return (
     <>
       <div className={clsx('position-list')}>
         <RecordList
-          renderRowKey={(v) => v.positionId}
+          renderRowKey={(v) => `${v.side} ${v.subWallet} ${v.symbol}}`}
           data={list}
           loading={Swap.Order.getPositionLoading(isUsdtType)}
           columns={useColumns({
@@ -129,26 +225,27 @@ export const PositionList = ({
         {liquidationModalProps.visible && (
           <LiquidationModal {...liquidationModalProps} onClose={onCloseLiquidationModal} />
         )}
-        {marginModalProps.visible && (
+        {/* {marginModalProps.visible && (
           <ModifyMarginModal
             {...marginModalProps}
-            data={list.find((v: any) => v.positionId === (marginModalProps.data as any)?.positionId) || { symbol: '' }}
+            data={list.find((v: any) => Swap.Order.positionIsSame(v, marginModalProps.data as any)) || { symbol: '' }}
             onClose={onCloseMarginModal}
           />
-        )}
+        )} */}
         {trackModalProps.visible && (
           <TrackModal
             {...trackModalProps}
-            data={list.find((v: any) => v.positionId === (trackModalProps.data as any)?.positionId) || { symbol: '' }}
+            data={list.find((v: any) => Swap.Order.positionIsSame(v, trackModalProps.data as any)) || { symbol: '' }}
             onClose={onCloseTrackModal}
           />
         )}
         {reverseModalProps.visible && <ReverseConfirmModal {...reverseModalProps} onClose={onCloseReverseModal} />}
-        {spslModalProps.visible && (
+        {
+        spslModalProps.visible && (
           <StopProfitStopLossModal
             {...spslModalProps}
             data={
-              list.find((v: any) => v.positionId === (spslModalProps.data as any)?.positionId) || spslModalProps.data
+              list.find((v: any) => Swap.Order.positionIsSame(v, spslModalProps.data as any)) || spslModalProps.data
             }
             onClose={onCloseSpslModal}
           />
@@ -163,20 +260,22 @@ export const PositionList = ({
               usdt: isUsdtType,
               data: modalItem,
               income: Number(modalItemIncome),
+              // isAutoMargin: true,
             }).toFixed(2)}
             income={modalItemIncome}
             isBuy={modalItem.side === '1'}
             items={[
-              [
-                LANG('开仓均价'),
-                formatNumber2Ceil(
-                  modalItem.avgCostPrice,
-                  Number(modalItem.baseShowPrecision),
-                  modalItem.side === '1'
-                ).toFixed(Number(modalItem.baseShowPrecision)),
-              ],
-              [LANG('当前价格'), Swap.Socket.getFlagPrice(modalItem.symbol, { withHooks: false })],
+              // 开仓价格
+              formatNumber2Ceil(
+                modalItem.avgCostPrice,
+                Number(modalItem.baseShowPrecision),
+                modalItem.side === '1'
+              ).toFixed(Number(modalItem.baseShowPrecision)),
+              // 标记价格
+              Swap.Socket.getFlagPrice(modalItem.symbol, { withHooks: false }),
             ]}
+            data={modalItem}
+            leverage={modalItem.leverage}
           />
           // <ShareModal
           //   isBuy={modalItem.side === '1'}
@@ -349,7 +448,9 @@ const useColumns = ({
                       }}
                     >
                       <LeverItem lever={leverage}></LeverItem>
-                      {!assetsPage && <Svg className={clsx('icon')} src='/static/images/swap/small_edit.svg' />}
+                      {!assetsPage && (
+                        <CommonIcon name='common-small-edit-0' size={12} className={clsx('icon')} enableSkin />
+                      )}
                     </div>
                   ) : (
                     <div style={{ width: 26 }} />
@@ -531,9 +632,21 @@ const useColumns = ({
       render: (margin: any, item: any) => {
         const { settleCoin } = Swap.Info.getCryptoData(item.symbol, { withHooks: false });
         const canAdd = item.marginType === 2;
+
+        const handleMargin = isUsdtType
+          ? FORMULAS.SWAP.usdt.calculateFreezeClosingFee
+          : FORMULAS.SWAP.coin.calculateFreezeClosingFee;
+        const firstMargin = handleMargin(
+          item['avgCostPrice'],
+          item['currentPosition'],
+          getCryptoData(item.symbol.toUpperCase()).contractFactor,
+          item['r']
+        );
+        const marginData = Number(item.margin).sub(Number(firstMargin));
         const myMargin = isUsdtType
-          ? formatNumber2Ceil(margin, 2).toFixed(2)
-          : Number(margin).toFixed(Number(item.basePrecision));
+          ? formatNumber2Ceil(marginData, 2).toFixed(2)
+          : Number(marginData).toFixed(Number(item.basePrecision));
+
         return (
           <div
             className={clsx('margin-wrapper', 'pointer')}
@@ -584,6 +697,7 @@ const useColumns = ({
           usdt: isUsdtType,
           data: item,
           income: Number(myIncome),
+          isAutoMargin: true,
         });
         return (
           <div className={clsx('multi-line-item')}>
@@ -615,7 +729,7 @@ const useColumns = ({
   columns.push(
     {
       visible: !assetsPage,
-      title: LANG('平仓'),
+      title: <span style={{ color: 'var(--spec-font-color-2)' }}>{LANG('平仓')}</span>,
       dataIndex: 'liquidation',
       // width: 150,
       render: (v: any, item: any) => {
@@ -631,34 +745,33 @@ const useColumns = ({
         );
       },
     },
-    {
-      visible: !assetsPage,
-      title: LANG('追踪出场'),
-      dataIndex: 'callbackValue',
-      // width: isZh || isEn ? 100 : null,
-      render: (v: any, item: any) => {
-        if (Number(item.callbackRate) > 0) {
-          const swap = Swap.Info.getCryptoData(item.symbol, { withHooks: false });
-          // 按比例（即根据当前最新价格*对应比例=回撤价格）
-          v = Swap.Utils.minChangeFormat(swap.minChangePrice, item.cbVal);
-          if (Number(item.cbVal) < swap.minChangePrice) {
-            v = swap.minChangePrice;
-          }
-        }
-        return (
-          <div className={clsx('follow-action')}>
-            <div className={clsx('text')}>
-              <div>
-                {' '}
-                {!Number(item.activationPrice) ? (v ? Number(v).toFixed(Number(item.baseShowPrecision)) : '--') : '--'}
-              </div>
-            </div>
-            <div style={{ width: 10 }} />
-            <EditButton onClick={() => onVisibleTrackModal(item)} />
-          </div>
-        );
-      },
-    },
+    // {
+    //   visible: !assetsPage,
+    //   title: <span style={{ color: 'var(--spec-font-color-2)' }}>{LANG('追踪出场')}</span>,
+    //   dataIndex: 'callbackValue',
+    //   // width: isZh || isEn ? 100 : null,
+    //   render: (v: any, item: any) => {
+    //     if (Number(item.callbackRate) > 0) {
+    //       const swap = Swap.Info.getCryptoData(item.symbol, { withHooks: false });
+    //       // 按比例（即根据当前最新价格*对应比例=回撤价格）
+    //       v = Swap.Utils.minChangeFormat(swap.minChangePrice, item.cbVal);
+    //       if (Number(item.cbVal) < swap.minChangePrice) {
+    //         v = swap.minChangePrice;
+    //       }
+    //     }
+    //     return (
+    //       <div className={clsx('follow-action')}>
+    //         <div className={clsx('text')}>
+    //           <div>
+    //             {!Number(item.activationPrice) ? (v ? Number(v).toFixed(Number(item.baseShowPrecision)) : '--') : '--'}
+    //           </div>
+    //         </div>
+    //         <div style={{ width: 10 }} />
+    //         <EditButton onClick={() => onVisibleTrackModal(item)} />
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       visible: !assetsPage,
       title: () => (
@@ -696,7 +809,7 @@ const useColumns = ({
       },
     },
     {
-      title: LANG('操作'),
+      title: <span style={{ color: 'var(--spec-font-color-2)' }}>{LANG('操作')}</span>,
       dataIndex: 'actions',
       align: 'right',
       render: (v: any, item: any) => (

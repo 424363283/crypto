@@ -8,6 +8,7 @@ import { useOrderData } from '../../hooks/use-order-data';
 import { usePageListener } from '../../hooks/use-page-listener';
 import { PositionHistory } from './components/position-history';
 import { clsx, styles } from './styled';
+import { kChartEmitter } from '@/core/events';
 
 const PositionList = dynamic(() => import('./components/position-list'), { ssr: false, loading: () => <div /> });
 const PendingList = dynamic(() => import('./components/pending-list'), { ssr: false, loading: () => <div /> });
@@ -21,6 +22,7 @@ export const Index = () => {
   const { positions, pending } = useOrderData({ hide });
   const isLogin = Account.isLogin;
   const tabs = useListTabs({ positions, pending });
+
   usePageListener();
 
   return (

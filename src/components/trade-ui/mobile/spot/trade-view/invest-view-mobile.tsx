@@ -1,13 +1,13 @@
 import AffiliateSelect from '@/components/affiliate/select';
 import CoinLogo from '@/components/coin-logo';
 import CommonIcon from '@/components/common-icon';
-import { CreateInvestConfirmModal } from '@/components/create-invest-confirm-modal';
+// import { CreateInvestConfirmModal } from '@/components/create-invest-confirm-modal';
 import { BottomModal, MobileModal } from '@/components/mobile-modal';
 import { ACCOUNT_TYPE, TransferModal } from '@/components/modal';
-import { ResultModal } from '@/components/spot-strategy-result-modal';
+// import { ResultModal } from '@/components/spot-strategy-result-modal';
 import { BaseModalStyle } from '@/components/trade-ui/trade-view/spot-strategy/components/base-modal-style';
 import Input from '@/components/trade-ui/trade-view/spot-strategy/components/input';
-import { INVEST_TIME, INVEST_TIME_MAP } from '@/components/trade-ui/trade-view/spot-strategy/components/invest-view';
+// import { INVEST_TIME, INVEST_TIME_MAP } from '@/components/trade-ui/trade-view/spot-strategy/components/invest-view';
 import { useCurrencyScale, useRouter } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { LIST_TYPE, LoadingType, Spot } from '@/core/shared';
@@ -246,7 +246,7 @@ export const InvestViewMobile = () => {
                   draft.period = val as number;
                 })
               }
-              list={INVEST_TIME}
+              list={[]}
             />
             <div className='label'>
               {LANG('每期总额')}
@@ -454,21 +454,21 @@ export const InvestViewMobile = () => {
           inMobile
         />
       )}
-      <ResultModal
+      {/* <ResultModal
         type='invest'
         open={resultModalVisible}
         onClose={() => setResultModalVisible(false)}
         isSuccess={success}
         onOk={success ? () => {} : () => setResultModalVisible(false)}
-      />
-      <CreateInvestConfirmModal
+      /> */}
+      {/* <CreateInvestConfirmModal
         open={confirmModalVisible}
         onClose={() => setConfirmModalVisible(false)}
         onOk={onConfirmClicked}
-        periodLabel={INVEST_TIME_MAP[editModalData.period]}
+        periodLabel={[][editModalData.period]}
         symbols={editModalData.symbols}
         oneCycleTotal={oneCycleTotal}
-      />
+      /> */}
       <MobileModal
         visible={mobileStrategyModalVisible}
         onClose={() => Strategy.changeMobileStrategyModalVisible(false)}

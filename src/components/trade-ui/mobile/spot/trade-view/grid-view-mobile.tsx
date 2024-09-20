@@ -1,7 +1,7 @@
 import CommonIcon from '@/components/common-icon';
 import { BottomModal, MobileModal } from '@/components/mobile-modal';
 import { ACCOUNT_TYPE, TransferModal } from '@/components/modal';
-import { ResultModal } from '@/components/spot-strategy-result-modal';
+// import { ResultModal } from '@/components/spot-strategy-result-modal';
 import Slider from '@/components/trade-ui/trade-view/components/slider';
 import { NS } from '@/components/trade-ui/trade-view/spot';
 import { BaseModalStyle } from '@/components/trade-ui/trade-view/spot-strategy/components/base-modal-style';
@@ -495,13 +495,13 @@ export const GridViewMobile = () => {
           inMobile
         />
       )}
-      <ResultModal
+      {/* <ResultModal
         open={strategyState.confirmModalVisible}
         onClose={onConfirmModalClose}
         isSuccess={strategyState.success}
         onOk={strategyState.success ? () => {} : onConfirmModalClose}
         type='grid'
-      />
+      /> */}
       <MobileModal
         visible={mobileStrategyModalVisible}
         onClose={() => Strategy.changeMobileStrategyModalVisible(false)}

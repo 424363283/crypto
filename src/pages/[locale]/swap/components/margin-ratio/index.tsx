@@ -215,11 +215,15 @@ const getDatas = ({ isUsdtType, positionData, balanceData, position, twoWayMode,
     balance = Number(position.margin) + data.income;
   }
   if (isUsdtType) {
-    // 「全仓」保证金余额=可用余额+仓位占用保证金+单仓位未实现盈亏=AB+PM+UNPNL
+    // 「全仓」保证金余额=可用余额+仓位占用保证金+单仓位未实现盈亏=AB+PM+UNPNL (因为之前positionsAccb已减去盈亏，此处不再减)
     // 「逐仓」保证金余额=仓位占用保证金+单仓位未实现盈亏=PM+UNPNL
-    balance = Number(calculateData.wallets[walletId]?.positionsAccb) + Number(position.margin || 0) + data.income;
+    balance = Number(calculateData.wallets[walletId]?.positionsAccb) + Number(position.margin || 0) ;
     if (!isCross) {
       balance = Number(position.margin) + data.income;
+      console.log('逐仓 保证金余额= ',' position.margin + ',Number(position.margin || 0),' income =',data.income , ' balance = ',balance)
+    }else{
+      console.log('全仓 保证金余额= ','positionsAccb +',Number(calculateData.wallets[walletId]?.positionsAccb),' position.margin + ',Number(position.margin || 0),' income = ',data.income , ' balance = ',balance)
+
     }
   }
   if (!crypto) return { balance: 0, rate: 0, margin: 0 };

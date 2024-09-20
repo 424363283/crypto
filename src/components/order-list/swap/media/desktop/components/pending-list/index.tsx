@@ -3,17 +3,22 @@ import { ColSelectTitle } from '@/components/order-list/components/record-list/c
 import { LANG, TradeLink } from '@/core/i18n';
 import { MarketsMap, Swap } from '@/core/shared';
 
+import { kHeaderStore } from '@/components/chart/k-chart/components/k-header/store';
 import CommonIcon from '@/components/common-icon';
 import { Loading } from '@/components/loading';
 import { useListByStore } from '@/components/order-list/swap/store';
 import { PendingDetailModal } from '@/components/trade-ui/order-list/swap/components/modal';
+import { kChartEmitter } from '@/core/events';
+import { SwapOrderEmitter } from '@/core/events/src/swap-order';
 import { SUBSCRIBE_TYPES, useWs } from '@/core/network';
 import { SWAP_PENDING_ORDER_STATUS } from '@/core/shared/src/constants/order';
 import { resso, useAppContext } from '@/core/store';
-import { message } from '@/core/utils';
+import { getUrlQueryParams, message } from '@/core/utils';
+import { frameRun } from '@/core/utils/src/frame-run';
 import dayjs from 'dayjs';
+import { cloneDeep } from 'lodash';
 import { useRouter } from 'next/router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CodeSelectTitle } from '../code-select-title';
 import { LeverItem } from '../lever-item';
 import { WalletName } from '../wallet-name';
@@ -28,11 +33,16 @@ const store: any = resso({
 });
 
 export const PendingList = () => {
+  let qty = Number(getUrlQueryParams('qty'));
+  const { setting } = kHeaderStore(qty);
+  const modal = Swap.Trade.store.modal;
   const [pendingDetailModalProps, setPendingDetailModalProps] = useState({ visible: false, data: {} });
   const { isUsdtType } = Swap.Trade.base;
   const pending = Swap.Order.getPending(isUsdtType);
+  const walletId = Swap.Info.getWalletId(isUsdtType);
   const { orderType } = store;
   const firstFilterList = useListByStore(pending);
+  const [isDragging, setIsDragging] = useState(false);
   const typeListLength = useMemo(() => {
     const reuslt: number[] = [];
     firstFilterList.forEach((v: any) => {
@@ -81,6 +91,7 @@ export const PendingList = () => {
     const isSpslType = ['2', '1'].includes(`${item['strategyType']}`);
     const isLimit = ['1', '4'].includes(item['type']);
     const digit = Swap.Info.getVolumeDigit(item.symbol, { withHooks: false });
+
     return Swap.Calculate.formatPositionNumber({
       usdt: isUsdtType,
       code: item.symbol,
@@ -89,6 +100,131 @@ export const PendingList = () => {
       flagPrice: isSpslType && !isLimit ? item.triggerPrice : item.price,
     });
   };
+
+  const onCancelOrder = async (item: any) => {
+    Loading.start();
+    try {
+      const result = await Swap.Order.cancelPending(item);
+      if (result.code == 200) {
+        message.success(LANG('撤销成功'));
+      } else {
+        message.error(result);
+      }
+    } catch (error: any) {
+      message.error(error);
+    } finally {
+      Loading.end();
+    }
+  };
+
+  useEffect(() => {
+    const action = () => {
+      if (setting?.pendingOrder) {
+        kChartEmitter.emit(kChartEmitter.K_CHART_COMMISSION_VISIBLE, true);
+        if (isDragging) {
+          return;
+        }
+        const msgList: any[] = [];
+        data
+          .filter((e: { subWallet: string }) => e?.subWallet === walletId)
+          ?.forEach((e) => {
+            let price =
+              e?.price?.toFixed(Number(e.baseShowPrecision)) ||
+              Number(e.triggerPrice).toFixed(Number(e.baseShowPrecision));
+            const info = Swap.Order.formatPendingType(e);
+            const tip = [info['type'], info['strategyType'], info['side']].filter((e) => !!e).join('/');
+            let text = `${tip} ${price}`;
+
+            if (e.orderType === 2) {
+              if (!e.triggerPrice) {
+                text = `${tip} -`;
+              } else {
+                const type = e.priceType === '1' ? LANG('市场价格') : LANG('标记价格');
+                const syb = e.direction === '1' ? '≥' : '≤';
+                text = `${tip} ${type} ${syb} ${Number(e.triggerPrice).toFixed(Number(e.baseShowPrecision))}`;
+              }
+            }
+            if (e.orderType === 3) {
+              // 暂时隐藏
+              // const tip = LANG('追踪委托');
+              // const type = e.priceType === '1' ? LANG('市场价格') : LANG('标记价格');
+              // const syb = e.direction === '1' ? '≥' : '≤';
+              // price = e?.price?.toFixed(1) || e?.activationPrice?.toFixed(1);
+              // text = `${tip} ${type} ${syb} ${price}`;
+
+              return;
+            }
+            msgList.push({
+              id: e.orderId,
+              side: e.side,
+              type: e.type,
+              text,
+              volume: e?.closePosition === true ? LANG('全部平仓') : formatItemVolume(e.volume, e),
+              price: Number(price),
+            });
+          });
+        kChartEmitter.emit(kChartEmitter.K_CHART_COMMISSION_UPDATE, msgList);
+      } else {
+        kChartEmitter.emit(kChartEmitter.K_CHART_COMMISSION_VISIBLE, false);
+      }
+    };
+    action();
+  }, [setting?.pendingOrder, data, isDragging]);
+
+  useEffect(() => {
+    const _data = cloneDeep(data);
+    const clickCallback = (id: string) => {
+      const idx = _data?.findIndex((item) => item.orderId === String(id));
+      if (idx < 0) return;
+      onCancelOrder(_data[idx]);
+    };
+
+    const moveCallback = (id: string) => {
+      setIsDragging(true);
+      console.log('拖动开始');
+    };
+
+    const moveEndCallback = (id: string, price: number) => {
+      console.log('停止拖动，拖动id为：', id, '当前价格为：', price);
+      const idx = _data?.findIndex((item) => item.orderId === String(id));
+
+      if (idx < 0) return;
+
+      if (_data[idx].price) {
+        const swap = Swap.Info.getCryptoData(_data[idx].symbol, { withHooks: false });
+        Swap.Trade.setModal({
+          modifyPositionMriceModalVisible: true,
+          modifyPositionMriceModalData: {
+            orderId: id,
+            price: Swap.Utils.minChangeFormat(swap.minChangePrice, price),
+            // triggerPrice: 50003,
+          },
+        });
+      } else {
+        data[idx].triggerPriceDragging = price;
+        SwapOrderEmitter.emit(`${SwapOrderEmitter.SwapOrder}-${_data[idx].orderId}`, price);
+      }
+
+      setIsDragging(false);
+    };
+
+    frameRun(() => {
+      kChartEmitter.removeAllListeners(kChartEmitter.K_CHART_COMMISSION_CLOSE_CLICK);
+      kChartEmitter.removeAllListeners(kChartEmitter.K_CHART_COMMISSION_MOVE_START);
+      kChartEmitter.removeAllListeners(kChartEmitter.K_CHART_COMMISSION_MOVE_END);
+
+      kChartEmitter.on(kChartEmitter.K_CHART_COMMISSION_CLOSE_CLICK, clickCallback);
+      kChartEmitter.on(kChartEmitter.K_CHART_COMMISSION_MOVE_START, moveCallback);
+      kChartEmitter.on(kChartEmitter.K_CHART_COMMISSION_MOVE_END, moveEndCallback);
+    });
+
+    return () => {
+      kChartEmitter.off(kChartEmitter.K_CHART_COMMISSION_CLOSE_CLICK, clickCallback);
+      kChartEmitter.off(kChartEmitter.K_CHART_COMMISSION_MOVE_START, moveCallback);
+      kChartEmitter.off(kChartEmitter.K_CHART_COMMISSION_MOVE_END, moveEndCallback);
+    };
+  }, [data]);
+
   return (
     <>
       <div className={clsx('pending-list')}>
@@ -170,7 +306,7 @@ const useColumns = ({ data, onPendingDetailModalOpen, formatItemVolume }: any) =
     {
       title: LANG('时间'),
       dataIndex: 'ctime',
-      render: (time: any) => dayjs(time).format('YYYY-MM-DD HH:mm:ss'),
+      render: (time: any) => dayjs(time).format('YYYY-MM-DD HH:mm'),
     },
     {
       title: () => (
@@ -318,7 +454,7 @@ const useColumns = ({ data, onPendingDetailModalOpen, formatItemVolume }: any) =
         const content = (
           <div className={clsx('row-wrap')}>
             <div>{formatItemVolume(v, item)}</div>
-            <div className={clsx('inline-block')} style={{ color: 'var(--skin-primary-color)' }}>
+            <div className={clsx('inline-block')} style={{ color: 'var(--skin-main-font-color)' }}>
               ({formatItemVolume(item.dealVolume, item)})
             </div>
             &nbsp;
@@ -398,3 +534,4 @@ const useColumns = ({ data, onPendingDetailModalOpen, formatItemVolume }: any) =
 //   );
 // };
 export default PendingList;
+export { store };

@@ -142,6 +142,14 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
  * limitations under the License.
  */
 /**
+ * theme type
+ */
+var THEME;
+(function (THEME) {
+    THEME["LIGHT"] = "light";
+    THEME["DARK"] = "dark";
+})(THEME || (THEME = {}));
+/**
  * line type
  */
 var LineType;
@@ -149,6 +157,22 @@ var LineType;
     LineType["Dashed"] = "dashed";
     LineType["Solid"] = "solid";
 })(LineType || (LineType = {}));
+/**
+ * order side
+ */
+var OrderSide;
+(function (OrderSide) {
+    OrderSide["Buy"] = "1";
+    OrderSide["Sell"] = "2";
+})(OrderSide || (OrderSide = {}));
+/**
+ * order type
+ */
+var OrderType;
+(function (OrderType) {
+    OrderType[OrderType["LIMIT"] = 0] = "LIMIT";
+    OrderType[OrderType["LIMIT_PLAN"] = 2] = "LIMIT_PLAN";
+})(OrderType || (OrderType = {}));
 var PolygonType;
 (function (PolygonType) {
     PolygonType["Stroke"] = "stroke";
@@ -216,13 +240,13 @@ function getDefaultGridStyle() {
             size: 1,
             color: '#EDEDED',
             style: LineType.Dashed,
-            dashedValue: [2, 2]
+            dashedValue: [2, 2],
         };
     }
     return {
         show: true,
         horizontal: item(),
-        vertical: item()
+        vertical: item(),
     };
 }
 /**
@@ -236,7 +260,7 @@ function getDefaultCandleStyle() {
         textOffset: 5,
         textSize: 10,
         textFamily: 'Helvetica Neue',
-        textWeight: 'normal'
+        textWeight: 'normal',
     };
     return {
         type: CandleType.CandleSolid,
@@ -249,20 +273,26 @@ function getDefaultCandleStyle() {
             noChangeBorderColor: grey,
             upWickColor: green,
             downWickColor: red,
-            noChangeWickColor: grey
+            noChangeWickColor: grey,
+            orderMarking: {
+                show: false,
+            },
         },
         area: {
             lineSize: 2,
             lineColor: blue,
             smooth: false,
             value: 'close',
-            backgroundColor: [{
+            backgroundColor: [
+                {
                     offset: 0,
-                    color: getAlphaBlue(0.01)
-                }, {
+                    color: getAlphaBlue(0.01),
+                },
+                {
                     offset: 1,
-                    color: getAlphaBlue(0.2)
-                }],
+                    color: getAlphaBlue(0.2),
+                },
+            ],
             point: {
                 show: true,
                 color: blue,
@@ -270,8 +300,8 @@ function getDefaultCandleStyle() {
                 rippleColor: getAlphaBlue(0.3),
                 rippleRadius: 8,
                 animation: true,
-                animationDuration: 1000
-            }
+                animationDuration: 1000,
+            },
         },
         priceMark: {
             show: true,
@@ -286,7 +316,7 @@ function getDefaultCandleStyle() {
                     show: true,
                     style: LineType.Dashed,
                     dashedValue: [4, 4],
-                    size: 1
+                    size: 1,
                 },
                 text: {
                     show: true,
@@ -303,7 +333,7 @@ function getDefaultCandleStyle() {
                     color: white,
                     family: 'Helvetica Neue',
                     weight: 'normal',
-                    borderRadius: 2
+                    borderRadius: 2,
                 },
                 orderbook: {
                     show: false,
@@ -324,7 +354,7 @@ function getDefaultCandleStyle() {
                             family: 'Helvetica Neue',
                             weight: 'normal',
                             borderRadius: 2,
-                            backgroundColor: 'green'
+                            backgroundColor: 'green',
                         },
                         sell: {
                             text: '',
@@ -342,14 +372,14 @@ function getDefaultCandleStyle() {
                             family: 'Helvetica Neue',
                             weight: 'normal',
                             borderRadius: 2,
-                            backgroundColor: 'red'
-                        }
-                    }
+                            backgroundColor: 'red',
+                        },
+                    },
                 },
                 countdown: {
-                    show: false
-                }
-            }
+                    show: false,
+                },
+            },
         },
         tooltip: {
             offsetLeft: 4,
@@ -364,7 +394,7 @@ function getDefaultCandleStyle() {
                 { title: 'high', value: '{high}' },
                 { title: 'low', value: '{low}' },
                 { title: 'close', value: '{close}' },
-                { title: 'volume', value: '{volume}' }
+                { title: 'volume', value: '{volume}' },
             ],
             defaultValue: 'n/a',
             rect: {
@@ -380,7 +410,7 @@ function getDefaultCandleStyle() {
                 borderRadius: 4,
                 borderSize: 1,
                 borderColor: '#F2F3F5',
-                color: '#FEFEFE'
+                color: '#FEFEFE',
             },
             text: {
                 size: 12,
@@ -390,10 +420,10 @@ function getDefaultCandleStyle() {
                 marginLeft: 8,
                 marginTop: 4,
                 marginRight: 8,
-                marginBottom: 4
+                marginBottom: 4,
             },
-            icons: []
-        }
+            icons: [],
+        },
     };
 }
 /**
@@ -405,33 +435,37 @@ function getDefaultIndicatorStyle() {
         smooth: false,
         size: 1,
         dashedValue: [2, 2],
-        color: color
+        color: color,
     }); });
     return {
         ohlc: {
             upColor: alphaGreen,
             downColor: alphaRed,
-            noChangeColor: grey
+            noChangeColor: grey,
         },
-        bars: [{
+        bars: [
+            {
                 style: PolygonType.Fill,
                 borderStyle: LineType.Solid,
                 borderSize: 1,
                 borderDashedValue: [2, 2],
                 upColor: alphaGreen,
                 downColor: alphaRed,
-                noChangeColor: grey
-            }],
+                noChangeColor: grey,
+            },
+        ],
         lines: lines,
-        circles: [{
+        circles: [
+            {
                 style: PolygonType.Fill,
                 borderStyle: LineType.Solid,
                 borderSize: 1,
                 borderDashedValue: [2, 2],
                 upColor: alphaGreen,
                 downColor: alphaRed,
-                noChangeColor: grey
-            }],
+                noChangeColor: grey,
+            },
+        ],
         lastValueMark: {
             show: false,
             text: {
@@ -449,8 +483,8 @@ function getDefaultIndicatorStyle() {
                 paddingTop: 4,
                 paddingRight: 4,
                 paddingBottom: 4,
-                borderRadius: 2
-            }
+                borderRadius: 2,
+            },
         },
         tooltip: {
             offsetLeft: 4,
@@ -470,10 +504,10 @@ function getDefaultIndicatorStyle() {
                 marginLeft: 8,
                 marginTop: 4,
                 marginRight: 8,
-                marginBottom: 4
+                marginBottom: 4,
             },
-            icons: []
-        }
+            icons: [],
+        },
     };
 }
 function getDefaultXAxisStyle() {
@@ -483,7 +517,7 @@ function getDefaultXAxisStyle() {
         axisLine: {
             show: true,
             color: axisLineColor,
-            size: 1
+            size: 1,
         },
         tickText: {
             show: true,
@@ -492,14 +526,14 @@ function getDefaultXAxisStyle() {
             family: 'Helvetica Neue',
             weight: 'normal',
             marginStart: 4,
-            marginEnd: 4
+            marginEnd: 4,
         },
         tickLine: {
             show: true,
             size: 1,
             length: 3,
-            color: axisLineColor
-        }
+            color: axisLineColor,
+        },
     };
 }
 function getDefaultYAxisStyle() {
@@ -519,7 +553,7 @@ function getDefaultCrosshairStyle() {
                 style: LineType.Dashed,
                 dashedValue: [4, 2],
                 size: 1,
-                color: textColor
+                color: textColor,
             },
             text: {
                 show: true,
@@ -537,8 +571,8 @@ function getDefaultCrosshairStyle() {
                 paddingRight: 4,
                 paddingTop: 4,
                 paddingBottom: 4,
-                backgroundColor: textColor
-            }
+                backgroundColor: textColor,
+            },
         };
     }
     return {
@@ -561,11 +595,52 @@ function getDefaultCrosshairStyle() {
             borderStyle: LineType.Solid,
             borderDashedValue: [2, 2],
             borderSize: 1,
-            borderColor: 'black'
+            borderColor: 'black',
         },
         clickAddBtn: function (price) {
             console.log('click', price);
-        }
+        },
+    };
+}
+function getDefaultCommissionStyle() {
+    return {
+        show: true,
+        orderList: [],
+        yAxisLabelRectStyles: {
+            paddingLeft: 4,
+            paddingRight: 4,
+            paddingTop: 4,
+            paddingBottom: 4,
+        },
+        fontStyle: {
+            color: white,
+            size: 12,
+            family: 'Helvetica Neue',
+            weight: 'normal',
+        },
+        onCloseClick: function () { return null; },
+        onMoveStart: function () { return null; },
+        onMoveEnd: function () { return null; },
+    };
+}
+function getDefaultPositionStyle() {
+    return {
+        show: true,
+        orderList: [],
+        yAxisLabelRectStyles: {
+            paddingLeft: 4,
+            paddingRight: 4,
+            paddingTop: 4,
+            paddingBottom: 4,
+        },
+        fontStyle: {
+            color: white,
+            size: 11,
+            family: 'Helvetica Neue',
+            weight: 'normal',
+        },
+        onReverseClick: function () { return null; },
+        onStopClick: function () { return null; },
     };
 }
 function getDefaultOverlayStyle() {
@@ -587,7 +662,7 @@ function getDefaultOverlayStyle() {
             paddingRight: 4,
             paddingTop: 4,
             paddingBottom: 4,
-            backgroundColor: blue
+            backgroundColor: blue,
         };
     }
     return {
@@ -599,14 +674,14 @@ function getDefaultOverlayStyle() {
             activeColor: blue,
             activeBorderColor: pointBorderColor,
             activeBorderSize: 3,
-            activeRadius: 5
+            activeRadius: 5,
         },
         line: {
             style: LineType.Solid,
             smooth: false,
             color: blue,
             size: 1,
-            dashedValue: [2, 2]
+            dashedValue: [2, 2],
         },
         rect: {
             style: PolygonType.Fill,
@@ -615,7 +690,7 @@ function getDefaultOverlayStyle() {
             borderSize: 1,
             borderRadius: 0,
             borderStyle: LineType.Solid,
-            borderDashedValue: [2, 2]
+            borderDashedValue: [2, 2],
         },
         polygon: {
             style: PolygonType.Fill,
@@ -623,7 +698,7 @@ function getDefaultOverlayStyle() {
             borderColor: blue,
             borderSize: 1,
             borderStyle: LineType.Solid,
-            borderDashedValue: [2, 2]
+            borderDashedValue: [2, 2],
         },
         circle: {
             style: PolygonType.Fill,
@@ -631,16 +706,16 @@ function getDefaultOverlayStyle() {
             borderColor: blue,
             borderSize: 1,
             borderStyle: LineType.Solid,
-            borderDashedValue: [2, 2]
+            borderDashedValue: [2, 2],
         },
         arc: {
             style: LineType.Solid,
             color: blue,
             size: 1,
-            dashedValue: [2, 2]
+            dashedValue: [2, 2],
         },
         text: text(),
-        rectText: text()
+        rectText: text(),
     };
 }
 function getDefaultSeparatorStyle() {
@@ -648,11 +723,12 @@ function getDefaultSeparatorStyle() {
         size: 1,
         color: axisLineColor,
         fill: true,
-        activeBackgroundColor: getAlphaBlue(0.08)
+        activeBackgroundColor: getAlphaBlue(0.08),
     };
 }
 function getDefaultStyles() {
     return {
+        theme: THEME.LIGHT,
         grid: getDefaultGridStyle(),
         candle: getDefaultCandleStyle(),
         indicator: getDefaultIndicatorStyle(),
@@ -660,7 +736,9 @@ function getDefaultStyles() {
         yAxis: getDefaultYAxisStyle(),
         separator: getDefaultSeparatorStyle(),
         crosshair: getDefaultCrosshairStyle(),
-        overlay: getDefaultOverlayStyle()
+        commissionOrder: getDefaultCommissionStyle(),
+        positionOrder: getDefaultPositionStyle(),
+        overlay: getDefaultOverlayStyle(),
     };
 }
 
@@ -710,16 +788,20 @@ function logTag() {
  * limitations under the License.
  */
 function merge(target, source) {
-    if ((!isObject(target) && !isObject(source))) {
+    if (!isObject(target) && !isObject(source)) {
         return;
     }
     for (var key in source) {
         if (Object.prototype.hasOwnProperty.call(source, key)) {
             var targetProp = target[key];
             var sourceProp = source[key];
-            if (isObject(sourceProp) &&
-                isObject(targetProp)) {
-                merge(targetProp, sourceProp);
+            if (isObject(sourceProp) && isObject(targetProp)) {
+                if (isArray(sourceProp) && isArray(targetProp)) {
+                    target[key] = source[key];
+                }
+                else {
+                    merge(targetProp, sourceProp);
+                }
             }
             else {
                 if (isValid(source[key])) {
@@ -760,7 +842,7 @@ function isFunction(value) {
     return typeof value === 'function';
 }
 function isObject(value) {
-    return (typeof value === 'object') && isValid(value);
+    return typeof value === 'object' && isValid(value);
 }
 function isNumber(value) {
     return typeof value === 'number' && !isNaN(value);
@@ -1276,7 +1358,7 @@ function getAllOverlayFigureIgnoreEventTypes() {
         'mouseDownEvent',
         'touchStartEvent',
         'mouseMoveEvent',
-        'touchMoveEvent'
+        'touchMoveEvent',
     ];
 }
 var OVERLAY_DRAW_STEP_START = 1;
@@ -1292,7 +1374,7 @@ var OverlayImp = /** @class */ (function () {
         this._prevPressedPoints = [];
         var mode = overlay.mode, modeSensitivity = overlay.modeSensitivity, extendData = overlay.extendData, styles = overlay.styles, name = overlay.name, totalStep = overlay.totalStep, lock = overlay.lock, visible = overlay.visible, zLevel = overlay.zLevel, needDefaultPointFigure = overlay.needDefaultPointFigure, needDefaultXAxisFigure = overlay.needDefaultXAxisFigure, needDefaultYAxisFigure = overlay.needDefaultYAxisFigure, createPointFigures = overlay.createPointFigures, createXAxisFigures = overlay.createXAxisFigures, createYAxisFigures = overlay.createYAxisFigures, performEventPressedMove = overlay.performEventPressedMove, performEventMoveForDrawing = overlay.performEventMoveForDrawing, onDrawStart = overlay.onDrawStart, onDrawing = overlay.onDrawing, onDrawEnd = overlay.onDrawEnd, onClick = overlay.onClick, onDoubleClick = overlay.onDoubleClick, onRightClick = overlay.onRightClick, onPressedMoveStart = overlay.onPressedMoveStart, onPressedMoving = overlay.onPressedMoving, onPressedMoveEnd = overlay.onPressedMoveEnd, onMouseEnter = overlay.onMouseEnter, onMouseLeave = overlay.onMouseLeave, onRemoved = overlay.onRemoved, onSelected = overlay.onSelected, onDeselected = overlay.onDeselected;
         this.name = name;
-        this.totalStep = (!isNumber(totalStep) || totalStep < 2) ? 1 : totalStep;
+        this.totalStep = !isNumber(totalStep) || totalStep < 2 ? 1 : totalStep;
         this.lock = lock !== null && lock !== void 0 ? lock : false;
         this.visible = visible !== null && visible !== void 0 ? visible : true;
         this.zLevel = zLevel !== null && zLevel !== void 0 ? zLevel : 0;
@@ -1371,7 +1453,7 @@ var OverlayImp = /** @class */ (function () {
                         mode: this.mode,
                         points: this.points,
                         performPointIndex: i,
-                        performPoint: this.points[i]
+                        performPoint: this.points[i],
                     });
                 }
             }
@@ -1381,7 +1463,7 @@ var OverlayImp = /** @class */ (function () {
                     mode: this.mode,
                     points: this.points,
                     performPointIndex: this.points.length - 1,
-                    performPoint: this.points[this.points.length - 1]
+                    performPoint: this.points[this.points.length - 1],
                 });
             }
             return true;
@@ -1557,7 +1639,7 @@ var OverlayImp = /** @class */ (function () {
             mode: this.mode,
             points: this.points,
             performPointIndex: pointIndex,
-            performPoint: newPoint
+            performPoint: newPoint,
         });
     };
     OverlayImp.prototype.eventPressedPointMove = function (point, pointIndex) {
@@ -1574,7 +1656,7 @@ var OverlayImp = /** @class */ (function () {
             points: this.points,
             mode: this.mode,
             performPointIndex: pointIndex,
-            performPoint: this.points[pointIndex]
+            performPoint: this.points[pointIndex],
         });
     };
     OverlayImp.prototype.startPressedMove = function (point) {
@@ -4583,20 +4665,23 @@ var horizontalStraightLine = {
     needDefaultYAxisFigure: true,
     createPointFigures: function (_a) {
         var coordinates = _a.coordinates, bounding = _a.bounding;
-        return [{
+        return [
+            {
                 type: 'line',
                 attrs: {
                     coordinates: [
                         {
                             x: 0,
                             y: coordinates[0].y
-                        }, {
+                        },
+                        {
                             x: bounding.width,
                             y: coordinates[0].y
                         }
                     ]
                 }
-            }];
+            }
+        ];
     }
 };
 
@@ -4998,12 +5083,19 @@ var priceLine = {
     createPointFigures: function (_a) {
         var _b;
         var coordinates = _a.coordinates, bounding = _a.bounding, precision = _a.precision, overlay = _a.overlay, thousandsSeparator = _a.thousandsSeparator, decimalFoldThreshold = _a.decimalFoldThreshold, yAxis = _a.yAxis;
-        var _c = (overlay.points)[0].value, value = _c === void 0 ? 0 : _c;
-        var currentPrecision = ((_b = yAxis === null || yAxis === void 0 ? void 0 : yAxis.isInCandle()) !== null && _b !== void 0 ? _b : true) ? precision.price : precision.excludePriceVolumeMax;
+        var _c = overlay.points[0].value, value = _c === void 0 ? 0 : _c;
+        var currentPrecision = ((_b = yAxis === null || yAxis === void 0 ? void 0 : yAxis.isInCandle()) !== null && _b !== void 0 ? _b : true)
+            ? precision.price
+            : precision.excludePriceVolumeMax;
         return [
             {
                 type: 'line',
-                attrs: { coordinates: [coordinates[0], { x: bounding.width, y: coordinates[0].y }] }
+                attrs: {
+                    coordinates: [
+                        coordinates[0],
+                        { x: bounding.width, y: coordinates[0].y }
+                    ]
+                }
             },
             {
                 type: 'text',
@@ -5685,7 +5777,7 @@ var OverlayStore = /** @class */ (function () {
                         (_c = _this._instances.get(paneId)) === null || _c === void 0 ? void 0 : _c.push(instance);
                     }
                     if (instance.isStart()) {
-                        (_d = instance.onDrawStart) === null || _d === void 0 ? void 0 : _d.call(instance, ({ overlay: instance }));
+                        (_d = instance.onDrawStart) === null || _d === void 0 ? void 0 : _d.call(instance, { overlay: instance });
                     }
                     return id;
                 }
@@ -5941,7 +6033,9 @@ var OverlayStore = /** @class */ (function () {
         if (!((_b = (_a = info.instance) === null || _a === void 0 ? void 0 : _a.isDrawing()) !== null && _b !== void 0 ? _b : false)) {
             (_d = (_c = info.instance) === null || _c === void 0 ? void 0 : _c.onClick) === null || _d === void 0 ? void 0 : _d.call(_c, __assign({ overlay: info.instance, figureKey: info.figureKey, figureIndex: info.figureIndex }, event));
         }
-        if ((instance === null || instance === void 0 ? void 0 : instance.id) !== ((_e = info.instance) === null || _e === void 0 ? void 0 : _e.id) || figureType !== info.figureType || figureIndex !== info.figureIndex) {
+        if ((instance === null || instance === void 0 ? void 0 : instance.id) !== ((_e = info.instance) === null || _e === void 0 ? void 0 : _e.id) ||
+            figureType !== info.figureType ||
+            figureIndex !== info.figureIndex) {
             this._clickInstanceInfo = info;
             if ((instance === null || instance === void 0 ? void 0 : instance.id) !== ((_f = info.instance) === null || _f === void 0 ? void 0 : _f.id)) {
                 (_g = instance === null || instance === void 0 ? void 0 : instance.onDeselected) === null || _g === void 0 ? void 0 : _g.call(instance, __assign({ overlay: instance, figureKey: figureKey, figureIndex: figureIndex }, event));
@@ -5963,7 +6057,8 @@ var OverlayStore = /** @class */ (function () {
     };
     OverlayStore.prototype.isDrawing = function () {
         var _a, _b;
-        return this._progressInstanceInfo !== null && ((_b = (_a = this._progressInstanceInfo) === null || _a === void 0 ? void 0 : _a.instance.isDrawing()) !== null && _b !== void 0 ? _b : false);
+        return (this._progressInstanceInfo !== null &&
+            ((_b = (_a = this._progressInstanceInfo) === null || _a === void 0 ? void 0 : _a.instance.isDrawing()) !== null && _b !== void 0 ? _b : false));
     };
     return OverlayStore;
 }());
@@ -6339,7 +6434,7 @@ var ChartStore = /** @class */ (function () {
             this._visibleDataList.push({
                 dataIndex: i,
                 x: x,
-                data: kLineData
+                data: kLineData,
             });
         }
     };
@@ -6511,7 +6606,9 @@ var ChartStore = /** @class */ (function () {
             ((this._forwardMore && params.type === LoadDataType.Forward) ||
                 (this._backwardMore && params.type === LoadDataType.Backward))) {
             var cb = function (data, more) {
-                _this.addData(data, params.type, more).then(function () { }).catch(function () { });
+                _this.addData(data, params.type, more)
+                    .then(function () { })
+                    .catch(function () { });
             };
             this._loading = true;
             this._loadDataCallback(__assign(__assign({}, params), { callback: cb }));
@@ -6763,7 +6860,9 @@ var Widget = /** @class */ (function (_super) {
         merge(this._bounding, bounding);
         return this;
     };
-    Widget.prototype.getContainer = function () { return this._container; };
+    Widget.prototype.getContainer = function () {
+        return this._container;
+    };
     Widget.prototype.getBounding = function () {
         return this._bounding;
     };
@@ -6903,7 +7002,9 @@ var WidgetNameConstants = {
     MAIN: 'main',
     X_AXIS: 'xAxis',
     Y_AXIS: 'yAxis',
-    SEPARATOR: 'separator'
+    SEPARATOR: 'separator',
+    INDICATOR: 'indicator',
+    CANDLE: 'candle'
 };
 var REAL_SEPARATOR_HEIGHT = 7;
 
@@ -7130,7 +7231,9 @@ function drawRect(ctx, attrs, styles) {
             ctx.fill();
         });
     }
-    if ((style === PolygonType.Stroke || styles.style === PolygonType.StrokeFill) && borderSize > 0 && !isTransparent(borderColor)) {
+    if ((style === PolygonType.Stroke || styles.style === PolygonType.StrokeFill) &&
+        borderSize > 0 &&
+        !isTransparent(borderColor)) {
         ctx.strokeStyle = borderColor;
         ctx.lineWidth = borderSize;
         if (borderStyle === LineType.Dashed) {
@@ -7410,7 +7513,9 @@ var View = /** @class */ (function (_super) {
         _this._widget = widget;
         return _this;
     }
-    View.prototype.getWidget = function () { return this._widget; };
+    View.prototype.getWidget = function () {
+        return this._widget;
+    };
     View.prototype.createFigure = function (figure, eventHandler) {
         var FigureClazz = getInnerFigureClass(figure.name);
         if (FigureClazz !== null) {
@@ -7457,6 +7562,7 @@ var CrosshairLineView = /** @class */ (function (_super) {
     CrosshairLineView.prototype.drawImp = function (ctx) {
         var _a;
         var widget = this.getWidget();
+        this.container = widget.getContainer();
         var pane = widget.getPane();
         var yAxisBounding = (_a = pane.getYAxisWidget()) === null || _a === void 0 ? void 0 : _a.getBounding();
         var bounding = widget.getBounding();
@@ -7470,17 +7576,18 @@ var CrosshairLineView = /** @class */ (function (_super) {
                 var y = crosshair.y;
                 this._drawLine(ctx, [
                     { x: 0, y: y },
-                    { x: bounding.width, y: y }
+                    { x: bounding.width, y: y },
                 ], styles.horizontal, true, styles, yAxisBounding, text);
             }
             var x = crosshair.realX;
             this._drawLine(ctx, [
                 { x: x, y: 0 },
-                { x: x, y: bounding.height }
+                { x: x, y: bounding.height },
             ], styles.vertical, false, styles);
         }
     };
     CrosshairLineView.prototype._drawLine = function (ctx, coordinates, styles, direction, style, yAxisBounding, price) {
+        var _this = this;
         var _a, _b;
         if (styles.show) {
             var lineStyles = styles.line;
@@ -7488,7 +7595,7 @@ var CrosshairLineView = /** @class */ (function (_super) {
                 (_a = this.createFigure({
                     name: 'line',
                     attrs: { coordinates: coordinates },
-                    styles: lineStyles
+                    styles: lineStyles,
                 })) === null || _a === void 0 ? void 0 : _a.draw(ctx);
                 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                 if (style.showAddBtn && direction && price) {
@@ -7501,18 +7608,26 @@ var CrosshairLineView = /** @class */ (function (_super) {
                     (_b = this.createFigure({
                         name: 'text',
                         attrs: {
-                            x: coordinates[1].x - textWidth - style.addBtnStyle.paddingLeft - style.addBtnStyle.paddingRight - yAxisWidth,
+                            x: coordinates[1].x -
+                                textWidth -
+                                style.addBtnStyle.paddingLeft -
+                                style.addBtnStyle.paddingRight -
+                                yAxisWidth,
                             y: coordinates[1].y,
                             text: '+',
-                            baseline: 'middle'
+                            baseline: 'middle',
                         },
-                        styles: _style
+                        styles: _style,
                     }, {
                         mouseClickEvent: function () {
                             console.log(price);
                             style.clickAddBtn(+(price !== null && price !== void 0 ? price : 0));
                             return true;
-                        }
+                        },
+                        mouseMoveEvent: function () {
+                            _this.container.style.cursor = 'pointer';
+                            return true;
+                        },
                     })) === null || _b === void 0 ? void 0 : _b.draw(ctx);
                 }
             }
@@ -7527,7 +7642,7 @@ var CrosshairLineView = /** @class */ (function (_super) {
         var text;
         if (yAxis.getType() === YAxisType.Percentage) {
             var fromData = chartStore.getVisibleFirstData();
-            text = "".concat(((value - fromData.close) / fromData.close * 100).toFixed(2), "%");
+            text = "".concat((((value - fromData.close) / fromData.close) * 100).toFixed(2), "%");
         }
         else {
             var indicators = chartStore.getIndicatorStore().getInstances(crosshair.paneId);
@@ -7982,12 +8097,14 @@ var CandleBarView = /** @class */ (function (_super) {
                     }
                     var openY = yAxis_1.convertToPixel(open_1);
                     var closeY = yAxis_1.convertToPixel(close_1);
-                    var priceY = [
-                        openY, closeY,
-                        yAxis_1.convertToPixel(high),
-                        yAxis_1.convertToPixel(low)
-                    ];
+                    var highY = yAxis_1.convertToPixel(high);
+                    var lowY = yAxis_1.convertToPixel(low);
+                    var priceY = [openY, closeY, highY, lowY];
                     priceY.sort(function (a, b) { return a - b; });
+                    if (candleBarOptions.styles.orderMarking.show) {
+                        // 绘制买卖打点
+                        _this._drawOrderData(ctx, x, openY, closeY, highY, lowY);
+                    }
                     var rects = [];
                     switch (type) {
                         case CandleType.CandleSolid: {
@@ -8060,6 +8177,36 @@ var CandleBarView = /** @class */ (function (_super) {
                 }
             });
         }
+    };
+    // 绘制买卖打点
+    CandleBarView.prototype._drawOrderData = function (ctx, x, openY, closeY, highY, lowY) {
+        var minY = Math.min(openY, closeY, highY, lowY);
+        var maxY = Math.max(openY, closeY, highY, lowY);
+        var textWidth = ctx.measureText('买').width;
+        var style = {
+            color: 'red',
+            size: 12,
+            backgroundColor: 'green',
+            paddingTop: 2,
+            paddingBottom: 2
+        };
+        var paddingSize = style.paddingBottom + style.paddingTop;
+        this._drawOrderDataText(ctx, '买', x - textWidth / 2, minY - paddingSize - style.size, style);
+        this._drawOrderDataText(ctx, '卖', x - textWidth / 2, maxY + paddingSize + style.size, style);
+    };
+    CandleBarView.prototype._drawOrderDataText = function (ctx, text, x, y, style) {
+        var _a;
+        // 绘制Text
+        (_a = this.createFigure({
+            name: 'text',
+            attrs: {
+                x: x,
+                y: y,
+                text: text,
+                baseline: 'middle'
+            },
+            styles: style
+        })) === null || _a === void 0 ? void 0 : _a.draw(ctx);
     };
     CandleBarView.prototype.getCandleBarOptions = function (chartStore) {
         var candleStyles = chartStore.getStyles().candle;
@@ -8428,10 +8575,15 @@ var OverlayView = /** @class */ (function (_super) {
             }
             overlayStore.setHoverInstanceInfo({
                 paneId: paneId,
-                instance: null, figureType: 0 /* EventOverlayInfoFigureType.None */, figureKey: '', figureIndex: -1, attrsIndex: -1
+                instance: null,
+                figureType: 0 /* EventOverlayInfoFigureType.None */,
+                figureKey: '',
+                figureIndex: -1,
+                attrsIndex: -1
             }, event);
             return false;
-        }).registerEvent('mouseClickEvent', function (event) {
+        })
+            .registerEvent('mouseClickEvent', function (event) {
             var _a, _b;
             var progressInstanceInfo = overlayStore.getProgressInstanceInfo();
             if (progressInstanceInfo !== null) {
@@ -8456,10 +8608,15 @@ var OverlayView = /** @class */ (function (_super) {
             }
             overlayStore.setClickInstanceInfo({
                 paneId: paneId,
-                instance: null, figureType: 0 /* EventOverlayInfoFigureType.None */, figureKey: '', figureIndex: -1, attrsIndex: -1
+                instance: null,
+                figureType: 0 /* EventOverlayInfoFigureType.None */,
+                figureKey: '',
+                figureIndex: -1,
+                attrsIndex: -1
             }, event);
             return false;
-        }).registerEvent('mouseDoubleClickEvent', function (event) {
+        })
+            .registerEvent('mouseDoubleClickEvent', function (event) {
             var _a;
             var progressInstanceInfo = overlayStore.getProgressInstanceInfo();
             if (progressInstanceInfo !== null) {
@@ -8478,7 +8635,8 @@ var OverlayView = /** @class */ (function (_super) {
                 return _this._figureMouseClickEvent(overlay, 1 /* EventOverlayInfoFigureType.Point */, "".concat(OVERLAY_FIGURE_KEY_PREFIX, "point_").concat(index), index, 0)(event);
             }
             return false;
-        }).registerEvent('mouseRightClickEvent', function (event) {
+        })
+            .registerEvent('mouseRightClickEvent', function (event) {
             var progressInstanceInfo = overlayStore.getProgressInstanceInfo();
             if (progressInstanceInfo !== null) {
                 var overlay = progressInstanceInfo.instance;
@@ -8488,7 +8646,8 @@ var OverlayView = /** @class */ (function (_super) {
                 }
             }
             return false;
-        }).registerEvent('mouseUpEvent', function (event) {
+        })
+            .registerEvent('mouseUpEvent', function (event) {
             var _a;
             var _b = overlayStore.getPressedInstanceInfo(), instance = _b.instance, figureIndex = _b.figureIndex, figureKey = _b.figureKey;
             if (instance !== null) {
@@ -8496,10 +8655,15 @@ var OverlayView = /** @class */ (function (_super) {
             }
             overlayStore.setPressedInstanceInfo({
                 paneId: paneId,
-                instance: null, figureType: 0 /* EventOverlayInfoFigureType.None */, figureKey: '', figureIndex: -1, attrsIndex: -1
+                instance: null,
+                figureType: 0 /* EventOverlayInfoFigureType.None */,
+                figureKey: '',
+                figureIndex: -1,
+                attrsIndex: -1
             });
             return false;
-        }).registerEvent('pressedMouseMoveEvent', function (event) {
+        })
+            .registerEvent('pressedMouseMoveEvent', function (event) {
             var _a, _b;
             var _c = overlayStore.getPressedInstanceInfo(), instance = _c.instance, figureType = _c.figureType, figureIndex = _c.figureIndex, figureKey = _c.figureKey;
             if (instance !== null) {
@@ -8510,7 +8674,11 @@ var OverlayView = /** @class */ (function (_super) {
                             instance.eventPressedPointMove(point, figureIndex);
                         }
                         else {
-                            instance.eventPressedOtherMove(point, _this.getWidget().getPane().getChart().getChartStore().getTimeScaleStore());
+                            instance.eventPressedOtherMove(point, _this.getWidget()
+                                .getPane()
+                                .getChart()
+                                .getChartStore()
+                                .getTimeScaleStore());
                         }
                     }
                 }
@@ -8548,16 +8716,20 @@ var OverlayView = /** @class */ (function (_super) {
             //   'tapEvent', 'doubleTapEvent', 'mouseDownEvent',
             //   'touchStartEvent', 'mouseMoveEvent', 'touchMoveEvent'
             // ]
-            if (!eventTypes.includes('mouseMoveEvent') && !eventTypes.includes('touchMoveEvent')) {
+            if (!eventTypes.includes('mouseMoveEvent') &&
+                !eventTypes.includes('touchMoveEvent')) {
                 eventHandler.mouseMoveEvent = this._figureMouseMoveEvent(overlay, figureType, figureKey, figureIndex, attrsIndex);
             }
-            if (!eventTypes.includes('mouseDownEvent') && !eventTypes.includes('touchStartEvent')) {
+            if (!eventTypes.includes('mouseDownEvent') &&
+                !eventTypes.includes('touchStartEvent')) {
                 eventHandler.mouseDownEvent = this._figureMouseDownEvent(overlay, figureType, figureKey, figureIndex, attrsIndex);
             }
-            if (!eventTypes.includes('mouseClickEvent') && !eventTypes.includes('tapEvent')) {
+            if (!eventTypes.includes('mouseClickEvent') &&
+                !eventTypes.includes('tapEvent')) {
                 eventHandler.mouseClickEvent = this._figureMouseClickEvent(overlay, figureType, figureKey, figureIndex, attrsIndex);
             }
-            if (!eventTypes.includes('mouseDoubleClickEvent') && !eventTypes.includes('doubleTapEvent')) {
+            if (!eventTypes.includes('mouseDoubleClickEvent') &&
+                !eventTypes.includes('doubleTapEvent')) {
                 eventHandler.mouseDoubleClickEvent = this._figureMouseDoubleClickEvent(overlay, figureType, figureKey, figureIndex, attrsIndex);
             }
             if (!eventTypes.includes('mouseRightClickEvent')) {
@@ -8571,7 +8743,14 @@ var OverlayView = /** @class */ (function (_super) {
         return function (event) {
             var pane = _this.getWidget().getPane();
             var overlayStore = pane.getChart().getChartStore().getOverlayStore();
-            overlayStore.setHoverInstanceInfo({ paneId: pane.getId(), instance: overlay, figureType: figureType, figureKey: figureKey, figureIndex: figureIndex, attrsIndex: attrsIndex }, event);
+            overlayStore.setHoverInstanceInfo({
+                paneId: pane.getId(),
+                instance: overlay,
+                figureType: figureType,
+                figureKey: figureKey,
+                figureIndex: figureIndex,
+                attrsIndex: attrsIndex
+            }, event);
             return true;
         };
     };
@@ -8584,7 +8763,14 @@ var OverlayView = /** @class */ (function (_super) {
             var overlayStore = pane.getChart().getChartStore().getOverlayStore();
             overlay.startPressedMove(_this._coordinateToPoint(overlay, event));
             (_a = overlay.onPressedMoveStart) === null || _a === void 0 ? void 0 : _a.call(overlay, __assign({ overlay: overlay, figureIndex: figureIndex, figureKey: figureKey }, event));
-            overlayStore.setPressedInstanceInfo({ paneId: paneId, instance: overlay, figureType: figureType, figureKey: figureKey, figureIndex: figureIndex, attrsIndex: attrsIndex });
+            overlayStore.setPressedInstanceInfo({
+                paneId: paneId,
+                instance: overlay,
+                figureType: figureType,
+                figureKey: figureKey,
+                figureIndex: figureIndex,
+                attrsIndex: attrsIndex
+            });
             return true;
         };
     };
@@ -8594,7 +8780,14 @@ var OverlayView = /** @class */ (function (_super) {
             var pane = _this.getWidget().getPane();
             var paneId = pane.getId();
             var overlayStore = pane.getChart().getChartStore().getOverlayStore();
-            overlayStore.setClickInstanceInfo({ paneId: paneId, instance: overlay, figureType: figureType, figureKey: figureKey, figureIndex: figureIndex, attrsIndex: attrsIndex }, event);
+            overlayStore.setClickInstanceInfo({
+                paneId: paneId,
+                instance: overlay,
+                figureType: figureType,
+                figureKey: figureKey,
+                figureIndex: figureIndex,
+                attrsIndex: attrsIndex
+            }, event);
             return true;
         };
     };
@@ -8634,7 +8827,9 @@ var OverlayView = /** @class */ (function (_super) {
         if (this.coordinateToPointValueFlag()) {
             var yAxis = pane.getAxisComponent();
             var value = yAxis.convertFromPixel(coordinate.y);
-            if (overlay.mode !== OverlayMode.Normal && paneId === PaneIdConstants.CANDLE && isNumber(point.dataIndex)) {
+            if (overlay.mode !== OverlayMode.Normal &&
+                paneId === PaneIdConstants.CANDLE &&
+                isNumber(point.dataIndex)) {
                 var kLineData = timeScaleStore.getDataByDataIndex(point.dataIndex);
                 if (kLineData !== null) {
                     var modeSensitivity = overlay.modeSensitivity;
@@ -8701,7 +8896,12 @@ var OverlayView = /** @class */ (function (_super) {
         return true;
     };
     OverlayView.prototype.dispatchEvent = function (name, event, other) {
-        if (this.getWidget().getPane().getChart().getChartStore().getOverlayStore().isDrawing()) {
+        if (this.getWidget()
+            .getPane()
+            .getChart()
+            .getChartStore()
+            .getOverlayStore()
+            .isDrawing()) {
             return this.onEvent(name, event, other);
         }
         return _super.prototype.dispatchEvent.call(this, name, event, other);
@@ -8789,7 +8989,9 @@ var OverlayView = /** @class */ (function (_super) {
                 var events = _this._createFigureEvents(overlay, 2 /* EventOverlayInfoFigureType.Other */, (_a = figure.key) !== null && _a !== void 0 ? _a : '', figureIndex, attrsIndex, ignoreEvent);
                 var ss = __assign(__assign(__assign({}, defaultStyles[type]), (_b = overlay.styles) === null || _b === void 0 ? void 0 : _b[type]), styles);
                 (_c = _this.createFigure({
-                    name: type, attrs: ats, styles: ss
+                    name: type,
+                    attrs: ats,
+                    styles: ss
                 }, events)) === null || _c === void 0 ? void 0 : _c.draw(ctx);
             });
         });
@@ -8805,14 +9007,28 @@ var OverlayView = /** @class */ (function (_super) {
     };
     OverlayView.prototype.getFigures = function (overlay, coordinates, bounding, barSpace, precision, thousandsSeparator, decimalFoldThreshold, dateTimeFormat, defaultStyles, xAxis, yAxis) {
         var _a, _b;
-        return (_b = (_a = overlay.createPointFigures) === null || _a === void 0 ? void 0 : _a.call(overlay, { overlay: overlay, coordinates: coordinates, bounding: bounding, barSpace: barSpace, precision: precision, thousandsSeparator: thousandsSeparator, decimalFoldThreshold: decimalFoldThreshold, dateTimeFormat: dateTimeFormat, defaultStyles: defaultStyles, xAxis: xAxis, yAxis: yAxis })) !== null && _b !== void 0 ? _b : [];
+        return ((_b = (_a = overlay.createPointFigures) === null || _a === void 0 ? void 0 : _a.call(overlay, {
+            overlay: overlay,
+            coordinates: coordinates,
+            bounding: bounding,
+            barSpace: barSpace,
+            precision: precision,
+            thousandsSeparator: thousandsSeparator,
+            decimalFoldThreshold: decimalFoldThreshold,
+            dateTimeFormat: dateTimeFormat,
+            defaultStyles: defaultStyles,
+            xAxis: xAxis,
+            yAxis: yAxis
+        })) !== null && _b !== void 0 ? _b : []);
     };
     OverlayView.prototype.drawDefaultFigures = function (ctx, overlay, coordinates, _bounding, _precision, _dateTimeFormat, _customApi, _thousandsSeparator, _drawDefaultFigures, defaultStyles, _xAxis, _yAxis, hoverInstanceInfo, clickInstanceInfo) {
         var _this = this;
         var _a, _b;
         if (overlay.needDefaultPointFigure) {
-            if ((((_a = hoverInstanceInfo.instance) === null || _a === void 0 ? void 0 : _a.id) === overlay.id && hoverInstanceInfo.figureType !== 0 /* EventOverlayInfoFigureType.None */) ||
-                (((_b = clickInstanceInfo.instance) === null || _b === void 0 ? void 0 : _b.id) === overlay.id && clickInstanceInfo.figureType !== 0 /* EventOverlayInfoFigureType.None */)) {
+            if ((((_a = hoverInstanceInfo.instance) === null || _a === void 0 ? void 0 : _a.id) === overlay.id &&
+                hoverInstanceInfo.figureType !== 0 /* EventOverlayInfoFigureType.None */) ||
+                (((_b = clickInstanceInfo.instance) === null || _b === void 0 ? void 0 : _b.id) === overlay.id &&
+                    clickInstanceInfo.figureType !== 0 /* EventOverlayInfoFigureType.None */)) {
                 var styles = overlay.styles;
                 var pointStyles_1 = __assign(__assign({}, defaultStyles.point), styles === null || styles === void 0 ? void 0 : styles.point);
                 coordinates.forEach(function (_a, index) {
@@ -8893,8 +9109,8 @@ var IndicatorWidget = /** @class */ (function (_super) {
     IndicatorWidget.prototype.updateMainContent = function (_ctx) { };
     IndicatorWidget.prototype.updateOverlay = function (ctx) {
         this._overlayView.draw(ctx);
-        this._crosshairLineView.draw(ctx);
         this._tooltipView.draw(ctx);
+        this._crosshairLineView.draw(ctx);
     };
     return IndicatorWidget;
 }(DrawWidget));
@@ -9174,10 +9390,10 @@ var CandleHighLowPriceView = /** @class */ (function (_super) {
                 coordinates: [
                     { x: startX - 2, y: startY + offsets[0] },
                     { x: startX, y: startY },
-                    { x: startX + 2, y: startY + offsets[0] }
-                ]
+                    { x: startX + 2, y: startY + offsets[0] },
+                ],
             },
-            styles: { color: styles.color }
+            styles: { color: styles.color },
         })) === null || _a === void 0 ? void 0 : _a.draw(ctx);
         var lineEndX;
         var textStartX;
@@ -9200,10 +9416,10 @@ var CandleHighLowPriceView = /** @class */ (function (_super) {
                 coordinates: [
                     { x: startX, y: startY },
                     { x: startX, y: y },
-                    { x: lineEndX, y: y }
-                ]
+                    { x: lineEndX, y: y },
+                ],
             },
-            styles: { color: styles.color }
+            styles: { color: styles.color },
         })) === null || _b === void 0 ? void 0 : _b.draw(ctx);
         (_c = this.createFigure({
             name: 'text',
@@ -9212,14 +9428,14 @@ var CandleHighLowPriceView = /** @class */ (function (_super) {
                 y: y,
                 text: text,
                 align: textAlign,
-                baseline: 'middle'
+                baseline: 'middle',
             },
             styles: {
                 color: styles.color,
                 size: styles.textSize,
                 family: styles.textFamily,
-                weight: styles.textWeight
-            }
+                weight: styles.textWeight,
+            },
         })) === null || _c === void 0 ? void 0 : _c.draw(ctx);
     };
     return CandleHighLowPriceView;
@@ -9278,15 +9494,15 @@ var CandleLastPriceView = /** @class */ (function (_super) {
                         attrs: {
                             coordinates: [
                                 { x: lastX, y: priceY },
-                                { x: bounding.width, y: priceY }
-                            ]
+                                { x: bounding.width, y: priceY },
+                            ],
                         },
                         styles: {
                             style: lastPriceMarkLineStyles.style,
                             color: color,
                             size: lastPriceMarkLineStyles.size,
-                            dashedValue: lastPriceMarkLineStyles.dashedValue
-                        }
+                            dashedValue: lastPriceMarkLineStyles.dashedValue,
+                        },
                     })) === null || _a === void 0 ? void 0 : _a.draw(ctx);
                 }
             }
@@ -9333,9 +9549,9 @@ var CandleLastPriceView = /** @class */ (function (_super) {
                 x: x - 30,
                 y: priceY,
                 text: _price,
-                baseline: baseline
+                baseline: baseline,
             },
-            styles: oBstyle[key]
+            styles: oBstyle[key],
         })) === null || _c === void 0 ? void 0 : _c.draw(ctx);
     };
     /**
@@ -9767,6 +9983,640 @@ var CandleTooltipView = /** @class */ (function (_super) {
     return CandleTooltipView;
 }(IndicatorTooltipView));
 
+var CommissionOrderView = /** @class */ (function (_super) {
+    __extends(CommissionOrderView, _super);
+    function CommissionOrderView() {
+        var _a;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.widget = _this.getWidget();
+        _this.container = _this.widget.getContainer();
+        _this.chart = _this.widget.getPane().getChart();
+        _this.padding = 5;
+        _this.height = 21;
+        _this.startX = 10;
+        _this.pointWidth = 20;
+        _this.currentMoveIndex = -1;
+        _this.isTriggered = false;
+        _this.isMoving = false;
+        _this.yList = [];
+        _this.orderList = [];
+        _this.colorMap = (_a = {},
+            _a[THEME.DARK] = {
+                rectFillColor: '#313535',
+                volumeColor: '#fff',
+            },
+            _a[THEME.LIGHT] = {
+                rectFillColor: '#fff',
+                volumeColor: '#141717',
+            },
+            _a);
+        return _this;
+    }
+    CommissionOrderView.prototype.drawImp = function (ctx) {
+        var _this = this;
+        var pane = this.widget.getPane();
+        this.chartStore = pane.getChart().getChartStore();
+        this.pricePrecision = this.chartStore.getPrecision().price;
+        var styles = this.chartStore.getStyles();
+        this.defaultStyle = styles;
+        this.theme = styles.theme;
+        var commission = styles.commissionOrder;
+        if (!commission.show)
+            return;
+        var orderList = commission.orderList;
+        this.orderList = orderList;
+        var yAxis = pane.getAxisComponent();
+        this.yAxis = yAxis;
+        var high = Number.MIN_SAFE_INTEGER;
+        var low = Number.MAX_SAFE_INTEGER;
+        this.eachChildren(function (data) {
+            var kLineData = data.data;
+            if (isValid(kLineData)) {
+                if (high < kLineData.high) {
+                    high = kLineData.high;
+                }
+                if (low > kLineData.low) {
+                    low = kLineData.low;
+                }
+            }
+        });
+        // 得到最高价和最低价在 Y 轴上的坐标
+        this.highY = yAxis.convertToPixel(high);
+        this.lowY = yAxis.convertToPixel(low);
+        orderList.forEach(function (order, index) {
+            _this._drawOrder(ctx, pane, order, index);
+        });
+        this.yList = orderList.map(function (order) {
+            return {
+                id: order.id,
+                y: _this.yAxis.convertToPixel(order.price),
+            };
+        });
+    };
+    CommissionOrderView.prototype._drawOrder = function (ctx, pane, order, index) {
+        var commission = this.defaultStyle.commissionOrder;
+        var _a = this.defaultStyle.candle.bar, buyColor = _a.upColor, sellColor = _a.downColor;
+        var color = order.side === OrderSide.Buy ? buyColor : sellColor;
+        var priceToY = this.yAxis.convertToPixel(order.price);
+        var Y = priceToY - this.height / 2;
+        if ((priceToY < this.highY || priceToY > this.lowY) && index !== this.currentMoveIndex)
+            return;
+        this._drawText(ctx, Y, order, commission, {
+            style: PolygonType.Fill,
+            color: color,
+        }, pane);
+        this._drawPointer(ctx, this.startX, Y, color);
+    };
+    CommissionOrderView.prototype._drawRect = function (ctx, x, y, width, height, styles) {
+        var _a;
+        (_a = this.createFigure({
+            name: 'rect',
+            attrs: {
+                x: x,
+                y: y,
+                width: width,
+                height: height,
+            },
+            styles: styles,
+        })) === null || _a === void 0 ? void 0 : _a.draw(ctx);
+    };
+    CommissionOrderView.prototype._drawPointer = function (ctx, x, y, color) {
+        var _this = this;
+        var _a;
+        var Coordinate = [
+            {
+                x: 7,
+                y: 5,
+            },
+            {
+                x: 11,
+                y: 5,
+            },
+            {
+                x: 7,
+                y: 10,
+            },
+            {
+                x: 11,
+                y: 10,
+            },
+            {
+                x: 7,
+                y: 15,
+            },
+            {
+                x: 11,
+                y: 15,
+            },
+        ];
+        Coordinate.forEach(function (item) {
+            _this._drawRect(ctx, x + item.x, y + item.y, 2, 2, {
+                style: PolygonType.Fill,
+                color: color,
+            });
+        });
+        (_a = this.createFigure({
+            name: 'rect',
+            attrs: {
+                x: x,
+                y: y,
+                width: this.pointWidth,
+                height: this.height,
+            },
+            styles: {
+                style: PolygonType.Stroke,
+                borderColor: 'transparent',
+                borderSize: 1,
+            },
+        }, {
+            mouseMoveEvent: function () {
+                _this.container.style.cursor = 'pointer';
+                return true;
+            },
+        })) === null || _a === void 0 ? void 0 : _a.draw(ctx);
+    };
+    CommissionOrderView.prototype._drawText = function (ctx, y, order, commission, styles, pane) {
+        var text = order.text, volume = order.volume, id = order.id;
+        var _style = commission.fontStyle;
+        var textWidth = ctx.measureText(text).width;
+        var volumeWidth = ctx.measureText(String(volume)).width;
+        var rectWidth = this.startX + this.pointWidth + textWidth + volumeWidth + this.padding * 6;
+        // 边框
+        this._drawRect(ctx, this.startX, y, rectWidth, this.height, {
+            style: PolygonType.StrokeFill,
+            borderColor: styles.color,
+            borderSize: 1,
+            borderRadius: 4,
+            color: this.colorMap[this.theme].rectFillColor,
+        });
+        // 内容
+        utils.drawText(ctx, {
+            x: this.startX + this.pointWidth,
+            y: y + this.height / 2,
+            text: text,
+            baseline: 'middle',
+        }, __assign(__assign({}, _style), { backgroundColor: styles.color, paddingLeft: this.padding, paddingTop: this.padding, paddingRight: this.padding, paddingBottom: this.padding }));
+        // 持仓数量
+        utils.drawText(ctx, {
+            x: this.startX + this.pointWidth + textWidth + this.padding * 3,
+            y: y + this.height / 2,
+            text: String(volume),
+            baseline: 'middle',
+        }, __assign(__assign({}, _style), { color: this.colorMap[this.theme].volumeColor }));
+        // 分隔线
+        utils.drawLine(ctx, {
+            coordinates: [
+                {
+                    x: this.startX + this.pointWidth + this.padding * 4 + textWidth + volumeWidth,
+                    y: y,
+                },
+                {
+                    x: this.startX + this.pointWidth + this.padding * 4 + textWidth + volumeWidth,
+                    y: y + this.height,
+                },
+            ],
+        }, {
+            style: LineType.Solid,
+            size: 1,
+            color: styles.color,
+        });
+        //
+        this._drawClose(ctx, this.startX + this.pointWidth + this.padding * 4 + textWidth + volumeWidth + this.padding, y, id, commission.onCloseClick);
+        this._drawLine(ctx, pane, this.startX + rectWidth, y + this.height / 2, styles.color);
+    };
+    CommissionOrderView.prototype._drawClose = function (ctx, x, y, id, onClick) {
+        var _this = this;
+        var _a;
+        utils.drawLine(ctx, {
+            coordinates: [
+                {
+                    x: x,
+                    y: y + this.padding,
+                },
+                {
+                    x: x + 9,
+                    y: y + 16,
+                },
+            ],
+        }, {
+            style: LineType.Solid,
+            size: 1,
+            color: '#9E9E9D',
+        });
+        utils.drawLine(ctx, {
+            coordinates: [
+                {
+                    x: x + 9,
+                    y: y + this.padding,
+                },
+                {
+                    x: x,
+                    y: y + 16,
+                },
+            ],
+        }, {
+            style: LineType.Solid,
+            size: 1,
+            color: '#9E9E9D',
+        });
+        (_a = this.createFigure({
+            name: 'rect',
+            attrs: {
+                x: x - this.padding,
+                y: y,
+                width: this.padding + 16,
+                height: this.height,
+            },
+            styles: {
+                style: PolygonType.StrokeFill,
+                borderColor: 'transparent',
+                borderSize: 1,
+            },
+        }, {
+            mouseClickEvent: function () {
+                onClick(id);
+                return true;
+            },
+            mouseMoveEvent: function () {
+                _this.container.style.cursor = 'pointer';
+                return true;
+            },
+            mouseLeaveEvent: function () {
+                _this.container.style.cursor = 'crosshair';
+                return true;
+            },
+        })) === null || _a === void 0 ? void 0 : _a.draw(ctx);
+    };
+    CommissionOrderView.prototype._drawLine = function (ctx, pane, x, y, color) {
+        var _a;
+        var yAxisBound = (_a = pane.getYAxisWidget()) === null || _a === void 0 ? void 0 : _a.getBounding();
+        if (!yAxisBound)
+            return;
+        var endX = pane.getBounding().width - yAxisBound.width;
+        utils.drawLine(ctx, {
+            coordinates: [
+                {
+                    x: x,
+                    y: y,
+                },
+                {
+                    x: endX,
+                    y: y,
+                },
+            ],
+        }, {
+            style: LineType.Dashed,
+            size: 1,
+            color: color,
+        });
+    };
+    CommissionOrderView.prototype.updateStart = function (x, y) {
+        var _this = this;
+        var moveIndex;
+        var heightOffset = this.height / 2;
+        this.yList.forEach(function (item, index) {
+            if (x >= _this.startX &&
+                x <= _this.startX + _this.pointWidth &&
+                y >= item.y - heightOffset &&
+                y <= item.y + heightOffset) {
+                moveIndex = index;
+            }
+        });
+        this.currentMoveIndex = moveIndex !== undefined ? moveIndex : -1;
+        if (this.currentMoveIndex > -1) {
+            this.defaultStyle.commissionOrder.onMoveStart();
+            this.isTriggered = false;
+        }
+        return true;
+    };
+    CommissionOrderView.prototype.updateYAxis = function (y) {
+        var _this = this;
+        this.isMoving = true;
+        if (this.currentMoveIndex > -1) {
+            this.chart.setStyles({
+                commissionOrder: {
+                    orderList: this.orderList.map(function (item, index) {
+                        if (index === _this.currentMoveIndex) {
+                            if (y <= _this.highY) {
+                                item.price = _this.yAxis.convertFromPixel(_this.highY);
+                                _this.updateEnd();
+                            }
+                            else if (y >= _this.lowY) {
+                                item.price = _this.yAxis.convertFromPixel(_this.lowY);
+                                _this.updateEnd();
+                            }
+                            else {
+                                item.price = _this.yAxis.convertFromPixel(y);
+                            }
+                        }
+                        return item;
+                    }),
+                },
+            });
+            return true;
+        }
+        return false;
+    };
+    CommissionOrderView.prototype.updateEnd = function () {
+        if (this.currentMoveIndex > -1 && this.isMoving && !this.isTriggered) {
+            var item = this.yList[this.currentMoveIndex];
+            this.defaultStyle.commissionOrder.onMoveEnd(item.id, this.yAxis.convertFromPixel(item.y).toFixed(this.pricePrecision));
+            this.isMoving = false;
+            this.isTriggered = true;
+        }
+        return true;
+    };
+    return CommissionOrderView;
+}(ChildrenView));
+
+var PositionOrderView = /** @class */ (function (_super) {
+    __extends(PositionOrderView, _super);
+    function PositionOrderView() {
+        var _a;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.padding = 5;
+        _this.height = 21;
+        _this.startX = 10;
+        _this.exchangeWidth = 14;
+        _this.offset = 3;
+        _this.stopMarginLeft = 30;
+        _this.borderSize = 1;
+        _this.colorMap = (_a = {},
+            _a[THEME.DARK] = {
+                rectFillColor: '#313535',
+                volumeColor: '#fff',
+                stopBackgroundColor: '#4C5252',
+                stopColor: '#fff',
+            },
+            _a[THEME.LIGHT] = {
+                rectFillColor: '#fff',
+                volumeColor: '#141717',
+                stopBackgroundColor: '#E5E5E4',
+                stopColor: '#141717',
+            },
+            _a);
+        return _this;
+    }
+    PositionOrderView.prototype.drawImp = function (ctx) {
+        var _this = this;
+        var widget = this.getWidget();
+        this.container = widget.getContainer();
+        var pane = widget.getPane();
+        var chartStore = pane.getChart().getChartStore();
+        var styles = chartStore.getStyles();
+        this.defaultStyle = styles;
+        this.theme = styles.theme;
+        var positionOrder = styles.positionOrder;
+        if (!positionOrder.show)
+            return;
+        var orderList = positionOrder.orderList, onReverseClick = positionOrder.onReverseClick, onStopClick = positionOrder.onStopClick;
+        orderList.forEach(function (order) {
+            _this._drawOrder(ctx, pane, order, onReverseClick, onStopClick);
+        });
+    };
+    PositionOrderView.prototype._drawOrder = function (ctx, pane, order, onReverseClick, onStopClick) {
+        var _this = this;
+        var _a, _b, _c, _d, _e, _f, _g, _h;
+        var id = order.id, openPrice = order.openPrice, sideText = order.sideText, profitRate = order.profitRate, volume = order.volume;
+        var _j = this.defaultStyle.candle.bar, buyColor = _j.upColor, sellColor = _j.downColor;
+        var color = order.side === OrderSide.Buy ? buyColor : sellColor;
+        var yAxis = pane.getAxisComponent();
+        var y = yAxis.convertToPixel(Number(openPrice)) - this.height / 2;
+        var sideTextWidth = ctx.measureText(sideText).width;
+        var profitRateWidth = ctx.measureText(profitRate).width;
+        var volumeWidth = ctx.measureText(String(volume)).width;
+        var yAxisBounding = (_a = pane.getYAxisWidget()) === null || _a === void 0 ? void 0 : _a.getBounding();
+        if (!yAxisBounding)
+            return;
+        var endX = pane.getBounding().width - yAxisBounding.width;
+        // 边框
+        utils.drawRect(ctx, {
+            x: this.startX,
+            y: y,
+            width: sideTextWidth + profitRateWidth + volumeWidth + this.padding * 7 + this.exchangeWidth,
+            height: this.height,
+        }, {
+            style: PolygonType.StrokeFill,
+            borderColor: color,
+            borderSize: this.borderSize,
+            borderRadius: 4,
+            color: this.colorMap[this.theme].rectFillColor,
+        });
+        // 开仓方向
+        utils.drawText(ctx, {
+            x: this.startX,
+            y: y,
+            text: sideText,
+            height: this.height,
+        }, {
+            style: PolygonType.StrokeFill,
+            paddingLeft: 5 + this.borderSize,
+            paddingTop: 5,
+            paddingRight: 5,
+            paddingBottom: 5,
+            borderRadius: 4,
+            backgroundColor: color,
+            color: '#fff',
+        });
+        // hack 圆角
+        (_b = this.createFigure({
+            name: 'line',
+            attrs: {
+                coordinates: [
+                    {
+                        x: this.startX + sideTextWidth + this.padding * 2,
+                        y: y,
+                    },
+                    {
+                        x: this.startX + sideTextWidth + this.padding * 2,
+                        y: y + this.height,
+                    },
+                ],
+            },
+            styles: {
+                style: LineType.Solid,
+                size: 4,
+                color: color,
+            },
+        })) === null || _b === void 0 ? void 0 : _b.draw(ctx);
+        // 盈亏率
+        utils.drawText(ctx, {
+            x: this.startX + sideTextWidth + this.padding * 3,
+            y: y,
+            text: profitRate,
+            height: this.height,
+        }, {
+            paddingLeft: 5,
+            paddingTop: 5,
+            paddingRight: 5,
+            paddingBottom: 5,
+            color: profitRate.includes('-') ? sellColor : buyColor,
+        });
+        // 持仓数量
+        utils.drawText(ctx, {
+            x: this.startX + sideTextWidth + this.padding * 4 + profitRateWidth,
+            y: y,
+            text: String(volume),
+            height: this.height,
+        }, {
+            paddingLeft: 5,
+            paddingTop: 5,
+            paddingRight: 5,
+            paddingBottom: 5,
+            color: this.colorMap[this.theme].volumeColor,
+        });
+        // 分隔线
+        (_c = this.createFigure({
+            name: 'line',
+            attrs: {
+                coordinates: [
+                    {
+                        x: this.startX + sideTextWidth + this.padding * 6 + profitRateWidth + volumeWidth,
+                        y: y,
+                    },
+                    {
+                        x: this.startX + sideTextWidth + this.padding * 6 + profitRateWidth + volumeWidth,
+                        y: y + this.height,
+                    },
+                ],
+            },
+            styles: {
+                style: LineType.Solid,
+                size: 1,
+                color: color,
+            },
+        })) === null || _c === void 0 ? void 0 : _c.draw(ctx);
+        // 反向开仓箭头a
+        (_d = this.createFigure({
+            name: 'line',
+            attrs: {
+                coordinates: [
+                    {
+                        x: this.startX + sideTextWidth + this.padding * 7 + profitRateWidth + volumeWidth,
+                        y: y + this.padding + this.offset,
+                    },
+                    {
+                        x: this.startX + sideTextWidth + this.padding * 7 + profitRateWidth + volumeWidth + this.offset,
+                        y: y + this.padding,
+                    },
+                    {
+                        x: this.startX + sideTextWidth + this.padding * 7 + profitRateWidth + volumeWidth + this.offset,
+                        y: y + this.padding + 11,
+                    },
+                ],
+            },
+            styles: {
+                style: LineType.Solid,
+                size: 1,
+                color: color,
+            },
+        })) === null || _d === void 0 ? void 0 : _d.draw(ctx);
+        // 反向开仓箭头b
+        (_e = this.createFigure({
+            name: 'line',
+            attrs: {
+                coordinates: [
+                    {
+                        x: this.startX + sideTextWidth + this.padding * 7 + profitRateWidth + volumeWidth + this.offset * 2,
+                        y: y + this.padding - this.borderSize,
+                    },
+                    {
+                        x: this.startX + sideTextWidth + this.padding * 7 + profitRateWidth + volumeWidth + this.offset * 2,
+                        y: y + this.padding + 10,
+                    },
+                    {
+                        x: this.startX + sideTextWidth + this.padding * 7 + profitRateWidth + volumeWidth + this.offset * 3,
+                        y: y + this.padding + 11 - this.offset,
+                    },
+                ],
+            },
+            styles: {
+                style: LineType.Solid,
+                size: 1,
+                color: color,
+            },
+        })) === null || _e === void 0 ? void 0 : _e.draw(ctx);
+        // 反向开仓事件触发矩形
+        (_f = this.createFigure({
+            name: 'rect',
+            attrs: {
+                x: this.startX + sideTextWidth + this.padding * 6 + profitRateWidth + volumeWidth,
+                y: y,
+                width: 20,
+                height: this.height,
+            },
+            styles: {
+                style: PolygonType.Stroke,
+            },
+        }, {
+            mouseClickEvent: function () {
+                onReverseClick(id);
+                return true;
+            },
+            mouseMoveEvent: function () {
+                _this.container.style.cursor = 'pointer';
+                return true;
+            },
+        })) === null || _f === void 0 ? void 0 : _f.draw(ctx);
+        // 价格线
+        (_g = this.createFigure({
+            name: 'line',
+            attrs: {
+                coordinates: [
+                    {
+                        x: this.startX + sideTextWidth + profitRateWidth + volumeWidth + this.padding * 7 + this.exchangeWidth,
+                        y: y + this.height / 2,
+                    },
+                    {
+                        x: endX + this.offset,
+                        y: y + this.height / 2,
+                    },
+                ],
+            },
+            styles: {
+                style: LineType.Dashed,
+                size: 1,
+                color: color,
+            },
+        })) === null || _g === void 0 ? void 0 : _g.draw(ctx);
+        // 止盈止损按钮
+        (_h = this.createFigure({
+            name: 'text',
+            attrs: {
+                x: this.startX +
+                    sideTextWidth +
+                    profitRateWidth +
+                    volumeWidth +
+                    this.padding * 7 +
+                    this.exchangeWidth +
+                    this.stopMarginLeft,
+                y: y + this.height / 2,
+                text: 'TP/SL',
+                baseline: 'middle',
+            },
+            styles: {
+                style: PolygonType.StrokeFill,
+                paddingLeft: 5,
+                paddingTop: 5,
+                paddingRight: 5,
+                paddingBottom: 5,
+                backgroundColor: this.colorMap[this.theme].stopBackgroundColor,
+                color: this.colorMap[this.theme].stopColor,
+            },
+        }, {
+            mouseClickEvent: function () {
+                onStopClick(id);
+                return true;
+            },
+            mouseMoveEvent: function () {
+                _this.container.style.cursor = 'pointer';
+                return true;
+            },
+        })) === null || _h === void 0 ? void 0 : _h.draw(ctx);
+    };
+    return PositionOrderView;
+}(ChildrenView));
+
 /**
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -9788,7 +10638,24 @@ var CandleWidget = /** @class */ (function (_super) {
         _this._candleAreaView = new CandleAreaView(_this);
         _this._candleHighLowPriceView = new CandleHighLowPriceView(_this);
         _this._candleLastPriceLineView = new CandleLastPriceView(_this);
+        _this._commissionOrderView = new CommissionOrderView(_this);
+        _this._positionOrderView = new PositionOrderView(_this);
         _this.addChild(_this._candleBarView);
+        _this.addChild(_this._commissionOrderView);
+        _this.addChild(_this._positionOrderView);
+        _this.registerEvent('mouseMoveEvent', function () {
+            _this.getContainer().style.cursor = 'crosshair';
+            return true;
+        });
+        _this.registerEvent('mouseDownEvent', function (e) {
+            return _this._commissionOrderView.updateStart(e.x, e.y);
+        });
+        _this.registerEvent('pressedMouseMoveEvent', function (e) {
+            return _this._commissionOrderView.updateYAxis(e.y);
+        });
+        _this.registerEvent('mouseUpEvent', function () {
+            return _this._commissionOrderView.updateEnd();
+        });
         return _this;
     }
     CandleWidget.prototype.updateMainContent = function (ctx) {
@@ -9802,6 +10669,8 @@ var CandleWidget = /** @class */ (function (_super) {
             this._candleAreaView.draw(ctx);
         }
         this._candleLastPriceLineView.draw(ctx);
+        this._commissionOrderView.draw(ctx);
+        this._positionOrderView.draw(ctx);
     };
     CandleWidget.prototype.createTooltipView = function () {
         return new CandleTooltipView(this);
@@ -10055,7 +10924,7 @@ var CandleLastPriceLabelView = /** @class */ (function (_super) {
                     if (yAxis.getType() === YAxisType.Percentage) {
                         var fromData = chartStore.getVisibleFirstData();
                         var fromClose = fromData.close;
-                        text = "".concat(((close_1 - fromClose) / fromClose * 100).toFixed(2), "%");
+                        text = "".concat((((close_1 - fromClose) / fromClose) * 100).toFixed(2), "%");
                     }
                     else {
                         text = formatPrecision(close_1, precision.price);
@@ -10114,7 +10983,9 @@ var CandleLastPriceLabelView = /** @class */ (function (_super) {
                     this._drawCountDown(ctx, chartStore, function (text) {
                         var _a;
                         if (lastCountDownStyle.show) {
-                            ctx.clearRect(0, priceY_1, bounding.width, lastPriceMarkTextStyles.size + lastPriceMarkTextStyles.paddingTop + lastPriceMarkTextStyles.paddingBottom);
+                            ctx.clearRect(0, priceY_1, bounding.width, lastPriceMarkTextStyles.size +
+                                lastPriceMarkTextStyles.paddingTop +
+                                lastPriceMarkTextStyles.paddingBottom);
                             (_a = _this.createFigure({
                                 name: 'text',
                                 attrs: {
@@ -10167,13 +11038,13 @@ var CandleLastPriceLabelView = /** @class */ (function (_super) {
         // 未来到期时间
         var futureTime = timestamp1 + diffTime;
         /**
-           * 计算 当前最新时间 到达 未来时间 的倒计时
-           * 1. 小于等于1分钟：使用这种格式倒计时 00:59S
-           * 2. 大于1分钟小于等于一个小时的：使用这种格式倒计时 59M:59S
-           * 3. 大于一个小时小于等于一天的：使用这种格式倒计时 23H:59M
-           * 5. 大于一天小于等于一周的：使用这种格式倒计时 6D:23H
-           * 5. 大于一天小于等于一个月的：使用这种格式倒计时 29D:23H
-           */
+         * 计算 当前最新时间 到达 未来时间 的倒计时
+         * 1. 小于等于1分钟：使用这种格式倒计时 00:59S
+         * 2. 大于1分钟小于等于一个小时的：使用这种格式倒计时 59M:59S
+         * 3. 大于一个小时小于等于一天的：使用这种格式倒计时 23H:59M
+         * 5. 大于一天小于等于一周的：使用这种格式倒计时 6D:23H
+         * 5. 大于一天小于等于一个月的：使用这种格式倒计时 29D:23H
+         */
         var now = new Date().getTime();
         // 未来 - 当前 = 剩余时间
         var diff = futureTime - now;
@@ -10183,7 +11054,7 @@ var CandleLastPriceLabelView = /** @class */ (function (_super) {
         var second = Math.floor((diff % (60 * 1000)) / 1000);
         var text = '00:00';
         // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-        var prefix = function (num) { return num < 10 ? '0' + num : num; };
+        var prefix = function (num) { return (num < 10 ? '0' + num : num); };
         if (day > 0) {
             text = "".concat(prefix(day), "D:").concat(prefix(hour), "H");
         }
@@ -10379,7 +11250,10 @@ var CrosshairHorizontalLabelView = /** @class */ (function (_super) {
         var widget = this.getWidget();
         var pane = widget.getPane();
         var bounding = widget.getBounding();
-        var chartStore = this._CchartStore = widget.getPane().getChart().getChartStore();
+        var chartStore = (this._CchartStore = widget
+            .getPane()
+            .getChart()
+            .getChartStore());
         var crosshair = chartStore.getTooltipStore().getCrosshair();
         var styles = chartStore.getStyles().crosshair;
         if (isString(crosshair.paneId) && this.compare(crosshair, pane.getId())) {
@@ -10421,10 +11295,12 @@ var CrosshairHorizontalLabelView = /** @class */ (function (_super) {
         var text;
         if (yAxis.getType() === YAxisType.Percentage) {
             var fromData = chartStore.getVisibleFirstData();
-            text = "".concat(((value - fromData.close) / fromData.close * 100).toFixed(2), "%");
+            text = "".concat((((value - fromData.close) / fromData.close) * 100).toFixed(2), "%");
         }
         else {
-            var indicators = chartStore.getIndicatorStore().getInstances(crosshair.paneId);
+            var indicators = chartStore
+                .getIndicatorStore()
+                .getInstances(crosshair.paneId);
             var precision_1 = 0;
             var shouldFormatBigNumber_1 = false;
             if (yAxis.isInCandle()) {
@@ -10469,7 +11345,9 @@ var CrosshairHorizontalLabelView = /** @class */ (function (_super) {
                 if (precision > 4) {
                     precision = 4;
                 }
-                text = ((+(text.replace(/[^0-9.]/g, '')) - +(data.close)) / +(data.close) * 100).toFixed(precision) + '%';
+                text =
+                    (((+text.replace(/[^0-9.]/g, '') - +data.close) / +data.close) *
+                        100).toFixed(precision) + '%';
             }
             else {
                 text = '0.00%';
@@ -10479,6 +11357,153 @@ var CrosshairHorizontalLabelView = /** @class */ (function (_super) {
     };
     return CrosshairHorizontalLabelView;
 }(View));
+
+var CommissionOrderYAxisLabelView = /** @class */ (function (_super) {
+    __extends(CommissionOrderYAxisLabelView, _super);
+    function CommissionOrderYAxisLabelView() {
+        var _a;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.height = 21;
+        _this.offset = 3;
+        _this.colorMap = (_a = {},
+            _a[THEME.DARK] = {
+                rectFillColor: '#313535',
+            },
+            _a[THEME.LIGHT] = {
+                rectFillColor: '#fff',
+            },
+            _a);
+        return _this;
+    }
+    CommissionOrderYAxisLabelView.prototype.drawImp = function (ctx) {
+        var _this = this;
+        var widget = this.getWidget();
+        var pane = widget.getPane();
+        var chartStore = pane.getChart().getChartStore();
+        var styles = chartStore.getStyles();
+        this.defaultStyle = styles;
+        this.theme = styles.theme;
+        this.chartStore = chartStore;
+        var commission = styles.commissionOrder;
+        if (!commission.show)
+            return;
+        var yAxis = pane.getAxisComponent();
+        this.yAxis = yAxis;
+        var high = Number.MIN_SAFE_INTEGER;
+        var low = Number.MAX_SAFE_INTEGER;
+        this.eachChildren(function (data) {
+            var kLineData = data.data;
+            if (isValid(kLineData)) {
+                if (high < kLineData.high) {
+                    high = kLineData.high;
+                }
+                if (low > kLineData.low) {
+                    low = kLineData.low;
+                }
+            }
+        });
+        // 得到最高价和最低价在 Y 轴上的坐标
+        this.highY = yAxis.convertToPixel(high);
+        this.lowY = yAxis.convertToPixel(low);
+        var orderList = commission.orderList;
+        orderList.forEach(function (order) {
+            _this._drawOrder(ctx, pane, order);
+        });
+    };
+    CommissionOrderYAxisLabelView.prototype._drawOrder = function (ctx, pane, order) {
+        var _a, _b, _c;
+        var yAxisBounding = (_a = pane.getYAxisWidget()) === null || _a === void 0 ? void 0 : _a.getBounding();
+        var commission = this.defaultStyle.commissionOrder;
+        var fontStyle = commission === null || commission === void 0 ? void 0 : commission.fontStyle;
+        var yAxisLabelRectStyles = commission === null || commission === void 0 ? void 0 : commission.yAxisLabelRectStyles;
+        var _d = this.defaultStyle.candle.bar, buyColor = _d.upColor, sellColor = _d.downColor;
+        var color = order.side === OrderSide.Buy ? buyColor : sellColor;
+        var Y = this.yAxis.convertToPixel(order.price);
+        if (Y < this.highY || Y > this.lowY)
+            return;
+        var price = formatFoldDecimal(formatThousands(Number(order.price).toFixed(this.chartStore.getPrecision().price), this.chartStore.getThousandsSeparator()), this.chartStore.getDecimalFoldThreshold());
+        if (yAxisBounding === null || yAxisBounding === void 0 ? void 0 : yAxisBounding.width) {
+            (_b = this.createFigure({
+                name: 'rect',
+                attrs: {
+                    x: 1,
+                    y: Y - this.height / 2,
+                    width: (yAxisBounding === null || yAxisBounding === void 0 ? void 0 : yAxisBounding.width) - this.offset,
+                    height: this.height,
+                },
+                styles: {
+                    style: PolygonType.StrokeFill,
+                    borderRadius: 4,
+                    borderSize: 1,
+                    borderColor: color,
+                    color: this.colorMap[this.theme].rectFillColor,
+                },
+            })) === null || _b === void 0 ? void 0 : _b.draw(ctx);
+        }
+        (_c = this.createFigure({
+            name: 'text',
+            attrs: {
+                x: 0,
+                y: Y,
+                text: price,
+                baseline: 'middle',
+            },
+            styles: __assign(__assign(__assign({}, yAxisLabelRectStyles), fontStyle), { color: color }),
+        })) === null || _c === void 0 ? void 0 : _c.draw(ctx);
+    };
+    return CommissionOrderYAxisLabelView;
+}(ChildrenView));
+
+var PositionOrderYAxisLabelView = /** @class */ (function (_super) {
+    __extends(PositionOrderYAxisLabelView, _super);
+    function PositionOrderYAxisLabelView() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.offset = 3;
+        return _this;
+    }
+    PositionOrderYAxisLabelView.prototype.drawImp = function (ctx) {
+        var _this = this;
+        var widget = this.getWidget();
+        var pane = widget.getPane();
+        var chartStore = pane.getChart().getChartStore();
+        var styles = chartStore.getStyles();
+        this.defaultStyle = styles;
+        this.chartStore = chartStore;
+        var positionOrder = styles.positionOrder;
+        if (!positionOrder.show)
+            return;
+        var orderList = positionOrder.orderList;
+        orderList.forEach(function (order) {
+            _this._drawOrder(ctx, pane, order);
+        });
+    };
+    PositionOrderYAxisLabelView.prototype._drawOrder = function (ctx, pane, order) {
+        var _a, _b;
+        var yAxisBounding = (_a = pane.getYAxisWidget()) === null || _a === void 0 ? void 0 : _a.getBounding();
+        if (!yAxisBounding)
+            return;
+        var commission = this.defaultStyle.positionOrder;
+        var fontStyle = commission === null || commission === void 0 ? void 0 : commission.fontStyle;
+        var yAxisLabelRectStyles = commission === null || commission === void 0 ? void 0 : commission.yAxisLabelRectStyles;
+        var _c = this.defaultStyle.candle.bar, buyColor = _c.upColor, sellColor = _c.downColor;
+        var color = order.side === OrderSide.Buy ? buyColor : sellColor;
+        var openPrice = formatFoldDecimal(formatThousands(order.openPrice, this.chartStore.getThousandsSeparator()), this.chartStore.getDecimalFoldThreshold());
+        var yAxis = pane.getAxisComponent();
+        var Y = yAxis.convertToPixel(Number(order.openPrice));
+        (_b = this.createFigure({
+            name: 'text',
+            attrs: {
+                x: this.offset,
+                y: Y,
+                text: openPrice,
+                baseline: 'middle',
+                width: (yAxisBounding === null || yAxisBounding === void 0 ? void 0 : yAxisBounding.width) - this.offset,
+            },
+            styles: __assign(__assign(__assign({}, yAxisLabelRectStyles), fontStyle), { style: PolygonType.StrokeFill, backgroundColor: color, borderRadius: 4, color: '#fff' }),
+        })) === null || _b === void 0 ? void 0 : _b.draw(ctx);
+    };
+    return PositionOrderYAxisLabelView;
+}(ChildrenView));
 
 /**
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -10502,7 +11527,8 @@ var YAxisWidget = /** @class */ (function (_super) {
         _this._indicatorLastValueView = new IndicatorLastValueView(_this);
         _this._overlayYAxisView = new OverlayYAxisView(_this);
         _this._crosshairHorizontalLabelView = new CrosshairHorizontalLabelView(_this);
-        _this.getContainer().style.cursor = 'ns-resize';
+        _this._commissionOrderYAxisLabelView = new CommissionOrderYAxisLabelView(_this);
+        _this._positionOrderYAxisLabelView = new PositionOrderYAxisLabelView(_this);
         _this.addChild(_this._overlayYAxisView);
         return _this;
     }
@@ -10512,6 +11538,8 @@ var YAxisWidget = /** @class */ (function (_super) {
     YAxisWidget.prototype.updateMain = function (ctx) {
         this._yAxisView.draw(ctx);
         if (this.getPane().getAxisComponent().isInCandle()) {
+            this._commissionOrderYAxisLabelView.draw(ctx);
+            this._positionOrderYAxisLabelView.draw(ctx);
             this._candleLastPriceLabelView.draw(ctx);
         }
         this._indicatorLastValueView.draw(ctx);
@@ -11386,8 +12414,7 @@ var SeparatorWidget = /** @class */ (function (_super) {
         var topPane = currentPane.getTopPane();
         var bottomPane = currentPane.getBottomPane();
         var isUpDrag = dragDistance < 0;
-        if (topPane !== null &&
-            (bottomPane === null || bottomPane === void 0 ? void 0 : bottomPane.getOptions().dragEnabled)) {
+        if (topPane !== null && (bottomPane === null || bottomPane === void 0 ? void 0 : bottomPane.getOptions().dragEnabled)) {
             var reducedPane = void 0;
             var increasedPane = void 0;
             var startDragReducedPaneHeight = void 0;
@@ -11409,7 +12436,9 @@ var SeparatorWidget = /** @class */ (function (_super) {
                 var reducedPaneHeight = Math.max(startDragReducedPaneHeight - Math.abs(dragDistance), reducedPaneMinHeight);
                 var diffHeight = startDragReducedPaneHeight - reducedPaneHeight;
                 reducedPane.setBounding({ height: reducedPaneHeight });
-                increasedPane.setBounding({ height: startDragIncreasedPaneHeight + diffHeight });
+                increasedPane.setBounding({
+                    height: startDragIncreasedPaneHeight + diffHeight,
+                });
                 var chart = currentPane.getChart();
                 chart.getChartStore().getActionStore().execute(ActionType.OnPaneDrag, { paneId: currentPane.getId() });
                 chart.adjustPaneViewport(true, true, true, true, true);
@@ -11446,7 +12475,7 @@ var SeparatorWidget = /** @class */ (function (_super) {
             top: '-3px',
             zIndex: '20',
             boxSizing: 'border-box',
-            cursor: 'ns-resize'
+            cursor: 'ns-resize',
         });
     };
     SeparatorWidget.prototype.updateImp = function (container, _bounding, level) {
@@ -12025,10 +13054,16 @@ var SyntheticEvent = /** @class */ (function () {
         var _this = this;
         this._clickCount = 0;
         this._clickTimeoutId = null;
-        this._clickCoordinate = { x: Number.NEGATIVE_INFINITY, y: Number.POSITIVE_INFINITY };
+        this._clickCoordinate = {
+            x: Number.NEGATIVE_INFINITY,
+            y: Number.POSITIVE_INFINITY,
+        };
         this._tapCount = 0;
         this._tapTimeoutId = null;
-        this._tapCoordinate = { x: Number.NEGATIVE_INFINITY, y: Number.POSITIVE_INFINITY };
+        this._tapCoordinate = {
+            x: Number.NEGATIVE_INFINITY,
+            y: Number.POSITIVE_INFINITY,
+        };
         this._longTapTimeoutId = null;
         this._longTapActive = false;
         this._mouseMoveStartCoordinate = null;
@@ -12154,7 +13189,9 @@ var SyntheticEvent = /** @class */ (function () {
         this._unsubscribeContextMenu = function () {
             _this._target.removeEventListener('contextmenu', boundContextMenu);
         };
-        this._target.addEventListener('contextmenu', boundContextMenu, { passive: false });
+        this._target.addEventListener('contextmenu', boundContextMenu, {
+            passive: false,
+        });
         if (this._firesTouchEvents(enterEvent)) {
             return;
         }
@@ -12167,7 +13204,10 @@ var SyntheticEvent = /** @class */ (function () {
         }
         this._clickCount = 0;
         this._clickTimeoutId = null;
-        this._clickCoordinate = { x: Number.NEGATIVE_INFINITY, y: Number.POSITIVE_INFINITY };
+        this._clickCoordinate = {
+            x: Number.NEGATIVE_INFINITY,
+            y: Number.POSITIVE_INFINITY,
+        };
     };
     SyntheticEvent.prototype._resetTapTimeout = function () {
         if (this._tapTimeoutId !== null) {
@@ -12175,7 +13215,10 @@ var SyntheticEvent = /** @class */ (function () {
         }
         this._tapCount = 0;
         this._tapTimeoutId = null;
-        this._tapCoordinate = { x: Number.NEGATIVE_INFINITY, y: Number.POSITIVE_INFINITY };
+        this._tapCoordinate = {
+            x: Number.NEGATIVE_INFINITY,
+            y: Number.POSITIVE_INFINITY,
+        };
     };
     SyntheticEvent.prototype._mouseMoveHandler = function (moveEvent) {
         if (this._mousePressed || this._touchMoveStartCoordinate !== null) {
@@ -12409,8 +13452,12 @@ var SyntheticEvent = /** @class */ (function () {
                 rootElement.removeEventListener('touchmove', boundTouchMoveWithDownHandler_1);
                 rootElement.removeEventListener('touchend', boundTouchEndHandler_1);
             };
-            rootElement.addEventListener('touchmove', boundTouchMoveWithDownHandler_1, { passive: false });
-            rootElement.addEventListener('touchend', boundTouchEndHandler_1, { passive: false });
+            rootElement.addEventListener('touchmove', boundTouchMoveWithDownHandler_1, {
+                passive: false,
+            });
+            rootElement.addEventListener('touchend', boundTouchEndHandler_1, {
+                passive: false,
+            });
             this._clearLongTapTimeout();
             this._longTapTimeoutId = setTimeout(this._longTapHandler.bind(this, downEvent), 500 /* Delay.LongTap */);
         }
@@ -12475,7 +13522,7 @@ var SyntheticEvent = /** @class */ (function () {
                 if (event.composed && _this._target.contains(event.composedPath()[0])) {
                     return;
                 }
-                if ((event.target !== null) && _this._target.contains(event.target)) {
+                if (event.target !== null && _this._target.contains(event.target)) {
                     return;
                 }
                 _this._handler.mouseDownOutsideEvent({ x: 0, y: 0, pageX: 0, pageY: 0 });
@@ -12521,7 +13568,9 @@ var SyntheticEvent = /** @class */ (function () {
             !isValid(this._handler.pinchEndEvent)) {
             return;
         }
-        this._target.addEventListener('touchstart', function (event) { _this._checkPinchState(event.touches); }, { passive: true });
+        this._target.addEventListener('touchstart', function (event) {
+            _this._checkPinchState(event.touches);
+        }, { passive: true });
         this._target.addEventListener('touchmove', function (event) {
             if (event.touches.length !== 2 || _this._startPinchMiddleCoordinate === null) {
                 return;
@@ -12552,8 +13601,8 @@ var SyntheticEvent = /** @class */ (function () {
         var _a;
         var box = (_a = this._target.getBoundingClientRect()) !== null && _a !== void 0 ? _a : { left: 0, top: 0 };
         this._startPinchMiddleCoordinate = {
-            x: ((touches[0].clientX - box.left) + (touches[1].clientX - box.left)) / 2,
-            y: ((touches[0].clientY - box.top) + (touches[1].clientY - box.top)) / 2
+            x: (touches[0].clientX - box.left + (touches[1].clientX - box.left)) / 2,
+            y: (touches[0].clientY - box.top + (touches[1].clientY - box.top)) / 2,
         };
         this._startPinchDistance = this._getTouchDistance(touches[0], touches[1]);
         if (isValid(this._handler.pinchStartEvent)) {
@@ -12623,13 +13672,16 @@ var SyntheticEvent = /** @class */ (function () {
             y: eventLike.clientY - box.top,
             pageX: eventLike.pageX,
             pageY: eventLike.pageY,
-            isTouch: !event.type.startsWith('mouse') && event.type !== 'contextmenu' && event.type !== 'click' && event.type !== 'wheel',
+            isTouch: !event.type.startsWith('mouse') &&
+                event.type !== 'contextmenu' &&
+                event.type !== 'click' &&
+                event.type !== 'wheel',
             preventDefault: function () {
                 if (event.type !== 'touchstart') {
                     // touchstart is passive and cannot be prevented
                     _this._preventDefault(event);
                 }
-            }
+            },
         };
     };
     SyntheticEvent.prototype._getTouchDistance = function (p1, p2) {
@@ -12645,7 +13697,7 @@ var SyntheticEvent = /** @class */ (function () {
     SyntheticEvent.prototype._getCoordinate = function (eventLike) {
         return {
             x: eventLike.pageX,
-            y: eventLike.pageY
+            y: eventLike.pageY,
         };
     };
     SyntheticEvent.prototype._eventTimeStamp = function (e) {
@@ -12731,7 +13783,7 @@ var Event = /** @class */ (function () {
         this._chart = chart;
         this._event = new SyntheticEvent(container, this, {
             treatVertDragAsPageScroll: function () { return false; },
-            treatHorzDragAsPageScroll: function () { return false; }
+            treatHorzDragAsPageScroll: function () { return false; },
         });
         container.addEventListener('keydown', this._boundKeyBoardDownEvent);
     }
@@ -12883,7 +13935,7 @@ var Event = /** @class */ (function () {
                                 range: newTo - newFrom,
                                 realFrom: newRealFrom,
                                 realTo: newRealTo,
-                                realRange: newRealTo - newRealFrom
+                                realRange: newRealTo - newRealFrom,
                             });
                         }
                         var distance = event_3.x - this._startScrollCoordinate.x;
@@ -12900,7 +13952,10 @@ var Event = /** @class */ (function () {
                             var scale = this._xAxisStartScaleDistance / event_3.pageX;
                             var zoomScale = (scale - this._xAxisScale) * 10;
                             this._xAxisScale = scale;
-                            this._chart.getChartStore().getTimeScaleStore().zoom(zoomScale, (_e = this._xAxisStartScaleCoordinate) !== null && _e !== void 0 ? _e : undefined);
+                            this._chart
+                                .getChartStore()
+                                .getTimeScaleStore()
+                                .zoom(zoomScale, (_e = this._xAxisStartScaleCoordinate) !== null && _e !== void 0 ? _e : undefined);
                         }
                     }
                     else {
@@ -12927,7 +13982,7 @@ var Event = /** @class */ (function () {
                                 range: newRange,
                                 realFrom: newRealFrom,
                                 realTo: newRealTo,
-                                realRange: newRealTo - newRealFrom
+                                realRange: newRealTo - newRealFrom,
                             });
                             this._chart.adjustPaneViewport(false, true, true, true);
                         }
@@ -13129,7 +14184,7 @@ var Event = /** @class */ (function () {
                     if (this._startScrollCoordinate !== null) {
                         var time = new Date().getTime() - this._flingStartTime;
                         var distance = event_10.x - this._startScrollCoordinate.x;
-                        var v_1 = distance / (time > 0 ? time : 1) * 20;
+                        var v_1 = (distance / (time > 0 ? time : 1)) * 20;
                         if (time < 200 && Math.abs(v_1) > 0) {
                             var timeScaleStore_1 = this._chart.getChartStore().getTimeScaleStore();
                             var flingScroll_1 = function () {
@@ -13218,8 +14273,7 @@ var Event = /** @class */ (function () {
                 var _c = __read(separatorPanes_1_1.value, 2), pane_1 = _c[1];
                 var bounding = pane_1.getBounding();
                 var top_1 = bounding.top - Math.round((REAL_SEPARATOR_HEIGHT - separatorSize) / 2);
-                if (x >= bounding.left && x <= bounding.left + bounding.width &&
-                    y >= top_1 && y <= top_1 + REAL_SEPARATOR_HEIGHT) {
+                if (x >= bounding.left && x <= bounding.left + bounding.width && y >= top_1 && y <= top_1 + REAL_SEPARATOR_HEIGHT) {
                     return { pane: pane_1, widget: pane_1.getWidget() };
                 }
             }
@@ -13237,8 +14291,10 @@ var Event = /** @class */ (function () {
             for (var drawPanes_1 = __values(drawPanes), drawPanes_1_1 = drawPanes_1.next(); !drawPanes_1_1.done; drawPanes_1_1 = drawPanes_1.next()) {
                 var p = drawPanes_1_1.value;
                 var bounding = p.getBounding();
-                if (x >= bounding.left && x <= bounding.left + bounding.width &&
-                    y >= bounding.top && y <= bounding.top + bounding.height) {
+                if (x >= bounding.left &&
+                    x <= bounding.left + bounding.width &&
+                    y >= bounding.top &&
+                    y <= bounding.top + bounding.height) {
                     pane = p;
                     break;
                 }
@@ -13256,8 +14312,10 @@ var Event = /** @class */ (function () {
             if (widget === null) {
                 var mainWidget = pane.getMainWidget();
                 var mainBounding = mainWidget.getBounding();
-                if (x >= mainBounding.left && x <= mainBounding.left + mainBounding.width &&
-                    y >= mainBounding.top && y <= mainBounding.top + mainBounding.height) {
+                if (x >= mainBounding.left &&
+                    x <= mainBounding.left + mainBounding.width &&
+                    y >= mainBounding.top &&
+                    y <= mainBounding.top + mainBounding.height) {
                     widget = mainWidget;
                 }
             }
@@ -13265,8 +14323,10 @@ var Event = /** @class */ (function () {
                 var yAxisWidget = pane.getYAxisWidget();
                 if (yAxisWidget !== null) {
                     var yAxisBounding = yAxisWidget.getBounding();
-                    if (x >= yAxisBounding.left && x <= yAxisBounding.left + yAxisBounding.width &&
-                        y >= yAxisBounding.top && y <= yAxisBounding.top + yAxisBounding.height) {
+                    if (x >= yAxisBounding.left &&
+                        x <= yAxisBounding.left + yAxisBounding.width &&
+                        y >= yAxisBounding.top &&
+                        y <= yAxisBounding.top + yAxisBounding.height) {
                         widget = yAxisWidget;
                     }
                 }
@@ -13470,7 +14530,8 @@ var ChartImp = /** @class */ (function () {
         }
         var indicatorPaneTotalHeight = 0;
         this._drawPanes.forEach(function (pane) {
-            if (pane.getId() !== PaneIdConstants.CANDLE && pane.getId() !== PaneIdConstants.X_AXIS) {
+            if (pane.getId() !== PaneIdConstants.CANDLE &&
+                pane.getId() !== PaneIdConstants.X_AXIS) {
                 var paneHeight = pane.getBounding().height;
                 var paneMinHeight = pane.getOptions().minHeight;
                 if (paneHeight < paneMinHeight) {
@@ -13565,7 +14626,9 @@ var ChartImp = /** @class */ (function () {
             var shouldMeasureHeight = false;
             if (pane !== null) {
                 var shouldAdjust = forceShouldAdjust;
-                if (options.id !== PaneIdConstants.CANDLE && isNumber(options.height) && options.height > 0) {
+                if (options.id !== PaneIdConstants.CANDLE &&
+                    isNumber(options.height) &&
+                    options.height > 0) {
                     var minHeight = Math.max((_a = options.minHeight) !== null && _a !== void 0 ? _a : pane.getOptions().minHeight, 0);
                     var height = Math.max(minHeight, options.height);
                     pane.setBounding({ height: height });
@@ -13592,11 +14655,21 @@ var ChartImp = /** @class */ (function () {
         var pane = this._drawPanes.find(function (p) { return p.getId() === paneId; });
         return pane !== null && pane !== void 0 ? pane : null;
     };
-    ChartImp.prototype.getContainer = function () { return this._container; };
-    ChartImp.prototype.getChartStore = function () { return this._chartStore; };
-    ChartImp.prototype.getXAxisPane = function () { return this._xAxisPane; };
-    ChartImp.prototype.getAllDrawPanes = function () { return this._drawPanes; };
-    ChartImp.prototype.getAllSeparatorPanes = function () { return this._separatorPanes; };
+    ChartImp.prototype.getContainer = function () {
+        return this._container;
+    };
+    ChartImp.prototype.getChartStore = function () {
+        return this._chartStore;
+    };
+    ChartImp.prototype.getXAxisPane = function () {
+        return this._xAxisPane;
+    };
+    ChartImp.prototype.getAllDrawPanes = function () {
+        return this._drawPanes;
+    };
+    ChartImp.prototype.getAllSeparatorPanes = function () {
+        return this._separatorPanes;
+    };
     ChartImp.prototype.adjustPaneViewport = function (shouldMeasureHeight, shouldMeasureWidth, shouldUpdate, shouldAdjustYAxis, shouldForceAdjustYAxis) {
         if (shouldMeasureHeight) {
             this._measurePaneHeight();
@@ -13646,7 +14719,8 @@ var ChartImp = /** @class */ (function () {
                 indicators.forEach(function (indicator) {
                     var _a;
                     var result = indicator.result;
-                    paneIndicatorData[indicator.name] = result[(_a = crosshair.dataIndex) !== null && _a !== void 0 ? _a : result.length - 1];
+                    paneIndicatorData[indicator.name] =
+                        result[(_a = crosshair.dataIndex) !== null && _a !== void 0 ? _a : result.length - 1];
                 });
                 indicatorData_1[id] = paneIndicatorData;
             });
@@ -13740,7 +14814,10 @@ var ChartImp = /** @class */ (function () {
         this.adjustPaneViewport(true, true, true, true, true);
     };
     ChartImp.prototype.setPriceVolumePrecision = function (pricePrecision, volumePrecision) {
-        this._chartStore.setPrecision({ price: pricePrecision, volume: volumePrecision });
+        this._chartStore.setPrecision({
+            price: pricePrecision,
+            volume: volumePrecision
+        });
     };
     ChartImp.prototype.getPriceVolumePrecision = function () {
         return this._chartStore.getPrecision();
@@ -13778,14 +14855,18 @@ var ChartImp = /** @class */ (function () {
             logWarn('setLeftMinVisibleBarCount', 'barCount', 'barCount must greater than zero!!!');
             return;
         }
-        this._chartStore.getTimeScaleStore().setLeftMinVisibleBarCount(Math.ceil(barCount));
+        this._chartStore
+            .getTimeScaleStore()
+            .setLeftMinVisibleBarCount(Math.ceil(barCount));
     };
     ChartImp.prototype.setRightMinVisibleBarCount = function (barCount) {
         if (barCount < 0) {
             logWarn('setRightMinVisibleBarCount', 'barCount', 'barCount must greater than zero!!!');
             return;
         }
-        this._chartStore.getTimeScaleStore().setRightMinVisibleBarCount(Math.ceil(barCount));
+        this._chartStore
+            .getTimeScaleStore()
+            .setRightMinVisibleBarCount(Math.ceil(barCount));
     };
     ChartImp.prototype.setBarSpace = function (space) {
         this._chartStore.getTimeScaleStore().setBarSpace(space);
@@ -13804,9 +14885,15 @@ var ChartImp = /** @class */ (function () {
     };
     ChartImp.prototype.applyNewData = function (data, more, callback) {
         if (isValid(callback)) {
-            logWarn('applyNewData', '', 'param `callback` has been deprecated since version 9.8.0, use `subscribeAction(\'onDataReady\')` instead.');
+            logWarn('applyNewData', '', "param `callback` has been deprecated since version 9.8.0, use `subscribeAction('onDataReady')` instead.");
         }
-        this._chartStore.addData(data, LoadDataType.Init, more).then(function () { }).catch(function () { }).finally(function () { callback === null || callback === void 0 ? void 0 : callback(); });
+        this._chartStore
+            .addData(data, LoadDataType.Init, more)
+            .then(function () { })
+            .catch(function () { })
+            .finally(function () {
+            callback === null || callback === void 0 ? void 0 : callback();
+        });
     };
     /**
      * @deprecated
@@ -13814,13 +14901,25 @@ var ChartImp = /** @class */ (function () {
      */
     ChartImp.prototype.applyMoreData = function (data, more, callback) {
         logWarn('', '', 'Api `applyMoreData` has been deprecated since version 9.8.0.');
-        this._chartStore.addData(data, LoadDataType.Forward, more !== null && more !== void 0 ? more : true).then(function () { }).catch(function () { }).finally(function () { callback === null || callback === void 0 ? void 0 : callback(); });
+        this._chartStore
+            .addData(data, LoadDataType.Forward, more !== null && more !== void 0 ? more : true)
+            .then(function () { })
+            .catch(function () { })
+            .finally(function () {
+            callback === null || callback === void 0 ? void 0 : callback();
+        });
     };
     ChartImp.prototype.updateData = function (data, callback) {
         if (isValid(callback)) {
-            logWarn('updateData', '', 'param `callback` has been deprecated since version 9.8.0, use `subscribeAction(\'onDataReady\')` instead.');
+            logWarn('updateData', '', "param `callback` has been deprecated since version 9.8.0, use `subscribeAction('onDataReady')` instead.");
         }
-        this._chartStore.addData(data).then(function () { }).catch(function () { }).finally(function () { callback === null || callback === void 0 ? void 0 : callback(); });
+        this._chartStore
+            .addData(data)
+            .then(function () { })
+            .catch(function () { })
+            .finally(function () {
+            callback === null || callback === void 0 ? void 0 : callback();
+        });
     };
     /**
      * @deprecated
@@ -13844,17 +14943,24 @@ var ChartImp = /** @class */ (function () {
         var paneId = paneOptions === null || paneOptions === void 0 ? void 0 : paneOptions.id;
         var currentPane = this.getDrawPaneById(paneId !== null && paneId !== void 0 ? paneId : '');
         if (currentPane !== null) {
-            this._chartStore.getIndicatorStore().addInstance(indicator, paneId !== null && paneId !== void 0 ? paneId : '', isStack !== null && isStack !== void 0 ? isStack : false).then(function (_) {
+            this._chartStore
+                .getIndicatorStore()
+                .addInstance(indicator, paneId !== null && paneId !== void 0 ? paneId : '', isStack !== null && isStack !== void 0 ? isStack : false)
+                .then(function (_) {
                 var _a;
                 _this._setPaneOptions(paneOptions !== null && paneOptions !== void 0 ? paneOptions : {}, (_a = currentPane.getAxisComponent().buildTicks(true)) !== null && _a !== void 0 ? _a : false);
-            }).catch(function (_) { });
+            })
+                .catch(function (_) { });
         }
         else {
             paneId !== null && paneId !== void 0 ? paneId : (paneId = createId(PaneIdConstants.INDICATOR));
             var pane = this._createPane(IndicatorPane, paneId, paneOptions !== null && paneOptions !== void 0 ? paneOptions : {});
             var height = (_a = paneOptions === null || paneOptions === void 0 ? void 0 : paneOptions.height) !== null && _a !== void 0 ? _a : PANE_DEFAULT_HEIGHT;
             pane.setBounding({ height: height });
-            void this._chartStore.getIndicatorStore().addInstance(indicator, paneId, isStack !== null && isStack !== void 0 ? isStack : false).finally(function () {
+            void this._chartStore
+                .getIndicatorStore()
+                .addInstance(indicator, paneId, isStack !== null && isStack !== void 0 ? isStack : false)
+                .finally(function () {
                 _this.adjustPaneViewport(true, true, true, true, true);
                 callback === null || callback === void 0 ? void 0 : callback();
             });
@@ -13863,16 +14969,22 @@ var ChartImp = /** @class */ (function () {
     };
     ChartImp.prototype.overrideIndicator = function (override, paneId, callback) {
         var _this = this;
-        this._chartStore.getIndicatorStore().override(override, paneId !== null && paneId !== void 0 ? paneId : null).then(function (_a) {
+        this._chartStore
+            .getIndicatorStore()
+            .override(override, paneId !== null && paneId !== void 0 ? paneId : null)
+            .then(function (_a) {
             var _b = __read(_a, 2), onlyUpdateFlag = _b[0], resizeFlag = _b[1];
             if (onlyUpdateFlag || resizeFlag) {
                 _this.adjustPaneViewport(false, resizeFlag, true, resizeFlag);
                 callback === null || callback === void 0 ? void 0 : callback();
             }
-        }).catch(function () { });
+        })
+            .catch(function () { });
     };
     ChartImp.prototype.getIndicatorByPaneId = function (paneId, name) {
-        return this._chartStore.getIndicatorStore().getInstanceByPaneId(paneId, name);
+        return this._chartStore
+            .getIndicatorStore()
+            .getInstanceByPaneId(paneId, name);
     };
     ChartImp.prototype.removeIndicator = function (paneId, name) {
         var e_1, _a;
@@ -13947,7 +15059,9 @@ var ChartImp = /** @class */ (function () {
             paneId = PaneIdConstants.CANDLE;
             appointPaneFlag = false;
         }
-        var ids = this._chartStore.getOverlayStore().addInstances(overlays, paneId, appointPaneFlag);
+        var ids = this._chartStore
+            .getOverlayStore()
+            .addInstances(overlays, paneId, appointPaneFlag);
         if (isArray(value)) {
             return ids;
         }
@@ -13987,7 +15101,9 @@ var ChartImp = /** @class */ (function () {
         return this._chartStore.getTimeScaleStore().getScrollEnabled();
     };
     ChartImp.prototype.scrollByDistance = function (distance, animationDuration) {
-        var duration = isNumber(animationDuration) && animationDuration > 0 ? animationDuration : 0;
+        var duration = isNumber(animationDuration) && animationDuration > 0
+            ? animationDuration
+            : 0;
         var timeScaleStore = this._chartStore.getTimeScaleStore();
         if (duration > 0) {
             timeScaleStore.startScroll();
@@ -14011,13 +15127,16 @@ var ChartImp = /** @class */ (function () {
     ChartImp.prototype.scrollToRealTime = function (animationDuration) {
         var timeScaleStore = this._chartStore.getTimeScaleStore();
         var barSpace = timeScaleStore.getBarSpace().bar;
-        var difBarCount = timeScaleStore.getLastBarRightSideDiffBarCount() - timeScaleStore.getInitialOffsetRightDistance() / barSpace;
+        var difBarCount = timeScaleStore.getLastBarRightSideDiffBarCount() -
+            timeScaleStore.getInitialOffsetRightDistance() / barSpace;
         var distance = difBarCount * barSpace;
         this.scrollByDistance(distance, animationDuration);
     };
     ChartImp.prototype.scrollToDataIndex = function (dataIndex, animationDuration) {
         var timeScaleStore = this._chartStore.getTimeScaleStore();
-        var distance = (timeScaleStore.getLastBarRightSideDiffBarCount() + (this.getDataList().length - 1 - dataIndex)) * timeScaleStore.getBarSpace().bar;
+        var distance = (timeScaleStore.getLastBarRightSideDiffBarCount() +
+            (this.getDataList().length - 1 - dataIndex)) *
+            timeScaleStore.getBarSpace().bar;
         this.scrollByDistance(distance, animationDuration);
     };
     ChartImp.prototype.scrollToTimestamp = function (timestamp, animationDuration) {
@@ -14025,7 +15144,9 @@ var ChartImp = /** @class */ (function () {
         this.scrollToDataIndex(dataIndex, animationDuration);
     };
     ChartImp.prototype.zoomAtCoordinate = function (scale, coordinate, animationDuration) {
-        var duration = isNumber(animationDuration) && animationDuration > 0 ? animationDuration : 0;
+        var duration = isNumber(animationDuration) && animationDuration > 0
+            ? animationDuration
+            : 0;
         var timeScaleStore = this._chartStore.getTimeScaleStore();
         if (duration > 0) {
             var barSpace_1 = timeScaleStore.getBarSpace().bar;
@@ -14048,7 +15169,9 @@ var ChartImp = /** @class */ (function () {
         }
     };
     ChartImp.prototype.zoomAtDataIndex = function (scale, dataIndex, animationDuration) {
-        var x = this._chartStore.getTimeScaleStore().dataIndexToCoordinate(dataIndex);
+        var x = this._chartStore
+            .getTimeScaleStore()
+            .dataIndexToCoordinate(dataIndex);
         this.zoomAtCoordinate(scale, { x: x, y: 0 }, animationDuration);
     };
     ChartImp.prototype.zoomAtTimestamp = function (scale, timestamp, animationDuration) {
@@ -14084,7 +15207,7 @@ var ChartImp = /** @class */ (function () {
                 });
             }
         }
-        return isArray(points) ? coordinates : ((_a = coordinates[0]) !== null && _a !== void 0 ? _a : {});
+        return isArray(points) ? coordinates : (_a = coordinates[0]) !== null && _a !== void 0 ? _a : {};
     };
     ChartImp.prototype.convertFromPixel = function (coordinates, finder) {
         var _a;
@@ -14104,7 +15227,8 @@ var ChartImp = /** @class */ (function () {
                     if (isNumber(coordinate.x)) {
                         var dataIndex = (_a = xAxis_2 === null || xAxis_2 === void 0 ? void 0 : xAxis_2.convertFromPixel(coordinate.x)) !== null && _a !== void 0 ? _a : -1;
                         point.dataIndex = dataIndex;
-                        point.timestamp = (_b = timeScaleStore_2.dataIndexToTimestamp(dataIndex)) !== null && _b !== void 0 ? _b : undefined;
+                        point.timestamp =
+                            (_b = timeScaleStore_2.dataIndexToTimestamp(dataIndex)) !== null && _b !== void 0 ? _b : undefined;
                     }
                     if (isNumber(coordinate.y)) {
                         var y = absolute ? coordinate.y - bounding_2.top : coordinate.y;
@@ -14114,7 +15238,7 @@ var ChartImp = /** @class */ (function () {
                 });
             }
         }
-        return isArray(coordinates) ? points : ((_a = points[0]) !== null && _a !== void 0 ? _a : {});
+        return isArray(coordinates) ? points : (_a = points[0]) !== null && _a !== void 0 ? _a : {};
     };
     ChartImp.prototype.executeAction = function (type, data) {
         var _a;

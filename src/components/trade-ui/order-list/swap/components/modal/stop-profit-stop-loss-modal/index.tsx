@@ -5,7 +5,7 @@ import Modal, { ModalFooter, ModalTitle } from '@/components/trade-ui/common/mod
 import { useFormatCryptoName, useResponsive, useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
-import { message } from '@/core/utils';
+import { formatNumber2Ceil, message } from '@/core/utils';
 import { useEffect, useState } from 'react';
 import { CloseTips, store as CloseTipsStore } from './components/close-tips';
 import { Info } from './components/info';
@@ -186,7 +186,6 @@ const StopProfitStopLossModal = ({ data = {}, onClose, visible }: { data: any; o
           subWallet: data['subWallet'],
         })
       : await Swap.Trade.submitSpslOrder({
-          positionId: data['positionId'],
           price: isLimit ? price : '',
           orderQty: orderQty,
           side: !isBuy ? 1 : 2,
@@ -202,10 +201,10 @@ const StopProfitStopLossModal = ({ data = {}, onClose, visible }: { data: any; o
     if (result) {
       try {
         if (result?.code === 200) {
+          Swap.Order.fetchPending(isUsdtType);
+          Swap.Order.fetchPosition(isUsdtType);
           if (!isCloseType) {
             message.success(LANG('修改成功'), 1);
-            Swap.Order.fetchPending(isUsdtType);
-            Swap.Order.fetchPosition(isUsdtType);
           }
           onClose?.();
         } else {
@@ -308,7 +307,9 @@ const StopProfitStopLossModal = ({ data = {}, onClose, visible }: { data: any; o
             <Info label={LANG('合约')} value={name} className={clsx(isBuy ? 'green' : 'red')} />
             <Info
               label={`${LANG('开仓价格')} (${priceUnitText})`}
-              value={data.avgCostPrice?.toFormat(Number(currentPricePrecision))}
+              value={formatNumber2Ceil(data.avgCostPrice, Number(data.baseShowPrecision), data.side === '1').toFormat(
+                Number(data.baseShowPrecision)
+              )}
             />
             <Info
               label={`${LANG('标记价格')} (${priceUnitText})`}
@@ -341,8 +342,8 @@ const StopProfitStopLossModal = ({ data = {}, onClose, visible }: { data: any; o
                 minChange={incomeStandard3 === 0 ? triggerPriceType == Swap.Trade.PRICE_TYPE.NEW : false}
                 incomeStandard={incomeStandard3}
                 setIncomeStandard={setIncomeStandard3}
-                onIncomeStandardTextChange={({ value }: any) => {
-                  CloseTipsStore.value = value;
+                onIncomeStandardTextChange={({ _value }: any) => {
+                  CloseTipsStore.value = _value;
                 }}
               />
               <InputSection
@@ -421,7 +422,7 @@ const StopProfitStopLossModal = ({ data = {}, onClose, visible }: { data: any; o
                   {LANG('已超出单笔最大委托数量{value} {symbol}', { value: maxEntrustNum, symbol: volumeUnit })}
                 </div>
               )}
-              <Info label={`${LANG('数量')}`} value={`${maxVolume} ${volumeUnit}`} />
+              <Info label={`${LANG('数量')}`} value={`${volume} ${volumeUnit}`} />
               <Info
                 label={LANG('预计盈亏')}
                 value={`${income} ${settleCoin}`}

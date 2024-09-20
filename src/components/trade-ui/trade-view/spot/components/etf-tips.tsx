@@ -63,7 +63,7 @@ const EtfTips = ({ isLimit }: { isLimit: boolean }) => {
               <span>{LANG('ETF杠杆代币波动较大，请在交易前注意查看净值价格，并仔细阅读')}</span>
               <a
                 target='_blank'
-                href={`https://support.YMEX.com/hc/${
+                href={`https://support.YmexYmex.com/hc/${
                   locale === 'zh' ? 'zh-cn' : 'en-us'
                 }/sections/5691989278095-Leveraged-Tokens`}
                 style={{

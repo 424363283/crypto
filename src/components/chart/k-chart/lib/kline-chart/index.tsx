@@ -75,9 +75,10 @@ const KlineChartUI = ({
             AlertFunction({
               hideHeaderIcon: true,
               theme: localStorageApi.getItem(LOCAL_KEY.THEME) as THEME,
+              className: 'save-picture-modal',
               children: (
                 <div>
-                  <div style={{ color: 'var(--theme-font-color-1)' }}>{LANG('截图保存')}</div>
+                  <div style={{ color: 'var(--theme-font-color-1)', textAlign: 'left' }}>{LANG('截图保存')}</div>
                   <br />
                   <Image
                     src={base64}
@@ -115,6 +116,33 @@ const KlineChartUI = ({
         });
         kChartEmitter.on(kChartEmitter.K_CHART_SWITCH_COLOR, (data: any) => {
           chart.current?.setColor(data['up-color-rgb'], data['down-color-rgb']);
+        });
+        kChartEmitter.on(kChartEmitter.K_CHART_POSITION_UPDATE, (data: any) => {
+          chart.current?.setPositionOrder(data);
+        });
+        kChartEmitter.on(kChartEmitter.K_CHART_JUMP_DATE, (timestamp: number, animationDuration: number) => {
+          chart.current?.getKlineHistory(
+            id,
+            Date.now(),
+            true,
+            () => {
+              chart.current?.scrollToTimestamp(timestamp, animationDuration);
+            },
+            undefined,
+            Math.floor(timestamp / 1000)
+          );
+        });
+        kChartEmitter.on(kChartEmitter.K_CHART_SET_THEME, (theme: THEME) => {
+          chart.current?.setTheme(theme);
+        });
+        kChartEmitter.on(kChartEmitter.K_CHART_POSITION_VISIBLE, (visible: boolean) => {
+          chart.current?.setPositionOrderVisible(visible);
+        });
+        kChartEmitter.on(kChartEmitter.K_CHART_COMMISSION_VISIBLE, (visible: boolean) => {
+          chart.current?.setCommissionOrderVisible(visible);
+        });
+        kChartEmitter.on(kChartEmitter.K_CHART_COMMISSION_UPDATE, (data: any) => {
+          chart.current?.setCommissionOrder(data);
         });
         setTimeout(() => {
           // 主动触发一次 resize，让图表主动适应大小变化
@@ -155,10 +183,29 @@ const KlineChartUI = ({
   }, [showCountdown]);
 
   // 实时数据
-  useWs(SUBSCRIBE_TYPES.ws4001, (data) => {
-    klineData.current.data = data;
-    chart.current?.updateData(klineData.current);
-  });
+  useWs(
+    SUBSCRIBE_TYPES.ws4001,
+    (data) => {
+      if (data.id != id) {
+        return;
+      }
+      klineData.current.data = data;
+      chart.current?.updateData(klineData.current);
+    },
+    [id]
+  );
+  // 实时数据
+  useWs(
+    SUBSCRIBE_TYPES.wsim4001,
+    (data) => {
+      if (data.id != id) {
+        return;
+      }
+      klineData.current.data = data;
+      chart.current?.updateData(klineData.current);
+    },
+    [id]
+  );
 
   useWs(SUBSCRIBE_TYPES.ws7001, (data) => {
     try {
@@ -187,6 +234,13 @@ const KlineChartUI = ({
           @media ${MediaInfo.mobile} {
             background-size: 150px;
           }
+        }
+        :global(.save-picture-modal .ant-modal-body) {
+          margin-top: 0 !important;
+        }
+        :global(.save-picture-modal .ant-btn:nth-child(2)) {
+          background-color: var(--const-color-orange) !important;
+          color: var(--spec-font-color-1) !important;
         }
       `}</style>
     </>

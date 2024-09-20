@@ -1,9 +1,14 @@
+import CommonIcon from '@/components/common-icon';
 import { Loading } from '@/components/loading';
+import { kChartEmitter } from '@/core/events';
 import { useResponsive, useRouter, useTheme } from '@/core/hooks';
+import { WS } from '@/core/network';
 import { useAppContext } from '@/core/store';
+import { isSwap } from '@/core/utils';
+import dayjs from 'dayjs';
 import { memo, useEffect } from 'react';
 import { KHeader } from './components/k-header';
-import { KTYPE, kHeaderStore } from './components/k-header/store';
+import { KTYPE, getKLinePriceType, kHeaderStore } from './components/k-header/store';
 import { OnceRender } from './components/once-render';
 import { DeepChart } from './lib/deep-chart';
 import { KlineChart } from './lib/kline-chart';
@@ -16,27 +21,65 @@ export enum TRADINGVIEW_SYMBOL_TYPE {
   SWAP = 'Swap',
 }
 
-const KChartComponent = ({ symbolType, qty = 0 }: { symbolType: TRADINGVIEW_SYMBOL_TYPE; qty?: number }) => {
+const KChartComponent = ({
+  symbolType,
+  qty = 0,
+  klineGroupMode,
+}: {
+  symbolType: TRADINGVIEW_SYMBOL_TYPE;
+  qty?: number;
+  klineGroupMode?: boolean;
+}) => {
   const { kType, resolution, isLoading, setkType, setting } = kHeaderStore(qty);
+  const klinePriceType = getKLinePriceType(qty);
   const router = useRouter();
-  const { id, locale } = router.query;
+  let { id, locale } = router.query;
   const { theme } = useTheme();
   const { isLogin } = useAppContext();
   const { isMobile } = useResponsive(false);
+  const isSwapId = isSwap(id);
+  const showCrosshairOrderBtn = !isMobile && isSwapId && setting.paintOrder && isLogin && klinePriceType == 0;
 
-  const showCrosshairOrderBtn =
-    !isMobile && symbolType == TRADINGVIEW_SYMBOL_TYPE.SWAP && setting.paintOrder && isLogin;
   useEffect(() => {
     // 如果当前缓存的kType是深度图，但是当前symbolType不是lite，那么就切换到k线图
     if (kType === KTYPE.DEEP_CHART && symbolType == TRADINGVIEW_SYMBOL_TYPE.LITE) {
       setkType(KTYPE.K_LINE_CHART);
     }
   }, [kType]);
+  let klineId = id;
+  // if (isSwapId) {
+  //   switch (klinePriceType) {
+  //     // 标记价格
+  //     case 1:
+  //       klineId = `m${id}`;
+  //       break;
+  //     // 指数价格
+  //     case 2:
+  //       klineId = `i${id}`;
+  //       break;
+  //     case 0:
+  //     default:
+  //   }
+  // }
+
+  const backDate = () => {
+    kChartEmitter.emit(kChartEmitter.K_CHART_JUMP_DATE, dayjs().valueOf(), 1000);
+  };
+
+  useEffect(() => {
+    if (id) {
+      if (/^[im]/.test(klineId) && !klineGroupMode) {
+        WS.subscribe4001([klineId, id]);
+      } else {
+        WS.subscribe4001([id]);
+      }
+    }
+  }, [id, klineId, klineGroupMode]);
 
   return (
     <>
       <div className='k-box' id={getKlineBoxId(qty)}>
-        <KHeader id={id as string} qty={qty} />
+        <KHeader id={id as string} qty={qty} klineGroupMode={klineGroupMode} />
         <Loading.wrap
           style={{ position: 'relative', flex: 1 }}
           isLoading={isLoading}
@@ -47,17 +90,18 @@ const KChartComponent = ({ symbolType, qty = 0 }: { symbolType: TRADINGVIEW_SYMB
               <KlineChart
                 showCrosshairOrderBtn={showCrosshairOrderBtn}
                 qty={qty}
-                id={id as string}
+                id={klineId as string}
                 theme={theme as string}
                 resolution={resolution}
                 isReverse={!isMobile ? setting.revesePreview : false}
                 showOrdebok={!isMobile ? setting.orderBookPrice : false}
                 showCountdown={!isMobile ? setting.countdown : false}
-                showPriceLine={!isMobile ? setting.newPrice : true}
+                showPriceLine={!isMobile ? setting.newPrice : false}
                 vol
                 holc
               />
             )}
+            <CommonIcon onClick={backDate} className='double-right' name='kline-doubleRight' size={26} />
           </OnceRender>
           <OnceRender render={kType === KTYPE.TRADING_VIEW}>
             {id && (
@@ -89,6 +133,14 @@ const KChartComponent = ({ symbolType, qty = 0 }: { symbolType: TRADINGVIEW_SYMB
           }
           .k-box.k-full-screen {
             position: fixed;
+          }
+
+          :global(.double-right) {
+            position: absolute;
+            right: 66px;
+            bottom: 35px;
+            cursor: pointer;
+            z-index: 9999;
           }
         `}
       </style>

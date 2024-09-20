@@ -1,7 +1,9 @@
+import { kChartEmitter } from '@/core/events';
 import { useRouter, useTheme } from '@/core/hooks';
 import { LANG, TrLink } from '@/core/i18n';
 import { SESSION_KEY } from '@/core/store';
 import { clsx } from '@/core/utils';
+import { useLayoutEffect } from 'react';
 
 export const UnLoginView = () => {
   const { isDark } = useTheme();
@@ -11,6 +13,11 @@ export const UnLoginView = () => {
     sessionStorage.setItem(SESSION_KEY.LOGIN_REDIRECT, pathname);
     router.push('/login');
   };
+
+  useLayoutEffect(() => {
+    kChartEmitter.emit(kChartEmitter.K_CHART_COMMISSION_VISIBLE, false);
+    kChartEmitter.emit(kChartEmitter.K_CHART_POSITION_VISIBLE, false);
+  }, []);
   return (
     <>
       <div className={clsx('un-login-view', !isDark && 'light')}>

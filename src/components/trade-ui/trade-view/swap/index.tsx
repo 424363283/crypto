@@ -31,6 +31,9 @@ const SelectUnitModal = dynamic(() => import('./components/modal/select-unit-mod
 const SpslSettingModal = dynamic(() => import('./components/modal/spsl-setting-modal'), { ssr: false });
 const PaintOrderModal = dynamic(() => import('./components/modal/paint-order-modal'), { ssr: false });
 const PaintOrderOptionsModal = dynamic(() => import('./components/modal/paint-order-options-modal'), { ssr: false });
+const ModifyPositionMriceModal = dynamic(() => import('./components/modal/modify-position-price-modal') as never, {
+  ssr: false,
+});
 const TransferModal = dynamic(() => import('./components/modal/transfer-modal'), { ssr: false });
 const WalletSelectModal = dynamic(() => import('./components/modal/wallet-select-modal'), { ssr: false });
 const WalletSelectModalInTrade = dynamic(() => import('./components/modal/wallet-select-modal-in-trade'), {
@@ -123,6 +126,7 @@ const SwapComponent = () => {
     selectUnitVisible,
     paintOrderVisible,
     paintOrderOptionsVisible,
+    modifyPositionMriceModalVisible,
   } = Swap.Trade.store.modal;
 
   return (
@@ -151,6 +155,7 @@ const SwapComponent = () => {
       <BounsUseModal />
       {paintOrderVisible && <PaintOrderModal />}
       {paintOrderOptionsVisible && <PaintOrderOptionsModal />}
+      {modifyPositionMriceModalVisible && <ModifyPositionMriceModal />}
       {/* other */}
       <OrderListener />
     </>
