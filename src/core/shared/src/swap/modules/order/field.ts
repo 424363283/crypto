@@ -13,6 +13,7 @@ export type PositionItemType = {
   callbackValue: string | number | null;
   closeOrderId: string | null;
   closeOrderPrice: string | number | null;
+  positionSide: string;
   closeOrderVolume: string | number | null;
   currentPosition: string;
   frozen: string | number | null;
@@ -24,6 +25,7 @@ export type PositionItemType = {
   markPrice: string;
   maxAddMargin: number;
   maxSubMargin: number;
+  cbVal: number;
   subWallet: string;
   mm: number;
   mmr: number;
@@ -45,6 +47,7 @@ export type PendingItemType = {
   ctime: number;
   dealVolume: number;
   direction: string | null;
+  activationPrice: number;
   leverageLevel: number;
   marginType: number;
   mtime: number;
@@ -101,6 +104,9 @@ export class OrderField {
       return data.filter((v: PendingItemType) => v.subWallet === walletId);
     }
     return data;
+  }
+  positionIsSame(v: PositionItemType, option: PositionItemType) {
+    return v.symbol === option.symbol && v.positionSide === option.positionSide && v.subWallet === option.subWallet;
   }
   getPending(usdt: boolean, { walletId }: { walletId?: string } = {}) {
     const { u, c } = this.store.pending;
