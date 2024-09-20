@@ -69,7 +69,7 @@ export const options = (koptions: KOptions, k_config: any) => {
             color: k_config.aColor,
             textMargin: 5,
             textSize: 12,
-            textFamily: 'bydfi',
+            textFamily: 'Ymex',
             textWeight: 'normal',
           },
           // 最低价标记
@@ -78,7 +78,7 @@ export const options = (koptions: KOptions, k_config: any) => {
             color: k_config.aColor,
             textMargin: 5,
             textSize: 12,
-            textFamily: 'bydfi',
+            textFamily: 'Ymex',
             textWeight: 'normal',
           },
           // 最新价标记
@@ -108,7 +108,7 @@ export const options = (koptions: KOptions, k_config: any) => {
               borderSize: 1,
               borderDashedValue: [2, 2],
               color: '#FFFFFF',
-              family: 'bydfi',
+              family: 'Ymex',
               weight: 'normal',
               borderRadius: 0,
             },
@@ -238,7 +238,7 @@ export const options = (koptions: KOptions, k_config: any) => {
           },
           text: {
             size: 12,
-            family: 'bydfi',
+            family: 'Ymex',
             weight: 'normal',
             color: k_config.aColor,
             marginLeft: 8,
@@ -349,7 +349,7 @@ export const options = (koptions: KOptions, k_config: any) => {
             style: 'fill',
             color: '#FFFFFF',
             size: 12,
-            family: 'bydfi',
+            family: 'Ymex',
             weight: 'normal',
             // 'solid' | 'dashed'
             borderStyle: 'solid',
@@ -373,7 +373,7 @@ export const options = (koptions: KOptions, k_config: any) => {
           defaultValue: 'n/a',
           text: {
             size: 12,
-            family: 'bydfi',
+            family: 'Ymex',
             weight: 'normal',
             color: '#D9D9D9',
             marginTop: 8,
@@ -417,7 +417,7 @@ export const options = (koptions: KOptions, k_config: any) => {
         tickText: {
           show: true,
           color: k_config.aColor,
-          family: 'bydfi',
+          family: 'Ymex',
           weight: 'normal',
           size: 12,
           marginStrat: 4,
@@ -451,7 +451,7 @@ export const options = (koptions: KOptions, k_config: any) => {
         tickText: {
           show: true,
           color: k_config.aColor,
-          family: 'bydfi',
+          family: 'Ymex',
           weight: 'normal',
           size: 12,
           marginStrat: 4,
@@ -492,7 +492,7 @@ export const options = (koptions: KOptions, k_config: any) => {
             style: 'fill',
             color: '#ffffff',
             size: 12,
-            family: 'bydfi',
+            family: 'Ymex',
             weight: 'normal',
             // 'solid' | 'dashed'
             borderStyle: 'solid',
@@ -524,7 +524,7 @@ export const options = (koptions: KOptions, k_config: any) => {
             style: 'fill',
             color: '#FFFFFF',
             size: 12,
-            family: 'bydfi',
+            family: 'Ymex',
             weight: 'normal',
             // 'solid' | 'dashed'
             borderStyle: 'solid',
@@ -608,7 +608,7 @@ export const options = (koptions: KOptions, k_config: any) => {
         text: {
           color: '#1677FF',
           size: 12,
-          family: 'bydfi',
+          family: 'Ymex',
           weight: 'normal',
         },
         rectText: {
@@ -616,7 +616,7 @@ export const options = (koptions: KOptions, k_config: any) => {
           style: 'fill',
           color: '#FFFFFF',
           size: 12,
-          family: 'bydfi',
+          family: 'Ymex',
           weight: 'normal',
           // 'solid' | 'dashed'
           borderStyle: 'solid',
