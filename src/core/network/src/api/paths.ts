@@ -207,7 +207,7 @@ export const paths = {
     swap_private_delivery_trade_positionHistory: '/swap/private/delivery/trade/positionHistory',
     swap_private_future_trade_positionHistory: '/swap/private/future/trade/positionHistory',
     swap_delivery_edit_plan_order: '/swap/private/delivery/edit_plan_order', // 永续编辑止盈止损
-    swap_future_edit_plan_order: '/swap/private/future/edit_plan_order',
+    swap_future_edit_plan_order: '/swap/private/future/order/edit_plan_order',
     swap_public_wallet_create_wallet: '/swap/private/wallet/create_wallet',
     swap_public_wallet_update_wallet: '/swap/private/wallet/update_wallet',
     testnet_private_testnet_addCoin: '/testnet/private/testnet/addCoin',
