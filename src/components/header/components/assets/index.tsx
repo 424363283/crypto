@@ -5,7 +5,7 @@ const list = [
   { name: LANG('我的资产'), href: '/account/fund-management/assets-overview' },
   { name: LANG('充币'), href: '/account/fund-management/asset-account/recharge' },
   { name: LANG('提币'), href: '/account/fund-management/asset-account/withdraw' },
-  { name: LANG('法币充值'), href: '/fiat-crypto' },
+  // { name: LANG('法币充值'), href: '/fiat-crypto' },
   { name: LANG('内部转账'), href: '/account/fund-management/asset-account/transfer' },
   { name: LANG('合约卡券'), href: '/account/fund-management/assets-overview', query: { type: 'coupon' } },
 ];

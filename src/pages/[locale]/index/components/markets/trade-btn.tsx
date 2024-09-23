@@ -19,13 +19,13 @@ const TradeBtn = (props: { tab: string; id: string; coin: string }) => {
 
   return (
     <li className='action'>
-      {tab === 'spot' && (
+      {/* {tab === 'spot' && (
         <Desktop>
           <div className='trade-btn trade-btn-1' onClick={_goToTrade}>
             {LANG('购买')}
           </div>
         </Desktop>
-      )}
+      )} */}
       <TradeLink id={id}>
         <div className='trade-btn trade-btn-2'>{LANG('交易')}</div>
       </TradeLink>

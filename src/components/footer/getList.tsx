@@ -121,10 +121,10 @@ export const getList = (locale: string) => {
     {
       label: LANG('Services'),
       children: [
-        {
-          label: LANG('Buy Crypto'),
-          href: `/fiat-crypto`,
-        },
+        // {
+        //   label: LANG('Buy Crypto'),
+        //   href: `/fiat-crypto`,
+        // },
         {
           label: LANG('Affiliate Program'),
           href: `/partnership/affiliate`,

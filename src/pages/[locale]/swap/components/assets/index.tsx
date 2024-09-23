@@ -32,7 +32,7 @@ export const Assets = () => {
       },
       Account.isLogin ? !agreeAgreement : false,
     ],
-    [LANG('买币'), '/fiat-crypto'],
+    // [LANG('买币'), '/fiat-crypto'],
     [LANG('转换'), '/convert'],
   ];
   const cryptoLower = crypto?.toLowerCase();

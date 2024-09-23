@@ -50,14 +50,15 @@ export const PreferenceMenu = ({
       return;
     }
     if (!isBounsWallet) {
-      if (!isMobile) {
-        store.positionVisible = !store.positionVisible;
-        if (store.positionVisible) {
-          store.visible = false;
-        }
-      } else {
-        store.positionVisible = true;
-      }
+      store.positionVisible =  !store.positionVisible;
+      // if (!isMobile) {
+      //   store.positionVisible = !store.positionVisible;
+      //   if (store.positionVisible) {
+      //     store.visible = false;
+      //   }
+      // } else {
+      //   store.positionVisible = true;
+      // }
     }
   };
   const _setPreference = (v: object) => {

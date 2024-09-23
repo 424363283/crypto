@@ -220,9 +220,9 @@ const getDatas = ({ isUsdtType, positionData, balanceData, position, twoWayMode,
     balance = Number(calculateData.wallets[walletId]?.positionsAccb) + Number(position.margin || 0) ;
     if (!isCross) {
       balance = Number(position.margin) + data.income;
-      console.log('逐仓 保证金余额= ',' position.margin + ',Number(position.margin || 0),' income =',data.income , ' balance = ',balance)
+      // console.log('逐仓 保证金余额= ',' position.margin + ',Number(position.margin || 0),' income =',data.income , ' balance = ',balance)
     }else{
-      console.log('全仓 保证金余额= ','positionsAccb +',Number(calculateData.wallets[walletId]?.positionsAccb),' position.margin + ',Number(position.margin || 0),' income = ',data.income , ' balance = ',balance)
+      // console.log('全仓 保证金余额= ','positionsAccb +',Number(calculateData.wallets[walletId]?.positionsAccb),' position.margin + ',Number(position.margin || 0),' income = ',data.income , ' balance = ',balance)
 
     }
   }

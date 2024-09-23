@@ -52,10 +52,10 @@ const menuItems = [
         label: LANG('提币'),
         href: '/account/fund-management/asset-account/withdraw',
       },
-      {
-        label: LANG('法币充值'),
-        href: '/fiat-crypto',
-      },
+      // {
+      //   label: LANG('法币充值'),
+      //   href: '/fiat-crypto',
+      // },
       {
         label: LANG('内部转账'),
         href: '/account/fund-management/asset-account/transfer',
@@ -201,6 +201,7 @@ const styles = css`
       height: 48px;
       margin: 30px 25px;
       padding: 0 12px;
+      min-height: 48px;
       span {
         color: var(--theme-font-color-3);
       }

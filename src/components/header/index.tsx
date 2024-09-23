@@ -187,7 +187,7 @@ function HeaderComponent({
               >
                 {LANG('行情')}
               </TrActiveLink>
-              {renderBuyCrypto()}
+              {/* {renderBuyCrypto()} */}
               <Menu
                 showArrow
                 width='235px'

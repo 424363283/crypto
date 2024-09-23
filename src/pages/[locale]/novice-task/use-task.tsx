@@ -60,7 +60,7 @@ export const useTask = () => {
 
     redirect =
       {
-        '/fiatPurchase': '/fiat-crypto',
+        // '/fiatPurchase': '/fiat-crypto',
         '/deposit': '/account/fund-management/asset-account/recharge?code=USDT',
         '/community': '/copy-trading',
         '/tradeEntrance/etf': '/spot/btc3l_usdt',

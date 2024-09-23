@@ -97,7 +97,7 @@ export const SwapPositionModeModal = ({
   if (isMobile) {
     return (
       <MobileModal visible={visible} onClose={onClose} type='bottom' zIndex={zIndex}>
-        <BottomModal title={LANG('仓位模式')} displayConfirm={false}>
+        <BottomModal title={LANG('仓位模式')}   displayConfirm={false}  >
           {content}
         </BottomModal>
       </MobileModal>

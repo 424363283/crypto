@@ -17,12 +17,12 @@ export interface NavDrawerProps {
 const enableLite = process.env.NEXT_PUBLIC_LITE_ENABLE === 'true';
 
 const menuItems = [
-  {
-    label: LANG('快捷买币'),
-    children: [],
-    href: HEADER_PATH.BUY_CRYPTO,
-    icon: 'header-buy-crypto-0',
-  },
+  // {
+  //   label: LANG('快捷买币'),
+  //   children: [],
+  //   href: HEADER_PATH.BUY_CRYPTO,
+  //   icon: 'header-buy-crypto-0',
+  // },
   {
     label: LANG('币币交易'),
     icon: 'header-spot-0',

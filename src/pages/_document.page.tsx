@@ -35,7 +35,7 @@ class MyDocument extends Document {
       const commonLangJsSrc = `/static/locales/${lang}/common-lang.js?t=${buildTime}`;
       const lang_js_index = (pathname == '/[locale]/index' || pathname == '/[locale]') ? `/static/locales/${lang}/index.js?t=${buildTime}` : '';
       const lang_js_convert = pathname == '/[locale]/convert' ? `/static/locales/${lang}/convert.js?t=${buildTime}` : '';
-      const lang_js_fiat_crypto = pathname == '/[locale]/fiat-crypto' ? `/static/locales/${lang}/fiat-crypto.js?t=${buildTime}` : '';
+      // const lang_js_fiat_crypto = pathname == '/[locale]/fiat-crypto' ? `/static/locales/${lang}/fiat-crypto.js?t=${buildTime}` : '';
       const lang_js_account = 
       (
         pathname == '/[locale]/account/dashboard' ||
@@ -65,7 +65,7 @@ class MyDocument extends Document {
               <script src={commonLangJsSrc}></script>
               {lang_js_index && <script src={lang_js_index}></script>}
               {lang_js_convert && <script src={lang_js_convert}></script>}
-              {lang_js_fiat_crypto && <script src={lang_js_fiat_crypto}></script>}
+              {/* {lang_js_fiat_crypto && <script src={lang_js_fiat_crypto}></script>} */}
               {lang_js_account && <script src={lang_js_account}></script>}
               {lang_js_novice_task && <script src={lang_js_novice_task}></script>}
               {lang_js_markets && <script src={lang_js_markets}></script>}

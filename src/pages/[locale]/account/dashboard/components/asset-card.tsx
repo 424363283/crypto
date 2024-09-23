@@ -24,7 +24,7 @@ const ButtonArea = () => {
         </TrLink>
       </Button>
       <Button type='light-sub-2' className='btn sub-btn'>
-        <TrLink href='/fiat-crypto'>{LANG('买币')}</TrLink>
+        {/* <TrLink href='/fiat-crypto'>{LANG('买币')}</TrLink> */}
       </Button>
       <style jsx>{buttonStyles}</style>
     </div>

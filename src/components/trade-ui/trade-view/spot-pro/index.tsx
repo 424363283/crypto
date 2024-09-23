@@ -673,7 +673,7 @@ export const SpotProTradeUI = () => {
                 </div>
                 <div className='links'>
                   <TrLink href='/account/fund-management/asset-account/recharge'>{LANG('充币')}</TrLink>
-                  <TrLink href='/fiat-crypto'>{LANG('买币')}</TrLink>
+                  {/* <TrLink href='/fiat-crypto'>{LANG('买币')}</TrLink> */}
                   <TrLink href='/account/fund-management/asset-account/withdraw'>{LANG('提币')}</TrLink>
                 </div>
               </>

@@ -359,6 +359,10 @@ export const colorMap = {
     light: '#ffffff',
     dark: '#ffffff',
   },
+  '--color-active':{
+    light: '#782ce8',
+    dark: '#782ce8',
+  }
 
 
 
