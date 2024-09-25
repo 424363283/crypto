@@ -38,11 +38,13 @@ export const middleware = (req: NextRequest) => {
     req.nextUrl.pathname.startsWith('/_next') ||
     req.nextUrl.pathname.startsWith('/api/') ||
     req.nextUrl.pathname.startsWith('/swap/') ||
+    req.nextUrl.pathname.startsWith('/apissr/') ||
     PUBLIC_FILE.test(req.nextUrl.pathname)
   ) {
     //console.log(req.nextUrl.pathname,'req.nextUrl.pathname')
     return;
   }
+ 
 
   const url = req.nextUrl.clone();
   const { pathname } = req.nextUrl;

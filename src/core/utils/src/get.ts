@@ -17,7 +17,7 @@ export const getCurrencyDigit = (code: string) => {
   return digit;
 };
 
-let upload = 'https://uploads.y-mex.in/icons/';
+let upload = 'https://y-mex-upload.pages.dev/icons/';
 
 export const getCryptoIcon = (code: string) => {
   if (typeof code !== 'string') return;

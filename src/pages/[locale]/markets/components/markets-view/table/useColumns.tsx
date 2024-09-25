@@ -30,7 +30,7 @@ const useColumns = (onFavorite: (latestFavorsList: FAVORS_LIST[]) => void) => {
   const [coinList, setCoinList] = useState<any>([]);
   const [localCoinList, setLocalCoinList] = useIndexedDB(IDB_STORE_KEYS.MARKET_DETAIL_CMC_LIST, coinList);
   const getCoinDetailList = async () => {
-    return fetch('/apissr/cmc/list.json')
+    return fetch('/static/json/apissr_cmc_list.json')
       .then((response) => {
         return response.json();
       })

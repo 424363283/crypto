@@ -20,8 +20,8 @@ class Info {
     this.iosUrl = data?.iosUrl || 'https://apps.apple.com/us/app/id6444251506';
     this.macUrl = data?.macUrl || 'https://y-mexlenew.oss-ap-southeast-1.aliyuncs.com/pcclient/YMEX-1.0.0.dmg';
     this.winUrl = data?.winUrl || 'https://y-mexlenew.oss-ap-southeast-1.aliyuncs.com/pcclient/YMEX-Setup-1.0.0.exe';
-    this.iconsUrl = data?.upload || 'https://uploads.y-mex.in/icons/';
-    this.uploadHost = data?.uploadHost || 'https://uploads.y-mex.in';
+    this.iconsUrl = data?.upload || 'https://y-mex-upload.pages.dev/icons/';
+    this.uploadHost = data?.uploadHost || 'https://y-mex-upload.pages.dev';
   }
 
   public static async getInstance(): Promise<Info> {
