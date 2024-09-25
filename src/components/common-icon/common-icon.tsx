@@ -1,6 +1,8 @@
 import { useTheme } from '@/core/hooks';
+import { SKIN } from '@/core/store/src/types';
 import type { ImageProps } from 'next/image';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 type OmitSrc<T> = Pick<T, Exclude<keyof T, 'src' | 'alt'>>;
 
@@ -15,6 +17,7 @@ interface CommonIconProps extends OmitSrc<ImageProps> {
    * 是否开启icon皮肤
    */
   enableSkin?: boolean;
+  latestSkin?: SKIN;
 }
 
 interface IconWithName extends CommonIconProps {
@@ -40,8 +43,28 @@ function _extractContent(input: string) {
 }
 
 const CommonIcon = (props: IconProps) => {
-  const { name, size, src, width, height, alt = 'icon', useDarkIcon = false, enableSkin = false, ...rest } = props;
+  const {
+    name = 'bydfi icon',
+    size,
+    src,
+    width,
+    height,
+    alt,
+    useDarkIcon = false,
+    enableSkin = false,
+    latestSkin, // 用于比如AlertFunction这种只渲染一次的组件
+    ...rest
+  } = props;
   const { isDark, skin } = useTheme();
+  const [currentSkin, setCurrentSkin] = useState(skin);
+
+  useEffect(() => {
+    if (latestSkin) {
+      setCurrentSkin(latestSkin);
+    } else {
+      setCurrentSkin(skin);
+    }
+  }, [skin, latestSkin]);
   // 使用正则表达式匹配第一个 '-' 前面的单词
   const pattern = /^([^-]+)/;
   const matchIconSubPath = name?.match(pattern);
@@ -50,15 +73,15 @@ const CommonIcon = (props: IconProps) => {
   const isThemeRelative = !name?.includes('-0'); // icon名称是否与主题有关
 
   // 使用正则表达式匹配第一个 '-' 后面，最后一个'-0'前面的单词（默认去掉-0）
-  if (enableSkin && skin !== 'primary') {
+  if (enableSkin && currentSkin !== 'primary') {
     const url = isThemeRelative
-      ? `/static/icons/${skin}/${iconPrefixSubPath}/${isDark ? 'dark/' : ''}${restWord}.svg`
-      : `/static/icons/${skin}/${iconPrefixSubPath}/${useDarkIcon ? 'dark/' : ''}${restWord}.svg`;
+      ? `/static/icons/${currentSkin}/${iconPrefixSubPath}/${isDark ? 'dark/' : ''}${restWord}.svg`
+      : `/static/icons/${currentSkin}/${iconPrefixSubPath}/${useDarkIcon ? 'dark/' : ''}${restWord}.svg`;
     return (
       <Image
         {...rest}
         src={src || url}
-        alt={name || alt}
+        alt={alt || name}
         width={width || size}
         height={height || size}
         priority
@@ -74,7 +97,7 @@ const CommonIcon = (props: IconProps) => {
     <Image
       {...rest}
       src={src || defaultUrl}
-      alt={name || alt}
+      alt={alt || name}
       width={width || size}
       height={height || size}
       priority

@@ -10,7 +10,7 @@ import { GlobalStyle } from '@/core/styles/src/global-style';
 import { AppProps } from 'next/app';
 // const ErrorBoundary = dynamic(() => import('@/components/error/error-boundary'));
 import  ErrorBoundary  from '@/components/error/error-boundary';
-import '@/core/styles/global.scss';
+// import '@/core/styles/global.scss';
 import {useRouter} from 'next/router';
 import { useEffect } from 'react';
 

@@ -52,7 +52,6 @@ class MyDocument extends Document {
       return (
         <Html 
         lang={lang}
-        style={{ fontSize: "37.5px" }}
         >
           <Head />
           <script src={theme_js}></script>

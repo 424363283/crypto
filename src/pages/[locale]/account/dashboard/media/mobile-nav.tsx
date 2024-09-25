@@ -1,5 +1,5 @@
+import CommonIcon from '@/components/common-icon';
 import { ScrollXWrap } from '@/components/scroll-x-wrap';
-import { Svg } from '@/components/svg';
 import { LANG, TrLink } from '@/core/i18n';
 import { MediaInfo, clsx } from '@/core/utils';
 import css from 'styled-jsx/css';
@@ -39,7 +39,7 @@ export const MobileNav = ({ className }: { className?: string }) => {
           query={{ type: item.query }}
           key={item.query}
         >
-          <Svg src={NAV_ICON_MAP[item.query]} width={20} height={20} currentColor='#C5C5C4' />
+          <CommonIcon name={NAV_ICON_MAP[item.query]} width={20} height={20} />
           <span className='title'>{item.title}</span>
         </TrLink>
       );
