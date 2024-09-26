@@ -17,4 +17,5 @@ export {useMiniChartData} from './src/use-mini-chart-data'
 export {useDeviceDownloadUrl} from './src/use-device-download-url'
 export {useLastPathname} from './src/use-lastpath-name'
 export {useCouponState} from './src/use-coupon-state'
+export {useNativeAPP} from './src/use-native-app'
 

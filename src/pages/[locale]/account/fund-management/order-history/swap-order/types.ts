@@ -1,0 +1,7 @@
+export enum SWAP_HISTORY_ORDER_TYPE {
+    CURRENT_COMMISSIONS = '0',
+    HISTORY_COMMISSIONS = '1',
+    HISTORY_TRANSACTION = '2',
+    ASSET_FLOW = '3',
+  }
+  
