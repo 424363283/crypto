@@ -275,7 +275,9 @@ function getDefaultCandleStyle() {
             downWickColor: red,
             noChangeWickColor: grey,
             orderMarking: {
-                show: false,
+                show: true,
+                type: 'bs',
+                historyList: [],
             },
         },
         area: {
@@ -598,7 +600,7 @@ function getDefaultCrosshairStyle() {
             borderColor: 'black',
         },
         clickAddBtn: function (price) {
-            // console.log('click', price);
+            console.log('click', price);
         },
     };
 }
@@ -641,6 +643,12 @@ function getDefaultPositionStyle() {
         },
         onReverseClick: function () { return null; },
         onStopClick: function () { return null; },
+    };
+}
+function getDefaultPositionOverlayStyle() {
+    return {
+        buy: green,
+        sell: red,
     };
 }
 function getDefaultOverlayStyle() {
@@ -739,6 +747,7 @@ function getDefaultStyles() {
         commissionOrder: getDefaultCommissionStyle(),
         positionOrder: getDefaultPositionStyle(),
         overlay: getDefaultOverlayStyle(),
+        positionOverlayStyle: getDefaultPositionOverlayStyle(),
     };
 }
 
@@ -761,7 +770,7 @@ function log(templateText, tagStyle, messageStyle, api, invalidParam, append) {
         var apiStr = api !== '' ? "Call api `".concat(api, "`").concat(invalidParam !== '' || append !== '' ? ', ' : '.') : '';
         var invalidParamStr = invalidParam !== '' ? "invalid parameter `".concat(invalidParam, "`").concat(append !== '' ? ', ' : '.') : '';
         var appendStr = append !== '' ? append : '';
-        // console.log(templateText, tagStyle, messageStyle, apiStr, invalidParamStr, appendStr);
+        console.log(templateText, tagStyle, messageStyle, apiStr, invalidParamStr, appendStr);
     }
 }
 function logWarn(api, invalidParam, append) {
@@ -3888,17 +3897,17 @@ function getVolumeFigure() {
         baseValue: 0,
         styles: function (data, indicator, defaultStyles) {
             var kLineData = data.current.kLineData;
-            var color = formatValue(indicator.styles, 'bars[0].noChangeColor', (defaultStyles.bars)[0].noChangeColor);
+            var color = formatValue(indicator.styles, 'bars[0].noChangeColor', defaultStyles.bars[0].noChangeColor);
             if (isValid(kLineData)) {
                 if (kLineData.close > kLineData.open) {
-                    color = formatValue(indicator.styles, 'bars[0].upColor', (defaultStyles.bars)[0].upColor);
+                    color = formatValue(indicator.styles, 'bars[0].upColor', defaultStyles.bars[0].upColor);
                 }
                 else if (kLineData.close < kLineData.open) {
-                    color = formatValue(indicator.styles, 'bars[0].downColor', (defaultStyles.bars)[0].downColor);
+                    color = formatValue(indicator.styles, 'bars[0].downColor', defaultStyles.bars[0].downColor);
                 }
             }
             return { color: color };
-        }
+        },
     };
 }
 var volume = {
@@ -3913,7 +3922,7 @@ var volume = {
         { key: 'ma1', title: 'MA5: ', type: 'line' },
         { key: 'ma2', title: 'MA10: ', type: 'line' },
         { key: 'ma3', title: 'MA20: ', type: 'line' },
-        getVolumeFigure()
+        getVolumeFigure(),
     ],
     regenerateFigures: function (params) {
         var figures = params.map(function (p, i) {
@@ -3934,12 +3943,12 @@ var volume = {
                 volSums[index] = ((_a = volSums[index]) !== null && _a !== void 0 ? _a : 0) + volume;
                 if (i >= p - 1) {
                     vol[figures[index].key] = volSums[index] / p;
-                    volSums[index] -= ((_b = dataList[i - (p - 1)].volume) !== null && _b !== void 0 ? _b : 0);
+                    volSums[index] -= (_b = dataList[i - (p - 1)].volume) !== null && _b !== void 0 ? _b : 0;
                 }
             });
             return vol;
         });
-    }
+    },
 };
 
 /**
@@ -7620,7 +7629,7 @@ var CrosshairLineView = /** @class */ (function (_super) {
                         styles: _style,
                     }, {
                         mouseClickEvent: function () {
-                            // console.lo/g(price);
+                            console.log(price);
                             style.clickAddBtn(+(price !== null && price !== void 0 ? price : 0));
                             return true;
                         },
@@ -8037,7 +8046,7 @@ var ChildrenView = /** @class */ (function (_super) {
         var visibleDataList = chartStore.getVisibleDataList();
         var barSpace = chartStore.getTimeScaleStore().getBarSpace();
         visibleDataList.forEach(function (data, index) {
-            childCallback(data, barSpace, index);
+            childCallback(data, barSpace, index, visibleDataList[index + 1]);
         });
     };
     return ChildrenView;
@@ -8060,6 +8069,7 @@ var CandleBarView = /** @class */ (function (_super) {
     __extends(CandleBarView, _super);
     function CandleBarView() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.type = 'rect';
         _this._boundCandleBarClickEvent = function (data) { return function () {
             _this.getWidget().getPane().getChart().getChartStore().getActionStore().execute(ActionType.OnCandleBarClick, data);
             return false;
@@ -8074,11 +8084,15 @@ var CandleBarView = /** @class */ (function (_super) {
         var candleBarOptions = this.getCandleBarOptions(chartStore);
         if (candleBarOptions !== null) {
             var yAxis_1 = pane.getAxisComponent();
-            this.eachChildren(function (data, barSpace) {
+            this.isReverse = yAxis_1.isReverse();
+            this.eachChildren(function (data, barSpace, _, nextData) {
                 var kLineData = data.data, x = data.x;
                 if (isValid(kLineData)) {
                     var open_1 = kLineData.open, high = kLineData.high, low = kLineData.low, close_1 = kLineData.close;
                     var type = candleBarOptions.type, styles = candleBarOptions.styles;
+                    var positionOverlayStyle = chartStore.getStyles().positionOverlayStyle;
+                    _this.upColor = positionOverlayStyle.buy;
+                    _this.downColor = positionOverlayStyle.sell;
                     var colors = [];
                     if (close_1 > open_1) {
                         colors[0] = styles.upColor;
@@ -8102,8 +8116,20 @@ var CandleBarView = /** @class */ (function (_super) {
                     var priceY = [openY, closeY, highY, lowY];
                     priceY.sort(function (a, b) { return a - b; });
                     if (candleBarOptions.styles.orderMarking.show) {
-                        // 绘制买卖打点
-                        _this._drawOrderData(ctx, x, openY, closeY, highY, lowY);
+                        var historyList = candleBarOptions.styles.orderMarking.historyList;
+                        _this.type = candleBarOptions.styles.orderMarking.type;
+                        var findItem = historyList.find(function (item) {
+                            if (nextData === null || nextData === void 0 ? void 0 : nextData.data) {
+                                return item.date >= kLineData.timestamp && item.date < nextData.data.timestamp;
+                            }
+                            else {
+                                return item.date >= kLineData.timestamp;
+                            }
+                        });
+                        if (findItem) {
+                            // 绘制买卖打点
+                            _this._drawOrderData(ctx, x, openY, closeY, highY, lowY, findItem);
+                        }
                     }
                     var rects = [];
                     switch (type) {
@@ -8143,23 +8169,23 @@ var CandleBarView = /** @class */ (function (_super) {
                                             x: x - size / 2,
                                             y: priceY[0],
                                             width: size,
-                                            height: priceY[3] - priceY[0]
+                                            height: priceY[3] - priceY[0],
                                         },
                                         {
                                             x: x - barSpace.halfGapBar,
                                             y: openY + size > priceY[3] ? priceY[3] - size : openY,
                                             width: barSpace.halfGapBar - size / 2,
-                                            height: size
+                                            height: size,
                                         },
                                         {
                                             x: x + size / 2,
                                             y: closeY + size > priceY[3] ? priceY[3] - size : closeY,
                                             width: barSpace.halfGapBar - size / 2,
-                                            height: size
-                                        }
+                                            height: size,
+                                        },
                                     ],
-                                    styles: { color: colors[0] }
-                                }
+                                    styles: { color: colors[0] },
+                                },
                             ];
                             break;
                         }
@@ -8169,7 +8195,7 @@ var CandleBarView = /** @class */ (function (_super) {
                         var handler;
                         if (isMain) {
                             handler = {
-                                mouseClickEvent: _this._boundCandleBarClickEvent(data)
+                                mouseClickEvent: _this._boundCandleBarClickEvent(data),
                             };
                         }
                         (_a = _this.createFigure(rect, handler)) === null || _a === void 0 ? void 0 : _a.draw(ctx);
@@ -8179,40 +8205,111 @@ var CandleBarView = /** @class */ (function (_super) {
         }
     };
     // 绘制买卖打点
-    CandleBarView.prototype._drawOrderData = function (ctx, x, openY, closeY, highY, lowY) {
+    CandleBarView.prototype._drawOrderData = function (ctx, x, openY, closeY, highY, lowY, item) {
         var minY = Math.min(openY, closeY, highY, lowY);
         var maxY = Math.max(openY, closeY, highY, lowY);
-        var textWidth = ctx.measureText('买').width;
+        var textWidth = ctx.measureText('B').width;
         var style = {
-            color: 'red',
+            color: 'white',
             size: 12,
-            backgroundColor: 'green',
-            paddingTop: 2,
-            paddingBottom: 2
+            paddingTop: 1,
+            paddingBottom: 1,
+            paddingLeft: 3,
+            paddingRight: 3,
+            borderRadius: 3,
         };
         var paddingSize = style.paddingBottom + style.paddingTop;
-        this._drawOrderDataText(ctx, '买', x - textWidth / 2, minY - paddingSize - style.size, style);
-        this._drawOrderDataText(ctx, '卖', x - textWidth / 2, maxY + paddingSize + style.size, style);
+        var yArr = [minY - paddingSize - style.size, maxY + paddingSize + style.size];
+        item.buy > 0 &&
+            this._drawOrderDataText(ctx, 'B', x - (textWidth + 6) / 2, yArr[Number(!this.isReverse)], __assign(__assign({}, style), { backgroundColor: this.upColor }));
+        item.sell > 0 &&
+            this._drawOrderDataText(ctx, 'S', x - (textWidth + 6) / 2, yArr[Number(this.isReverse)], __assign(__assign({}, style), { backgroundColor: this.downColor }));
     };
     CandleBarView.prototype._drawOrderDataText = function (ctx, text, x, y, style) {
         var _a;
-        // 绘制Text
-        (_a = this.createFigure({
-            name: 'text',
-            attrs: {
-                x: x,
-                y: y,
-                text: text,
-                baseline: 'middle'
-            },
-            styles: style
-        })) === null || _a === void 0 ? void 0 : _a.draw(ctx);
+        if (this.type === 'bs') {
+            // 绘制Text
+            (_a = this.createFigure({
+                name: 'text',
+                attrs: {
+                    x: x,
+                    y: y,
+                    text: text,
+                    baseline: 'middle',
+                },
+                styles: style,
+            })) === null || _a === void 0 ? void 0 : _a.draw(ctx);
+            if (text === 'S') {
+                utils.drawPolygon(ctx, {
+                    coordinates: [
+                        { x: x + 4, y: y + 6 },
+                        { x: x + 7, y: y + 9 },
+                        { x: x + 10, y: y + 6 },
+                    ],
+                }, {
+                    style: PolygonType.Fill,
+                    color: this.downColor,
+                });
+            }
+            else {
+                utils.drawPolygon(ctx, {
+                    coordinates: [
+                        { x: x + 4, y: y - 6 },
+                        { x: x + 7, y: y - 9 },
+                        { x: x + 10, y: y - 6 },
+                    ],
+                }, {
+                    style: PolygonType.Fill,
+                    color: this.upColor,
+                });
+            }
+        }
+        else {
+            if (text === 'S') {
+                utils.drawLine(ctx, {
+                    coordinates: [
+                        { x: x + 3.5, y: y },
+                        { x: x + 6.5, y: y + 3 },
+                        { x: x + 9.5, y: y },
+                    ],
+                }, {
+                    color: this.downColor,
+                });
+                utils.drawLine(ctx, {
+                    coordinates: [
+                        { x: x + 6.5, y: y + 3 },
+                        { x: x + 6.5, y: y - 7 },
+                    ],
+                }, {
+                    color: this.downColor,
+                });
+            }
+            else {
+                utils.drawLine(ctx, {
+                    coordinates: [
+                        { x: x + 3.5, y: y },
+                        { x: x + 6.5, y: y - 3 },
+                        { x: x + 9.5, y: y },
+                    ],
+                }, {
+                    color: this.upColor,
+                });
+                utils.drawLine(ctx, {
+                    coordinates: [
+                        { x: x + 6.5, y: y - 3 },
+                        { x: x + 6.5, y: y + 7 },
+                    ],
+                }, {
+                    color: this.upColor,
+                });
+            }
+        }
     };
     CandleBarView.prototype.getCandleBarOptions = function (chartStore) {
         var candleStyles = chartStore.getStyles().candle;
         return {
             type: candleStyles.type,
-            styles: candleStyles.bar
+            styles: candleStyles.bar,
         };
     };
     CandleBarView.prototype._createSolidBar = function (x, priceY, barSpace, colors) {
@@ -8223,9 +8320,9 @@ var CandleBarView = /** @class */ (function (_super) {
                     x: x - 0.5,
                     y: priceY[0],
                     width: 1,
-                    height: priceY[3] - priceY[0]
+                    height: priceY[3] - priceY[0],
                 },
-                styles: { color: colors[2] }
+                styles: { color: colors[2] },
             },
             {
                 name: 'rect',
@@ -8233,14 +8330,14 @@ var CandleBarView = /** @class */ (function (_super) {
                     x: x - barSpace.halfGapBar + 0.5,
                     y: priceY[1],
                     width: barSpace.gapBar - 1,
-                    height: Math.max(1, priceY[2] - priceY[1])
+                    height: Math.max(1, priceY[2] - priceY[1]),
                 },
                 styles: {
                     style: PolygonType.StrokeFill,
                     color: colors[0],
-                    borderColor: colors[1]
-                }
-            }
+                    borderColor: colors[1],
+                },
+            },
         ];
     };
     CandleBarView.prototype._createStrokeBar = function (x, priceY, barSpace, colors) {
@@ -8252,16 +8349,16 @@ var CandleBarView = /** @class */ (function (_super) {
                         x: x - 0.5,
                         y: priceY[0],
                         width: 1,
-                        height: priceY[1] - priceY[0]
+                        height: priceY[1] - priceY[0],
                     },
                     {
                         x: x - 0.5,
                         y: priceY[2],
                         width: 1,
-                        height: priceY[3] - priceY[2]
-                    }
+                        height: priceY[3] - priceY[2],
+                    },
                 ],
-                styles: { color: colors[2] }
+                styles: { color: colors[2] },
             },
             {
                 name: 'rect',
@@ -8269,13 +8366,13 @@ var CandleBarView = /** @class */ (function (_super) {
                     x: x - barSpace.halfGapBar + 0.5,
                     y: priceY[1],
                     width: barSpace.gapBar - 1,
-                    height: Math.max(1, priceY[2] - priceY[1])
+                    height: Math.max(1, priceY[2] - priceY[1]),
                 },
                 styles: {
                     style: PolygonType.Stroke,
-                    borderColor: colors[1]
-                }
-            }
+                    borderColor: colors[1],
+                },
+            },
         ];
     };
     return CandleBarView;
@@ -10055,7 +10152,7 @@ var CommissionOrderView = /** @class */ (function (_super) {
     };
     CommissionOrderView.prototype._drawOrder = function (ctx, pane, order, index) {
         var commission = this.defaultStyle.commissionOrder;
-        var _a = this.defaultStyle.candle.bar, buyColor = _a.upColor, sellColor = _a.downColor;
+        var _a = this.defaultStyle.positionOverlayStyle, buyColor = _a.buy, sellColor = _a.sell;
         var color = order.side === OrderSide.Buy ? buyColor : sellColor;
         var priceToY = this.yAxis.convertToPixel(order.price);
         var Y = priceToY - this.height / 2;
@@ -10287,7 +10384,6 @@ var CommissionOrderView = /** @class */ (function (_super) {
             this.defaultStyle.commissionOrder.onMoveStart();
             this.isTriggered = false;
         }
-        return true;
     };
     CommissionOrderView.prototype.updateYAxis = function (y) {
         var _this = this;
@@ -10378,7 +10474,7 @@ var PositionOrderView = /** @class */ (function (_super) {
         var _this = this;
         var _a, _b, _c, _d, _e, _f, _g, _h;
         var id = order.id, openPrice = order.openPrice, sideText = order.sideText, profitRate = order.profitRate, volume = order.volume;
-        var _j = this.defaultStyle.candle.bar, buyColor = _j.upColor, sellColor = _j.downColor;
+        var _j = this.defaultStyle.positionOverlayStyle, buyColor = _j.buy, sellColor = _j.sell;
         var color = order.side === OrderSide.Buy ? buyColor : sellColor;
         var yAxis = pane.getAxisComponent();
         var y = yAxis.convertToPixel(Number(openPrice)) - this.height / 2;
@@ -10648,7 +10744,8 @@ var CandleWidget = /** @class */ (function (_super) {
             return true;
         });
         _this.registerEvent('mouseDownEvent', function (e) {
-            return _this._commissionOrderView.updateStart(e.x, e.y);
+            _this._commissionOrderView.updateStart(e.x, e.y);
+            return false;
         });
         _this.registerEvent('pressedMouseMoveEvent', function (e) {
             return _this._commissionOrderView.updateYAxis(e.y);
@@ -11416,7 +11513,7 @@ var CommissionOrderYAxisLabelView = /** @class */ (function (_super) {
         var commission = this.defaultStyle.commissionOrder;
         var fontStyle = commission === null || commission === void 0 ? void 0 : commission.fontStyle;
         var yAxisLabelRectStyles = commission === null || commission === void 0 ? void 0 : commission.yAxisLabelRectStyles;
-        var _d = this.defaultStyle.candle.bar, buyColor = _d.upColor, sellColor = _d.downColor;
+        var _d = this.defaultStyle.positionOverlayStyle, buyColor = _d.buy, sellColor = _d.sell;
         var color = order.side === OrderSide.Buy ? buyColor : sellColor;
         var Y = this.yAxis.convertToPixel(order.price);
         if (Y < this.highY || Y > this.lowY)
@@ -11485,7 +11582,7 @@ var PositionOrderYAxisLabelView = /** @class */ (function (_super) {
         var commission = this.defaultStyle.positionOrder;
         var fontStyle = commission === null || commission === void 0 ? void 0 : commission.fontStyle;
         var yAxisLabelRectStyles = commission === null || commission === void 0 ? void 0 : commission.yAxisLabelRectStyles;
-        var _c = this.defaultStyle.candle.bar, buyColor = _c.upColor, sellColor = _c.downColor;
+        var _c = this.defaultStyle.positionOverlayStyle, buyColor = _c.buy, sellColor = _c.sell;
         var color = order.side === OrderSide.Buy ? buyColor : sellColor;
         var openPrice = formatFoldDecimal(formatThousands(order.openPrice, this.chartStore.getThousandsSeparator()), this.chartStore.getDecimalFoldThreshold());
         var yAxis = pane.getAxisComponent();
@@ -14390,7 +14487,7 @@ var ChartImp = /** @class */ (function () {
             // @ts-expect-error
             msUserSelect: 'none',
             MozUserSelect: 'none',
-            webkitTapHighlightColor: 'transparent'
+            webkitTapHighlightColor: 'transparent',
         });
         this._chartContainer.tabIndex = 1;
         container.appendChild(this._chartContainer);
@@ -14530,8 +14627,7 @@ var ChartImp = /** @class */ (function () {
         }
         var indicatorPaneTotalHeight = 0;
         this._drawPanes.forEach(function (pane) {
-            if (pane.getId() !== PaneIdConstants.CANDLE &&
-                pane.getId() !== PaneIdConstants.X_AXIS) {
+            if (pane.getId() !== PaneIdConstants.CANDLE && pane.getId() !== PaneIdConstants.X_AXIS) {
                 var paneHeight = pane.getBounding().height;
                 var paneMinHeight = pane.getOptions().minHeight;
                 if (paneHeight < paneMinHeight) {
@@ -14626,9 +14722,7 @@ var ChartImp = /** @class */ (function () {
             var shouldMeasureHeight = false;
             if (pane !== null) {
                 var shouldAdjust = forceShouldAdjust;
-                if (options.id !== PaneIdConstants.CANDLE &&
-                    isNumber(options.height) &&
-                    options.height > 0) {
+                if (options.id !== PaneIdConstants.CANDLE && isNumber(options.height) && options.height > 0) {
                     var minHeight = Math.max((_a = options.minHeight) !== null && _a !== void 0 ? _a : pane.getOptions().minHeight, 0);
                     var height = Math.max(minHeight, options.height);
                     pane.setBounding({ height: height });
@@ -14719,8 +14813,7 @@ var ChartImp = /** @class */ (function () {
                 indicators.forEach(function (indicator) {
                     var _a;
                     var result = indicator.result;
-                    paneIndicatorData[indicator.name] =
-                        result[(_a = crosshair.dataIndex) !== null && _a !== void 0 ? _a : result.length - 1];
+                    paneIndicatorData[indicator.name] = result[(_a = crosshair.dataIndex) !== null && _a !== void 0 ? _a : result.length - 1];
                 });
                 indicatorData_1[id] = paneIndicatorData;
             });
@@ -14779,7 +14872,7 @@ var ChartImp = /** @class */ (function () {
                 left: 0,
                 top: 0,
                 right: 0,
-                bottom: 0
+                bottom: 0,
             };
         }
         return null;
@@ -14816,7 +14909,7 @@ var ChartImp = /** @class */ (function () {
     ChartImp.prototype.setPriceVolumePrecision = function (pricePrecision, volumePrecision) {
         this._chartStore.setPrecision({
             price: pricePrecision,
-            volume: volumePrecision
+            volume: volumePrecision,
         });
     };
     ChartImp.prototype.getPriceVolumePrecision = function () {
@@ -14855,18 +14948,14 @@ var ChartImp = /** @class */ (function () {
             logWarn('setLeftMinVisibleBarCount', 'barCount', 'barCount must greater than zero!!!');
             return;
         }
-        this._chartStore
-            .getTimeScaleStore()
-            .setLeftMinVisibleBarCount(Math.ceil(barCount));
+        this._chartStore.getTimeScaleStore().setLeftMinVisibleBarCount(Math.ceil(barCount));
     };
     ChartImp.prototype.setRightMinVisibleBarCount = function (barCount) {
         if (barCount < 0) {
             logWarn('setRightMinVisibleBarCount', 'barCount', 'barCount must greater than zero!!!');
             return;
         }
-        this._chartStore
-            .getTimeScaleStore()
-            .setRightMinVisibleBarCount(Math.ceil(barCount));
+        this._chartStore.getTimeScaleStore().setRightMinVisibleBarCount(Math.ceil(barCount));
     };
     ChartImp.prototype.setBarSpace = function (space) {
         this._chartStore.getTimeScaleStore().setBarSpace(space);
@@ -14982,9 +15071,7 @@ var ChartImp = /** @class */ (function () {
             .catch(function () { });
     };
     ChartImp.prototype.getIndicatorByPaneId = function (paneId, name) {
-        return this._chartStore
-            .getIndicatorStore()
-            .getInstanceByPaneId(paneId, name);
+        return this._chartStore.getIndicatorStore().getInstanceByPaneId(paneId, name);
     };
     ChartImp.prototype.removeIndicator = function (paneId, name) {
         var e_1, _a;
@@ -15059,9 +15146,7 @@ var ChartImp = /** @class */ (function () {
             paneId = PaneIdConstants.CANDLE;
             appointPaneFlag = false;
         }
-        var ids = this._chartStore
-            .getOverlayStore()
-            .addInstances(overlays, paneId, appointPaneFlag);
+        var ids = this._chartStore.getOverlayStore().addInstances(overlays, paneId, appointPaneFlag);
         if (isArray(value)) {
             return ids;
         }
@@ -15101,9 +15186,7 @@ var ChartImp = /** @class */ (function () {
         return this._chartStore.getTimeScaleStore().getScrollEnabled();
     };
     ChartImp.prototype.scrollByDistance = function (distance, animationDuration) {
-        var duration = isNumber(animationDuration) && animationDuration > 0
-            ? animationDuration
-            : 0;
+        var duration = isNumber(animationDuration) && animationDuration > 0 ? animationDuration : 0;
         var timeScaleStore = this._chartStore.getTimeScaleStore();
         if (duration > 0) {
             timeScaleStore.startScroll();
@@ -15127,15 +15210,13 @@ var ChartImp = /** @class */ (function () {
     ChartImp.prototype.scrollToRealTime = function (animationDuration) {
         var timeScaleStore = this._chartStore.getTimeScaleStore();
         var barSpace = timeScaleStore.getBarSpace().bar;
-        var difBarCount = timeScaleStore.getLastBarRightSideDiffBarCount() -
-            timeScaleStore.getInitialOffsetRightDistance() / barSpace;
+        var difBarCount = timeScaleStore.getLastBarRightSideDiffBarCount() - timeScaleStore.getInitialOffsetRightDistance() / barSpace;
         var distance = difBarCount * barSpace;
         this.scrollByDistance(distance, animationDuration);
     };
     ChartImp.prototype.scrollToDataIndex = function (dataIndex, animationDuration) {
         var timeScaleStore = this._chartStore.getTimeScaleStore();
-        var distance = (timeScaleStore.getLastBarRightSideDiffBarCount() +
-            (this.getDataList().length - 1 - dataIndex)) *
+        var distance = (timeScaleStore.getLastBarRightSideDiffBarCount() + (this.getDataList().length - 1 - dataIndex)) *
             timeScaleStore.getBarSpace().bar;
         this.scrollByDistance(distance, animationDuration);
     };
@@ -15144,9 +15225,7 @@ var ChartImp = /** @class */ (function () {
         this.scrollToDataIndex(dataIndex, animationDuration);
     };
     ChartImp.prototype.zoomAtCoordinate = function (scale, coordinate, animationDuration) {
-        var duration = isNumber(animationDuration) && animationDuration > 0
-            ? animationDuration
-            : 0;
+        var duration = isNumber(animationDuration) && animationDuration > 0 ? animationDuration : 0;
         var timeScaleStore = this._chartStore.getTimeScaleStore();
         if (duration > 0) {
             var barSpace_1 = timeScaleStore.getBarSpace().bar;
@@ -15169,9 +15248,7 @@ var ChartImp = /** @class */ (function () {
         }
     };
     ChartImp.prototype.zoomAtDataIndex = function (scale, dataIndex, animationDuration) {
-        var x = this._chartStore
-            .getTimeScaleStore()
-            .dataIndexToCoordinate(dataIndex);
+        var x = this._chartStore.getTimeScaleStore().dataIndexToCoordinate(dataIndex);
         this.zoomAtCoordinate(scale, { x: x, y: 0 }, animationDuration);
     };
     ChartImp.prototype.zoomAtTimestamp = function (scale, timestamp, animationDuration) {
@@ -15227,8 +15304,7 @@ var ChartImp = /** @class */ (function () {
                     if (isNumber(coordinate.x)) {
                         var dataIndex = (_a = xAxis_2 === null || xAxis_2 === void 0 ? void 0 : xAxis_2.convertFromPixel(coordinate.x)) !== null && _a !== void 0 ? _a : -1;
                         point.dataIndex = dataIndex;
-                        point.timestamp =
-                            (_b = timeScaleStore_2.dataIndexToTimestamp(dataIndex)) !== null && _b !== void 0 ? _b : undefined;
+                        point.timestamp = (_b = timeScaleStore_2.dataIndexToTimestamp(dataIndex)) !== null && _b !== void 0 ? _b : undefined;
                     }
                     if (isNumber(coordinate.y)) {
                         var y = absolute ? coordinate.y - bounding_2.top : coordinate.y;
@@ -15264,7 +15340,7 @@ var ChartImp = /** @class */ (function () {
         var canvas = createDom('canvas', {
             width: "".concat(width, "px"),
             height: "".concat(height, "px"),
-            boxSizing: 'border-box'
+            boxSizing: 'border-box',
         });
         var ctx = canvas.getContext('2d');
         var pixelRatio = getPixelRatio(canvas);
