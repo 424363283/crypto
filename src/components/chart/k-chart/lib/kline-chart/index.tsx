@@ -10,7 +10,7 @@ import Image from 'next/image';
 import { memo, useEffect, useRef } from 'react';
 import { ResolutionType } from '../../components/k-header/resolution/config';
 import { Kline } from './chart';
-import { MyKlineData } from './types';
+import { ChartSetting, MyKlineData } from './types';
 const KlineChartUI = ({
   id,
   theme,
@@ -25,6 +25,7 @@ const KlineChartUI = ({
   showOrdebok,
   showPriceLine = true,
   showCountdown = false,
+  showOrderMarking = false,
 }: {
   id: string;
   theme: string;
@@ -39,6 +40,7 @@ const KlineChartUI = ({
   showOrdebok?: boolean;
   showPriceLine?: boolean;
   showCountdown?: boolean;
+  showOrderMarking?: boolean;
 }) => {
   const chart = useRef<Kline | null>(null);
   const ref = useRef<boolean>(true);
@@ -66,6 +68,7 @@ const KlineChartUI = ({
           showOrdebok,
           showPriceLine,
           showCountdown,
+          showOrderMarking,
         });
         console.log('基础班初始化');
         kChartEmitter.on(kChartEmitter.K_CHART_SCREENSHOT + qty, () => {
@@ -122,7 +125,7 @@ const KlineChartUI = ({
         });
         kChartEmitter.on(kChartEmitter.K_CHART_JUMP_DATE, (timestamp: number, animationDuration: number) => {
           chart.current?.getKlineHistory(
-            id,
+            '',
             Date.now(),
             true,
             () => {
@@ -144,13 +147,23 @@ const KlineChartUI = ({
         kChartEmitter.on(kChartEmitter.K_CHART_COMMISSION_UPDATE, (data: any) => {
           chart.current?.setCommissionOrder(data);
         });
+        kChartEmitter.on(kChartEmitter.K_CHART_SET_ORDER_MARKING_DATA, (data: any) => {
+          chart.current?.setLOrderMarkingData(data);
+        });
+        kChartEmitter.on(kChartEmitter.K_CHART_REFETCH_ORDER_MARKING_DATA, () => {
+          chart.current?.getTradeHistory();
+        });
+        kChartEmitter.on(kChartEmitter.K_CHART_UPDATE_SETTING, (setting: ChartSetting) => {
+          chart.current?.updateChartSetting(setting);
+        });
+        kChartEmitter.emit(kChartEmitter.K_CHART_INIT_FINISHED);
         setTimeout(() => {
           // 主动触发一次 resize，让图表主动适应大小变化
           window.dispatchEvent(new Event('resize'));
         }, 0);
       });
     }
-  }, [id, resolution, theme]);
+  }, [id, resolution, theme, showOrderMarking]);
 
   useEffect(() => {
     if (!chart.current) return;
@@ -181,6 +194,11 @@ const KlineChartUI = ({
     if (!chart.current) return;
     chart.current?.setShowCountdown(!!showCountdown);
   }, [showCountdown]);
+
+  useEffect(() => {
+    if (!chart.current) return;
+    chart.current?.setLOrderMarkingVisible(!!showOrderMarking);
+  }, [showOrderMarking]);
 
   // 实时数据
   useWs(

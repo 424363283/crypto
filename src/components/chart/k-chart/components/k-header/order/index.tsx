@@ -1,14 +1,15 @@
-import { Svg } from '@/components/svg';
+import CommonIcon from '@/components/common-icon';
 import { Switch } from '@/components/switch';
 import Tooltip from '@/components/trade-ui/common/tooltip';
 import { LANG } from '@/core/i18n';
-import { clsxWithScope } from '@/core/utils';
+import { clsxWithScope, isSwapDemo } from '@/core/utils';
 import { Dropdown } from 'antd';
 import { useCallback, useState } from 'react';
 import css from 'styled-jsx/css';
 
 export const KlineHeaderActionOrders = ({ store }: { store: any }) => {
   const [visible, setVisible] = useState(false);
+  const isDemo = isSwapDemo();
   const active = visible ? true : false;
   const _handleVisible = useCallback(() => setVisible((v) => !v), []);
 
@@ -36,19 +37,19 @@ export const KlineHeaderActionOrders = ({ store }: { store: any }) => {
           />
         </div>
       </div>
-      {/* <div>
-        <Tooltip title={LANG('显示设置')}>
-          <div>{LANG('买卖打点')}</div>
-        </Tooltip>
+      {!isDemo && (
         <div>
-          <Switch
-            checked={store.transactionManagement}
-            bgType={2}
-            onChange={(v) => (store.setting = { ...store.setting, transactionManagement: v })}
-            size='small'
-          />
+          <div>{LANG('买卖打点')}</div>
+          <div>
+            <Switch
+              checked={store.setting.transactionManagement}
+              bgType={2}
+              onChange={(v) => (store.setting = { ...store.setting, transactionManagement: v })}
+              size='small'
+            />
+          </div>
         </div>
-      </div> */}
+      )}
     </div>
   );
   return (
@@ -64,14 +65,11 @@ export const KlineHeaderActionOrders = ({ store }: { store: any }) => {
       >
         <Tooltip title={LANG('显示设置')}>
           <div className={clsx('action')} onClick={() => {}}>
-            <Svg
-              src={
-                active
-                  ? '/static/images/trade/kline/order_setting_active.svg'
-                  : '/static/images/trade/kline/order_setting.svg'
-              }
-              height={12}
-            />
+            {active ? (
+              <CommonIcon name='common-order-setting-active-0' size={12} enableSkin />
+            ) : (
+              <CommonIcon name='common-order-setting-0' size={12} />
+            )}
           </div>
         </Tooltip>
       </Dropdown>

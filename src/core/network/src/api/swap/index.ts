@@ -275,3 +275,29 @@ export function swapGetContractRiskListApi(code: string) {
 export function postSwapEditOrderApi(data: any, usdt: boolean) {
   return http.post(`${paths[usdt ? 'swap_private_future_order_edit_order' : 'swap_private_delivery_order_edit_order']}`, data);
 }
+
+
+/** ws错误信息列表 */
+export function swapGetPublicCommonErrorsApi() {
+  return http.get(`${paths['swap_public_common_errors']}`);
+}
+
+/** 获取K线U本位历史成交 */
+export function getKlineUTradeHistoryApi(symbol: string, type: number) {
+  return http.get(`${paths['swap_kline_u_trade_history_list']}`, {
+    params: {
+      type,
+      symbol,
+    },
+  });
+}
+
+/** 获取K线币本位历史成交 */
+export function getKlineCTradeHistoryApi(symbol: string, type: number) {
+  return http.get(`${paths['swap_kline_c_trade_history_list']}`, {
+    params: {
+      type,
+      symbol,
+    },
+  });
+}

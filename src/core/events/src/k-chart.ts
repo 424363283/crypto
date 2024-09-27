@@ -42,4 +42,13 @@ export const kChartEmitter = new (class extends EventEmitter {
   public K_CHART_COMMISSION_MOVE_START = 'K_CHART_COMMISSION_MOVE_START'; // 委托拖动开始
 
   public K_CHART_COMMISSION_MOVE_END = 'K_CHART_COMMISSION_MOVE_END'; // 委托拖动结束
+
+  public K_CHART_SET_ORDER_MARKING_DATA = 'K_CHART_SET_ORDER_MARKING_DATA'; // 设置买卖打点数据
+
+  public K_CHART_REFETCH_ORDER_MARKING_DATA = 'K_CHART_REFETCH_ORDER_MARKING_DATA'; // 重新请求买卖打点数据
+
+  public K_CHART_UPDATE_SETTING = 'K_CHART_UPDATE_SETTING'; // 更新图表设置
+
+  public K_CHART_INIT_FINISHED = 'K_CHART_INIT_FINISHED'; // 图标初始化成功
+
 })();

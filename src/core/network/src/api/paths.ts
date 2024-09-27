@@ -214,6 +214,11 @@ export const paths = {
     swap_private_future_order_edit_order: '/swap/private/future/order/edit_order',
     swap_private_delivery_order_edit_order: '/swap/private/delivery/order/edit_order',
   
+    swap_public_common_errors: '/swap/public/common/errors',
+    swap_kline_u_trade_history_list: '/swap/private/future/trade/getOrderAvgPrice',
+    swap_kline_c_trade_history_list: '/swap/private/delivery/trade/getOrderAvgPrice',
+
+    
     //转账 提币  法币
     transfer_chains: '/api/spot/setting/chains', // 转账链信息
     networks_chains: '/api/spot/setting/networks', // 主网链信息

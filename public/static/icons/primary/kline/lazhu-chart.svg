@@ -1,0 +1,17 @@
+<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M9.93213 5.70801V8.35108" stroke="#141717" stroke-width="0.755162"/>
+<path d="M9.93213 17.6489V20.292" stroke="#141717" stroke-width="0.755162"/>
+<path d="M16.1621 8.11523V10.7583" stroke="#141717" stroke-width="0.755162"/>
+<path d="M16.0679 15.9497V18.5928" stroke="#141717" stroke-width="0.755162"/>
+<mask id="path-5-inside-1_9030_7219" fill="white">
+<rect x="8.04419" y="8.11523" width="3.77581" height="9.72271" rx="0.471976"/>
+</mask>
+<rect x="8.04419" y="8.11523" width="3.77581" height="9.72271" rx="0.471976" stroke="#141717" stroke-width="1.51032" mask="url(#path-5-inside-1_9030_7219)"/>
+<mask id="path-6-inside-2_9030_7219" fill="white">
+<rect x="14.1799" y="10.2861" width="3.77581" height="6.0413" rx="0.471976"/>
+</mask>
+<rect x="14.1799" y="10.2861" width="3.77581" height="6.0413" rx="0.471976" stroke="#141717" stroke-width="1.51032" mask="url(#path-6-inside-2_9030_7219)"/>
+<path d="M9.177 8.87012V17.0825" stroke="#141717" stroke-width="0.755162" stroke-dasharray="0.76 0.76"/>
+<path d="M9.93213 8.02051L9.93213 17.8376" stroke="#141717" stroke-width="0.755162" stroke-dasharray="0.76 0.76"/>
+<path d="M10.6873 8.87012V17.0825" stroke="#141717" stroke-width="0.755162" stroke-dasharray="0.76 0.76"/>
+</svg>

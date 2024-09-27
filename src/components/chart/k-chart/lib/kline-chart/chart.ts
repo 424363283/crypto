@@ -5,10 +5,13 @@ import { RootColor } from '@/core/styles/src/theme/global/root';
 import { Chart, KLineData } from './index.d';
 import { init } from './index.esm';
 
+import { getKlineCTradeHistoryApi, getKlineUTradeHistoryApi } from '@/core/api';
+import { isSwapDemoTradePage, isSwapTradePage, isSwapUsdt } from '@/core/utils';
+import { message } from 'antd';
 import { ResolutionType } from '../../components/k-header/resolution/config';
 import { k_config } from '../config';
 import { options } from './options';
-import { CommissionOrderItemStyle, KOptions, MyKlineData, PositionOrderItemStyle } from './types';
+import { ChartSetting, CommissionOrderItemStyle, KOptions, MyKlineData, PositionOrderItemStyle } from './types';
 
 class Kline {
   private instance: Chart | null = null;
@@ -106,7 +109,11 @@ class Kline {
     fromTimestamp?: number
   ): Promise<void> {
     if (!this.instance) return;
-    this.id = id;
+    if (id === '') {
+      id = this.id;
+    } else {
+      this.id = id;
+    }
     if (resolution) this.resolution = resolution;
     const to = parseInt((timestamp / 1000).toFixed(0));
 
@@ -121,6 +128,7 @@ class Kline {
           type: resolution.key == 'Line' ? 'area' : 'candle_solid',
         },
       });
+      this.getTradeHistory();
       // const cacheData = await IDB.get<KLineData[]>(IDB_STORE_KEYS.K_LINE_CHART_HISTORY(id, __resolution));
       // cacheData && this.instance?.applyNewData(cacheData as KLineData[]);
     }
@@ -156,6 +164,113 @@ class Kline {
     this.setPriceVolumePrecision();
     onReady?.();
   }
+
+  public getTradeHistory() {
+    if (isSwapTradePage() && !isSwapDemoTradePage()) {
+      const fetchApi = isSwapUsdt(this.id) ? getKlineUTradeHistoryApi : getKlineCTradeHistoryApi;
+      fetchApi(this.id, this.resolution.markingType || 1)
+        .then((res) => {
+          if (res?.code === 200) {
+            kChartEmitter.emit(kChartEmitter.K_CHART_SET_ORDER_MARKING_DATA, res?.data);
+          }
+        })
+        .catch((err) => message.error(err?.message));
+    }
+  }
+
+  public updateChartSetting(setting: ChartSetting) {
+    switch (setting.chartType) {
+      case 'candle':
+        this.instance?.setStyles({
+          candle: {
+            // @ts-ignore
+            type: setting.bullishCandleStick === 'solid' ? 'candle_solid' : 'candle_up_stroke',
+            bar: {
+              upColor: setting.upColor,
+              downColor: setting.downColor,
+              upBorderColor: setting.borderUpColor,
+              downBorderColor: setting.borderDownColor,
+              upWickColor: setting.wickUpColor,
+              downWickColor: setting.wickDownColor,
+              orderMarking: {
+                type: setting.tradeMarker,
+              },
+            },
+          },
+        });
+        break;
+      case 'line':
+        this.instance?.setStyles({
+          candle: {
+            // @ts-ignore
+            type: 'area',
+            area: {
+              lineSize: setting.lineWidth,
+              lineColor: setting.lineColor,
+              backgroundColor: [
+                {
+                  offset: 0,
+                  color: 'rgba(0, 0, 0, 0)',
+                },
+                {
+                  offset: 1,
+                  color: 'rgba(0, 0, 0, 0)',
+                },
+              ],
+            },
+            bar: {
+              orderMarking: {
+                type: setting.tradeMarker,
+              },
+            },
+          },
+        });
+        break;
+      case 'area':
+        this.instance?.setStyles({
+          candle: {
+            // @ts-ignore
+            type: 'area',
+            area: {
+              lineSize: 2,
+              lineColor: setting.areaColor,
+              backgroundColor: [
+                {
+                  offset: 0,
+                  color: setting.areaBackgroundColor1 || 'rgba(0, 0, 0, 0)',
+                },
+                {
+                  offset: 1,
+                  color: setting.areaBackgroundColor2 || 'rgba(0, 0, 0, 0)',
+                },
+              ],
+            },
+            bar: {
+              orderMarking: {
+                type: setting.tradeMarker,
+              },
+            },
+          },
+        });
+        break;
+      case 'us_line':
+        this.instance?.setStyles({
+          candle: {
+            // @ts-ignore
+            type: 'ohlc',
+            bar: {
+              upColor: setting.upColor,
+              downColor: setting.downColor,
+              orderMarking: {
+                type: setting.tradeMarker,
+              },
+            },
+          },
+        });
+        break;
+    }
+  }
+
   // 更新数据
   _s: undefined | number = undefined;
   _v: number = 0;
@@ -535,6 +650,19 @@ class Kline {
     });
   }
 
+  // 设置买卖打点数据
+  public setLOrderMarkingData(historyList = []) {
+    this.instance?.setStyles({
+      candle: {
+        bar: {
+          orderMarking: {
+            historyList,
+          },
+        },
+      },
+    });
+  }
+
   // 设置主题
   public setTheme(theme: THEME) {
     this.instance?.setStyles({
@@ -571,6 +699,18 @@ class Kline {
     this.instance?.setStyles({
       commissionOrder: {
         show: visible,
+      },
+    });
+  }
+  // 设置买卖打点是否显示
+  public setLOrderMarkingVisible(visible: boolean) {
+    this.instance?.setStyles({
+      candle: {
+        bar: {
+          orderMarking: {
+            show: visible,
+          },
+        },
       },
     });
   }

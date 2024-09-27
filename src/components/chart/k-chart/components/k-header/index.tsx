@@ -10,6 +10,7 @@ import { Resolution } from './resolution/resolution';
 import { Right } from './right';
 import { KlineHeaderActionSetting } from './setting';
 import { KTYPE, kHeaderStore } from './store';
+import { kSettingColor } from './setting/store';
 
 export const KHeader = ({ id, qty, klineGroupMode }: { id: string; qty: number; klineGroupMode?: boolean }) => {
   const store = kHeaderStore(qty);
@@ -17,10 +18,23 @@ export const KHeader = ({ id, qty, klineGroupMode }: { id: string; qty: number; 
   const isLogin = Account.isLogin;
 
   useEffect(() => {
+    kChartEmitter.on(kChartEmitter.K_CHART_INIT_FINISHED, () => {
+      kSettingColor.onChangeChart();
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!isLogin) {
+      kChartEmitter.emit(kChartEmitter.K_CHART_SET_ORDER_MARKING_DATA, []);
+    }
+  }, [isLogin]);
+
+  useEffect(() => {
     return () => {
       kChartEmitter.removeAllListeners();
     };
   }, []);
+ 
 
   return (
     <>

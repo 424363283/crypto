@@ -9,7 +9,7 @@ import css from 'styled-jsx/css';
 import { getKLinePriceType } from '../store';
 
 const GotoDateModal = dynamic(() => import('./components/goto-date-modal'), { ssr: false, loading: () => <div /> });
-// const GotoKLineModal = dynamic(() => import('./components/goto-kline-modal'), { ssr: false, loading: () => <div /> });
+const GotoKLineModal = dynamic(() => import('./components/goto-kline-modal'), { ssr: false, loading: () => <div /> });
 
 export const KlineHeaderActionSetting = ({ store, isSwap, qty }: { store: any; isSwap: boolean; qty: number }) => {
   const [visible, setVisible] = useState(false);
@@ -62,20 +62,22 @@ export const KlineHeaderActionSetting = ({ store, isSwap, qty }: { store: any; i
           <div>{LANG('前往日期')}</div>
         </div>
       </div>
-      {/* <div className={clsx('bottom')} style={{ borderTop: 'none' }}>
-        <div
-          onClick={() => {
-            setGotoKLineVisible(true);
-            setVisible(false);
-            console.log('setGotoKLineVisible');
-          }}
-        >
-          <div className={clsx('icon')}>
-            <CommonIcon name='common-filter-gray-0' size={16} />
+      {isSwap && (
+        <div className={clsx('bottom')} style={{ borderTop: 'none' }}>
+          <div
+            onClick={() => {
+              setGotoKLineVisible(true);
+              setVisible(false);
+              console.log('setGotoKLineVisible');
+            }}
+          >
+            <div className={clsx('icon')}>
+              <CommonIcon name='common-filter-gray-0' size={16} />
+            </div>
+            <div>{LANG('图表设置')}</div>
           </div>
-          <div>{LANG('图表设置')}</div>
         </div>
-      </div> */}
+      )}
     </div>
   );
   return (
@@ -103,7 +105,7 @@ export const KlineHeaderActionSetting = ({ store, isSwap, qty }: { store: any; i
       {gotoDateVisible && (
         <GotoDateModal qty={qty} visible={gotoDateVisible} onClose={() => setGotoDateVisible(false)} />
       )}
-      {/* {gotoKLineVisible && <GotoKLineModal visible={gotoKLineVisible} onClose={() => setGotoKLineVisible(false)} />} */}
+      {gotoKLineVisible && <GotoKLineModal visible={gotoKLineVisible} onClose={() => setGotoKLineVisible(false)} />}
     </>
   );
 };

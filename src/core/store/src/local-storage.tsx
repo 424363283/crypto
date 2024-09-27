@@ -71,6 +71,10 @@ enum LOCAL_KEY {
 
   ROOT_COLOR_INDEX = 'root-color-index-v1',
 
+    // swap 设置 K 线颜色
+    SWAP_SETTING_COLOR = 'swap_setting_color',
+  
+
   }
   // 定义 LocalStorage API 类
   class LocalStorageApi {

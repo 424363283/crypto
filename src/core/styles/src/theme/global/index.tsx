@@ -1,6 +1,8 @@
 import { blueColorMap } from '../blue/color';
 import { GlobalBlueVarStyle } from '../blue/var';
 import { colorMap } from './color';
+import { specColorMap } from './spec-color';
+import { specColorRgbMap } from './spec-color-rgb';
 import { GlobalVarStyle } from './var';
 /**
  * --color-red   - 涨颜色
@@ -10,7 +12,7 @@ import { GlobalVarStyle } from './var';
  * --skin-hover-font-color - hover字体颜色
  */
 export const GlobalThemeStyle = ({ children }: any) => {
-  const getThemeColors = (colors: typeof colorMap | typeof blueColorMap, theme: 'dark' | 'light') => {
+  const getThemeColors = (colors: typeof colorMap | typeof blueColorMap | typeof specColorMap, theme: 'dark' | 'light') => {
     return Object.entries(colors).reduce((acc, [key, value]) => `${acc} ${key}: ${value[theme]};`, '');
   };
   return (
@@ -26,9 +28,13 @@ export const GlobalThemeStyle = ({ children }: any) => {
               }
             }
             ${getThemeColors(colorMap, 'dark')}
+            ${getThemeColors(specColorMap, 'dark')}
+            ${getThemeColors(specColorRgbMap, 'dark')}
           }
           :root[theme='light'] {
             ${getThemeColors(colorMap, 'light')}
+            ${getThemeColors(specColorMap, 'light')}
+            ${getThemeColors(specColorRgbMap, 'light')}
           }
           .main-fall {
             color: var(--color-red);
