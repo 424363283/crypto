@@ -188,7 +188,7 @@ function HeaderComponent({
                 {LANG('行情')}
               </TrActiveLink>
               {/* {renderBuyCrypto()} */}
-              <Menu
+              {/* <Menu
                 showArrow
                 width='235px'
                 height='157px'
@@ -208,7 +208,7 @@ function HeaderComponent({
                 isActive={isSpotCoinActive}
               >
                 {LANG('币币交易')}
-              </Menu>
+              </Menu> */}
               <Menu
                 itemClassName='header-guide-swap-demo-step-1'
                 showArrow
@@ -223,7 +223,7 @@ function HeaderComponent({
               >
                 {LANG('衍生品')}
               </Menu>
-              <TrActiveLink
+              {/* <TrActiveLink
                 href={HEADER_PATH.COPY_TRADING_BOT}
                 onClick={() => {
                   EVENT_TRACK(EVENT_NAME.PC_TopButtonClick, {
@@ -232,7 +232,7 @@ function HeaderComponent({
                 }}
               >
                 {LANG('策略交易')}
-              </TrActiveLink>
+              </TrActiveLink> */}
               {enableLite && <TrActiveLink href={HEADER_PATH.COPY_TRADE}>{LANG('跟单大厅')}</TrActiveLink>}
               <Menu
                 showArrow

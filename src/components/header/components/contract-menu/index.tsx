@@ -203,7 +203,7 @@ const ContractMenu = ({ onContractLeftMenuHover }: { onContractLeftMenuHover: (i
           subMenu={<Perpetual isUsdtType={true} />}
           href='/swap/btc-usdt'
         />
-        <Menu
+        {/* <Menu
           title={LANG('币本位合约')}
           tips={LANG('以数字货币结算的永续合约')}
           // hot
@@ -211,8 +211,8 @@ const ContractMenu = ({ onContractLeftMenuHover }: { onContractLeftMenuHover: (i
           onHover={() => _onHover(1)}
           subMenu={<Perpetual />}
           href='/swap/btc-usd'
-        />
-        {enableLite && (
+        /> */}
+        {/* {enableLite && (
           <Menu
             title={LANG('简易合约')}
             tips={LANG('适合初学者的简单差价合约交易')}
@@ -221,8 +221,8 @@ const ContractMenu = ({ onContractLeftMenuHover }: { onContractLeftMenuHover: (i
             subMenu={<Simple active={subIndex === 0} />}
             href='/lite/btcusdt'
           />
-        )}
-        <Menu
+        )} */}
+        {/* <Menu
           title={LANG('杠杆代币')}
           tips={LANG('永不爆仓，安享收益')}
           // hot
@@ -230,8 +230,8 @@ const ContractMenu = ({ onContractLeftMenuHover }: { onContractLeftMenuHover: (i
           onHover={() => _onHover(3)}
           subMenu={<SpotEtf />}
           href='/spot/btc3l_usdt'
-        />
-        <Menu
+        /> */}
+        {/* <Menu
           className='header-guide-swap-demo-step-2'
           title={LANG('模拟交易')}
           tips={LANG('精进合约技能，无资金风险')}
@@ -241,7 +241,7 @@ const ContractMenu = ({ onContractLeftMenuHover }: { onContractLeftMenuHover: (i
           onHover={() => _onHover(4)}
           href='/swap/demo?id=sbtc-susdt'
           arrow={false}
-        />
+        /> */}
       </div>
       <style jsx>{styles}</style>
     </div>
