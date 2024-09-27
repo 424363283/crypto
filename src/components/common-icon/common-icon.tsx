@@ -44,7 +44,7 @@ function _extractContent(input: string) {
 
 const CommonIcon = (props: IconProps) => {
   const {
-    name = 'bydfi icon',
+    name = 'ymex icon',
     size,
     src,
     width,

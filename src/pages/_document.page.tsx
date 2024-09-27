@@ -45,6 +45,7 @@ class MyDocument extends Document {
       const lang_js_markets = pathname == '/[locale]/markets' ? `/static/locales/${lang}/markets.js?t=${buildTime}` : '';
       const lang_js_swap_info = pathname == '/[locale]/swap-info' ? `/static/locales/${lang}/swap-info.js?t=${buildTime}` : '';
       const lang_js_tv = pathname.indexOf('/[locale]/tv') > -1 ? `/static/locales/${lang}/tv.js?t=${buildTime}` : '';
+      const lang_js_vip = pathname.indexOf('/[locale]/vip') > -1 ? `/static/locales/${lang}/vip.js?t=${buildTime}` : '';
 
       const theme_js = `/static/js/theme.js?t=${buildTime}`;
       const cookie_js = `/static/js/cookie.js?t=${buildTime}`;
@@ -70,6 +71,7 @@ class MyDocument extends Document {
               {lang_js_markets && <script src={lang_js_markets}></script>}
               {lang_js_swap_info && <script src={lang_js_swap_info}></script>}
               {lang_js_tv && <script src={lang_js_tv}></script>}
+              {lang_js_vip && <script src={lang_js_vip}></script>}
 
               {/* <script type="module" src={zendesk_js} ></script> */}
 

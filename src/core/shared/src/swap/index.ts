@@ -99,7 +99,7 @@ export class Swap {
       const position = [...Swap.Order.getPosition(false)];
       updates.o.forEach((v: any) => {
         // "{\"uid\":814507938663514112,\"E\":1714129329338,\"e\":\"ORDER_TRADE_UPDATE\",
-        // \"brand\":\"BYD\",\"o\":[{\"S\":\"2\",\"c\":\"8605549203419848715\",\"s\":\"btc-usdt\"
+        // \"brand\":\"Y-MEX\",\"o\":[{\"S\":\"2\",\"c\":\"8605549203419848715\",\"s\":\"btc-usdt\"
         // ,\"sw\":\"W001\",\"X\":\"NEW\",\"x\":\"ORDER\",\"i\":8605549203419848715,\"cp\":true,
         // \"sp\":\"32050.05\",\"wt\":\"TRAILING_STOP_MARKET\",\"AP\":\"64100.1\"}]}"
 
