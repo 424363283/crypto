@@ -628,8 +628,8 @@ export const SWAP = {
       const PM = margin;
       //  维持保证金 = VOL*S*HP*MMR+VOL*S/LP*R
       const positionMargin = formula1 * Number(MMR) + fee1;
-      console.log('liquidationPrice>>> liquidationPrice ',liquidationPrice); 
-      console.log('positionMargin>>> formula1 ',formula1,' MMR ',MMR,' fee1 ',fee1); 
+      // console.log('liquidationPrice>>> liquidationPrice ',liquidationPrice); 
+      // console.log('positionMargin>>> formula1 ',formula1,' MMR ',MMR,' fee1 ',fee1); 
 
       // const availableBalance = Number(availableBalances[position.symbol.toLowerCase()]?.availableBalance || 0);
 
@@ -647,10 +647,10 @@ export const SWAP = {
         // sell:(VOL*S*HP*MMR+VOL*S*LP*R) / [AB1+PM+VOL*S*(HP-FP)]]
         const clac = Number(ACCB).add(PM).add(income);
         
-        console.log('marginRate>>> ACCB',ACCB,' PM',PM,' income',income,' clac=',clac); 
+        // console.log('marginRate>>> ACCB',ACCB,' PM',PM,' income',income,' clac=',clac); 
 
         positionMarginRate = clac ? FCR(positionMargin) / FCR(clac) : 0;
-        console.log('marginRate>>> positionMargin / clac',positionMargin,' / ',clac,' = ',positionMarginRate); 
+        // console.log('marginRate>/>> positionMargin / clac',positionMargin,' / ',clac,' = ',positionMarginRate); 
         // console.log('marginRate>>> positionMarginRate',positionMarginRate); 
 
       } else {
@@ -677,11 +677,11 @@ export const SWAP = {
       if (isBuy) {
         // 买 Vol*S*(FP -HP)
         income = Number(volume).mul(contractFactor).mul(flagPrice.sub(avgCostPrice));
-        console.log('盈亏计算 买 volume * contractFactor * (flagPrice - avgCostPrice)',volume,contractFactor,flagPrice,avgCostPrice,'=',income);
+        // console.log('盈亏计算 买 volume * contractFactor * (flagPrice - avgCostPrice)',volume,contractFactor,flagPrice,avgCostPrice,'=',income);
       } else {
         // 卖 Vol*S*(HP - FP)
         income = Number(volume).mul(contractFactor).mul(Number(avgCostPrice).sub(flagPrice));
-        console.log('盈亏计算 卖 volume * contractFactor * (avgCostPrice - flagPrice) ',volume,contractFactor,avgCostPrice,flagPrice,'=',income);
+        // console.log('盈亏计算 卖 volume * contractFactor * (avgCostPrice - flagPrice) ',volume,contractFactor,avgCostPrice,flagPrice,'=',income);
 
       }
      
@@ -776,7 +776,7 @@ export const SWAP = {
         if (isBuy) {
           // 多 LP =[AB+PM-VOL*S*HP*(1+MMR)] / [VOL*S*(R-1)]
           price = (Number(accb) - openFee + PM - volume * S * openPrice * (1 + mmr)) / (volume * S * (R - 1));
-          console.log(isBuy, { accbb, volume, S, R, accb, openFee, bonusAmount, mmr, openPrice });
+          // console.log(isBuy, { accbb, volume, S, R, accb, openFee, bonusAmount, mmr, openPrice });
         } else {
           // 空 LP =[AB+PM+VOL*S*HP*(1-MMR)] / [VOL*S*(R+1)]
           price = (Number(accb) - openFee + PM + volume * S * openPrice * (1 - mmr)) / (volume * S * (R + 1));

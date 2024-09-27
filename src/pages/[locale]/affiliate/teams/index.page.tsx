@@ -11,11 +11,11 @@ const TeamsManagePage = () => {
   
   const [tip, setTip] = useState('')
   useKeepAliveMountEffect(()=> {
-    console.log('组件激活---B')
+    // console.log('组件激活---B')
     setTip(new Date().getTime().toString())
   }, uid)
   useKeepAliveDeactivated(()=> {
-    console.log('组件失活---B')
+    // console.log('组件失活---B')
   }, uid)
 
 

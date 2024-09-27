@@ -13,7 +13,7 @@ import { useImmer } from 'use-immer';
 
 const AvatarCard = ({ hideEdit = false, className }: { hideEdit?: boolean; className?: string }) => {
   const { user } = useLoginUser();
-  console.log('user', user);
+  // console.log('user', user);
   const [state, setState] = useImmer({
     username: '',
     avatar: '',

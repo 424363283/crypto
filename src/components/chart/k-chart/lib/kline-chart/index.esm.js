@@ -598,7 +598,7 @@ function getDefaultCrosshairStyle() {
             borderColor: 'black',
         },
         clickAddBtn: function (price) {
-            console.log('click', price);
+            // console.log('click', price);
         },
     };
 }
@@ -761,7 +761,7 @@ function log(templateText, tagStyle, messageStyle, api, invalidParam, append) {
         var apiStr = api !== '' ? "Call api `".concat(api, "`").concat(invalidParam !== '' || append !== '' ? ', ' : '.') : '';
         var invalidParamStr = invalidParam !== '' ? "invalid parameter `".concat(invalidParam, "`").concat(append !== '' ? ', ' : '.') : '';
         var appendStr = append !== '' ? append : '';
-        console.log(templateText, tagStyle, messageStyle, apiStr, invalidParamStr, appendStr);
+        // console.log(templateText, tagStyle, messageStyle, apiStr, invalidParamStr, appendStr);
     }
 }
 function logWarn(api, invalidParam, append) {
@@ -7620,7 +7620,7 @@ var CrosshairLineView = /** @class */ (function (_super) {
                         styles: _style,
                     }, {
                         mouseClickEvent: function () {
-                            console.log(price);
+                            // console.lo/g(price);
                             style.clickAddBtn(+(price !== null && price !== void 0 ? price : 0));
                             return true;
                         },

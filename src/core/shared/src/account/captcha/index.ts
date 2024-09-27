@@ -33,7 +33,7 @@ class Captcha {
           const list = location.pathname.match(/^\/[a-z]{0,10}\//);
           key = list ? list[0].replace(/\//g, '') : 'en';
         } catch (e) {
-          console.log(e);
+          // console.log(e);
         }
         Captcha.Geetest4(data.captchaId, Captcha._geetestLang[key as keyof typeof Captcha._geetestLang], resolve);
       });

@@ -24,7 +24,7 @@ const CryptoSelect = ({ options = [], value, onChange, label = '', screen }: any
 
   const _onChange = (index: number) => {
     onChange?.(index);
-    console.log(index);
+    // console.log(index);
   };
 
   const _setKeyword = (v: any) => {

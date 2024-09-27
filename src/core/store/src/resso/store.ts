@@ -6,7 +6,7 @@ export const setStore = (nameSpace?: string, data?: any, whileList?: string[]) =
     try {
       localStorageApi.setItem(nameSpace as LOCAL_KEY, removeFunction(data, whileList));
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   }
 };

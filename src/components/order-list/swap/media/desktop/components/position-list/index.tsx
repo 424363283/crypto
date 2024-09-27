@@ -119,7 +119,7 @@ export const PositionList = ({
       
     const onK_CHART_POSITION_REVERSE_CLICK = (id: string) => {
       const item = list?.find((e: any) => e.positionId === id);
-      console.log('持仓反向开仓点击了id:', id);
+      // console.log('持仓反向开仓点击了id:', id);
       if (item) {
         onReverse(item, ({ onConfirm }) => onVisibleReverseModal(item, onConfirm));
       }
@@ -127,7 +127,7 @@ export const PositionList = ({
 
     const onK_CHART_POSITION_STOP_CLICK = (id: string) => {
       const item = list?.find((e: any) => e.positionId === id);
-      console.log('持仓止盈止损点击了id:', id);
+      // console.log('持仓止盈止损点击了id:', id);
 
       if (item) {
         onVisiblesSpslModal(item);

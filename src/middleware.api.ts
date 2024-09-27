@@ -15,14 +15,14 @@ const getLocale = (req: NextRequest) => {
   const { headers, cookies } = req;
 
   const cookieLang = cookies.get(LOCALE_COOKIE);
-  console.log('cookieLang',cookieLang)
+  // console.log('cookieLang',cookieLang)
 
   if (cookieLang?.value) {
     return cookieLang.value;
   }
 
   const acceptLanguage = headers.get('accept-language');
-  console.log('acceptLanguage',acceptLanguage)
+  // console.log('acceptLanguage',acceptLanguage)
 
   if (!acceptLanguage) {
     return defaultLang;
@@ -49,7 +49,7 @@ export const middleware = (req: NextRequest) => {
   const url = req.nextUrl.clone();
   const { pathname } = req.nextUrl;
 
-  console.log('>>>log middleware >>>  pathname',pathname)
+  // console.log('>>>log middleware >>>  pathname',pathname)
 
   // 会导致页面挂
   if (pathname.startsWith('/app')) {
@@ -57,22 +57,22 @@ export const middleware = (req: NextRequest) => {
       status: 400
     });
   }
-  console.log('>>>log middleware >>> defaultLang',defaultLang)
+  // console.log('>>>log middleware >>> defaultLang',defaultLang)
 
   // const paramLang = url.searchParams.get('lang');
   const languagePath = getLocaleFromPath(pathname) || '';
   const pagePath = pathname.replace(languagePath,'');
-  console.log('>>>log middleware >>> languagePath',languagePath,'pagePath', pagePath)
+  // console.log('>>>log middleware >>> languagePath',languagePath,'pagePath', pagePath)
 
   const language = languagePath.replace('/','') || getLocale(req);
   const page = pagePath;
-  console.log('>>>log middleware >>> language',language,'page',page)
+  // console.log('>>>log middleware >>> language',language,'page',page)
 
   const LOCALES = Object.keys(LANGUAGE);
-  console.log('>>>log middleware >>> LOCALES',LOCALES.includes(language))
+  // console.log('>>>log middleware >>> LOCALES',LOCALES.includes(language))
   
   const validLang = LOCALES.includes(language) ? language.toString() : defaultLang;
-  console.log('>>>log middleware >>> validLang',validLang)
+  // console.log('>>>log middleware >>> validLang',validLang)
 
   if (pathname.startsWith('/@')) {
     const [, _slug, ...rest] = pathname.split('/');
@@ -82,11 +82,11 @@ export const middleware = (req: NextRequest) => {
   } else {
     url.pathname = `/${validLang}${page}`;
   }
-  console.log('>>>log middleware >>> url.pathname',url.pathname)
+  // console.log('>>>log middleware >>> url.pathname',url.pathname)
 
   const response = NextResponse.rewrite(url);
 
-  console.log('>>>log middleware >>> url',url)
+  // console.log('>>>log middleware >>> url',url)
 
   if (language && language === validLang) {
     response.cookies.set(LOCALE_COOKIE, validLang, {

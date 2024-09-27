@@ -44,7 +44,7 @@ export const OnfidoModalContent = () => {
         },
       });
       return () => {
-        console.log('onfido teardowning...');
+        // console.log('onfido teardowning...');
         instance.tearDown().catch((error) => console.error('Error tearing down the instance:', error));
       };
     }

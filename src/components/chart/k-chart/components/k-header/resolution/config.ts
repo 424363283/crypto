@@ -234,7 +234,7 @@ export type ResolutionType = {
         this.setConfig(config);
         localStorage.setItem(this.cacheKey, JSON.stringify(config));
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     }
   

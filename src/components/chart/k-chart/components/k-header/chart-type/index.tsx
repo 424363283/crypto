@@ -48,7 +48,7 @@ export const ChartType = ({ qty }: { qty: number }) => {
                     className={clsx('item', tvChartType === +key && 'active')}
                     key={key}
                     onClick={() => {
-                      console.log("key=========",key)
+                      // console.log("key=========",key)
                       setTvChartType(+key);
                       kChartEmitter.emit(kChartEmitter.K_CHART_SWITCH_CHART_TYPE + qty, key);
                       setOpen(false);

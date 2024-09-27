@@ -17,7 +17,7 @@ class TV {
   // 电影列表
   static async getPageMovieList() {
     const { data, ...rest } = await tvPageMovieList() as any;
-    console.log('aaa', data, rest)
+    // console.log('aaa', data, rest)
     return data;
   }
 

@@ -72,7 +72,7 @@ const myresso = <T extends Data>(data: T, options: Options = {}): Store<T & MyDa
         };
       }
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   }
 
