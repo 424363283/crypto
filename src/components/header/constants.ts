@@ -26,6 +26,8 @@ export const ASSETS_MENU_LIST = [
 ];
 export const HEADER_PATH = {
   MARKETS: '/markets',
+  SPOT_PRO: '/spot/btc_usdt',
+  COIN_CONVERT: '/convert',
   // BUY_CRYPTO: '/fiat-crypto',
   COPY_TRADE: '/copy-trading',
   AFFILIATE: '/partnership/affiliate',
