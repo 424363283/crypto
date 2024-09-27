@@ -68,6 +68,9 @@ enum LOCAL_KEY {
     COOKIE_MODAL_VISIBLE = 'cookie_modal_visible',
       // 设置皮肤色
   GLOBAL_SKIN = 'global_skin',
+
+  ROOT_COLOR_INDEX = 'root-color-index-v1',
+
   }
   // 定义 LocalStorage API 类
   class LocalStorageApi {

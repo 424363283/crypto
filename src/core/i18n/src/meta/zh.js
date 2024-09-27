@@ -23,6 +23,11 @@ const metaLang = {
         "title": "尊享VIP会员权益 - 立即加入",
         "description": "通过Y-MEX的VIP等级提升您的交易体验。享受更低的手续费、更高的限额和高级专属支持，最大化您的加密货币交易体验。",
         "keywords": "VIP会员, 加密货币交易, 尊贵交易权益, 降低手续费, 提高交易限额, 专属支持, Y-MEX, 精英服务, 忠诚奖励"
+    },
+    "spot": {
+        "title": " Y-MEX 現貨",
+        "description": "在Y-MEX交易{coin}。使用我們先進的價格圖表和交易工具輕鬆買賣{coin}。深入Y-MEX的現貨交易動態世界。",
+        "keywords": "{coin} 交易, 比特幣, BTC, 以太坊, ETH, Doge, XRP, 現貨交易, Y-MEX, BitYard, 元宇宙, DeFi, GameFi."
     }
     
 } 

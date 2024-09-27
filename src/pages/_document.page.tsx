@@ -34,6 +34,11 @@ class MyDocument extends Document {
        
       const commonLangJsSrc = `/static/locales/${lang}/common-lang.js?t=${buildTime}`;
       const lang_js_index = (pathname == '/[locale]/index' || pathname == '/[locale]') ? `/static/locales/${lang}/index.js?t=${buildTime}` : '';
+    
+      const lang_js_spot = (pathname.indexOf('/[locale]/spot')  > -1) ? `/static/locales/${lang}/spot.js?t=${buildTime}` : '';
+      const lang_js_trade_ui =
+      (pathname.indexOf('/[locale]/swap') > -1 || pathname.indexOf('/[locale]/spot')  > -1) ? `/static/locales/${lang}/trade-ui-lang.js?t=${buildTime}` : '';
+
       const lang_js_convert = pathname == '/[locale]/convert' ? `/static/locales/${lang}/convert.js?t=${buildTime}` : '';
       // const lang_js_fiat_crypto = pathname == '/[locale]/fiat-crypto' ? `/static/locales/${lang}/fiat-crypto.js?t=${buildTime}` : '';
       const lang_js_account = 
@@ -64,6 +69,10 @@ class MyDocument extends Document {
             
               <script src={commonLangJsSrc}></script>
               {lang_js_index && <script src={lang_js_index}></script>}
+             
+              {lang_js_spot && <script src={lang_js_spot}></script>}
+              {lang_js_trade_ui && <script src={lang_js_trade_ui}></script>}
+             
               {lang_js_convert && <script src={lang_js_convert}></script>}
               {/* {lang_js_fiat_crypto && <script src={lang_js_fiat_crypto}></script>} */}
               {lang_js_account && <script src={lang_js_account}></script>}

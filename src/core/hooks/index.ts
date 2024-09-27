@@ -18,4 +18,4 @@ export {useDeviceDownloadUrl} from './src/use-device-download-url'
 export {useLastPathname} from './src/use-lastpath-name'
 export {useCouponState} from './src/use-coupon-state'
 export {useNativeAPP} from './src/use-native-app'
-
+export {useGroupidsDiffRedirect} from './src/use-groupids-diff-redirect'
