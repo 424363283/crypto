@@ -181,11 +181,11 @@ export const PendingList = () => {
 
     const moveCallback = (id: string) => {
       setIsDragging(true);
-      console.log('拖动开始');
+      // console.log('拖动开始');
     };
 
     const moveEndCallback = (id: string, price: number) => {
-      console.log('停止拖动，拖动id为：', id, '当前价格为：', price);
+      // console.log('停止拖动，拖动id为：', id, '当前价格为：', price);
       const idx = _data?.findIndex((item) => item.orderId === String(id));
 
       if (idx < 0) return;

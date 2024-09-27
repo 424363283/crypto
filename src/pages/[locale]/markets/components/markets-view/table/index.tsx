@@ -145,7 +145,7 @@ const MarketTable = () => {
     const getToggleAllSpotList = async () => {
       const group = await Group.getInstance();
       const thirdItemName = thirdItem.name;
-      console.log('thirdItem.name spot', thirdItem.name, LANG('全部'));
+      // console.log('thirdItem.name spot', thirdItem.name, LANG('全部'));
       const ids = group.getSpotByIds(secondItemName, thirdItemName === LANG('全部') ? 'All' : thirdItemName);
       setFilterSpotIds(ids);
     };

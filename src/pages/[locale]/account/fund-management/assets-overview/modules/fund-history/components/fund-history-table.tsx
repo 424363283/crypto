@@ -64,7 +64,7 @@ export const CommonFundHistoryTable = (props: TableProps) => {
   const onChangePage = (pagination: number) => {
     handleSearchFundHistory({ code: '', currency: '' }, pagination);
   };
-  console.log('tableData', tableData);
+  // console.log('tableData', tableData);
   return (
     <>
       <Table

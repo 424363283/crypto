@@ -24,7 +24,7 @@ class Markets {
   public static markets: MarketsMap = Object.create(MarketsData); // 所有商品集合
 
   private constructor(group: Group, subscribe?: boolean) {
-    console.log('group', group);
+    // console.log('group', group);
     this.init(group, subscribe);
     window.dispatchEvent(new CustomEvent(SUBSCRIBE_TYPES.ws3001, { detail: Markets.markets }));
   }
@@ -112,7 +112,7 @@ class Markets {
         Markets.cahceMarketsStatus = cacheStr;
         const group = await Group.getInstance();
         Markets.instance.init(group);
-        console.log('instance', Markets.instance);
+        // console.log('instance', Markets.instance);
         return Markets.instance;
       }
     }

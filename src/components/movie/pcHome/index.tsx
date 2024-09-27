@@ -14,7 +14,7 @@ interface IProps {
 
 const PcHome: FC<IProps> = ({ bigList, smallData }) => {
   const { t } = useTranslation()
-  console.log(bigList, smallData)
+  // console.log(bigList, smallData)
   return <main className={styles.homeWrap}>
     <div className={styles.container}>
       {/* {bigList.length > 0 ? <SwiperArea bigList={bigList}/> : null}

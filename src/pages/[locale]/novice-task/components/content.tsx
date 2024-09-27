@@ -61,7 +61,7 @@ export const RewardContent = () => {
   const [theme, setTheme] = useState('');
 
   const data = useMemo(() => {
-    console.log('list', list);
+    // console.log('list', list);
     let arr = list?.filter((v: { module: number; prizeType: number }) => {
       const cond = v.prizeType !== 3;
       if (tab === 0) {

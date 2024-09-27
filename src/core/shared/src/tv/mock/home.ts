@@ -624,7 +624,7 @@ export const useHomeStore = create<Props & Actions>()(
             )
           } catch (error) {
             set({ pageLoading: false }, false, "Loading...")
-            console.log("error", error)
+            // console.log("error", error)
           }
         },
 
@@ -644,7 +644,7 @@ export const useHomeStore = create<Props & Actions>()(
             )
           } catch (error) {
             set({ homeListLoading: false }, false, "Loading...")
-            console.log("error", error)
+            // console.log("error", error)
           }
         },
         getHomeRecommendList: async () => {
@@ -665,7 +665,7 @@ export const useHomeStore = create<Props & Actions>()(
             )
           } catch (error) {
             set({ homeListLoading: false }, false, "Loading...")
-            console.log("error", error)
+            // console.log("error", error)
           }
         },
         getGameInfo: async () => {
@@ -687,7 +687,7 @@ export const useHomeStore = create<Props & Actions>()(
             )
           } catch (error) {
             set({ homeListLoading: false }, false, "Loading...")
-            console.log("error", error)
+            // console.log("error", error)
           }
         },
         getGameRecommend: async () => {
@@ -707,7 +707,7 @@ export const useHomeStore = create<Props & Actions>()(
             )
           } catch (error) {
             set({ pageLoading: false }, false, "Loading...")
-            console.log("error", error)
+            // console.log("error", error)
           }
         },
       }),
@@ -823,7 +823,7 @@ export interface ICardList {
 
 export const useGetCardList = (name: string): ICardList => {
   const target = useHomeStore((state) => state.homeList?.find((item) => item.name === name))
-  console.log("target", target)
+  // console.log("target", target)
   if (target) {
     return {
       title: target.name,

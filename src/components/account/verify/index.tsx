@@ -160,7 +160,7 @@ export const VerifyForm = (props: {
       draft.gaCode = value;
     });
   };
-  console.log('verify-sence', sence, routerState);
+  // console.log('verify-sence', sence, routerState);
   const onAllSceneSuccess = async (result: { code: number; data: { token: string }; message: string }) => {
     // 解绑验证项相关
     const UNBIND_OPTIONS: any = {

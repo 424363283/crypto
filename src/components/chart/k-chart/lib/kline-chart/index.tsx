@@ -67,7 +67,7 @@ const KlineChartUI = ({
           showPriceLine,
           showCountdown,
         });
-        console.log('基础班初始化');
+        // console.log('基础班初始化');
         kChartEmitter.on(kChartEmitter.K_CHART_SCREENSHOT + qty, () => {
           Loading.start();
 
@@ -101,7 +101,7 @@ const KlineChartUI = ({
             html2canvas
               .default(document.getElementById(elementId + qty) as HTMLElement)
               .then(function (canvas) {
-                console.log(canvas);
+                // console.log(canvas);
                 const base64 = canvas.toDataURL('image/png');
                 open(base64);
               })
@@ -215,7 +215,7 @@ const KlineChartUI = ({
       };
       chart.current?.updateData(klineData.current);
     } catch (e) {
-      console.log('kline ws7001', e);
+      // console.log('kline ws7001', e);
     }
   });
 

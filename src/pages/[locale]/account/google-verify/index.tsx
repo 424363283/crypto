@@ -42,7 +42,7 @@ export default function GoogleVerify() {
     }
   };
   useEffect(() => {
-    console.log('result', page);
+    // console.log('result', page);
     _getGoogleSecret();
   }, []);
   const Content = [Download, AddKey, BackupKey, BindGaVerify][page];

@@ -111,7 +111,7 @@ export class Chart {
     config.isDark = config.theme === 'dark';
     this.datafeed = new Datafeeds(config, timezone());
 
-    console.log('init', config);
+    // console.log('init', config);
 
     this.instance = new widget({
       debug: config.debug,
@@ -163,7 +163,7 @@ export class Chart {
     this.instance.onChartReady(() => {
       this.ready = true;
       this.activeChart = this.instance.activeChart();
-      console.log(this.instance, this.activeChart);
+      // console.log(this.instance, this.activeChart);
       // 图表截图
       this.instance.subscribe('onScreenshotReady', (data) => {
         Loading.end();
@@ -174,7 +174,7 @@ export class Chart {
       try {
         const symbol = this.activeChart.symbol();
         const temp = localStorage.getItem(key(symbol));
-        console.log('load tv temp...', key(symbol));
+        // console.log('load tv temp...', key(symbol));
         if (config.symbolType && temp) {
           this.instance.load(JSON.parse(temp)); // 先使用本地存储的图表
           const { resolution } = kHeaderStore(config.qty);
@@ -189,7 +189,7 @@ export class Chart {
         }
         this.setTheme(localStorage.getItem('theme') || config.theme);
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         this.setTheme(localStorage.getItem('theme') || config.theme);
       }
 
@@ -198,7 +198,7 @@ export class Chart {
           this.instance.save((temp) => {
             const symbol = this.activeChart.symbol();
             localStorage.setItem(key(symbol), JSON.stringify(temp));
-            console.log('save tv temp...', key(symbol));
+            // console.log('save tv temp...', key(symbol));
           });
           localStorage.setItem(timezonekey, this.activeChart.getTimezone());
         }
@@ -242,7 +242,7 @@ export class Chart {
           try {
             this.datafeed.refreshBars(this.instance);
           } catch (e) {
-            console.log('refreshBars error', e);
+            // console.log('refreshBars error', e);
           }
         }
       });
@@ -255,7 +255,7 @@ export class Chart {
         this.activeChart.setSymbol(id);
       }
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   }
   switchResolution(resolution) {
@@ -270,7 +270,7 @@ export class Chart {
         this.activeChart.setResolution(resolution.resolution); //
       }
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   }
   // 指标

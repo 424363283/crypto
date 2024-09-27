@@ -23,7 +23,7 @@ export const PositionHistoryShare = ({
 
   useEffect(() => {
     Account.getUserInfo().then((userInfo) => {
-      console.log('userInfo', userInfo);
+      // console.log('userInfo', userInfo);
       setUser(userInfo);
     });
   }, []);

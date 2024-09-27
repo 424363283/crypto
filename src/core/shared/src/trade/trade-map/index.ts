@@ -54,7 +54,7 @@ class TradeMap {
       const { data } = await this._cacheSwapHttp;
       for (const item of data) {
         if(!item){
-           console.log('');
+          //  console.log('');
         }
         TradeMap._swap.set(item.symbol.toUpperCase(), new SwapTradeItem(item));
       }

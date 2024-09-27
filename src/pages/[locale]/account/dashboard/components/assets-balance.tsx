@@ -87,7 +87,7 @@ export const AssetsBalance = (props: AssetsBalanceProps) => {
   const { spotTotalBalance } = spotAssetsStore;
   const { swapBalance, swapUBalance } = useSwapBalance(); // 不包含冻结部分，未实现盈亏不计算入内
   const totalAssetsBalance = spotTotalBalance.add(swapBalance).add(swapUBalance);
-  console.log('spotTotalBalance', spotTotalBalance, swapBalance, swapUBalance);
+  // console.log('spotTotalBalance', spotTotalBalance, swapBalance, swapUBalance);
 
   const [selectedCurrency, setSelectedCurrency] = useLocalStorage(LOCAL_KEY.ASSETS_COIN_UNIT, 'BTC');
   const handleButtonClick: MenuProps['onClick'] = (item) => {

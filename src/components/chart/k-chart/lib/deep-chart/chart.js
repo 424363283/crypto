@@ -34,7 +34,7 @@ export class DepthChart {
       window.addEventListener('resize', func);
       kChartEmitter.on(kChartEmitter.K_CHART_FULL_SCREEN, func);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   }
 

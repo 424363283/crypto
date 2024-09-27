@@ -31,7 +31,7 @@ const NoviceTask: React.FC<object> = () => {
 
   const updateMovie = (num) => {
     setPage(num)
-    console.log(num)
+    // console.log(num)
     init(num)
   }
 

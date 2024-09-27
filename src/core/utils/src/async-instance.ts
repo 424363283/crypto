@@ -13,7 +13,7 @@ class InstanceFactory {
           } catch (e) {
             console.error('error', instance, e);
           }
-          console.log('instance', instance);
+          // console.log('instance', instance);
           this.instances.set(subclass, instance);
           this.loading.set(subclass, false);
           const queue = this.queue.get(subclass) || [];

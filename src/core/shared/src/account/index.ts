@@ -87,7 +87,7 @@ class Account {
     if (Account.isLogin) {
       return await UserInfo.refresh();
     } else {
-      console.log('refreshUserInfo 未登录');
+      // console.log('refreshUserInfo 未登录');
       return null;
     }
   }

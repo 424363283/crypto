@@ -9,11 +9,11 @@ const DashboardPage = () => {
 
   const [tip, setTip] = useState('')
   useKeepAliveMountEffect(()=> {
-    console.log('组件激活---A')
+    // console.log('组件激活---A')
     setTip(new Date().getTime().toString())
   }, uid)
   useKeepAliveDeactivated(()=> {
-    console.log('组件失活---A')
+    // console.log('组件失活---A')
   }, uid)
 
   return (

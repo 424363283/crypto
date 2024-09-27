@@ -72,7 +72,7 @@ export class Trade extends TradeField {
     if (!quoteId) return;
     this.store.quoteId = quoteId;
 
-    console.log('swap-log Account.isLogin',Account.isLogin,Info.getAgreementIsAllow())
+    // console.log('swap-log Account.isLogin',Account.isLogin,Info.getAgreementIsAllow())
 
     if (Account.isLogin && Info.getAgreementIsAllow()) {
       const { isUsdtType } = Swap.Trade.base;

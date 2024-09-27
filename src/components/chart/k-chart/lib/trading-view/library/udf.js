@@ -47,7 +47,7 @@ class Datafeeds {
   resolveSymbol(symbolName, onSymbolResolvedCallback, onResolveErrorCallback) {
     try {
       const { digit, name } = this._config.tradeList[symbolName] || {};
-      console.log('TradingView -> [resolveSymbol]: ', this._config.tradeList[symbolName]);
+      // console.log('TradingView -> [resolveSymbol]: ', this._config.tradeList[symbolName]);
       setTimeout(() => {
         onSymbolResolvedCallback({
           symbol: symbolName,
@@ -133,9 +133,9 @@ class Datafeeds {
           symbolInfo: symbolInfo,
           onResetCacheNeededCallback: onResetCacheNeededCallback,
         };
-        console.log('TradingView -> [subscribeBars]: ', this.subscribers[subscriberUID]);
+        // console.log('TradingView -> [subscribeBars]: ', this.subscribers[subscriberUID]);
       } else {
-        console.log('TradingView -> [subscribeBars]: ', 'lastBar is null');
+        // console.log('TradingView -> [subscribeBars]: ', 'lastBar is null');
       }
     } catch (err) {
       console.error(err);
@@ -172,7 +172,7 @@ class Datafeeds {
     for (let SUID in subscribers) {
       subscribers[SUID].onResetCacheNeededCallback();
     }
-    console.log('widget', widget);
+    // console.log('widget', widget);
     widget.activeChart().resetData();
   }
   // 数据合成算法

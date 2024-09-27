@@ -65,7 +65,7 @@ const RateHistory = () => {
     const Trade: any = await TradeMap.getSwapTradeMap();
     const group = await Group.getInstance();
     const data: any = (isUsdt ? group.getSwapUsdList : group.getSwapCoinList).map((swap: any) => Trade.get(swap.id)).filter(swap => swap !== undefined);
-    console.log('data', data);
+    // console.log('data', data);
     setList(data);
     setContract(data[0]);
   };
