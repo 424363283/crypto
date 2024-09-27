@@ -39,7 +39,7 @@ export * from './src/constants/ignore-theme-path'
 
 export {Spot} from './src/spot'
 export * from './src/spot/trade/types'
-export {SpotTabType,LIST_TYPE} from './src/spot/position/types'
+export {SpotTabType,LIST_TYPE,HistoryRange} from './src/spot/position/types'
 
 export * from './src/trade/trade-map'
 export * from './src/trade/recent-trade'

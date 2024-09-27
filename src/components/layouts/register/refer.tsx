@@ -315,7 +315,7 @@ export const Refer = ({ info }: any) => {
           <div className='border'></div>
           <div className='b2'>{LANG('合约子钱包: 避免交易风险')}</div>
           <div className='border'></div>
-          <div className='b2'>{LANG('BYD Point Center: Get super airdrops, by holding BYD Points')}</div>
+          <div className='b2'>{LANG('Y-MEX Point Center: Get super airdrops, by holding Y-MEX Points')}</div>
           <Image className='b3' src='/static/images/register/2888.png' width={580} height={180} alt='2888' />
           <div className='b4'>
             <span>{LANG('XK拥有最后的解释权利，任何不正常的套利或是行为都将取消优惠')}</span>

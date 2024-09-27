@@ -111,9 +111,9 @@ export const getEtfCryptoInfo = (code: string) => {
 };
 // export const getEnv = () => {
 //   if (!isBrowser) return '';
-//   // 检查是否是 bydtms 域名
+//   // 检查是否是 ymstms 域名
 //   const url = window.location.host;
-//   if (url.includes('bydtms')) {
+//   if (url.includes('ymstms')) {
 //     return url.split('.')[0]; // 'new-bipc-2'
 //   }
 //   // y-mex.com 返回 production

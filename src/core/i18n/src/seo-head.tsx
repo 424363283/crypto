@@ -9,6 +9,9 @@ import { PAGE_ENV } from './cache';
 export const SeoHead = (Component: React.ComponentType) => {
   const HeadComponent = (props: any) => {
     const { meta, env, locales, locale, auth, robots, id, key1, copyTradingName } = props || {};
+
+    console.log('metametameta',meta)
+
     const getCoin = useCallback((id: string) => (id || '')?.replace(/-|_/, '')?.toUpperCase(), []);
     const getTitle = useCallback((title: string) => `%s | ${meta.title?.trim() || ''}`.replace('%s', title), []);
     const getDescription = useCallback((coin: string) => meta.description?.replace(/\{coin\}/g, coin), []);

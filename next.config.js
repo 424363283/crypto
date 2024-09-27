@@ -12,6 +12,7 @@ const injectRule = rule => {
 };
 const NEXT_PUBLIC_API_URL = 'https://dev-swap.83uvgv.com';
 const NEXT_PUBLIC_BASE_URL = 'https://dev-swap.83uvgv.com';
+const NEXT_PUBLIC_APP_NAME = 'Y-MEX';
 const nextConfig = {
 
   
@@ -30,7 +31,8 @@ const nextConfig = {
 
   env: {
     NEXT_PUBLIC_API_URL: NEXT_PUBLIC_API_URL,
-    NEXT_PUBLIC_BASE_URL : NEXT_PUBLIC_BASE_URL
+    NEXT_PUBLIC_BASE_URL : NEXT_PUBLIC_BASE_URL,
+    NEXT_PUBLIC_APP_NAME : NEXT_PUBLIC_APP_NAME
   },
   images: {
       remotePatterns: [

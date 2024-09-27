@@ -86,7 +86,7 @@ export function postTradeUpdateInvestStrategyApi(data: object) {
 
 /** 定投策略——获取支持币对 */
 export function getTradeInvestSymbolsApi() {
-  return http.get(paths['invest_symbols'], { params: { brand: 'BYD' } });
+  return http.get(paths['invest_symbols'], { params: { brand: 'Y-MEX' } });
 }
 
 /** 定投策略——获取策略列表 */

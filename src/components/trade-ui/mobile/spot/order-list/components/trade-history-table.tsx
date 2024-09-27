@@ -1,7 +1,9 @@
 import { ListView } from '@/components/order-list/swap/media/tablet/components/list-view';
 import { useRouter } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
-import { HistoryRange, SideType, Spot, SpotPositionListItem } from '@/core/shared';
+import { HistoryRange, SideType, Spot } from '@/core/shared';
+import { SpotPositionListItem } from '@/core/shared/src/spot/position/types';
+
 import { useAppContext } from '@/core/store';
 import { getActive } from '@/core/utils';
 import dayjs from 'dayjs';

@@ -9,8 +9,13 @@ import { GetStaticProps, MetaKey } from '../types';
 /**
  * @param noindex 参数默认为seo 就是seo页面，都索引。一旦页面自己定义了noindex false，就不索引
  */
-export const getStaticProps = ({ key = MetaKey.index, auth = false, env = PAGE_ENV.PC, robots = true }: GetStaticProps) => {
-  return async (context: any) => {
+export const getStaticProps = ({
+  key = MetaKey.index,
+  auth = false,
+  env = PAGE_ENV.PC,
+  robots = true,
+}: Partial<GetStaticProps>) => {
+    return async (context: any) => {
     console.log(context.params,'getStaticProps context.params');
 
     const locale = context.params?.locale || defaultLang;

@@ -1,7 +1,8 @@
 
 export enum MetaKey{
     index = 'index',
-    login = 'login'
+    login = 'login',
+    spot = 'spot',
 }
 
 export type GetStaticProps = {

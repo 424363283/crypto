@@ -24,10 +24,10 @@ const CustomTotalAssetsColumn = ({
   total: string;
   maxScale: number;
 }) => {
-  if (code === 'BYD' && !id) {
+  if (code === 'Y-MEX' && !id) {
     return (
       <div className={'money-box'}>
-        <div className='current'>{total} BYD</div>
+        <div className='current'>{total} Y-MEX</div>
       </div>
     );
   } else {
@@ -218,7 +218,7 @@ export const useSpotTableColumns = ({ data }: UseSpotTableColumnsProps) => {
             }
           : false,
       render: (money: number, item: SpotItem) => {
-        if (item.code === 'BYD' && !item.id) {
+        if (item.code === 'Y-MEX' && !item.id) {
           return <div />;
         }
         return (
@@ -240,7 +240,7 @@ export const useSpotTableColumns = ({ data }: UseSpotTableColumnsProps) => {
             }
           : false,
       render: (freeze: number, item: SpotItem) => {
-        if (item.code === 'BYD' && !item.id) {
+        if (item.code === 'Y-MEX' && !item.id) {
           return <div />;
         }
         return (
