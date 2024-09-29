@@ -165,6 +165,8 @@ export const InputSection = ({
                 placeholder={incomeStandard === undefined ? placeholder || label : placeholderOpts[incomeStandard ?? 0]}
                 value={_value}
                 onChange={onChange}
+            
+
                 // min={0}
                 max={9999999999}
                 digit={digit}

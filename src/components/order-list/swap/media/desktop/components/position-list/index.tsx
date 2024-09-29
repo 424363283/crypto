@@ -11,6 +11,8 @@ import {
   usePositionActions,
   useSortData,
 } from '@/components/order-list/swap/stores/position-list';
+
+// import { useModalProps, usePositionActions } from '@/components/order-list/swap/stores/position-list';
 import { InfoHover } from '@/components/trade-ui/common/info-hover';
 import Tooltip from '@/components/trade-ui/common/tooltip';
 import {
@@ -18,6 +20,11 @@ import {
   ReverseConfirmModal,
   StopProfitStopLossModal,
   TrackModal,
+} from '@/components/trade-ui/order-list/swap/components/modal';
+
+import {
+  ModifyMarginModal,
+
 } from '@/components/trade-ui/order-list/swap/components/modal';
 
 // import { ModifyMarginModal } from '@/components/modal';
@@ -232,6 +239,7 @@ export const PositionList = ({
             onClose={onCloseMarginModal}
           />
         )} */}
+            <ModifyMarginModal {...marginModalProps}  data={list.find((v: any) => Swap.Order.positionIsSame(v, marginModalProps.data as any)) || { symbol: '' }} onClose={onCloseMarginModal} />
         {trackModalProps.visible && (
           <TrackModal
             {...trackModalProps}
@@ -650,7 +658,7 @@ const useColumns = ({
         return (
           <div
             className={clsx('margin-wrapper', 'pointer')}
-            onClick={() => (canAdd ? onVisibleMarginModal(item) : null)}
+            onClick={() => (onVisibleMarginModal(item))}
           >
             <div className={clsx()}>
               <div className={clsx()}>
@@ -662,7 +670,7 @@ const useColumns = ({
             {canAdd && (
               <>
                 <div style={{ width: 10 }} />
-                <EditButton />
+                <EditButton    />
               </>
             )}
           </div>

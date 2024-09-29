@@ -119,6 +119,7 @@ const StopProfitStopLossModal = ({ data = {}, onClose, visible }: { data: any; o
 
   const _onConfirm = async () => {
     const params: any[] = [];
+
     // if (!defaultStopProfit && stopProfit) {
     //   params.push(SubmitStopProfit({ stopProfit, stopProfitType, position }));
     // }
@@ -149,7 +150,6 @@ const StopProfitStopLossModal = ({ data = {}, onClose, visible }: { data: any; o
 
       // if (!_validate()) return;
     }
-
     const flagPrice = Swap.Socket.getFlagPrice(code);
     const priceNow = Swap.Utils.getNewPrice(code);
 
@@ -166,6 +166,7 @@ const StopProfitStopLossModal = ({ data = {}, onClose, visible }: { data: any; o
         code: data.symbol,
       });
     }
+    console.log("isCloseType",isCloseType)
 
     const result = !isCloseType
       ? await Utils.SubmitStopProfitStopLoss({
