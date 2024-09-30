@@ -658,7 +658,7 @@ const useColumns = ({
         return (
           <div
             className={clsx('margin-wrapper', 'pointer')}
-            onClick={() => (onVisibleMarginModal(item))}
+            onClick={() => (canAdd&&onVisibleMarginModal(item))}
           >
             <div className={clsx()}>
               <div className={clsx()}>
