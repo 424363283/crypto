@@ -17,7 +17,7 @@ export const OrderTypeSelect = ({
   onChange: (value?: string) => any;
   listLength: any;
 }) => {
-  const options = [LANG('限价委托'), LANG('止盈止损委托'), LANG('止盈/止损'), LANG('追踪出场')];
+  const options = [LANG('限价委托'), LANG('止盈止损委托'), LANG('止盈/止损')];
   const values = [ORDER_TYPES.LIMIT, ORDER_TYPES.SPSL, ORDER_TYPES.SP_OR_SL, ORDER_TYPES.TRACK];
   return (
     <>

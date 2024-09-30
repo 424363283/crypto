@@ -20,7 +20,9 @@ export const CalculatorModal = () => {
   const { getRiskList } = useRiskList();
   const { quoteId, cryptoData } = useStore();
 
-  const menus = [LANG('收益'), LANG('目标价格'), LANG('强平价格'), LANG('可开'), LANG('开仓价格')];
+  // const menus = [LANG('收益'), LANG('目标价格'), LANG('强平价格'), LANG('可开'), LANG('开仓价格')];
+  const menus = [LANG('收益'), LANG('目标价格'), LANG('强平价格'), LANG('可开')];
+
   const onClose = () => Swap.Trade.setModal({ calculatorVisible: false });
   const ContentView = [IncomeView, TargetPriceView, LiquidationPriceView, CanBeOpenedView, OpenPriceView][menuIndex];
   const visible = Swap.Trade.store.modal.calculatorVisible;
