@@ -413,3 +413,8 @@ export function getCommon4YearActivityDepositLucksApi(data: { dateGe: number; da
 export function getCommonSwapRankApi(data: { dateGe: number; dateLe: number }) {
   return http.get<{ rank: number; amount: number }>(paths['swap_rank'], { params: data });
 }
+
+/** 获取文章列表 */
+export function getCommonArticleListApi(type: string) {
+  return http.get(`${paths['grid_article_list']}?type=${type}`);
+}

@@ -1,4 +1,3 @@
-import LogoSvg from './logo_fill.svg';
 import Image from 'next/image';
 
 

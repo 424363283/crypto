@@ -404,5 +404,75 @@ export const paths = {
     invest_stop_by_id: '/api/bot/auto_invest/private/stop', // 停止定投
     invest_get_detail: '/api/bot/auto_invest/private/plan', // 获取定投策略详情
     invest_get_order_list: '/api/bot/auto_invest/private/orders', // 获取定投订单列表
+
+     /** 盲盒活动-活动详情 */
+    mysterybox_detail: '/api/variety/promo/mysterybox_detail',
+    /** 盲盒活动-邀请记录 */
+    mysterybox_invites: '/api/variety/promo/mysterybox_invites',
+    /** 盲盒活动-得到盲盒记录 */
+    mysterybox_assets: '/api/variety/promo/mysterybox_assets',
+    /** 盲盒活动-卡券奖励记录|盲盒奖励记录 */
+    mysterybox_rewards: '/api/variety/promo/mysterybox_rewards',
+    /** 盲盒活动-打开盲盒 */
+    open_mysterybox: '/api/variety/promo/open_mysterybox',
+    /** 盲盒活动-领取奖励 */
+    collect_mysterybox: '/api/variety/promo/collect_mysterybox',
+
+
+    
+    assist_invite: '/api/variety/promo/assist_invites', // 助力券-邀请记录
+  assist_process: '/api/variety/promo/assist_processes', //助力券-助力记录
+  join_assist: '/api/variety/promo/join_assist', //助力券-参加活动
+  cancel_assist: '/api/variety/promo/cancel_assist', // 助力券-提前结束
+  collect_assist: '/api/variety/promo/collect_assist', //助力券-领取奖励
+  assist_detail: '/api/variety/promo/assist_detail', //助力券-当前进行中活动详情
+  assist_rewards: '/api/variety/promo/assist_rewards', // 助力券-待领取活动奖励
+
+  /**
+   * 幸运轮盘
+   *
+   *
+   *
+   *
+   * 此处分割避免冲突
+   */
+
+  /** 邀新活动-数据统计 */
+  promo_overview: '/api/public/promo_overview',
+  promo_private_overview: '/api/variety/promo/promo_overview',
+  /** 邀新活动-数据统计-登录后 */
+  /** 邀请记录 */
+  luckydraw_invites: '/api/variety/promo/luckydraw_invites',
+  /** 奖励记录 */
+  luckydraw_rewards: '/api/variety/promo/luckydraw_rewards',
+  /** 轮盘进行中详情 */
+  luckydraw_detail: '/api/variety/promo/luckydraw_detail',
+  /** 参加轮盘 */
+  join_luckydraw: '/api/variety/promo/join_luckydraw',
+  /** 轮盘 提前结束 */
+  cancel_luckydraw: '/api/variety/promo/cancel_luckydraw',
+  /** 轮盘 抽奖 */
+  draw: '/api/variety/promo/draw',
+  /** 幸运轮盘-分享得到抽奖次数 */
+  share_luckydraw: '/api/variety/promo/share_luckydraw',
+  /** 幸运轮盘-领取奖励 */
+  collect_luckydraw: '/api/variety/promo/collect_luckydraw',
+ 
+    
+
+  // 推荐好友
+  invite_friends_resend_email: '/api/private/referral/resend_email', // 推荐好友 - 重发邀请邮件
+  invite_friends_send_email: '/api/private/referral/send_email', // 推荐好友 - 发送邀请邮件
+  invite_friends_summary: '/api/private/referral/summary', // 推荐好友 -  推荐总览
+  invite_friends_reward_total: '/api/private/referral/reward_total', // 推荐好友 - 奖励累计
+  invite_friends_send_records: '/api/private/referral/send_records', // 推荐好友 - 邀请记录
+  invite_friends_reward_records: '/api/private/referral/reward_records', // 推荐好友 - 奖励记录
+  // UE 资源位
+  ue_publicities: '/api/public/index/publicities', // UE资源位
+  // 兑换现金券
+  exchange_coupon: '/api/variety/promo/exchange_coupon', // 兑换现金券
+  
   };
   
+
+ 

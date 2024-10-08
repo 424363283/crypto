@@ -35,6 +35,7 @@ export const useTheme = () => {
     skin,
     theme: theme,
     isDark: theme === THEME.DARK,
+    isBlue: skin === SKIN.BLUE,
     toggleTheme,
   };
 };

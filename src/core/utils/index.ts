@@ -33,3 +33,4 @@ export {getInviteLink,getOtherLink,isSearchRU} from './src/get-invite-link';
 export { renderTextByKey } from './src/render-text-by-key';
 export {rgbDataURL} from './src/rgbDataURL';
 export {attachPropertiesToComponent} from './src/attachPropertiesToComponent';
+export {maskMiddleString} from './src/mask-string';

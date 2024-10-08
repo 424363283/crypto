@@ -28,6 +28,11 @@ const metaLang = {
         "title": " Y-MEX 現貨",
         "description": "在Y-MEX交易{coin}。使用我們先進的價格圖表和交易工具輕鬆買賣{coin}。深入Y-MEX的現貨交易動態世界。",
         "keywords": "{coin} 交易, 比特幣, BTC, 以太坊, ETH, Doge, XRP, 現貨交易, Y-MEX, BitYard, 元宇宙, DeFi, GameFi."
+    },
+    'partnership/lucky-wheel': {
+        "title": "Y-MEX邀請計劃 - 幸運輪盤 - 贏取獎勵與專屬獎金",
+        "description": "參與Y-MEX幸運輪盤邀請計劃，贏取獎勵、專屬獎金和特別優惠。透過每日抽獎提升您的交易體驗，最大化您的潛力。立即註冊，與Y-MEX一起贏取豐厚獎勵！",
+        "keywords": "Y-MEX邀請計劃, 幸運輪盤, 加密獎勵, 專屬獎金, 抽獎贏取, 交易優惠, 加密貨幣獎勵, 邀請計劃推廣"
     }
     
 } 
