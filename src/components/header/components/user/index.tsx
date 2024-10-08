@@ -108,7 +108,14 @@ const HeaderUser = (props: HeaderUserProps) => {
                     </CopyToClipboard>
                   ) : null}
                 </div>
-                <div className='right-info'>
+                <div className='right-info'
+                onClick={
+                  ()=>{
+                    router.push('/account/dashboard?type=security-setting');
+                  }
+                }
+                
+                >
                   {isKyc ? (
                     <Image src='/static/images/header/media/verified.svg' width={93} height={32} alt='verified' />
                   ) : (
@@ -180,6 +187,7 @@ const styles = css`
       }
       .right-info {
         margin-right: -12px;
+        cursor: pointer;
       }
       span {
         color: var(--skin-hover-font-color);

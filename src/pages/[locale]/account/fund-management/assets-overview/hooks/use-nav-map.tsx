@@ -13,15 +13,15 @@ export const useNavMap = (verifiedDeveloped: boolean) => {
       activeIcon: 'sidebar-overview-nav-active-0',
       href: '/account/fund-management/assets-overview',
     },
-    {
-      query: {
-        type: 'spot',
-      },
-      title: LANG('现货账户'),
-      icon: 'sidebar-spot-nav-0',
-      activeIcon: 'sidebar-spot-nav-active-0',
-      href: '/account/fund-management/assets-overview',
-    },
+    // {
+    //   query: {
+    //     type: 'spot',
+    //   },
+    //   title: LANG('现货账户'),
+    //   icon: 'sidebar-spot-nav-0',
+    //   activeIcon: 'sidebar-spot-nav-active-0',
+    //   href: '/account/fund-management/assets-overview',
+    // },
     {
       query: {
         type: 'swap',
