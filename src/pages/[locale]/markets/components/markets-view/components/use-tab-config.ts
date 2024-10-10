@@ -7,10 +7,10 @@ export const useTabConfig = () => {
       name: LANG('自选'),
       id: CURRENT_TAB.FAVORITE,
     },
-    {
-      name: LANG('现货'),
-      id: CURRENT_TAB.SPOT_GOODS,
-    },
+    // {
+    //   name: LANG('现货'),
+    //   id: CURRENT_TAB.SPOT_GOODS,
+    // },
     {
       name: LANG('永续合约'),
       id: CURRENT_TAB.PERPETUAL,
@@ -19,10 +19,10 @@ export const useTabConfig = () => {
       name: LANG('简易合约'),
       id: CURRENT_TAB.LITE,
     },
-    {
-      name: LANG('杠杆代币'),
-      id: CURRENT_TAB.ETF,
-    },
+    // {
+    //   name: LANG('杠杆代币'),
+    //   id: CURRENT_TAB.ETF,
+    // },
   ];
   // 获取环境变量
   const enableLite = process.env.NEXT_PUBLIC_LITE_ENABLE === 'true';

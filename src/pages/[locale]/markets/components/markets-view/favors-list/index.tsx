@@ -19,7 +19,8 @@ import { formatSpotCoinName } from '../table/helper';
 
 export const Wait2AddFavorsList = memo(({ onAddAllCallback }: { onAddAllCallback: () => void }) => {
   const [favorsListIds, setFavorsListIds] = useState<string[]>([]);
-  const { miniChartData, setSymbols, isLoading } = useMiniChartData();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { miniChartData, setSymbols } = useMiniChartData();
   const { secondItem, marketDetailList } = store;
   const [coinDetailList, setCoinDetailList] = useState<{ [key: string]: MarketItem }>({});
   const { id: secondId } = secondItem;
@@ -33,13 +34,16 @@ export const Wait2AddFavorsList = memo(({ onAddAllCallback }: { onAddAllCallback
     setCoinDetailList(marketDetailList);
   }, [marketDetailList]);
   useEffect(() => {
+    setIsLoading(true);
     const getList = async () => {
       const res = await getCommonSymbolsApi();
       if (res.code === 200) {
         const favList = res.data.favors;
         setFavorsData(favList);
+        setIsLoading(false);
       } else {
         message.error(res.message);
+        setIsLoading(false);
       }
     };
     getList();
@@ -80,8 +84,8 @@ export const Wait2AddFavorsList = memo(({ onAddAllCallback }: { onAddAllCallback
   const chartSize = MediaInfo.isMobile
     ? { width: 146, height: 34 }
     : isTablet
-    ? { width: window.innerWidth / 2 - 80, height: 110 }
-    : { width: 245, height: 110 };
+      ? { width: window.innerWidth / 2 - 80, height: 110 }
+      : { width: 245, height: 110 };
   const renderFavorsCardList = () => {
     return chartCardList.map((item: MarketItem) => {
       const isSelected = selectedIds.includes(item.id);

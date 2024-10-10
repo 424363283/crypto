@@ -152,14 +152,14 @@ const styles = css`
       content: '';
       z-index: 0;
       position: absolute;
-      width: 72px; /* 外层圆环的宽度 */
-      height: 72px; /* 外层圆环的高度 */
+      width: 120px; /* 外层圆环的宽度 */
+      height: 120px; /* 外层圆环的高度 */
       background-color: var(--theme-background-color-2-4); /* 外层圆环的背景色 */
       border-radius: 50%;
       border: 26px solid var(--theme-background-color-2-4);
-      top: -5px;
-      left: -9px;
-      box-sizing: content-box; /* 使用 content-box 让边框不占用容器的尺寸 */
+      top: -10px;
+      left: -8px;
+      box-sizing:border-box;
     }
     &::after {
       content: '';
@@ -169,7 +169,7 @@ const styles = css`
       height: 68px; /* 中间圆形的高度 */
       background-color: var(--theme-background-color-2); /* 中间圆形的背景色 */
       border-radius: 50%;
-      top: 24px; /* 调整中间圆形的位置 */
+      top: 13px; /* 调整中间圆形的位置 */
       left: 19px; /* 调整中间圆形的位置 */
     }
     :global(.content) {

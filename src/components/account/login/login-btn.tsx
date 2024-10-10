@@ -14,7 +14,7 @@ export const LoginButton = memo((props: { shouldDisableBtn: boolean; onLoginSucc
       style={{ width: '100%' }}
       onClick={handleLogin}
     >
-      {LANG('登陆')}
+      {LANG('登录')}
     </Button>
   );
 });
