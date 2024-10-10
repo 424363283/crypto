@@ -58,21 +58,21 @@ export const OrderConfirmModal = ({
   );
   const volume = !trackData
     ? `${Swap.Calculate.formatPositionNumber({
-        usdt: isUsdtType,
-        code: quoteId,
-        // flagPrice: avgCostPrice,
-        fixed: Swap.Info.getVolumeDigit(quoteId, { withHooks: false }),
-        value: currentPosition,
-      })}`
+      usdt: isUsdtType,
+      code: quoteId,
+      // flagPrice: avgCostPrice,
+      fixed: Swap.Info.getVolumeDigit(quoteId, { withHooks: false }),
+      value: currentPosition,
+    })}`
     : `${Swap.Calculate.formatPositionNumber({
-        usdt: isUsdtType,
-        code: trackData?.symbol || '',
-        // flagPrice: avgCostPrice,
-        fixed: isUsdtType
-          ? Swap.Info.getVolumeDigit(trackData?.symbol, { withHooks: false })
-          : Number(trackData?.basePrecision),
-        value: trackData?.currentPosition || 0,
-      })}`;
+      usdt: isUsdtType,
+      code: trackData?.symbol || '',
+      // flagPrice: avgCostPrice,
+      fixed: isUsdtType
+        ? Swap.Info.getVolumeDigit(trackData?.symbol, { withHooks: false })
+        : Number(trackData?.basePrecision),
+      value: trackData?.currentPosition || 0,
+    })}`;
 
   const onClose =
     _onClose ||
@@ -190,7 +190,7 @@ export const OrderConfirmModal = ({
                       {LANG('预估强平价与标记价格差距')}
                     </InfoHover>
                   </Tooltip>
-                  <div>{`${`${liquidationPrice}`.sub(newPrice).div(newPrice).mul(100).toFixed(2)}%`}</div>
+                  <div>{(newPrice !== 0 && liquidationPrice !== null && newPrice !== null) ? `${`${liquidationPrice}`.sub(newPrice).div(newPrice).mul(100).toFixed(2)}%` : '--'}</div>
                 </div>
               )}
               {[spslMode.stopProfitPrice, spslMode.stopLossPrice].some((v) => Number(v) > 0) && (
@@ -216,23 +216,23 @@ export const OrderConfirmModal = ({
               )}
             </>
           ) : (
-            <>
-              <div className={clsx('row')}>
-                <div>{LANG('回撤价格')}</div>
-                <div>{`${trackData?.trackPrice} ${priceUnitText}`} </div>
-              </div>
-              <div className={clsx('row')}>
-                <div>{LANG('数量')}</div>
-                <div>
-                  {volume} {Swap.Info.getUnitText({ symbol: quoteId })}
+              <>
+                <div className={clsx('row')}>
+                  <div>{LANG('回撤价格')}</div>
+                  <div>{`${trackData?.trackPrice} ${priceUnitText}`} </div>
                 </div>
-              </div>
-            </>
-          )}
+                <div className={clsx('row')}>
+                  <div>{LANG('数量')}</div>
+                  <div>
+                    {volume} {Swap.Info.getUnitText({ symbol: quoteId })}
+                  </div>
+                </div>
+              </>
+            )}
         </div>
         {!trackData && isMarketType && (
           <div className={clsx('danger')}>
-            {LANG('当市场价与标记价格偏离超过{n}%时，下单可能失败。', { n: `${`${deviationRate * 100}`.toFixed()}%` })}
+            {LANG('当市场价与标记价格偏离超过{n}%时，下单可能失败。', { n: `${`${deviationRate * 100}`.toFixed()}` })}
           </div>
         )}
         <div className={clsx('line')}></div>
