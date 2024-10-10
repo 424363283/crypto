@@ -11,13 +11,14 @@ const list = [
     href: enableLite
       ? '/account/fund-management/order-history/lite-order?id=0'
       : !_isSwapDemo
-      ? '/account/fund-management/order-history/swap-u-order?tab=0'
-      : '/account/fund-management/order-history/demo/swap-u-order?tab=0',
+        ? '/account/fund-management/order-history/swap-u-order?tab=0'
+        : '/account/fund-management/order-history/demo/swap-u-order?tab=0',
   },
 ];
-if (!_isSwapDemo) {
-  list.push({ name: LANG('现货'), href: '/account/fund-management/order-history/spot-order?tab=0' });
-}
+/* 先隐藏现货菜单 */
+// if (!_isSwapDemo) {
+//   list.push({ name: LANG('现货'), href: '/account/fund-management/order-history/spot-order?tab=0' });
+// }
 const HeaderOrder = () => {
   return (
     <ul className='order-list-wrapper'>

@@ -66,7 +66,7 @@ const LoggedArea = () => {
         )}
         <Menu
           width='160px'
-          height={!_isSwapDemo ? '124px' : '72px'}
+          height={!_isSwapDemo ? '72px' : '72px'}
           position='right:0'
           content={<HeaderOrder />}
           showArrow
@@ -90,7 +90,7 @@ const LoggedArea = () => {
       <MobileOrTablet>
         <UserIcon iconActive={userIconActive} className='user-icon' onClick={() => setUserDrawerOpen(true)} />
         <UserDrawer open={userDrawerOpen} onClose={() => setUserDrawerOpen(false)} />
-      </MobileOrTablet> 
+      </MobileOrTablet>
     </>
   );
 };

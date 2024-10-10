@@ -136,8 +136,8 @@ const UserDrawer = (props: UserDrawerProps) => {
             {isKyc ? (
               <Image src='/static/images/header/media/verified.svg' width={93} height={32} alt='verified' />
             ) : (
-              <Image src='/static/images/header/media/unverified.svg' width={93} height={32} alt='unverified' />
-            )}
+                <Image src='/static/images/header/media/unverified.svg' width={93} height={32} alt='unverified' />
+              )}
           </div>
         </div>
         <Menu
