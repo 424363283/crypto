@@ -61,12 +61,12 @@ const ResetPwd = () => {
       message.error(result.message || LANG('验证码错误'));
     }
   };
-  useEffect(() => {
-    return () => {
-      store.showGaVerify = true;
-      store.showForgetEntry = true;
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     store.showGaVerify = true;
+  //     store.showForgetEntry = true;
+  //   };
+  // }, []);
   useEffect(() => {
     if (showGaVerify) {
       gaCode.length === 6 && (smsCode.length === 6 || emailCode.length === 6) && handleConfirm();
