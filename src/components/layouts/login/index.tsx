@@ -18,24 +18,6 @@ export default function LoginCommonLayout(props: IProps) {
     <>
       <UniversalLayout hideFooter className='login-common' bgColor='var(--theme-secondary-bg-color)'>
         <div className={clsx('login-bg', props.className)}>
-          {props.children ? (
-            props.children
-          ) : (
-            <div className='bonus-logo-wrapper'>
-              <Desktop forceInitRender={false}>
-                <></>
-                {/* <Image
-                  src='/static/images/account/login.png'
-                  enableSkin
-                  className='pc-bonus-img'
-                  width='600'
-                  height='586'
-                  loading='eager'
-                  priority
-                /> */}
-              </Desktop>
-            </div>
-          )}
           <div className={clsx('login-box', props.loginBoxClassName)}>
             <Tablet forceInitRender={false}>
               <Image
@@ -61,6 +43,30 @@ export default function LoginCommonLayout(props: IProps) {
               </a>
             </Mobile>
             {<EntryPoint />}
+            {props.children ? (
+              props.children
+            ) : (
+              <div className='bonus-logo-wrapper'>
+                <Desktop forceInitRender={false}>
+                  <></>
+                  {<Image
+                    src='/static/images/account/login.png'
+                    enableSkin
+                    className='pc-bonus-img'
+                    width='298'
+                    height='286'
+                    loading='eager'
+                    priority
+                  />}
+                  <div className='bonus-slogan'>
+                    <div className='title'>
+                      <p>全球领先的</p>
+                    </div>
+                    <h1 className='text'>一站式金融娱乐平台</h1>
+                  </div>
+                </Desktop>
+              </div>
+            )}
           </div>
           <style jsx>{styles}</style>
         </div>
@@ -91,17 +97,12 @@ const styles = css`
       background-color: var(--theme-background-color-2);
     }
     justify-content: center;
-    .bonus-logo-wrapper {
-      width: 600px;
-      height: 586px;
-      @media ${MediaInfo.mobileOrTablet} {
-        display: none;
-      }
-    }
     .login-box {
-      position: relative;
+      position: relative;  
+      box-shadow: var(--theme-box-shadow-1);
       @media ${MediaInfo.desktop} {
-        margin-left: 7%;
+        display: flex;
+        margin-left: 0%;
         padding: 30px 24px;
       }
       @media ${MediaInfo.tablet} {
@@ -127,10 +128,43 @@ const styles = css`
         width: 142px;
         height: auto;
       }
-    }
-    :global(.pc-bonus-img) {
-      width: 600px;
-      height: 586px;
+      .bonus-logo-wrapper {
+        width: 298px;
+        height: auto;
+        @media ${MediaInfo.mobileOrTablet} {
+          display: none;
+        }
+        :global(.pc-bonus-img) {
+          width: 298px;
+          height: 286px;
+        }
+        .bonus-slogan {
+          .title {
+            margin: 0;
+            padding: 0;
+            font-size: 52px;
+            font-weight: 700;
+            line-height: 1.2;
+            white-space: nowrap;
+            color: var(--theme-font-color-1);
+            span {
+              color: var(--skin-color-active);
+            }
+            > * {
+              font-family: DINPro !important;
+            }
+          }
+          .text {
+            margin: 0;
+            padding: 0;
+            font-size: 28px;
+            font-weight: 400;
+            line-height: 1.5;
+            padding: 28px 0 24px;
+            color: var(--theme-font-color-1);
+          }
+        }
+      }
     }
   }
 `;

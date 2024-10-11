@@ -66,11 +66,11 @@ export const EntryPoint = () => {
       key: 'phone',
       children: <PhoneLogin onLoginSuccess={onLoginSuccess} />,
     },
-    {
-      label: LANG('用户名登录'),
-      key: 'username',
-      children: <UsernameLogin onLoginSuccess={onLoginSuccess} />,
-    },
+    // {
+    //   label: LANG('用户名登录'),
+    //   key: 'username',
+    //   children: <UsernameLogin onLoginSuccess={onLoginSuccess} />,
+    // },
     // { label: LANG('扫码登录'), key: 'qrcode', children: <LoginQrCode onLoginSuccess={onLoginSuccess} /> },
   ];
   // if (isMobile) {
