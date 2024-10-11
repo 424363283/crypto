@@ -44,7 +44,7 @@ const generateChartOptions = (
       enabled: false,
     },
     fill: {
-      colors: ['#FFD30F', '#00A478', '#396FD9'],
+      colors: ['#FFD30F', '#00A478'],
     },
     plotOptions: {
       pie: {
@@ -56,8 +56,8 @@ const generateChartOptions = (
     },
   };
   if (empty) {
-    options.labels = ['1', '2', '3'];
-    options.series = [50, 50, 50];
+    options.labels = ['1', '2'];
+    options.series = [50, 50];
   }
   return options;
 };
@@ -88,7 +88,7 @@ const PieChart = memo(
               data: [
                 { label: '1', value: spotBalance || 0 },
                 { label: '2', value: contractuBalance || 0 },
-                { label: '3', value: contractBalance || 0 },
+                // { label: '3', value: contractBalance || 0 },
               ],
               onSelect: (index) => {
                 flag = false;
@@ -118,7 +118,7 @@ const PieChart = memo(
       <div className='chart'>
         <div className='percent'>
           {Number(chartOptions.empty ? 0 : percents[selected])}%
-          {<div className='prompt'>{[LANG('现货账户'), LANG('U本位账户'), LANG('币本位账户')][selected]}</div>}
+          {<div className='prompt'>{[LANG('现货账户'), LANG('U本位账户')][selected]}</div>}
         </div>
         <Chart
           className='content'
@@ -187,7 +187,7 @@ const styles = css`
       white-space: nowrap;
       font-weight: 500;
       color: var(--theme-font-color-6);
-      top: 45px;
+      top: 33px;
       left: 24px;
     }
     .prompt {

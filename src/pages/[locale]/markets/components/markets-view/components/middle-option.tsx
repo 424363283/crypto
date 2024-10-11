@@ -57,8 +57,12 @@ const MiddleOption = () => {
     };
   });
   useEffect(() => {
-    const defaultValue = selectOptionValues?.[0];
+    const defaultValue = selectOptionValues?.filter((item: Options) => !['1-1', '1-5'].includes(item.value))[0];
     setSelectValue(defaultValue);
+    store.secondItem = {
+      id: defaultValue?.value,
+      name: defaultValue?.name,
+    };
   }, [currentId, JSON.stringify(secondConfigOption)]);
   const MobileLeftOption = ({ className }: { className?: string }) => {
     return (

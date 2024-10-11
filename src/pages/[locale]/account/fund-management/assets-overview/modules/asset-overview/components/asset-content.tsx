@@ -30,7 +30,7 @@ export const AssetContent: React.FC<AssetsProps> = React.memo(({ color }) => {
     <div className='assets-bottom-card'>
       <AssetsBottomTitle />
       <div className={classNames.join(' ')}>
-        <PieChart contractuBalance={+swapUBalance} contractBalance={+swapBalance} spotBalance={_spotTotalBalance} />
+        <PieChart contractuBalance={+swapUBalance} spotBalance={_spotTotalBalance} />
         <div className='assets-list'>
           <AssetItem
             title={LANG('现货账户')}
@@ -44,12 +44,12 @@ export const AssetContent: React.FC<AssetsProps> = React.memo(({ color }) => {
             color='#43BC9C'
             percent={swapUBalance.div(totalBalance)}
           />
-          <AssetItem
+          {/* <AssetItem
             title={LANG('币本位账户')}
             amount={swapBalance}
             color='#2C66D1'
             percent={swapBalance.div(totalBalance)}
-          />
+          /> */}
         </div>
       </div>
       <style jsx>{styles}</style>

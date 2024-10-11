@@ -22,15 +22,15 @@ export const useNavMap = (verifiedDeveloped: boolean) => {
     //   activeIcon: 'sidebar-spot-nav-active-0',
     //   href: '/account/fund-management/assets-overview',
     // },
-    {
-      query: {
-        type: 'swap',
-      },
-      title: LANG('币本位账户'),
-      icon: 'sidebar-coin-base-nav-0',
-      activeIcon: 'sidebar-coin-base-nav-active-0',
-      href: '/account/fund-management/assets-overview',
-    },
+    // {
+    //   query: {
+    //     type: 'swap',
+    //   },
+    //   title: LANG('币本位账户'),
+    //   icon: 'sidebar-coin-base-nav-0',
+    //   activeIcon: 'sidebar-coin-base-nav-active-0',
+    //   href: '/account/fund-management/assets-overview',
+    // },
     {
       query: {
         type: 'swap-u',
