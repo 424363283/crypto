@@ -21,8 +21,12 @@ export const paths = {
     security_options: '/api/security/options', // 获取安全认证项
     security_verify: '/api/security/verify', // 验证验证码
     
-    system_v2_send_email: '/api/system/v2/send_email', // 发送邮箱验证码
-    system_v2_send_sms: '/api/system/v2/send_sms', // 发送手机验证码
+    
+    system_v2_send_email: '/api/system/v2/send_email', // 发送邮箱验证码 v2
+    system_v2_send_sms: '/api/system/v2/send_sms', // 发送手机验证码 v2
+    system_v2_check_email: '/api/system/v2/check_email', // 校验邮箱验证码 v2
+    system_v2_check_sms: '/api/system/v2/checksms', // 校验手机验证码 v2
+    
 
     system_send_email: '/api/system/sendEmail', // 发送邮箱验证码
     system_check_email: '/api/system/checkEmail', // 校验邮箱验证码

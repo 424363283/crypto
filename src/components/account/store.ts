@@ -18,6 +18,7 @@ export const store = resso({
   closeVerify: false, // 是否关闭验证
   ru: '', // 注册时的邀请码
   showForgetEntry: true, //是否显示forget入口
+  showForgetStep: false,  
   showVerifyModal: false, // 是否显示验证弹窗
   showGaVerify: false, // 是否显示ga验证
   trace: '', // 三方token

@@ -1,18 +1,20 @@
 // 安全验证2FA
 import { countryVerifyApi, getBindOptionsApi, getSecurityOptionsApi, postAccountVerifyApi, referralVerifyCodeApi, securityVerifyApi } from '@/core/api';
 import { SENCE } from '@/core/shared';
+import { message } from '@/core/utils';
 import { Captcha } from '../captcha';
 class SecurityVerify extends Captcha {
   public static run() {}
 
   // 账号验证
-  public static accountVerify = async (account: string, shouldVerify: boolean = true) => {
-    if (!shouldVerify) {
-      return postAccountVerifyApi({ account });
-    }
-    const { data } = await this.verification();
-    if (data?.token) {
-      return postAccountVerifyApi({ account });
+  public static accountVerify = async (account: string) => {
+    try {
+      const { data } = await this.verification();
+      if (data?.token) {
+        return postAccountVerifyApi({ account, token: data.token });
+      }
+    } catch (err: any) {
+      message.error(err.message);
     }
   };
   //安全验证

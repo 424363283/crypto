@@ -18,7 +18,6 @@ const $Axios = ({ retry = Infinity, retryDelay = 1000, ...axiosConfig }) => {
   // @ts-ignore
   _axios.defaults.retryDelay = retryDelay;
   _axios.interceptors.request.use(async (request: any) => {
-    // https://xkh5-uat-003.fxhhwm.com/:api*
   
     if (TO_GMT8_API.indexOf(request.url) > -1 && request?.params) {
       if (request.params?.createTimeGe) {
@@ -40,7 +39,6 @@ const $Axios = ({ retry = Infinity, retryDelay = 1000, ...axiosConfig }) => {
       request.url = request.url.replaceAll('/swap/', '/testnet/');
     }
 
-    // request.url ='https://xkh5-uat-003.fxhhwm.com'+request.url
     const lang = document.documentElement.lang;
     // 语言参数
     request.headers['Accept-Language'] = Lang.getAcceptLanguage(lang);
