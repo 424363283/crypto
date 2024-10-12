@@ -27,7 +27,7 @@ import { ThirdRegister } from './third-part/third-register';
 export const EntryPoint = () => {
   const { isMobile } = useResponsive();
   const lastPath = useLastPath();
-  const { showForgetEntry } = store;
+  const { showForgetStep } = store;
   const router = useRouter();
   // 设置登录成功回跳页面
   const onLoginSuccess = useCallback(() => {
@@ -42,7 +42,7 @@ export const EntryPoint = () => {
     }
   }, []);
   const HEADER_TITLE_MAP: { [key: string]: string } = {
-    [ROUTE_PATH_KEY.LOGIN]: LANG('登陆 YMEX'),
+    [ROUTE_PATH_KEY.LOGIN]: LANG('登录 Ymex'),
     // [ROUTE_PATH_KEY.REGISTER]: LANG('加入 YMEX'),
     [ROUTE_PATH_KEY.REGISTER]: '账号注册',
     [ROUTE_PATH_KEY.INVITE]: LANG('加入 YMEX'),
@@ -102,7 +102,7 @@ export const EntryPoint = () => {
     [ROUTE_PATH_KEY.THIRD_REGISTER]: [{ children: <ThirdRegister onLoginSuccess={onLoginSuccess} /> }],
     [ROUTE_PATH_KEY.THIRD_BIND]: [{ children: <ThirdBind onLoginSuccess={onLoginSuccess} /> }],
   };
-  if (!showForgetEntry && lastPath === 'forget') {
+  if (showForgetStep && lastPath === 'forget') {
     return (
       <div className='account-wrapper'>
         <ResetPwd />

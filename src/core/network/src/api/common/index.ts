@@ -184,6 +184,20 @@ export function postCommonSendEmailCodeApi<T>(data: { sence: string; email: stri
   return http.post<T>(paths['system_send_email'], _(data));
 }
 
+
+
+/** 发送手机验证码 V2*/
+export function sendSmsCodeApi_V2<T>(data: { sence: string; countryCode: number | string; phone: string | number; token?: string }) {
+  return http.post<T>(paths['system_v2_send_sms'], _(data));
+}
+
+
+/** 发送邮箱验证码 V2 */
+export function postSendEmailCodeApi_V2<T>(data: { sence: string; email: string; token?: string; params?: any }) {
+  return http.post<T>(paths['system_v2_send_email'], _(data));
+}
+
+
 /** 注册接口 */
 export function postCommonRegisterApi(data: { password: string; countryCode?: string; countryId?: string; sign: string; email?: string; phone?: string }) {
   return http.post<object>(paths['register_submit'], _(data));
@@ -205,6 +219,18 @@ export function postCommonValidateEmailCodeApi<T>(data: { account: string; type:
 export function validateSmsCodeApi<T>(data: { account: string; type: string; code: string }) {
   return http.post<T>(paths['system_check_sms'], _(data));
 }
+
+
+/** 校验邮箱验证码V2 */
+export function postCommonValidateEmailCodeApi_V2<T>(data: { account: string; type: string; code: string }) {
+  return http.post<T>(paths['system_v2_check_email'], _(data));
+}
+
+/** 校验手机验证码V2 */
+export function validateSmsCodeApi_V2<T>(data: { account: string; type: string; code: string }) {
+  return http.post<T>(paths['system_v2_check_sms'], _(data));
+}
+
 
 /** 登陆接口 */
 export function loginApi(data: any) {

@@ -39,11 +39,11 @@ const LITE_OPTIONS = [
   },
 ];
 const FAVORITE_OPTIONS = [
-  {
-    name: LANG('现货'),
-    id: FAVORITE_OPTION_ID.SPOT,
-    key: 'favorites.spot',
-  },
+  // {
+  //   name: LANG('现货'),
+  //   id: FAVORITE_OPTION_ID.SPOT,
+  //   key: 'favorites.spot',
+  // },
   {
     name: LANG('U本位合约'),
     id: FAVORITE_OPTION_ID.SWAP_USDT,
@@ -54,16 +54,16 @@ const FAVORITE_OPTIONS = [
     id: FAVORITE_OPTION_ID.SWAP_COIN,
     key: 'favorites.swap_coin',
   },
-  {
-    name: LANG('简易合约'),
-    id: FAVORITE_OPTION_ID.LITE,
-    key: 'favorites.contract',
-  },
-  {
-    name: 'LVTs',
-    id: FAVORITE_OPTION_ID.ETF,
-    key: 'favorites.etf',
-  },
+  // {
+  //   name: LANG('简易合约'),
+  //   id: FAVORITE_OPTION_ID.LITE,
+  //   key: 'favorites.contract',
+  // },
+  // {
+  //   name: 'LVTs',
+  //   id: FAVORITE_OPTION_ID.ETF,
+  //   key: 'favorites.etf',
+  // },
 ].filter((item) => {
   if (item.id === FAVORITE_OPTION_ID.LITE) {
     return enableLite;

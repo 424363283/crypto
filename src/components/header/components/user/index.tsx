@@ -109,18 +109,18 @@ const HeaderUser = (props: HeaderUserProps) => {
                   ) : null}
                 </div>
                 <div className='right-info'
-                onClick={
-                  ()=>{
-                    router.push('/account/dashboard?type=security-setting');
+                  onClick={
+                    () => {
+                      router.push('/account/dashboard?type=overview');
+                    }
                   }
-                }
-                
+
                 >
                   {isKyc ? (
                     <Image src='/static/images/header/media/verified.svg' width={93} height={32} alt='verified' />
                   ) : (
-                    <Image src='/static/images/header/media/unverified.svg' width={93} height={32} alt='unverified' />
-                  )}
+                      <Image src='/static/images/header/media/unverified.svg' width={93} height={32} alt='unverified' />
+                    )}
                 </div>
               </div>
             </li>

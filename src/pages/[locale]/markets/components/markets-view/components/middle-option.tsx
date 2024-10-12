@@ -33,7 +33,8 @@ const MiddleOption = () => {
     store.currentView = CURRENT_VIEW.TABLE;
   };
   const renderLeftOptions = () => {
-    return secondConfigOption.map((item: Options) => {
+    /* 自选页签下屏蔽现货/杠杆代币和LVTs */
+    return secondConfigOption.filter((item: Options) => !['1-1', '1-5'].includes(item.id)).map((item: Options) => {
       const isActive = secondItem.id === item.id;
       return (
         <Button
@@ -56,8 +57,12 @@ const MiddleOption = () => {
     };
   });
   useEffect(() => {
-    const defaultValue = selectOptionValues?.[0];
+    const defaultValue = selectOptionValues?.filter((item: Options) => !['1-1', '1-5'].includes(item.value))[0];
     setSelectValue(defaultValue);
+    store.secondItem = {
+      id: defaultValue?.value,
+      name: defaultValue?.name,
+    };
   }, [currentId, JSON.stringify(secondConfigOption)]);
   const MobileLeftOption = ({ className }: { className?: string }) => {
     return (

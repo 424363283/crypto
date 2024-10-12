@@ -130,5 +130,10 @@
     "tailwindcss": "^3.3.0",
     "ts-node": "10.9.2",
     "typescript": "5.4.5"
-  }
+  },
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "last 2 versions"
+  ]
 }
