@@ -1,3 +1,4 @@
+import { MediaInfo } from '@/core/utils';
 import { PasswordInput } from '../../basic-input/password-input';
 import { InputPhone } from '../components/input-phone';
 import { useBtnStatus } from '../hooks/useBtnStatus';
@@ -9,7 +10,7 @@ export const PhoneLogin = ({ onLoginSuccess }: { onLoginSuccess: () => void }) =
   return (
     <div>
       <InputPhone />
-      <PasswordInput />
+      <PasswordInput showLabel={MediaInfo.isMobileOrTablet} />
       <LoginButton shouldDisableBtn={shouldDisableBtn} onLoginSuccess={onLoginSuccess} />
     </div>
   );

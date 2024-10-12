@@ -103,7 +103,7 @@ const styles = css`
       @media ${MediaInfo.desktop} {
         display: flex;
         margin-left: 0%;
-        padding: 30px 24px;
+        background-color: var(--theme-background-color-2);
       }
       @media ${MediaInfo.tablet} {
         margin-top: 75px;
@@ -131,6 +131,7 @@ const styles = css`
       .bonus-logo-wrapper {
         width: 298px;
         height: auto;
+        border-left: 1px solid var(--skin-border-color-1);
         @media ${MediaInfo.mobileOrTablet} {
           display: none;
         }
@@ -146,7 +147,7 @@ const styles = css`
             font-weight: 700;
             line-height: 1.2;
             white-space: nowrap;
-            color: var(--theme-font-color-1);
+            color: var(--skin-hover-font-color);
             span {
               color: var(--skin-color-active);
             }

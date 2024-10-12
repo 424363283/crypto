@@ -127,7 +127,6 @@ export const EntryPoint = () => {
 };
 const styles = css`
   :global(.account-wrapper) {
-    background-color: var(--theme-background-color-2);
     position: relative;
     @media ${MediaInfo.desktop} {
       width: 464px;

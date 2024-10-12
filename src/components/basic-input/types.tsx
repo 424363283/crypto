@@ -23,4 +23,5 @@ export interface BasicInputProps extends InputHTMLAttributes<HTMLInputElement> {
   prefix?: any;
   suffix?: any;
   showPwd?: boolean;
+  showLabel?: boolean;
 }
