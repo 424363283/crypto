@@ -9,7 +9,7 @@ export const PhoneLogin = ({ onLoginSuccess }: { onLoginSuccess: () => void }) =
   const [shouldDisableBtn] = useBtnStatus(TAB_TYPE.PHONE_LOGIN);
   return (
     <div>
-      <InputPhone />
+      <InputPhone showLabel={MediaInfo.isMobileOrTablet} />
       <PasswordInput showLabel={MediaInfo.isMobileOrTablet} />
       <LoginButton shouldDisableBtn={shouldDisableBtn} onLoginSuccess={onLoginSuccess} />
     </div>

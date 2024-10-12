@@ -99,6 +99,7 @@ const styles = css`
     justify-content: center;
     .login-box {
       position: relative;  
+      border-radius: 12px;
       box-shadow: var(--theme-box-shadow-1);
       @media ${MediaInfo.desktop} {
         display: flex;
@@ -129,8 +130,13 @@ const styles = css`
         height: auto;
       }
       .bonus-logo-wrapper {
-        width: 298px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        width: 358px;
         height: auto;
+        padding: 30px;
         border-left: 1px solid var(--skin-border-color-1);
         @media ${MediaInfo.mobileOrTablet} {
           display: none;
@@ -161,7 +167,7 @@ const styles = css`
             font-size: 28px;
             font-weight: 400;
             line-height: 1.5;
-            padding: 28px 0 24px;
+            padding: 15px 0 0 0;
             color: var(--theme-font-color-1);
           }
         }
