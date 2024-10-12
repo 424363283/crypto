@@ -887,7 +887,7 @@ export const SWAP = {
       let result;
       const S = contractFactor;
       if (buy) {
-        result = roe.mul(margin).div(volume).add(price);
+        result = roe.div(volume).add(price);
       } else {
         result = price.sub(roe.mul(margin).div(volume));
       }

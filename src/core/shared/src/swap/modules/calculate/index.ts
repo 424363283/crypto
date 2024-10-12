@@ -477,7 +477,7 @@ export class Calculate {
     } else {
       const volume = Number((currentPosition || data.currentPosition).mul(contractFactor));
       // return FORMULAS?.SWAP?.usdt?.positionIncomeToPrice(contractFactor, volume, data.avgCostPrice, income, buy);
-      return FORMULAS?.SWAP?.usdt?.positionRoeToPrice(contractFactor, volume, data.avgCostPrice, income, buy);
+      return FORMULAS?.SWAP?.usdt?.positionRoeToPrice(contractFactor, volume, data.avgCostPrice, income, data.margin, buy);
     }
   }
 }
