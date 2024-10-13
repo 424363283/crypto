@@ -43,6 +43,9 @@ export default function LoginCommonLayout(props: IProps) {
               </a>
             </Mobile>
             {<EntryPoint />}
+            <Desktop>
+              <div className='divided-line-vertical'></div>
+            </Desktop>
             {props.children ? (
               props.children
             ) : (
@@ -129,15 +132,18 @@ const styles = css`
         width: 142px;
         height: auto;
       }
+      :global(.divided-line-vertical) {
+        width: 1px;
+        border-left: 1px solid var(--skin-border-color-1);
+      }
       .bonus-logo-wrapper {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
-        width: 358px;
+        width: 298px;
         height: auto;
-        padding: 30px;
-        border-left: 1px solid var(--skin-border-color-1);
+        margin: 30px;
         @media ${MediaInfo.mobileOrTablet} {
           display: none;
         }
