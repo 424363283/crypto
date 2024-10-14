@@ -21,6 +21,7 @@ const BasicInput = forwardRef((props: BasicInputProps, ref: any) => {
     prefix,
     suffix,
     showPwd,
+    showLabel = true,
     ...rest
   } = props;
   const [val, setVal] = useState('');
@@ -90,7 +91,7 @@ const BasicInput = forwardRef((props: BasicInputProps, ref: any) => {
   };
   return (
     <div className={clsx('basic-input-container', className)}>
-      {label ? <p className='label'>{label}</p> : null}
+      {showLabel && label ? <p className='label'>{label}</p> : null}
       <div className={clsx('basic-input-box', getInputClassName())}>
         {prefix ? prefix : null}
         <input

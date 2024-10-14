@@ -11,7 +11,7 @@ type BasicInputPropsOptional = Partial<Pick<BasicInputProps, 'type' | 'label'>> 
 
 export const InputPhone = (props: BasicInputPropsOptional) => {
   const [val, setVal] = useState('');
-  const { label, type, placeholder, ...rest } = props;
+  const { label, type, placeholder, showLabel, ...rest } = props;
   const onChange = (value: string) => {
     setVal(value);
   };
@@ -24,7 +24,7 @@ export const InputPhone = (props: BasicInputPropsOptional) => {
   }, [val]);
   return (
     <div className='input-phone-container'>
-      <p className='label'>{LANG('选择国家')}</p>
+      {showLabel ? <p className='label'>{LANG('选择国家')}</p> : null}
 
       <div className='input-row'>
         <div className='select-country-container'>

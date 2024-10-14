@@ -18,6 +18,7 @@ export const InputVerificationCode = (props: {
   autoSend?: boolean;
   label?: string;
   withdrawData?: any;
+  showLabel?: boolean;
 }) => {
   const {
     type,
@@ -28,6 +29,7 @@ export const InputVerificationCode = (props: {
     autoSend = true,
     label = '',
     withdrawData,
+    showLabel = true
   } = props;
   const isEmailInput = type === LOCAL_KEY.INPUT_VERIFICATION_EMAIL || type === LOCAL_KEY.INPUT_REGISTER_EMAIL;
   const isPhoneInput = type === LOCAL_KEY.INPUT_VERIFICATION_PHONE || type === LOCAL_KEY.INPUT_REGISTER_PHONE;
@@ -80,6 +82,7 @@ export const InputVerificationCode = (props: {
         maxLength={6}
         withBorder={withBorder}
         suffix={<CaptchaButton type={type} scene={scene} autoSend={autoSend} />}
+        showLabel = {showLabel}
       />
       <style jsx>{styles}</style>
     </div>

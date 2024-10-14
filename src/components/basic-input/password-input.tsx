@@ -62,7 +62,7 @@ const styles = css`
     :global(.eye-icon) {
       position: absolute;
       right: 15px;
-      top: 50px;
+      bottom: 70px;
       cursor: pointer;
     }
     :global(.basic-input-container) {

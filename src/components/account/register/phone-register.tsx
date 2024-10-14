@@ -8,14 +8,15 @@ import { useBtnStatus } from '../hooks/useBtnStatus';
 import { TAB_TYPE } from '../types';
 import { RegisterButton } from './register-btn';
 import { RegisterFooter } from './register-footer';
+import { MediaInfo } from '@/core/utils';
 
 export const PhoneRegister = () => {
   const [shouldDisableBtn] = useBtnStatus(TAB_TYPE.PHONE_REGISTER);
   return (
     <>
-      <InputPhone />
-      <InputVerificationCode type={LOCAL_KEY.INPUT_REGISTER_PHONE} scene={SENCE.REGISTER} autoSend={false} />
-      <PasswordInput />
+      <InputPhone showLabel={MediaInfo.isMobileOrTablet} />
+      <InputVerificationCode showLabel={MediaInfo.isMobileOrTablet} type={LOCAL_KEY.INPUT_REGISTER_PHONE} scene={SENCE.REGISTER} autoSend={false} />
+      <PasswordInput showLabel={MediaInfo.isMobileOrTablet} />
       <InputInvitationCode />
       <RegisterButton shouldDisableBtn={shouldDisableBtn} type={LOCAL_KEY.INPUT_REGISTER_PHONE} />
       <RegisterFooter />
