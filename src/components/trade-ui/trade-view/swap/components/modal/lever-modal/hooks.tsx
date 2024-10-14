@@ -53,6 +53,7 @@ export const useLeverModal = ({ visible }: { visible: boolean }) => {
         Swap.Order.fetchPending(Swap.Trade.base.isUsdtType);
         message.success(LANG('杠杆修改成功'));
         Swap.Trade.clearInputVolume();
+        Swap.Trade.setModal({ leverVisible: false, leverModalData: {} })
         return true;
       } else {
         message.error(result);
