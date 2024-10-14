@@ -109,10 +109,10 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
   const typeOptions =
     tabKey === SWAP_HISTORY_ORDER_TYPE.ASSET_FLOW
       ? // 资金流水
-        Object.keys(SWAP_FUNDS_RECORD_TYPE()).map((v) => ({
-          label: SWAP_FUNDS_RECORD_TYPE()[v],
-          value: v,
-        }))
+      Object.keys(SWAP_FUNDS_RECORD_TYPE()).map((v) => ({
+        label: SWAP_FUNDS_RECORD_TYPE()[v],
+        value: v,
+      })).filter(item => item.value != 'transferLiteOutPerpetualIn')
       : handleTypeOptionsByRouteId();
   const newTypeOptions = filterAndConcatOptions(typeOptions);
   const onChangeContract = (v: { label: string; value: string }) => {

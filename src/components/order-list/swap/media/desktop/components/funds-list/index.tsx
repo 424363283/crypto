@@ -86,6 +86,7 @@ const useColumns = ({ isUsdtType }: any) => {
       title: () => {
         const types: any = { ...SWAP_FUNDS_RECORD_TYPE() };
         delete types.maker_fee;
+        delete types.transferLiteOutPerpetualIn;
         return (
           <ColSelectTitle options={types} value={storeType} onChange={(type) => (store.type = type)}>
             {LANG('类型')}
@@ -115,18 +116,18 @@ const useColumns = ({ isUsdtType }: any) => {
       title: isUsdtType
         ? LANG('资产种类')
         : () => {
-            return (
-              <CodeSelectTitle
-                codeOnly
-                value={storeCode}
-                onChange={(code: any) =>
-                  (store.code = code?.replace(!isSwapDemo() ? /-usdt?/i : /-s?usdt?/i, '').toUpperCase())
-                }
-              >
-                {LANG('资产种类')}
-              </CodeSelectTitle>
-            );
-          },
+          return (
+            <CodeSelectTitle
+              codeOnly
+              value={storeCode}
+              onChange={(code: any) =>
+                (store.code = code?.replace(!isSwapDemo() ? /-usdt?/i : /-s?usdt?/i, '').toUpperCase())
+              }
+            >
+              {LANG('资产种类')}
+            </CodeSelectTitle>
+          );
+        },
 
       dataIndex: 'currency',
       render: (v: any) => {

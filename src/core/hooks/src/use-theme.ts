@@ -20,9 +20,9 @@ export const useTheme = () => {
     if (_skin === 'blue' && colorIndex !== 3) {
       RootColor.setColorRGB(3);
     }
-    if (skin !== 'blue' && colorIndex === 3) {
-      RootColor.setColorRGB(1);
-    }
+    // if (skin !== 'blue' && colorIndex === 3) {
+    //   RootColor.setColorRGB(1);
+    // }
   }, []);
 
   const toggleTheme = () => {
