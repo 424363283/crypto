@@ -30,11 +30,14 @@ export const SwapPositionModeModal = ({
       Loading.start();
       const result = await Swap.Info.updatePositionType(isUsdtType, next);
       if (result.code !== 200) {
-        console.log('result', result);
         message.error(result);
-      }else{
+      } else {
         message.success(LANG('操作成功'));
 
+      }
+
+      if (!next) {
+        Swap.Trade.setPositionMode('open');
       }
 
     } catch (e) {
@@ -52,11 +55,11 @@ export const SwapPositionModeModal = ({
       LANG('双向持仓'),
       isUsdtType
         ? LANG(
-            '双向持仓模式下，一个合约可允许同时持有多空两个方向的仓位模式。 调整对所有合约统一生效。该设置仅对U本位合约生效。'
-          )
+          '双向持仓模式下，一个合约可允许同时持有多空两个方向的仓位模式。 调整对所有合约统一生效。该设置仅对U本位合约生效。'
+        )
         : LANG(
-            '双向持仓模式下，一个合约可允许同时持有多空两个方向的仓位模式。 调整对所有合约统一生效。该设置仅对币本位合约生效。'
-          ),
+          '双向持仓模式下，一个合约可允许同时持有多空两个方向的仓位模式。 调整对所有合约统一生效。该设置仅对币本位合约生效。'
+        ),
       { twoWayMode: true },
     ],
   ];
@@ -67,11 +70,11 @@ export const SwapPositionModeModal = ({
         <div className={clsx('info')}>
           {isUsdtType
             ? LANG(
-                '若U本位合约在持仓或者挂单，不允许调整仓位模式。仓位模式调整对所有合约统一生效。该设置仅对U本位合约生效。'
-              )
+              '若U本位合约在持仓或者挂单，不允许调整仓位模式。仓位模式调整对所有合约统一生效。该设置仅对U本位合约生效。'
+            )
             : LANG(
-                '若币本位合约在持仓或者挂单，不允许调整仓位模式。仓位模式调整对所有合约统一生效。该设置仅对币本位合约生效。'
-              )}
+              '若币本位合约在持仓或者挂单，不允许调整仓位模式。仓位模式调整对所有合约统一生效。该设置仅对币本位合约生效。'
+            )}
         </div>
         <div>
           {options.map(([label, msg, { twoWayMode }]: any, index) => {
@@ -97,7 +100,7 @@ export const SwapPositionModeModal = ({
   if (isMobile) {
     return (
       <MobileModal visible={visible} onClose={onClose} type='bottom' zIndex={zIndex}>
-        <BottomModal title={LANG('仓位模式')}   displayConfirm={false}  >
+        <BottomModal title={LANG('仓位模式')} displayConfirm={false}  >
           {content}
         </BottomModal>
       </MobileModal>

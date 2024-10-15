@@ -52,9 +52,8 @@ const StopProfitStopLossModal = ({ data = {}, onClose, visible }: { data: any; o
   const flagPrice = Swap.Socket.getFlagPrice(code);
   const cryptoData = Swap.Info.getCryptoData(code);
   const { currentPricePrecision, pricePrecision, minChangePrice, settleCoin } = cryptoData;
-  const name = `${formatSwapCryptoName(code)} ${LANG('永续____1')} / ${isBuy ? LANG('买') : LANG('卖')} ${
-    data.leverage
-  }X`;
+  const name = `${formatSwapCryptoName(code)} ${LANG('永续____1')} / ${isBuy ? LANG('买') : LANG('卖')} ${data.leverage
+    }X`;
   const disabledStopProfit = false;
   const disabledStopLoss = false;
   const scale = isUsdtType ? 2 : Number(data.basePrecision);
@@ -166,38 +165,38 @@ const StopProfitStopLossModal = ({ data = {}, onClose, visible }: { data: any; o
         code: data.symbol,
       });
     }
-    console.log("isCloseType",isCloseType)
+    console.log("isCloseType", isCloseType)
 
     const result = !isCloseType
       ? await Utils.SubmitStopProfitStopLoss({
-          position: data,
-          edit: editMode,
-          params: params,
-          flagPrice,
-          priceNow,
-          stopProfit,
-          stopLoss,
-          defaultStopProfit,
-          defaultStopLoss,
-          stopProfitType,
-          stopLossType,
-          isUsdtType,
-          balanceData: Swap.Assets.getBalanceData({ code: data.symbol, walletId: data.subWallet }),
-          cryptoData,
-          subWallet: data['subWallet'],
-        })
+        position: data,
+        edit: editMode,
+        params: params,
+        flagPrice,
+        priceNow,
+        stopProfit,
+        stopLoss,
+        defaultStopProfit,
+        defaultStopLoss,
+        stopProfitType,
+        stopLossType,
+        isUsdtType,
+        balanceData: Swap.Assets.getBalanceData({ code: data.symbol, walletId: data.subWallet }),
+        cryptoData,
+        subWallet: data['subWallet'],
+      })
       : await Swap.Trade.submitSpslOrder({
-          price: isLimit ? price : '',
-          orderQty: orderQty,
-          side: !isBuy ? 1 : 2,
-          symbol: code,
-          type: isLimit ? 4 : 5,
-          reduceOnly: 1,
-          opType: 3,
-          triggerPrice: triggerPrice,
-          priceType: triggerPriceType === TYPES.FLAG_PRICE ? 2 : 1,
-          subWallet: data['subWallet'],
-        });
+        price: isLimit ? price : '',
+        orderQty: orderQty,
+        side: !isBuy ? 1 : 2,
+        symbol: code,
+        type: isLimit ? 4 : 5,
+        reduceOnly: 1,
+        opType: 3,
+        triggerPrice: triggerPrice,
+        priceType: triggerPriceType === TYPES.FLAG_PRICE ? 2 : 1,
+        subWallet: data['subWallet'],
+      });
 
     if (result) {
       try {
@@ -246,13 +245,14 @@ const StopProfitStopLossModal = ({ data = {}, onClose, visible }: { data: any; o
 
     setCkey(+new Date());
   }, [visible]);
-
   const disabledConfirm = !isCloseType
-    ? disabledStopProfit && disabledStopLoss
+    ? (Number(stopProfit || 0) <= 0 ||
+      Number(stopLoss || 0) <= 0)
     : maxEntrustNumError ||
-      Number(triggerPrice || 0) <= 0 ||
-      Number(volume || 0) <= 0 ||
-      (isLimit ? Number(price || 0) <= 0 : false);
+    Number(triggerPrice || 0) <= 0 ||
+    Number(volume || 0) <= 0 ||
+    (isLimit ? Number(price || 0) <= 0 : false);
+
 
   const onClearInput = async (incomeLoss: boolean) => {
     const onDone = (_data: any) => {
@@ -443,55 +443,55 @@ const StopProfitStopLossModal = ({ data = {}, onClose, visible }: { data: any; o
               />
             </>
           ) : (
-            <>
-              <InputSection
-                key={`${ckey}_${ckey1}_1`}
-                // disabled={disabledStopProfit}
-                label={LANG('止盈')}
-                value={stopProfit}
-                placeholder={LANG('止盈触发价格')}
-                onChange={_onStopProfitChange}
-                digit={pricePrecision}
-                minChangePrice={minChangePrice}
-                unit={priceUnitText}
-                income={stopProfitIncome}
-                type={stopProfitType}
-                onTypeChange={_onStopProfitTypeChange}
-                minChange={incomeStandard1 === 0 ? stopProfitType == Swap.Trade.PRICE_TYPE.NEW : false}
-                incomeStandard={incomeStandard1}
-                setIncomeStandard={setIncomeStandard1}
-                data={data}
-                displayPriceInfo
-                onClearInput={!!defaultStopProfit ? () => onClearInput(false) : undefined}
-                clearable={false}
-                cancelEnable
-              />
-              <InputSection
-                key={`${ckey}_${ckey2}_2`}
-                // disabled={disabledStopLoss}
-                label={LANG('止损')}
-                placeholder={LANG('止损触发价格')}
-                value={stopLoss}
-                onChange={_onStopLossChange}
-                unit={priceUnitText}
-                digit={pricePrecision}
-                minChangePrice={minChangePrice}
-                income={stopLossIncome}
-                type={stopLossType}
-                onTypeChange={_onStopLossTypeChange}
-                incomeLossNegative
-                incomeLoss
-                minChange={incomeStandard2 === 0 ? stopLossType == Swap.Trade.PRICE_TYPE.NEW : false}
-                incomeStandard={incomeStandard2}
-                setIncomeStandard={setIncomeStandard2}
-                data={data}
-                clearable={false}
-                cancelEnable
-                onClearInput={!!defaultStopLoss ? () => onClearInput(true) : undefined}
-              />
-              <div style={{ height: 10 }}></div>
-            </>
-          )}
+              <>
+                <InputSection
+                  key={`${ckey}_${ckey1}_1`}
+                  // disabled={disabledStopProfit}
+                  label={LANG('止盈')}
+                  value={stopProfit}
+                  placeholder={LANG('止盈触发价格')}
+                  onChange={_onStopProfitChange}
+                  digit={pricePrecision}
+                  minChangePrice={minChangePrice}
+                  unit={priceUnitText}
+                  income={stopProfitIncome}
+                  type={stopProfitType}
+                  onTypeChange={_onStopProfitTypeChange}
+                  minChange={incomeStandard1 === 0 ? stopProfitType == Swap.Trade.PRICE_TYPE.NEW : false}
+                  incomeStandard={incomeStandard1}
+                  setIncomeStandard={setIncomeStandard1}
+                  data={data}
+                  displayPriceInfo
+                  onClearInput={!!defaultStopProfit ? () => onClearInput(false) : undefined}
+                  clearable={false}
+                  cancelEnable
+                />
+                <InputSection
+                  key={`${ckey}_${ckey2}_2`}
+                  // disabled={disabledStopLoss}
+                  label={LANG('止损')}
+                  placeholder={LANG('止损触发价格')}
+                  value={stopLoss}
+                  onChange={_onStopLossChange}
+                  unit={priceUnitText}
+                  digit={pricePrecision}
+                  minChangePrice={minChangePrice}
+                  income={stopLossIncome}
+                  type={stopLossType}
+                  onTypeChange={_onStopLossTypeChange}
+                  incomeLossNegative
+                  incomeLoss
+                  minChange={incomeStandard2 === 0 ? stopLossType == Swap.Trade.PRICE_TYPE.NEW : false}
+                  incomeStandard={incomeStandard2}
+                  setIncomeStandard={setIncomeStandard2}
+                  data={data}
+                  clearable={false}
+                  cancelEnable
+                  onClearInput={!!defaultStopLoss ? () => onClearInput(true) : undefined}
+                />
+                <div style={{ height: 10 }}></div>
+              </>
+            )}
           {/* <div className={clsx('description')}>
     *{' '}
     {LANG(
@@ -532,7 +532,7 @@ const StopProfitStopLossModal = ({ data = {}, onClose, visible }: { data: any; o
         </>
       ),
       okText: LANG('确认'),
-      onOk: () => {},
+      onOk: () => { },
       theme: theme,
       v3: true,
       zIndex: 10001,
@@ -547,9 +547,9 @@ const StopProfitStopLossModal = ({ data = {}, onClose, visible }: { data: any; o
           title={LANG('设置止盈止损')}
           titleInfo={titleInfo}
           contentClassName={clsx('stop-profit-stop-loss-mobile-content')}
-          // titles={[LANG('止盈/止损'), LANG('仓位止盈止损')]}
-          // tabIndex={tabIndex}
-          // onChangeIndex={setTabIndex}
+        // titles={[LANG('止盈/止损'), LANG('仓位止盈止损')]}
+        // tabIndex={tabIndex}
+        // onChangeIndex={setTabIndex}
         >
           {content}
         </BottomModal>

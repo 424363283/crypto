@@ -72,14 +72,14 @@ export const SwapDesktopLayout = ({
                   {!isSmallDesktop ? (
                     <KlineViewRight className='kline-view-right' OrderBook={OrderBook} RecentTrades={RecentTrades} />
                   ) : (
-                    <div className='kline-view-bottom'>
-                      <div className='bg card-radius kline-view-bottom-orderbook'>{OrderBook}</div>
-                      <div className='bg card-radius'>
-                        <div className='recent-trades-title'>{LANG('最近成交')}</div>
-                        {RecentTrades}
+                      <div className='kline-view-bottom'>
+                        <div className='bg card-radius kline-view-bottom-orderbook'>{OrderBook}</div>
+                        <div className='bg card-radius'>
+                          <div className='recent-trades-title'>{LANG('最近成交')}</div>
+                          {RecentTrades}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                 </div>
               </div>
             </div>

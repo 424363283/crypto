@@ -50,7 +50,7 @@ export const SWAP_FUNDS_RECORD_TYPE: () => { [key: string]: string } = () => ({
   trade: LANG('平仓盈亏'),
   transferTradeOutPerpetualIn: LANG('币币转永续'),
   transferPerpetualOutTradeIn: LANG('永续转币币'),
-  transferLiteOutPerpetualIn: LANG('简易合约转入永续'),
+  // transferLiteOutPerpetualIn: LANG('简易合约转入永续'),
   transferPerpetualOutLiteIn: LANG('永续转入简易合约'),
   // liq_system_accept: '强平平仓盈亏',
   // Main2Fun: '钱包转永续',

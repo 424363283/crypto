@@ -6,7 +6,7 @@ import Input from '@/components/trade-ui/trade-view/components/input';
 import { Loading } from '@/components/loading';
 import { useResponsive, useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
-import { Swap } from '@/core/shared';
+import { Account, Swap } from '@/core/shared';
 import { message } from '@/core/utils';
 import Slider from './components/slider';
 import { clsx, styles } from './styled';
@@ -53,6 +53,10 @@ export const useLeverModal = ({ visible }: { visible: boolean }) => {
         Swap.Order.fetchPending(Swap.Trade.base.isUsdtType);
         message.success(LANG('杠杆修改成功'));
         Swap.Trade.clearInputVolume();
+        Swap.Trade.setModal({ leverVisible: false, leverModalData: {} })
+        // 更新账户资产
+        Account.assets.getAllSpotAssets(true)
+        Account.assets.getPerpetualUAsset()
         return true;
       } else {
         message.error(result);

@@ -97,7 +97,7 @@ export default function GlobalSetting() {
               <span className='label'>{LANG('UTC时间')}</span>
             </Radio>
           </Radio.Group>
-          <Select values={selectedTime} options={timeZone} onChange={onUtcTimeSelect} />
+          <Select disabled={quoteOption == 'utc-time'} values={selectedTime} options={timeZone} onChange={onUtcTimeSelect} />
         </div>
       </div>
       <style jsx>{styles}</style>
