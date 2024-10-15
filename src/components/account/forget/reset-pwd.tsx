@@ -34,7 +34,7 @@ const ResetPwd = () => {
   const { email, phone, curTab, emailCode, smsCode, password, countryCode, showGaVerify } = store;
   const passwordsMatch = initPwd === confirmPwd;
   const shouldDisableResetPwdBtn = !passwordsMatch || initPwdError || confirmPwdError || !password; //两次密码不匹配或者第一个密码无效或者第二个密码无效
-  const account = curTab === 0 ? email : countryCode + phone;
+  const account = curTab === 1 ? email : countryCode + phone;
 
   const handleConfirm = async () => {
     if (shouldDisableReceiveCodeBtn) {
@@ -83,7 +83,7 @@ const ResetPwd = () => {
   // 获取验证码阶段
   const renderVerificationCodePanel = () => {
     // 邮箱验证码
-    if (curTab === 0) {
+    if (curTab === 1) {
       return (
         <div className='step2-reset-password'>
           <h4>{LANG('重置登录密码')}</h4>

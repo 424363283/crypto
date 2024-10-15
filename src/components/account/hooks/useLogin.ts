@@ -11,9 +11,9 @@ export const useLogin = (onLoginSuccess: () => void) => {
   // const account = curTab === 1 ? countryCode + phone : email;
   //  curTab === 1 ? countryCode + phone : email;
    const account = (() => {
-    if (curTab === 0) {
+    if (curTab === 1) {
       return email
-    } else if (curTab === 1) {
+    } else if (curTab === 0) {
       return countryCode + phone
     } else {
       return username;
