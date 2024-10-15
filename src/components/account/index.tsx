@@ -23,6 +23,9 @@ import { SecurityVerify } from './security/security-verify';
 import { store } from './store';
 import { ThirdBind } from './third-part/third-bind';
 import { ThirdRegister } from './third-part/third-register';
+import { Desktop, Mobile } from '../responsive';
+import { RegisterSwitchLoginReg } from './register/register-switch-register-reg';
+import { LoginSwitchLgoinReg } from './login/login-switch_register_reg';
 
 export const EntryPoint = () => {
   const { isMobile } = useResponsive();
@@ -55,16 +58,20 @@ export const EntryPoint = () => {
   const FOOTER_MAP: { [key: string]: React.ReactNode } = {
     [ROUTE_PATH_KEY.LOGIN]: <LoginFooter />,
   };
+  const SWITCH_LOGIN_REG_MAP: { [key: string]: React.ReactNode } = {
+    [ROUTE_PATH_KEY.LOGIN]: <LoginSwitchLgoinReg />,
+    [ROUTE_PATH_KEY.REGISTER]: <RegisterSwitchLoginReg />
+  }
   const LOGIN_TABS = [
     {
-      label: LANG('邮箱登录'),
-      key: 'email',
-      children: <EmailLogin onLoginSuccess={onLoginSuccess} />,
-    },
-    {
-      label: LANG('手机登录'),
+      label: LANG('手机'),
       key: 'phone',
       children: <PhoneLogin onLoginSuccess={onLoginSuccess} />,
+    },
+    {
+      label: LANG('邮箱'),
+      key: 'email',
+      children: <EmailLogin onLoginSuccess={onLoginSuccess} />,
     },
     // {
     //   label: LANG('用户名登录'),
@@ -78,21 +85,21 @@ export const EntryPoint = () => {
   // }
   const FORGET_TABS = [
     {
-      label: LANG('邮箱'),
-      key: 'email',
-      tips: LANG('重置登录密码后，24小时内禁止提币'),
-      children: <EmailForget />,
-    },
-    {
       label: LANG('手机'),
       key: 'phone',
       tips: LANG('重置登录密码后，24小时内禁止提币'),
       children: <PhoneForget />,
     },
+    {
+      label: LANG('邮箱'),
+      key: 'email',
+      tips: LANG('重置登录密码后，24小时内禁止提币'),
+      children: <EmailForget />,
+    },
   ];
   const REGISTER_TABS = [
-    { label: LANG('邮箱注册'), key: 'email', children: <EmailRegister /> },
-    { label: LANG('手机注册'), key: 'phone', children: <PhoneRegister /> },
+    { label: LANG('手机'), key: 'phone', children: <PhoneRegister /> },
+    { label: LANG('邮箱'), key: 'email', children: <EmailRegister /> },
   ];
   const TABS_MAP: any = {
     [ROUTE_PATH_KEY.LOGIN]: LOGIN_TABS,
@@ -114,11 +121,18 @@ export const EntryPoint = () => {
   return (
     <ThirdPartAuthProvider value={{ onLoginSuccess: onLoginSuccess }}>
       <div className='account-wrapper'>
-         
+
         <h1 className='title'>{HEADER_TITLE_MAP[lastPath]}</h1>
-        {!singleTab ? <Tabs items={TABS_MAP[lastPath]} /> : TABS_MAP[lastPath][0].children}
-        {ROUTE_PATH_KEY.LOGIN === lastPath && <ThirdPartBtns />}
-        {FOOTER_MAP[lastPath]}
+        {!singleTab ?
+          <Tabs items={TABS_MAP[lastPath]} >
+            <Desktop >
+              {SWITCH_LOGIN_REG_MAP[lastPath]}
+            </Desktop>
+          </Tabs>
+          : TABS_MAP[lastPath][0].children
+        }
+        {false ? ROUTE_PATH_KEY.LOGIN === lastPath && <ThirdPartBtns /> : null}
+        {false ? FOOTER_MAP[lastPath] : null}
         <SecurityVerify />
         <style jsx>{styles}</style>
       </div>

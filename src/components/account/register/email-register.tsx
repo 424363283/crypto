@@ -9,6 +9,8 @@ import { TAB_TYPE } from '../types';
 import { RegisterButton } from './register-btn';
 import { RegisterFooter } from './register-footer';
 import { MediaInfo } from '@/core/utils';
+import { Mobile, MobileOrTablet } from '@/components/responsive';
+import { ThirdPartBtns } from '../components/third-part-btns';
 
 export const EmailRegister = () => {
   const [shouldDisableBtn] = useBtnStatus(TAB_TYPE.EMAIL_REGISTER);
@@ -16,10 +18,13 @@ export const EmailRegister = () => {
     <>
       <InputEmail showLabel={MediaInfo.isMobileOrTablet} />
       <InputVerificationCode showLabel={MediaInfo.isMobileOrTablet} type={LOCAL_KEY.INPUT_REGISTER_EMAIL} scene={SENCE.REGISTER} autoSend={false} />
-      <PasswordInput  showLabel={MediaInfo.isMobileOrTablet} />
+      <PasswordInput showLabel={MediaInfo.isMobileOrTablet} />
       <InputInvitationCode />
       <RegisterButton shouldDisableBtn={shouldDisableBtn} type={LOCAL_KEY.INPUT_REGISTER_EMAIL} />
-      <RegisterFooter />
+      <ThirdPartBtns />
+      <MobileOrTablet forceInitRender={false}>
+        <RegisterFooter />
+      </MobileOrTablet>
     </>
   );
 };

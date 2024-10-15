@@ -1,23 +1,20 @@
-import { TrLink } from '@/core/i18n/src/components/tr-link';
-import { LANG } from '@/core/i18n/src/page-lang';
-import { ThirdPartBtns } from '../components/third-part-btns';
+import { LANG, TrLink } from "@/core/i18n";
 
-export const RegisterFooter = () => {
+export const RegisterSwitchLoginReg = () => {
   return (
     <>
-      <p className='register-footer'>
-        {LANG('已经是Y-MEX用户？')}
+      <p className='register-switch-login-reg-wrapper'>
+        {LANG('已有账号')}？
         <TrLink href='/login'>&nbsp;&nbsp;{LANG('登录')}</TrLink>
         <style jsx>
           {`
-            .register-footer {
+            .register-switch-login-reg-wrapper {
               text-align: center;
               display: block;
               text-align: center;
               font-size: 14px;
               font-weight: 400;
               color: var(--theme-font-color-3);
-              padding-top: 46px;
               :global(a) {
                 font-size: 14px;
                 font-weight: 700;
@@ -30,4 +27,3 @@ export const RegisterFooter = () => {
     </>
   );
 };
-

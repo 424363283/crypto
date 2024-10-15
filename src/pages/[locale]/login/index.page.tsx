@@ -1,8 +1,8 @@
-import LoginCommonLayout from '@/components/layouts/login';
+import LoginCommonLayout, { Login as LoginPage } from '@/components/layouts/login';
 import { Lang } from '@/core/i18n';
 
 function Login() {
-  return  <LoginCommonLayout />;
+  return  <LoginPage />;
 }
 export default Lang.SeoHead(Login);
 export const getStaticPaths = Lang.getStaticPaths;

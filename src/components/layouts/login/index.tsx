@@ -181,3 +181,11 @@ const styles = css`
     }
   }
 `;
+
+function Login() {
+  return <>
+    <LoginCommonLayout />
+  </>;
+}
+
+export { Login }

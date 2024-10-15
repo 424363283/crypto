@@ -9,6 +9,8 @@ import { TAB_TYPE } from '../types';
 import { RegisterButton } from './register-btn';
 import { RegisterFooter } from './register-footer';
 import { MediaInfo } from '@/core/utils';
+import { Mobile, MobileOrTablet } from '@/components/responsive';
+import { ThirdPartBtns } from '../components/third-part-btns';
 
 export const PhoneRegister = () => {
   const [shouldDisableBtn] = useBtnStatus(TAB_TYPE.PHONE_REGISTER);
@@ -19,7 +21,10 @@ export const PhoneRegister = () => {
       <PasswordInput showLabel={MediaInfo.isMobileOrTablet} />
       <InputInvitationCode />
       <RegisterButton shouldDisableBtn={shouldDisableBtn} type={LOCAL_KEY.INPUT_REGISTER_PHONE} />
-      <RegisterFooter />
+      <ThirdPartBtns />
+      <MobileOrTablet forceInitRender={false}>
+        <RegisterFooter />
+      </MobileOrTablet>
     </>
   );
 };

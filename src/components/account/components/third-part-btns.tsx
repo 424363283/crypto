@@ -37,7 +37,7 @@ export const ThirdPartBtns = () => {
     try {
       const idToken: string = await AppleLogin(AppleLoginType.LOGIN);
       if (!idToken) {
-        return message.error(LANG('登录失败'));
+        return message.error(LANG('登录失败')); 
       }
       await postOauthLogin({ type: 'apple', idToken, scene: 'APPLE_LOGIN' });
     } catch (e) {
@@ -100,9 +100,6 @@ export const ThirdPartBtns = () => {
   return (
     <>
       <div className={clsx('third-part-btns', isMobile && 'mobile')}>
-        <div className='or'>
-          <div>{LANG('or')}</div>
-        </div>
         <div className='btns'>
           <div>
             <div id='my-google-login-btn' style={{ opacity: 0 }} className='google-login'>
@@ -164,7 +161,7 @@ export const ThirdPartBtns = () => {
             display: flex;
             justify-content: center;
             align-items: center;
-
+            margin-top: 32px;
             #my-google-login-btn {
               position: absolute;
 
