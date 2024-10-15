@@ -40,7 +40,7 @@ export const SpslSettingModal = () => {
       setIncomeStandard2(0);
       setStopProfitPrice(spslMode.stopProfitPrice);
       setStopProfitPriceType(spslMode.stopProfitPriceType);
-      setStopLossPrice(spslMode.stopProfitPrice);
+      setStopLossPrice(spslMode.stopLossPrice);
       setStopLossPriceType(spslMode.stopLossPriceType);
     }
   }, [visible]);
@@ -135,8 +135,7 @@ export const SpslSettingModal = () => {
         data={[
           [
             LANG('合约'),
-            `${quoteName} ${Swap.Info.getContractName(isUsdtType)} / ${
-              !isBuy ? LANG('卖') : LANG('买')
+            `${quoteName} ${Swap.Info.getContractName(isUsdtType)} / ${!isBuy ? LANG('卖') : LANG('买')
             } ${leverageLevel}X`,
           ],
           [LANG('委托价格'), !isMarketType ? `${storePrice} ${priceUnitText}` : LANG('市价')],
