@@ -25,7 +25,7 @@ export const paths = {
     system_v2_send_email: '/api/system/v2/send_email', // 发送邮箱验证码 v2
     system_v2_send_sms: '/api/system/v2/send_sms', // 发送手机验证码 v2
     system_v2_check_email: '/api/system/v2/check_email', // 校验邮箱验证码 v2
-    system_v2_check_sms: '/api/system/v2/checksms', // 校验手机验证码 v2
+    system_v2_check_sms: '/api/system/v2/check_sms', // 校验手机验证码 v2
     
 
     system_send_email: '/api/system/sendEmail', // 发送邮箱验证码
