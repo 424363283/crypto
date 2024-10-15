@@ -12,7 +12,7 @@ export const ForgetButton = (props: any) => {
     }
     const { phone, countryCode, email, curTab } = store;
     const newPhone = countryCode + (phone || '').replace(/^0*/, '');
-    const account = curTab === 0 ? email : newPhone;
+    const account = curTab === 1 ? email : newPhone;
     try {
       const result = await Account.securityVerify.accountVerify(account);
       if (result?.code !== 200) {

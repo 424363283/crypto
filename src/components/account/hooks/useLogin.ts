@@ -26,7 +26,7 @@ export const useLogin = (onLoginSuccess: () => void) => {
     store.loginVhash = loginVhash;
     const platform = getPlatform();
     const loginParam: any  = (() => {
-      if (curTab === 0) {
+      if (curTab === 1) {
         return {
           username: email,
           password,
@@ -36,7 +36,7 @@ export const useLogin = (onLoginSuccess: () => void) => {
           version: '2.0',
           cToken,
         };
-      } else if (curTab === 1) {
+      } else if (curTab === 0) {
         return {
           username: account,
           password,
