@@ -1,7 +1,7 @@
 import { resso } from '@/core/store';
 
 export const store = resso({
-  curTab: 0, // 当前选择的tab
+  curTab: '', // 当前选择的tab
   password: '',
   email: '',
   phone: '',

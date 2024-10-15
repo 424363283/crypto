@@ -4,7 +4,6 @@ import { clsx } from '@/core/utils/src/clsx';
 import { MediaInfo } from '@/core/utils/src/media-info';
 import css from 'styled-jsx/css';
 import { ROUTE_PATH_KEY } from '../constants';
-import { store } from '../store';
 
 const LoginSwitchLoginReg = () => {
   return (

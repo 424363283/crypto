@@ -3,14 +3,14 @@ import { LANG } from '@/core/i18n/src/page-lang';
 import { clsx } from '@/core/utils/src/clsx';
 import { MediaInfo } from '@/core/utils/src/media-info';
 import css from 'styled-jsx/css';
-import { ROUTE_PATH_KEY } from '../constants';
+import { ACCOUNT_TAB_KEY, ROUTE_PATH_KEY } from '../constants';
 import { store } from '../store';
 
 const LoginFooter = () => {
   const { curTab } = store;
   return (
-    <div className={clsx('bottom-area', curTab !== 2 ? '' : 'bottom-qrcode')}>
-      {curTab !== 2 ? (
+    <div className={clsx('bottom-area', curTab !== ACCOUNT_TAB_KEY.QRCODE ? '' : 'bottom-qrcode')}>
+      {curTab !== ACCOUNT_TAB_KEY.QRCODE ? (
         <TrLink href={`/${ROUTE_PATH_KEY.FORGET}`} className='bottom-link'>
           {LANG('忘记密码')}？
         </TrLink>

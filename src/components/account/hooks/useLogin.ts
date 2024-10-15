@@ -5,15 +5,16 @@ import { message } from '@/core/utils/src/message';
 import { removeCountryCode } from '@/core/utils/src/unknown';
 
 import { store } from '../store';
+import { ACCOUNT_TAB_KEY } from '../constants';
 
 export const useLogin = (onLoginSuccess: () => void) => {
   const { email, password, countryCode, phone, username, curTab, trace } = store;
-  // const account = curTab === 1 ? countryCode + phone : email;
-  //  curTab === 1 ? countryCode + phone : email;
+  // const account = curTab === ACCOUNT_TAB_KEY.EMAIL ? countryCode + phone : email;
+  //  curTab === ACCOUNT_TAB_KEY.EMAIL ? countryCode + phone : email;
    const account = (() => {
-    if (curTab === 1) {
+    if (curTab === ACCOUNT_TAB_KEY.EMAIL) {
       return email
-    } else if (curTab === 0) {
+    } else if (curTab === ACCOUNT_TAB_KEY.PHONE) {
       return countryCode + phone
     } else {
       return username;
@@ -26,7 +27,7 @@ export const useLogin = (onLoginSuccess: () => void) => {
     store.loginVhash = loginVhash;
     const platform = getPlatform();
     const loginParam: any  = (() => {
-      if (curTab === 1) {
+      if (curTab === ACCOUNT_TAB_KEY.EMAIL) {
         return {
           username: email,
           password,
@@ -36,7 +37,7 @@ export const useLogin = (onLoginSuccess: () => void) => {
           version: '2.0',
           cToken,
         };
-      } else if (curTab === 0) {
+      } else if (curTab === ACCOUNT_TAB_KEY.PHONE) {
         return {
           username: account,
           password,

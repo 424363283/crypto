@@ -5,9 +5,9 @@ import { MediaInfo } from '@/core/utils/src/media-info';
 import { message } from '@/core/utils/src/message';
 import React, { useCallback } from 'react';
 import css from 'styled-jsx/css';
-import { Tabs } from './components/tabs';
+import { Tab, Tabs } from './components/tabs';
 import { ThirdPartAuthProvider, ThirdPartBtns } from './components/third-part-btns';
-import { ROUTE_PATH_KEY } from './constants';
+import { ACCOUNT_TAB_KEY, ROUTE_PATH_KEY } from './constants';
 import { EmailForget } from './forget/email-forget';
 import { PhoneForget } from './forget/phone-forget';
 import ResetPwd from './forget/reset-pwd';
@@ -25,7 +25,7 @@ import { ThirdBind } from './third-part/third-bind';
 import { ThirdRegister } from './third-part/third-register';
 import { Desktop, Mobile } from '../responsive';
 import { RegisterSwitchLoginReg } from './register/register-switch-register-reg';
-import { LoginSwitchLgoinReg } from './login/login-switch_register_reg';
+import { LoginSwitchLgoinReg } from './login/login-switch-register-reg';
 
 export const EntryPoint = () => {
   const { isMobile } = useResponsive();
@@ -62,52 +62,58 @@ export const EntryPoint = () => {
     [ROUTE_PATH_KEY.LOGIN]: <LoginSwitchLgoinReg />,
     [ROUTE_PATH_KEY.REGISTER]: <RegisterSwitchLoginReg />
   }
-  const LOGIN_TABS = [
+  const LOGIN_TABS: Tab[] = [
     {
       label: LANG('手机'),
-      key: 'phone',
+      key: ACCOUNT_TAB_KEY.PHONE,
       children: <PhoneLogin onLoginSuccess={onLoginSuccess} />,
     },
     {
       label: LANG('邮箱'),
-      key: 'email',
+      key: ACCOUNT_TAB_KEY.EMAIL,
       children: <EmailLogin onLoginSuccess={onLoginSuccess} />,
     },
     // {
     //   label: LANG('用户名登录'),
-    //   key: 'username',
+    // key: ACCOUNT_TAB_KEY.USERNAME,
     //   children: <UsernameLogin onLoginSuccess={onLoginSuccess} />,
     // },
-    // { label: LANG('扫码登录'), key: 'qrcode', children: <LoginQrCode onLoginSuccess={onLoginSuccess} /> },
+    // { label: LANG('扫码登录'), key: ACCOUNT_TAB_KEY.QRCODE, children: <LoginQrCode onLoginSuccess={onLoginSuccess} /> },
   ];
   // if (isMobile) {
   //   LOGIN_TABS.splice(2, 1);
   // }
-  const FORGET_TABS = [
+  const FORGET_TABS: Tab[] = [
     {
       label: LANG('手机'),
-      key: 'phone',
+      key: ACCOUNT_TAB_KEY.PHONE,
       tips: LANG('重置登录密码后，24小时内禁止提币'),
       children: <PhoneForget />,
     },
     {
       label: LANG('邮箱'),
-      key: 'email',
+      key: ACCOUNT_TAB_KEY.EMAIL,
       tips: LANG('重置登录密码后，24小时内禁止提币'),
       children: <EmailForget />,
     },
   ];
-  const REGISTER_TABS = [
-    { label: LANG('手机'), key: 'phone', children: <PhoneRegister /> },
-    { label: LANG('邮箱'), key: 'email', children: <EmailRegister /> },
+  const REGISTER_TABS: Tab[] = [
+    { label: LANG('手机'), key: ACCOUNT_TAB_KEY.PHONE, children: <PhoneRegister /> },
+    { label: LANG('邮箱'), key: ACCOUNT_TAB_KEY.EMAIL, children: <EmailRegister /> },
   ];
+  const THIRD_REGISTER_TABS: Tab[] = [
+    { label: '创建账号', key: ACCOUNT_TAB_KEY.THIRD_REGISTER, children: <ThirdRegister onLoginSuccess={onLoginSuccess} /> }
+  ]
+  const THIRD_BIND_TABS: Tab[] = [
+    { label: '关联账号', key: ACCOUNT_TAB_KEY.THIRD_BIND, children: <ThirdBind onLoginSuccess={onLoginSuccess} /> }
+  ]
   const TABS_MAP: any = {
     [ROUTE_PATH_KEY.LOGIN]: LOGIN_TABS,
     [ROUTE_PATH_KEY.FORGET]: FORGET_TABS,
     [ROUTE_PATH_KEY.REGISTER]: REGISTER_TABS,
     [ROUTE_PATH_KEY.INVITE]: REGISTER_TABS,
-    [ROUTE_PATH_KEY.THIRD_REGISTER]: [{ children: <ThirdRegister onLoginSuccess={onLoginSuccess} /> }],
-    [ROUTE_PATH_KEY.THIRD_BIND]: [{ children: <ThirdBind onLoginSuccess={onLoginSuccess} /> }],
+    [ROUTE_PATH_KEY.THIRD_REGISTER]: THIRD_REGISTER_TABS,
+    [ROUTE_PATH_KEY.THIRD_BIND]: THIRD_BIND_TABS,
   };
   if (showForgetStep && lastPath === 'forget') {
     return (

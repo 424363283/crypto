@@ -49,3 +49,12 @@ export const ACCOUNT_ROUTE_PATH = {
     },
   },
 };
+
+export const ACCOUNT_TAB_KEY = {
+  PHONE: 'phone',
+  EMAIL: 'email',
+  USERNAME: 'username',
+  QRCODE: 'qrcode',
+  THIRD_REGISTER: 'third_register',
+  THIRD_BIND: 'third_bind',
+}

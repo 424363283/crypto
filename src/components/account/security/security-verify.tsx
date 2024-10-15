@@ -13,6 +13,7 @@ import css from 'styled-jsx/css';
 import { BasicInput } from '../../basic-input';
 import { InputVerificationCode } from '../components/verification-code';
 import { store } from '../store';
+import { ACCOUNT_TAB_KEY } from '../constants';
 export const SecurityVerify = () => {
   const [isChecked, setIsChecked] = useState(false);
   const router = useRouter();
@@ -76,7 +77,7 @@ export const SecurityVerify = () => {
   const onConfirm = async () => {
     Loading.start();
     const basicParams = {
-      account: curTab === 1 ? countryCode + phone : email,
+      account: curTab === ACCOUNT_TAB_KEY.PHONE ? countryCode + phone : email,
       vHash: loginVhash,
       sence: SENCE.LOGIN,
       ...(gaCode && { ga_code: gaCode }),
@@ -112,7 +113,7 @@ export const SecurityVerify = () => {
           trust: isChecked,
           vToken,
           ...(countryCode && { countryCode }),
-          username: curTab === 1 ? phone : email,
+          username: curTab === ACCOUNT_TAB_KEY.PHONE ? phone : email,
         };
         if (store.trace) {
           loginParam.trace = store.trace;

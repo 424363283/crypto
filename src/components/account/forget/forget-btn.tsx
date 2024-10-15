@@ -3,6 +3,7 @@ import { LANG } from '@/core/i18n/src/page-lang';
 import { Account } from '@/core/shared/src/account';
 import { message } from '@/core/utils/src/message';
 import { store } from '../store';
+import { ACCOUNT_TAB_KEY } from '../constants';
 
 export const ForgetButton = (props: any) => {
   const { shouldDisableBtn } = props;
@@ -12,7 +13,7 @@ export const ForgetButton = (props: any) => {
     }
     const { phone, countryCode, email, curTab } = store;
     const newPhone = countryCode + (phone || '').replace(/^0*/, '');
-    const account = curTab === 1 ? email : newPhone;
+    const account = curTab === ACCOUNT_TAB_KEY.EMAIL ? email : newPhone;
     try {
       const result = await Account.securityVerify.accountVerify(account);
       if (result?.code !== 200) {

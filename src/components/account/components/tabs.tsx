@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
 import { store } from '../store';
 
-type Tab = {
+export type Tab = {
+  key: string;
   label: string;
   children: React.ReactNode;
   tips?: string;
@@ -13,7 +14,7 @@ type Tab = {
 export const Tabs = ({ items, children }: { items: Tab[], children?: React.ReactNode }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   useEffect(() => {
-    store.curTab = activeIndex;
+    store.curTab = items[activeIndex].key;
   }, [activeIndex]);
   return (
     <div className='tabs-wrapper'>

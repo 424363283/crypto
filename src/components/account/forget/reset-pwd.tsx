@@ -14,6 +14,7 @@ import { InputVerificationCode } from '../components/verification-code';
 import { useBtnStatus } from '../hooks/useBtnStatus';
 import { store } from '../store';
 import { TAB_TYPE } from '../types';
+import { ACCOUNT_TAB_KEY } from '../constants';
 enum RESET_PW_STEP {
   STEP1 = 1,
   STEP2 = 2,
@@ -34,7 +35,7 @@ const ResetPwd = () => {
   const { email, phone, curTab, emailCode, smsCode, password, countryCode, showGaVerify } = store;
   const passwordsMatch = initPwd === confirmPwd;
   const shouldDisableResetPwdBtn = !passwordsMatch || initPwdError || confirmPwdError || !password; //两次密码不匹配或者第一个密码无效或者第二个密码无效
-  const account = curTab === 1 ? email : countryCode + phone;
+  const account = curTab === ACCOUNT_TAB_KEY.EMAIL ? email : countryCode + phone;
 
   const handleConfirm = async () => {
     if (shouldDisableReceiveCodeBtn) {
@@ -83,7 +84,7 @@ const ResetPwd = () => {
   // 获取验证码阶段
   const renderVerificationCodePanel = () => {
     // 邮箱验证码
-    if (curTab === 1) {
+    if (curTab === ACCOUNT_TAB_KEY.EMAIL) {
       return (
         <div className='step2-reset-password'>
           <h4>{LANG('重置登录密码')}</h4>
@@ -118,40 +119,43 @@ const ResetPwd = () => {
           </Button>
         </div>
       );
-    }
-    // 手机验证码
-    return (
-      <div className='step2-reset-password'>
-        <h4>{LANG('重置登录密码')}</h4>
-        <InputVerificationCode
-          type={LOCAL_KEY.INPUT_VERIFICATION_PHONE}
-          autoSend
-          scene={SENCE.FORGOT_PASSWORD}
-          withBorder
-        />
-        <p className='step2-tips'>
-          {LANG('请输入{account}收到的验证码', { account: hidePartialOfPhoneOrEmail(phone) })}
-        </p>
-        {showGaVerify ? (
-          <BasicInput
-            label={LANG('谷歌验证码')}
-            placeholder={LANG('请输入Google验证码')}
-            type={INPUT_TYPE.CAPTCHA}
+    } else if (curTab === ACCOUNT_TAB_KEY.PHONE) {
+      // 手机验证码
+      return (
+        <div className='step2-reset-password'>
+          <h4>{LANG('重置登录密码')}</h4>
+          <InputVerificationCode
+            type={LOCAL_KEY.INPUT_VERIFICATION_PHONE}
+            autoSend
+            scene={SENCE.FORGOT_PASSWORD}
             withBorder
-            value={gaCode}
-            onInputChange={onInputGaCodeChange}
           />
-        ) : null}
-        <Button
-          type='primary'
-          style={{ width: '100%', padding: '14px 0' }}
-          onClick={handleConfirm}
-          disabled={shouldDisableReceiveCodeBtn}
-        >
-          {LANG('确定')}
-        </Button>
-      </div>
-    );
+          <p className='step2-tips'>
+            {LANG('请输入{account}收到的验证码', { account: hidePartialOfPhoneOrEmail(phone) })}
+          </p>
+          {showGaVerify ? (
+            <BasicInput
+              label={LANG('谷歌验证码')}
+              placeholder={LANG('请输入Google验证码')}
+              type={INPUT_TYPE.CAPTCHA}
+              withBorder
+              value={gaCode}
+              onInputChange={onInputGaCodeChange}
+            />
+          ) : null}
+          <Button
+            type='primary'
+            style={{ width: '100%', padding: '14px 0' }}
+            onClick={handleConfirm}
+            disabled={shouldDisableReceiveCodeBtn}
+          >
+            {LANG('确定')}
+          </Button>
+        </div>
+      );
+    } else {
+      return null;
+    }
   };
   const onInputNewPwd = (value: string, hasError: boolean = false) => {
     setInputState((draft) => {

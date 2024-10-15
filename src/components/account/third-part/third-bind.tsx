@@ -6,6 +6,7 @@ import { getUrlQueryParams } from '@/core/utils/src/get';
 import { useEffect } from 'react';
 import { LoginButton } from '../login/login-btn';
 import { store } from '../store';
+import { ACCOUNT_TAB_KEY } from '../constants';
 
 export const ThirdBind = ({ onLoginSuccess }: { onLoginSuccess: any }) => {
   const trace = getUrlQueryParams('trace');
@@ -19,7 +20,7 @@ export const ThirdBind = ({ onLoginSuccess }: { onLoginSuccess: any }) => {
   }, []);
 
   useEffect(() => {
-    store.curTab = 2;
+    store.curTab = ACCOUNT_TAB_KEY.THIRD_BIND;
     store.trace = trace || '';
     store.email = email || '';
   }, []);
