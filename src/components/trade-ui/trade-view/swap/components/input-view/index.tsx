@@ -84,7 +84,7 @@ export const InputView = () => {
             onChange={(v: any) => Swap.Trade.onPriceChange(v)}
             onBlur={(e: any, next: any) => {
               if (!Swap.Trade.store.price) {
-                Swap.Trade.onPriceChange(Swap.Utils.getNewPrice(quoteId));
+                Swap.Trade.onPriceChange(Swap.Utils.getNewestPrice());
               } else {
                 next();
               }
@@ -99,7 +99,7 @@ export const InputView = () => {
                   className={clsx('newest')}
                   onClick={() =>
                     Swap.Trade.onPriceChange(
-                      Swap.Utils.minChangeFormat(cryptoData.minChangePrice, Swap.Utils.getNewPrice(quoteId))
+                      Swap.Utils.minChangeFormat(cryptoData.minChangePrice, Swap.Utils.getNewestPrice())
                     )
                   }
                 >

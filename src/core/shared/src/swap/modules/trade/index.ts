@@ -5,7 +5,7 @@ import { DEFAULT_SPSL_VALUE, TradeField } from './field';
 import { Loading } from '@/components/loading';
 import { postSwapAddOtocoApi } from '@/core/api';
 import { LANG } from '@/core/i18n';
-import { message } from '@/core/utils';
+import { message,playAudio } from '@/core/utils';
 import { assetsInstance as Assets } from '../assets';
 import { SWAP_BOUNS_WALLET_KEY } from '../assets/constants';
 import { Calculate } from '../calculate';
@@ -266,6 +266,8 @@ export class Trade extends TradeField {
     const onDone = (data: any) => {
       if (data && data.code === 200) {
         this.onResetTradeForm();
+        message.success(LANG('下单成功'), 1);
+        playAudio('/static/music/swap_order_sound.mp3');
       } else {
         message.error(data.message, 1);
       }
