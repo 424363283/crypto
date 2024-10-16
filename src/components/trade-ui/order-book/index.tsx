@@ -42,7 +42,10 @@ export const OrderBook = ({ type }: { type: ORDER_BOOK_TYPES }) => {
   const { list } = store;
   const setList = (v: any) => (store.list = v);
 
-  useWs(SUBSCRIBE_TYPES.ws4001, (data) => setMarketDetail(data));
+  useWs(SUBSCRIBE_TYPES.ws4001, (data) => {
+    Swap.Utils.setNewestPrice(data?.price);
+    setMarketDetail(data)
+  });
   useWs(SUBSCRIBE_TYPES.ws7001, (data) => setList(data));
 
   const isSpotOrderBook = type === ORDER_BOOK_TYPES.SPOT;

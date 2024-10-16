@@ -3,9 +3,23 @@ import { SwapTradeItem } from '../../../trade/trade-map';
 import { tradeInstance as Trade } from '../trade';
 
 export class Utils {
+  static newestPrice: number | null = null;
+  /* 这个价格看起来是标记价 */
   static getNewPrice = (id: string) => {
     return Number(Markets.markets[id]?.price) || 0;
   };
+
+  static setNewestPrice = (price:number) => {
+    Utils.newestPrice = price;
+    return price;
+  }
+
+  /* 获取最新价 */
+  static getNewestPrice = () => {
+    return Utils.newestPrice;
+  };
+
+
   static minChangeFormat = (change: number, value: string | number) => {
     let str = value.div(change) + '';
     if (/\./.test(str)) {
