@@ -18,7 +18,7 @@ const LoginSwitchLoginReg = () => {
     </div>
   );
 };
-export { LoginSwitchLoginReg as LoginSwitchLgoinReg };
+export { LoginSwitchLoginReg };
 
 const styles = css`
   .login-switch-login-reg-wrapper {
