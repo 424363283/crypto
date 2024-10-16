@@ -137,8 +137,6 @@ export const EntryPoint = () => {
           </Tabs>
           : TABS_MAP[lastPath][0].children
         }
-        {false ? ROUTE_PATH_KEY.LOGIN === lastPath && <ThirdPartBtns /> : null}
-        {false ? FOOTER_MAP[lastPath] : null}
         <SecurityVerify />
         <style jsx>{styles}</style>
       </div>
