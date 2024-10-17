@@ -179,7 +179,7 @@ export const useWalletButton = (type: WalletType, { onWalletCreateClick }: { onW
   const getTradeLink = () => {
     const isUsdtType = type === WalletType.ASSET_SWAP_U;
     if (type === WalletType.ASSET_SWAP || type === WalletType.ASSET_SWAP_U) {
-      return isUsdtType ? '/swap/btc-usdt' : '/swap/btc-usd';
+      return isUsdtType ? '/swap/btc-usdt' : '/swap/btc-usdt';
     }
     if (type === 'asset-lite') {
       return '/lite/btcusdt';
