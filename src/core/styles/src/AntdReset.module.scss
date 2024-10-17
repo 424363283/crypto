@@ -1,0 +1,167 @@
+@import '@/styles/size-variables.scss';
+.antTooltip {
+  border-radius: var(--radius-xs, 4px);
+
+  :global {
+    .ant-tooltip-inner {
+      color: var(--text-text-primary);
+      background: var(--fill-secondary-bg);
+      font-size: 12px;
+      box-shadow: 0px 6px 20px 0px rgba(27, 30, 46, 0.1);
+      z-index: 100;
+    }
+
+    .ant-tooltip-placement-bottomLeft {
+
+      .ant-tooltip-arrow::after,
+      .ant-tooltip-arrow-content::after {
+        background: var(--fill-secondary-bg);
+      }
+    }
+
+    .ant-tooltip-arrow::before,
+    .ant-tooltip-arrow-content::before {
+      background: var(--fill-secondary-bg);
+    }
+  }
+}
+
+.antSlider {
+  --slider-track-bg: rgb(255, 143, 52);
+  --slider-handle-shadow-3: rgb(255, 143, 52, 0.3);
+  --slider-handle-shadow-12: rgb(255, 143, 52, 0.12);
+
+  :global {
+    .ant-slider-with-marks {
+      margin-bottom: 8px;
+    }
+
+    .ant-slider-mark {
+      display: none !important;
+    }
+
+    .ant-slider-mark-text {
+      color: var(--text-text-primary, #fff);
+      font-size: 12px;
+      font-weight: 400;
+      opacity: 0.4;
+    }
+
+    .ant-slider:hover {
+      background-color: transparent;
+
+      & .ant-slider-rail {
+        background: var(--fill-btn-secondary) !important;
+      }
+
+      & .ant-slider-track {
+        background: var(--slider-track-bg) !important;
+      }
+
+      & .ant-slider-handle:not(.ant-tooltip-open) {
+        background-color: var(--bg-page-secondary) !important;
+      }
+    }
+
+    .ant-slider-handle {
+      border: 2px solid var(--slider-track-bg);
+      background-color: var(--text-text-white-static, #fff);
+      width: 12px;
+      height: 12px;
+      overflow: hidden;
+      border-radius: 50%;
+      top: -1px;
+
+      &::before {
+        box-shadow: 0px 0px 0px 6px var(--slider-handle-shadow-3) !important;
+      }
+
+      &:focus {
+        box-shadow: 0px 0px 0px 6px var(--slider-handle-shadow-12);
+      }
+    }
+
+    .ant-slider-rail {
+      height: 2px;
+      background-color: var(--fill-btn-secondary, #36363a) !important;
+    }
+
+    .ant-slider-dot {
+      background-color: var(--fill-page-primary, #121212) !important;
+      border: 2px solid var(--fill-btn-secondary, #36363a) !important;
+      top: -3px;
+    }
+
+    .ant-slider-track {
+      height: 2px;
+      background-color: var(--slider-track-bg) !important;
+    }
+
+    .ant-slider-dot-active {
+      border: 2px solid var(--slider-track-bg) !important;
+    }
+  }
+}
+
+.antTabs {
+
+  :global {
+    .ant-tabs-nav-list {
+      padding-bottom: 4px;
+    }
+
+    .ant-tabs-nav {
+      margin: 0;
+
+      .ant-tabs-nav-operations,
+      &::before {
+        display: none;
+      }
+    }
+
+    .ant-tabs-tab {
+      min-height: 24px;
+      height: 24px;
+      line-height: 20px;
+      padding: 0;
+    }
+
+    .ant-tabs-tab,
+    .ant-tabs-tab:hover,
+    .ant-tabs-tab-btn:focus,
+    .ant-tabs-tab-btn:hover,
+    .ant-tabs-tab-remove:focus,
+    .ant-tabs-tab-btn:active,
+    .ant-tabs-tab-remove:active {
+      color: var(--text-text-tertiary) !important;
+    }
+
+    .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+      color: var(--text-text-primary) !important;
+      box-shadow: none;
+    }
+
+    .ant-tabs-ink-bar {
+      background: #f08834;
+    }
+  }
+}
+
+@media (max-width: $sm ) {
+
+  .antSlider {
+    :global{
+   .ant-slider-handle {
+
+      &::before {
+        box-shadow: none !important;
+      }
+
+      &:focus {
+        box-shadow: none !important;
+      }
+    }
+    }
+  }
+
+}

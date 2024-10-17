@@ -1,0 +1,46 @@
+.g-message {
+  .ant-message-notice-content {
+    // 最外层容器
+    padding: 5px 10px;
+    box-shadow: 0px 2px 6px 0px rgba(27, 30, 46, 0.10);
+    background: var(--fill-page-secondary, #1d1d21);
+    color: var(--text-text-primary, #fff);
+    border-radius: 2px;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 9px !important;
+    text-align: left;
+  }
+
+  .ant-message-custom-content {
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .bhex-icon {
+    font-size: 24px !important;
+    margin-right: 4px;
+  }
+
+  .bhex-icon-info {
+    color: #3375e0;
+  }
+
+  .bhex-icon-suspended1 {
+    color: #fcb71e;
+  }
+
+  .bhex-icon-delete {
+    transform: scale(0.85);
+    color: #f73a46;
+  }
+
+  .bhex-icon-check {
+    color: #51d372;
+  }
+
+  .bhex-icon-info {
+    color: #f08834;
+  }
+}

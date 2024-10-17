@@ -1,0 +1,129 @@
+.antdModalWrap {
+  :global {
+    .ant-modal-content {
+      border-radius: 16px;
+      background: var(--fill-page-secondary, #ffffff);
+      padding: 0;
+    }
+
+    .ant-modal-body {
+      padding: 0;
+    }
+  }
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--line-border);
+  color: var(--text-text-primary);
+
+  h3 {
+    color: var(--text-text-primary);
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 500;
+  }
+
+  :global {
+    .close-btn {
+      color: var(--text-text-tertiary);
+      cursor: pointer;
+      pointer-events: fill;
+
+      &:hover {
+        opacity: 0, 8;
+      }
+    }
+  }
+}
+
+.modalContent {
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--text-text-tertiary, #717171);
+    border-radius: 8px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--text-text-tertiary, #717171);
+    }
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 8px;
+  }
+}
+
+.modalContent {
+  padding: 24px;
+
+  max-height: calc(480px - 61px - 88px);
+  overflow-y: auto;
+
+  color: var(--text-text-secondary);
+
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+
+  p {
+    word-break: break-all;
+  }
+
+  // p+p {
+  //   margin-top: 24px;
+  // }
+}
+
+.modalFooter {
+  padding: 16px 24px 24px 24px;
+  display: flex;
+  gap: 8px;
+
+  :global {
+    .ant-btn {
+      flex: 1;
+      height: 40px;
+      line-height: 40px;
+      padding: 0 12px;
+      border-radius: 30px;
+      border: none;
+      color: var(--text-text-primary);
+      text-align: center;
+      font-size: 14px;
+
+      &.cancel {
+        background: var(--fill-btn-secondary);
+        color: var(--text-text-primary) !important;
+
+        &:hover {
+          color: var(--text-text-primary) !important;
+        }
+      }
+
+      &.primary {
+        color: var(--text-text-on-btn) !important;
+        background: var(--theme-theme-normal);
+
+        &:hover {
+          color: var(--text-text-on-btn) !important;
+        }
+      }
+
+      &:disabled {
+        opacity: 0.7;
+      }
+    }
+  }
+}

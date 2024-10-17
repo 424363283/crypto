@@ -1,0 +1,103 @@
+.chartMenuWrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  position: relative;
+
+  :global {
+    .selected {
+      color: var(--theme-theme-normal) !important;
+    }
+
+    .ant-select-single {
+      height: 22px;
+    }
+
+    .ant-select-selection-item {
+      line-height: 22px !important;
+    }
+
+    .ant-select-selector {
+      background-color: var(--fill-input-default) !important;
+      border-radius: 4px;
+      border: none !important;
+      padding: 0px !important;
+      color: var(--text-text-secondary);
+      box-shadow: none  !important;
+    }
+
+    .ant-select-selection-item {
+      color: var(--text-text-secondary, #a5a8ac) !important;
+      font-size: 12px;
+    }
+
+    .ant-select-selection-search {
+      display: none;
+    }
+
+    .ant-select-arrow {
+      inset-inline-end: 5px;
+    }
+  }
+}
+
+.chartMenu {
+  color: var(--text-text-secondary);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px;
+  margin: 0 !important;
+  background: transparent !important;
+
+  &:not(:disabled) {
+    cursor: pointer;
+
+    &:hover {
+      color: var(--theme-theme-normal) !important;
+    }
+  }
+
+
+}
+
+.popupClassName {
+  background: var(--bg-page-secondary, #1d1d21);
+  padding: 0px !important;
+  border-radius: 2px !important;
+  min-width: 100px;
+  :global {
+    .ant-select-item {
+      background-color: var(--fill-page-secondary, #1d1d21);
+      padding: 5px 2px !important;
+      text-align: center;
+      min-height: 28px;
+      border-radius: 0px !important;
+
+
+      &:hover {
+        color: var(--bg-btn-primary, #ff8f34) !important;
+        background: var(--fill-page-tertiary, #26262b) !important;
+      }
+    }
+
+    .ant-select-item-option-active {
+      background-color: var(--fill-page-secondary, #1d1d21);
+    }
+
+    .ant-select-item-option-selected,
+    .ant-select-item-option-disabled {
+      background-color: var(--fill-page-secondary, #1d1d21);
+    }
+
+    .ant-select-item-option {
+      background-color: var(--fill-page-secondary, #1d1d21) !important;
+      color: var(--text-text-primary, #fff) !important;
+      font-size: 12px !important;
+      font-weight: 500 !important;
+    }
+  }
+}

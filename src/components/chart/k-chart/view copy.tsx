@@ -14,7 +14,6 @@ import { DeepChart } from './lib/deep-chart';
 import { KlineChart } from './lib/kline-chart';
 import { TradingView } from './lib/trading-view';
 import { getKlineBoxId } from './utils';
-import Kline from '@/components/Kline'
 
 export enum TRADINGVIEW_SYMBOL_TYPE {
   SPOT = 'Spot',
@@ -79,7 +78,72 @@ const KChartComponent = ({
 
   return (
     <>
-    <Kline/>
+      <div className='k-box' id={getKlineBoxId(qty)}>
+        <KHeader id={id as string} qty={qty} klineGroupMode={klineGroupMode} />
+        <Loading.wrap
+          style={{ position: 'relative', flex: 1 }}
+          isLoading={isLoading}
+          background={'var(--theme-trade-bg-color-2)'}
+        >
+          <OnceRender render={kType === KTYPE.K_LINE_CHART}>
+            {id && (
+              <KlineChart
+                showCrosshairOrderBtn={showCrosshairOrderBtn}
+                qty={qty}
+                id={klineId as string}
+                theme={theme as string}
+                resolution={resolution}
+                isReverse={!isMobile ? setting.revesePreview : false}
+                showOrdebok={!isMobile ? setting.orderBookPrice : false}
+                showCountdown={!isMobile ? setting.countdown : false}
+                showPriceLine={!isMobile ? setting.newPrice : false}
+                vol
+                holc
+              />
+            )}
+            <CommonIcon onClick={backDate} className='double-right' name='kline-doubleRight' size={26} />
+          </OnceRender>
+          <OnceRender render={kType === KTYPE.TRADING_VIEW}>
+            {id && (
+              <TradingView
+                qty={qty}
+                symbolType={symbolType}
+                id={id}
+                theme={theme}
+                resolution={resolution}
+                language={locale}
+              />
+            )}
+          </OnceRender>
+          <OnceRender render={kType === KTYPE.DEEP_CHART}>
+            {id && <DeepChart id={id} theme={theme} qty={qty} />}
+          </OnceRender>
+        </Loading.wrap>
+      </div>
+      <style jsx>
+        {`
+          .k-box {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            color: var(--theme-trade-text-color-1);
+            overflow: hidden;
+            background-color: var(--theme-background-color-1);
+          }
+          .k-box.k-full-screen {
+            position: fixed;
+          }
+
+          :global(.double-right) {
+            position: absolute;
+            right: 66px;
+            bottom: 35px;
+            cursor: pointer;
+            z-index: 9999;
+          }
+        `}
+      </style>
     </>
   );
 };
