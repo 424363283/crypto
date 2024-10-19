@@ -27,6 +27,9 @@ class CustomWebSocket {
     this.connect();
   }
 
+  public setMessageHandler(handler: (response: any) => void): void {
+    this.onmessage = handler;
+}
   private connect(): void {
     if (this.ws) return;
 
@@ -38,6 +41,8 @@ class CustomWebSocket {
   }
 
   private onmessage(event: MessageEvent): void {
+
+
     WorkerStore.wsWorker.parse(event.data).then((data: any) => {
       if (data.cmid === SUBSCRIBE_TYPES.ws3001) {
         Markets.onMessage(data, this.type);

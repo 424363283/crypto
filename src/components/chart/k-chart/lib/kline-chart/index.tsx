@@ -214,7 +214,7 @@ const KlineChartUI = ({
   );
   // 实时数据
   useWs(
-    SUBSCRIBE_TYPES.wsim4001,
+    SUBSCRIBE_TYPES.ws4001,
     (data) => {
       if (data.id != id) {
         return;

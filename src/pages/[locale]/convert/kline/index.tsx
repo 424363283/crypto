@@ -21,7 +21,7 @@ const Kline = ({ coin = 'BTC', price = '' }: { coin: string; price: string }) =>
     };
   }, [coin]);
 
-  useWs(SUBSCRIBE_TYPES.ws4001, (item: Item) => setData(item));
+  // useWs(SUBSCRIBE_TYPES.ws4001, (item: Item) => setData(item));
 
   return (
     <>

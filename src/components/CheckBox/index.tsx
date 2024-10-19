@@ -1,6 +1,5 @@
 import noop from 'lodash/noop';
 import { Icon } from '@/components/YIcons';
-import './index.scss';
 import { ReactNode } from 'react';
 
 const IconsMap = {
@@ -10,7 +9,7 @@ const IconsMap = {
   checkboxLight: '<rect x="3.40796" y="2.54816" width="11" height="11" rx="1.5" stroke="#717171"/>'
 };
 
-function CheckIcon({ name, ...props }: { name: string; [key: string]: any }) {
+function CheckIcon({ name, ...props }: { name: string;[key: string]: any }) {
   if (!IconsMap[name as keyof typeof IconsMap]) return null;
 
   return <Icon name={name} value={IconsMap[name as keyof typeof IconsMap]} size={20} {...props} />;
@@ -27,10 +26,37 @@ export default function CheckBox(props: {
   const iconName = checked ? 'checkboxChecked' : theme && /^light$/gi.test(theme) ? 'checkboxLight' : 'checkbox';
 
   return (
-    <label className={`icon-checkbox ${disabled ? 'icon-checkbox-disabled' : ''}`} onClick={() => onChange(!checked)}>
-      <CheckIcon name={iconName} width="16" height="17" viewBox="0 0 16 17" />
-      <span>{label}</span>
-    </label>
+    <>
+      <label className={`icon-checkbox ${disabled ? 'icon-checkbox-disabled' : ''}`} onClick={() => onChange(!checked)}>
+        <CheckIcon name={iconName} width="16" height="17" viewBox="0 0 16 17" />
+        <span>{label}</span>
+      </label>
+      <style jsx>
+        {`
+       .icon-checkbox {
+  display: inline-flex;
+  align-items: center;
+
+  &.icon-checkbox-disabled {
+    opacity: 0.6
+  }
+
+  &:not(.icon-checkbox-disabled) {
+    cursor: pointer
+  }
+
+  & span {
+    white-space: nowrap;
+    margin-left: 2px;
+    color: #000;
+    font-size: 12px;
+    font-weight: 500;
+  }
+}
+          `}
+      </style>
+    </>
   );
 }
+
 

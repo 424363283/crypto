@@ -171,6 +171,7 @@ class Kline {
       fetchApi(this.id, this.resolution.markingType || 1)
         .then((res) => {
           if (res?.code === 200) {
+            console.log("获取历史数据",res.data)
             kChartEmitter.emit(kChartEmitter.K_CHART_SET_ORDER_MARKING_DATA, res?.data);
           }
         })

@@ -1,0 +1,130 @@
+// @import '@/styles/size-variables.scss';
+.TimeSelectionContent {
+  .headerChange {
+    display: flex;
+
+    .leftTitle {
+      flex: 1;
+      font-size: 14px;
+      color: var(--text-text-primary);
+      font-style: normal;
+      font-weight: 500;
+    }
+  }
+
+  .timeListContent {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .timeBtn {
+    display: flex;
+    padding: 1px 8px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    color: var(--text-text-tertiary, #9fa1a6);
+    box-sizing: border-box;
+    min-width: 66px;
+    &:hover {
+      border-radius: 4px;
+      background: var(--functional-orange-1, rgba(255, 143, 52, 0.1));
+      color: var(--theme-theme-normal, #ff8f34);
+    }
+  }
+}
+
+.selectTimeBtn {
+  border-radius: 4px;
+  border: 1px solid var(--text-text-tertiary, #9fa1a6);
+  background: var(--fill-page-tertiary, #f4f5f6);
+}
+
+.timeBtnContent {
+  width: 320px;
+  background-color: var(--special-mask);
+  border-radius: 8px;
+  :global {
+    .ant-popover-inner {
+      padding: 16px !important;
+      background: var(--fill-page-secondary);
+      bottom: 0
+    }
+
+    .ant-popover-content {
+      background-color: transparent;
+      border-radius: 4px;
+    }
+  }
+}
+
+.activeBtn {
+  border-radius: 4px;
+  border: 1px solid var(--theme-theme-normal, #ff8f34);
+  background: var(--functional-orange-1, rgba(255, 143, 52, 0.1));
+  color: var(--theme-theme-normal, #ff8f34);
+}
+
+.selectIcon {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+}
+
+.rightTitle {
+  color: var(--theme-theme-normal, #ff8f34);
+  font-weight: 500;
+
+  span {
+    cursor: pointer;
+  }
+}
+
+.reset {
+  margin-right: 16px;
+}
+
+.KlineSelectIcon {
+  height: calc(100% - 6px);
+  display: flex;
+  align-items: center;
+  margin-left: -10px;
+  cursor: pointer;
+
+  svg {
+    transition: all 0.2s ease;
+
+    &:hover path {
+      fill: #ff7800;
+    }
+  }
+}
+
+.arrowUp {
+  svg {
+    transform: rotate(-180deg);
+  }
+}
+
+// @media screen and (max-width: $sm) {
+//   .timeBtnContent {
+//     width: 100vw;
+//   }
+//   .TimeSelectionContent {
+//     .timeBtn {
+//       width: calc((100% - 4 * 8px) / 5);
+//     }
+//   }
+// }
+
+// @media screen and (max-width: $xxs) {
+//   .TimeSelectionContent {
+//     .timeBtn {
+//       width: calc((100% - 3 * 8px) / 4);
+//     }
+//   }
+// }

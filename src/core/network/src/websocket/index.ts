@@ -64,7 +64,8 @@ class WS {
     }
   }
 
-  public static async subscribe4001(ids: string[], r?: number): Promise<void> {
+  public static async subscribe4001(ids: string[], r?: number, callback?: (response: any) => void): Promise<void> {
+  // public static async subscribe4001(ids: string[], r?: number): Promise<void> {
     const id = ids.join(',');
     // if (WS.id === id) return console.log('4001-请勿重复订阅...', id);
     if (WS.id) await this.unsubscribe4001(WS.id);
@@ -73,7 +74,9 @@ class WS {
 
     if (isSwapSL(id)) {
       const { swapSLQuoteDomains } = await Group.getInstance();
+     
       this.WsSwapSL = this.WsSwapSL || new CustomWebSocket(swapSLQuoteDomains, wsType.SWAP_SL);
+      console.log("订阅数据1",this.WsSwapSL ,data)
       this.WsSwapSL?.send(data);
       return;
     }
@@ -81,6 +84,7 @@ class WS {
     if (isSwap(id)) {
       const { swapQuoteDomains } = await Group.getInstance();
       this.WsSwap = this.WsSwap || new CustomWebSocket(swapQuoteDomains, wsType.SWAP);
+      console.log("订阅数据2",this.WsSwap ,data)
       this.WsSwap?.send(data);
       return;
     }
@@ -88,6 +92,7 @@ class WS {
     if (isSpot(id) || isLite(id)) {
       const { spotQuoteDomains } = await Group.getInstance();
       this.WsSpotLite = this.WsSpotLite || new CustomWebSocket(spotQuoteDomains, wsType.SPOT_LITE);
+      console.log("订阅数据3",this.WsSpotLite ,data)
       this.WsSpotLite?.send(data);
       return;
     }

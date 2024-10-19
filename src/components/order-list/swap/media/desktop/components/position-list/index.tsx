@@ -179,14 +179,21 @@ export const PositionList = ({
             return `${rate.toFixed(2)}%`;
           };
 
+
+          // console.log('获取当前持仓数据',list)
           kChartEmitter.emit(
             kChartEmitter.K_CHART_POSITION_UPDATE,
             list
               .filter((e: { subWallet: string }) => e?.subWallet === walletId)
               .map((item: any) => {
                 return {
+                  symbolId:item.symbol,
+                  avgPrice:item.avgCostPrice,
+                  unrealizedPnl:item.income,
+                  leverage:item.leverage,//杠杠倍数
                   id: item.positionId,
                   side: item.side,
+                  
                   sideText: item.side === '1' ? LANG('多') : LANG('空'),
                   openPrice: formatNumber2Ceil(
                     item.avgCostPrice,

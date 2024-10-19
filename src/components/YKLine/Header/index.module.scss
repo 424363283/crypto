@@ -1,0 +1,357 @@
+// @import '@/styles/size-variables.scss';
+// @import '@/styles/AntdReset.module.scss';
+
+.headerContainer {
+  background: #ffffff;
+  border-bottom: 1px solid #F4F5F6;
+  padding: 0 16px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 99;
+}
+
+.header {
+  display: flex;
+  height: 28px;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+}
+
+.headerScrollArrow {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  width: 14px;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 100;
+  cursor: pointer;
+  &::before {
+    content: "";
+    display: inline;
+    width: 4px;
+    height: 4px;
+    position: absolute;
+    margin: auto;
+    transform-origin: center;
+    border-top: solid 1px #787D83;
+  }
+  &.left {
+    left: 0;
+    &::before {
+      border-left: solid 1px #787D83;
+      transform: rotate(-45deg);
+      left: 6px;
+    }
+  }
+  &.right {
+    right: 0;
+    &::before {
+      border-right: solid 1px #787D83;
+      transform: rotate(45deg);
+      right: 6px;
+    }
+  }
+}
+
+.kline_btn {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  // border-right: 1px solid #E8E9EA;
+  color:#787D83;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.headerLine {
+  margin-left: 8px;
+}
+
+.RightsetTing {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: #787D83;
+  cursor: pointer;
+
+  span {
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+  }
+
+  :global {
+    .ant-select-single {
+      height: 22px;
+    }
+
+    .ant-select-selection-item {
+      line-height: 22px !important;
+    }
+
+    .ant-select-selector {
+      background-color: #F4F5F6 !important;
+      border-radius: 4px;
+      border: none !important;
+      padding: 0px !important;
+      color: #787D83;
+      box-shadow: none !important;
+    }
+
+    .ant-select-selection-item {
+      color: #787D83 !important;
+      font-size: 12px;
+    }
+
+    .ant-select-arrow {
+      inset-inline-end: 5px;
+    }
+  }
+}
+
+.RightBtn {
+  flex: 1;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  color: #787D83;
+  font-size: 12px;
+  font-style: normal;
+  margin-left: 14px;
+
+  span {
+    margin-left: 12px;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.6;
+      color: #ff8f34;
+    }
+  }
+}
+
+.timeBtn {
+  span {
+    cursor: pointer;
+    display: inherit;
+    margin-top: -1px;
+    text-align: center;
+    margin-right: 10px;
+    opacity: 0.6;
+
+    &:hover {
+      color: #ff8f34;
+    }
+  }
+}
+
+.activeTimeBtnBtn {
+  color: #ff8f34;
+
+  span {
+    opacity: 1;
+
+    &:hover {
+      color: #ff8f34;
+    }
+  }
+}
+
+//header
+.headerLine {
+  height: 16px;
+  width: 1px;
+  background: #eeeeee;
+}
+
+
+.popoverWrapper {
+  min-width: 99px;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  .popoverContent {
+    color: #2B2F33;
+    font-size: 12px;
+  }
+
+  .popoverItem {
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+    height: 36px;
+    fill: #787D83;
+    stroke: #787D83;
+    color:#2B2F33;
+    border-radius: 4px;
+    cursor: pointer;
+    &:hover, &.selected {
+      fill: #ff8f34;
+      stroke: #ff8f34;
+      color: #ff8f34;
+      background-color: #F4F5F6;
+    }
+  }
+}
+
+.headerIcon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  fill: #787D83;
+  stroke: #787D83;
+  // &:hover {
+  //   fill: var(--text-text-primary);
+  //   stroke: var(--text-text-primary);
+  //   .arrow {
+  //     border-top-color: var(--text-text-primary);
+  //   }
+  // }
+  .arrow {
+    width: 12px;
+    height: 12px;
+    transform: rotate(0);
+    transform-origin: center;
+    transition: transform .2s ease-in;
+  }
+  .rotate {
+    transform: rotate(180deg);
+  }
+}
+
+.PopoverConfig {
+  :global {
+    .ant-popover-inner {
+      background: var(--bg-page-secondary, #1d1d21);
+      border-radius: 8px;
+      padding: 0px !important;
+
+      & .timeUl {
+        li {
+          padding: 4px 10px;
+          line-height: 20px;
+          cursor: pointer;
+          color: #6a6e73;
+
+          &:hover {
+            color: #ff8f34;
+          }
+        }
+      }
+    }
+
+    .ant-popover-arrow {
+      display: none;
+    }
+
+    .ant-checkbox-checked .ant-checkbox-inner {
+      background-color: #ff8f34;
+      border-color: #ff8f34;
+      color: #ffffff;
+    }
+
+    .ant-checkbox {
+      color: #ffffff;
+    }
+
+    .ant-checkbox:hover {
+      border-color: #ff8f34;
+    }
+
+    .ant-checkbox-checked::after {
+      border-color: #ff8f34;
+    }
+
+    .ant-checkbox + span {
+      padding-left: 10px;
+      padding-right: 0px;
+    }
+
+    .ant-checkbox-inner {
+      background-color: #323232;
+      border: 1px solid #ff8f34;
+    }
+
+    .ant-checkbox-wrapper:hover .ant-checkbox-inner,
+    .ant-checkbox:hover .ant-checkbox-inner,
+    .ant-checkbox-input:focus + .ant-checkbox-inner {
+      border: 1px solid #ff8f34;
+    }
+
+    .ant-checkbox-checked.ant-checkbox-inner::after {
+      position: absolute;
+      display: table;
+      border: 2px solid #323232;
+      border-top: 0;
+      border-left: 0;
+      transform: rotate(45deg) scale(1) translate(-50%, -50%);
+      opacity: 1;
+      transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+      content: ' ';
+    }
+  }
+}
+
+.onlyDepthChart {
+  display: flex;
+  justify-content: flex-end;
+  height: 28px;
+  padding: 0px 16px;
+  z-index: 99;
+  background: #ffffff;
+}
+
+.popupClassName {
+  background: var(--bg-page-secondary, #1d1d21);
+  padding: 0px !important;
+  border-radius: 2px !important;
+
+  :global {
+    .ant-select-item {
+      background-color: #FFFFFF;
+      padding: 5px 2px !important;
+      text-align: center;
+      min-height: 28px;
+      border-radius: 0px !important;
+
+      &:hover {
+        color: var(--bg-btn-primary, #ff8f34) !important;
+        background: var(--fill-page-tertiary, #26262b) !important;
+      }
+    }
+
+    .ant-select-dropdown {
+    }
+
+    .ant-select-item-option-active {
+      background-color: #FFFFFF;
+    }
+
+    .ant-select-item-option-selected,
+    .ant-select-item-option-disabled {
+      background-color: #FFFFFF;
+    }
+
+    .ant-select-item-option {
+      background-color: #FFFFFF !important;
+      color: #2B2F33!important;
+      font-size: 12px !important;
+      font-weight: 500 !important;
+    }
+  }
+}
+
+.historicalOrdersContent {
+  border-bottom: 1px dashed #2B2F33;
+}
+
+.maskContent {
+  position: absolute;
+  width: 100vw;
+  height: 100%;
+  left: 0px;
+  background: rgba(0, 0, 0, 0.6)
+}

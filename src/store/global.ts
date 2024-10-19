@@ -1,13 +1,5 @@
 import { StoreApi, UseBoundStore, create } from 'zustand';
-export enum ORDERBOOK_TRADING_TYPE {
-  BUY = 1, //买
-  SELL = 0 //卖
-}
-export enum _TRADING_UNIT_TYPE {
-  ZERO = 0, //张
-  ONE = 1, //币
-  TWO = 2 //USDT
-}
+import { ORDERBOOK_TRADING_TYPE, _TRADING_UNIT_TYPE } from '@/constants';
 
 const GlobalStore: UseBoundStore<StoreApi<GlobalStore>> = create(() => ({
   minPricePrecision: '',

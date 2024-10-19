@@ -14,7 +14,7 @@ import { DeepChart } from './lib/deep-chart';
 import { KlineChart } from './lib/kline-chart';
 import { TradingView } from './lib/trading-view';
 import { getKlineBoxId } from './utils';
-import Kline from '@/components/Kline'
+import Kline from '@/components/YKLine'
 
 export enum TRADINGVIEW_SYMBOL_TYPE {
   SPOT = 'Spot',

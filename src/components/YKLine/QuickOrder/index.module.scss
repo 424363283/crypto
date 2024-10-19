@@ -1,0 +1,114 @@
+.quickOrderContainer {
+  width: 338px;
+  height: 40px;
+  display: flex;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 50px;
+  position: absolute;
+  top: 30%;
+  left: 25%;
+  z-index: 999;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+
+%side-icon {
+  width: 16px;
+  color: var(--text-text-primary);
+  height: 40px !important;
+  background: var(--fill-page-tertiary);
+  cursor: pointer;
+  display: flex;
+  align-items: center
+}
+
+.leftIcon {
+  @extend %side-icon;
+}
+
+.rightIcon {
+  @extend %side-icon;
+}
+
+
+.quickValContent {
+  width: 104px;
+  background: var(--fill-page-tertiary);
+  padding-top: 3px;
+  border: 1px solid transparent;
+  font-size: 0;
+
+  &:global(.error) {
+    border-color: #EC4D5C;
+  }
+
+  &:active,
+  &:hover {
+    border-color: #f08834;
+  }
+}
+
+.quickTitle {
+  color: #787D83;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.quickValVal {
+  color: var(--text-text-primary, #fff);
+  padding: 0;
+  font-size: 12px !important;
+  box-sizing: border-box;
+  text-align: center;
+  caret-color: var(--theme-theme-normal, #ff8f34) !important;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  line-height: 17.5px;
+
+  &:focus {
+    border-color: transparent;
+    box-shadow: none;
+  }
+
+  &::placeholder {
+    color: var(--text-text-tertiary) !important;
+    font-size: 12px;
+    font-weight: normal;
+  }
+}
+
+%side-content {
+  width: 100px;
+  border-top: 2px solid transparent;
+  font-size: 12px;
+  text-align: center;
+  font-weight: 500;
+  padding: 2px 0px;
+  cursor: pointer;
+  color: var(--text-text-primary);
+}
+
+.quickBuyContent {
+  @extend %side-content;
+  background: var(--buy-content-bg);
+  border-color: var(--functional-green-3);
+
+  // &:hover {
+  //   background: var(--functional-green);
+  // }
+}
+
+.quickSellContent {
+  @extend %side-content;
+  background: var(--sell-content-bg);
+  border-color: var(--functional-red-3);
+
+  // &:hover {
+  //   background: var(--functional-red);
+  // }
+}
