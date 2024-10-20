@@ -98,6 +98,7 @@ const OriginalKLine: ForwardRefRenderFunction<
   const [subIndicators, setSubIndicators] = useState<string[]>([]);
 
   const [positionList, setPositionList] = useState<any>([]); //当前持仓线数据
+  const [tpSlList, setTpSlList] = useState<any>([]); //止盈止损列表数据
   const [historyOrderList, setHistoryOrderList] = useState<any>([
     {
       dealPrice: "68318.5",
@@ -346,6 +347,8 @@ const OriginalKLine: ForwardRefRenderFunction<
   kChartEmitter.on(kChartEmitter.K_CHART_POSITION_UPDATE, (data: any) => {
     // console.log("获取当前持仓",data)
     setPositionList(data);
+    setTpSlList(data[0]?.tpSlList);
+
     // chart.current?.setPositionOrder(data);
   });
 
@@ -376,6 +379,9 @@ const OriginalKLine: ForwardRefRenderFunction<
             backgroundColor,
             closeTooltip: "市价平仓",
             reverseTooltip: "反手开仓",
+            onOrderdrag:(e)=>{
+              console.log("eeeee")
+            },
             onReverseClick: () => {
               console.log("点击反手开仓");
             },
@@ -402,6 +408,58 @@ const OriginalKLine: ForwardRefRenderFunction<
     coinUnitLen,
     positionUnitType,
   ]);
+
+    // 绘制止盈止损
+    useEffect(() => {
+      if (widgetRef.current && showPositionLine) {
+        tpSlList.forEach((position) => {
+          if (position?.symbol === symbolSwapId) {
+          
+            let unrealizedPnl = position.unrealizedPnl;
+            const isLong = position?.side === "1";
+            const direction = isLong ? "做多 " : "SHORT "; //持仓方向
+            let profitLoss= position?.direction === "1"?'止盈':'止损'
+            let total = position?.direction === "1"?'预计止盈(---)':'预计止损(---)'
+            let closeTooltip=position?.direction === "1"?'取消止盈':'取消止损'
+            const profitLossColor = unrealizedPnl >= 0 ? Color.Green : Color.Red;
+            const directionColor = isLong ? Color.Green : Color.Red; //多/空
+            const isLight = theme === "light";
+            const tooltipColor = isLight ? "#3B3C45" : "#3B3C45";
+            const backgroundColor = isLight ? "#FFFFFF" : "#FFFFFF";
+            let price=Number(position?.triggerPrice)
+            widgetRef.current?.createPositionTPSLLine({
+              direction,
+              directionColor,
+              profitLoss:profitLoss,
+              profitLossColor,
+              price:price,
+              volume: `${total}`,
+              tooltipColor,
+              backgroundColor,
+              closeTooltip: closeTooltip,
+              // reverseTooltip: "反手开仓",
+        
+            });
+          }
+        });
+      }
+  
+      return () => {
+        if (widgetRef.current) {
+          widgetRef.current.removeAllPositionTPSLLine();
+        }
+      };
+    }, [
+      theme,
+      isLogin,
+      showPositionLine,
+      tpSlList,
+      symbolSwapId,
+      contractMultiplier,
+      coinUnitLen,
+      positionUnitType,
+    ]);
+
 
   // // 创建历史订单标记
   useEffect(() => {

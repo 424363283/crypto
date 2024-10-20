@@ -9,6 +9,9 @@ import timezone from 'dayjs/plugin/timezone';
 
 
 import positionLine, { PositionLineFigureKey } from './extension/positionLine';
+
+import positionTPTLLine, { PositionTPSLLineFigureKey } from './extension/positionTPTLLine';
+// import positionTPTLLine from './extension/positionTPTLLine'
 import historyOrderMark, { HistoryOrderMarkArrowDirection } from './extension/historyOrderMark';
 
 import { DatafeedSymbolInfo } from '../Datafeed';
@@ -44,7 +47,8 @@ export interface PositionLineOptions {
   reverseTooltip: string;
   tooltipColor: string;
   onReverseClick: () => void;
-  onCloseClick: () => void
+  onCloseClick: () => void,
+  onOrderdrag: (e) => void;
 }
 
 export interface HistoryOrderMarkOptions {
@@ -68,6 +72,7 @@ export default class Widget {
 
   constructor (options: WidgetOptions) {
     registerOverlay(positionLine);
+    registerOverlay(positionTPTLLine);
     registerOverlay(historyOrderMark);
     this._options = options;
     const containerId = options.container ?? 'bv_kline_chart';
@@ -298,7 +303,7 @@ export default class Widget {
   resetData () {
     this._getBars();
   }
-
+//创建持仓线
   createPositionLine(position: PositionLineOptions) {
     const key = `${position.price}`;
     const count = this._positionLineCountMap[key] ?? 0;
@@ -369,12 +374,12 @@ export default class Widget {
     });
     this._positionLineCountMap[key] = (this._positionLineCountMap[key] ?? 0) + 1;
   }
-
+//移除持仓线
   removeAllPositionLine () {
     this._positionLineCountMap = {};
     this._chart?.removeOverlay({ name: 'positionLine' });
   }
-
+//创建历史成交标记
   createHistoryOrderMark (orderMark: HistoryOrderMarkOptions) {
     const dataList = this._chart?.getDataList() ?? [];
     let candleData: Nullable<KLineData> = null;
@@ -444,10 +449,97 @@ export default class Widget {
       this._historyMarkCountMap[key] = (this._historyMarkCountMap[key] ?? 0) + 1;
     }
   }
-
+//移除历史成交标记
   removeAllHistoryOrderMark () {
     this._historyMarkCountMap = {};
     this._chart?.removeOverlay({ name: 'historyOrderMark' });
+  }
+  //创建止盈止损持仓线
+  createPositionTPSLLine(position: any) {
+    const key = `${position.price}`;
+    const count = this._positionLineCountMap[key] ?? 0;
+    this._chart?.createOverlay({
+      name: 'positionTPTLLine',
+      points: [{ value: position.price }],
+      extendData: {
+        ...position,
+        closeTooltip: '',
+        reverseTooltip: ''
+      },
+      styles: {
+        cursor: 'grab',
+        directionColor: position.directionColor,
+        profitLossColor: position.profitLossColor,
+        tooltipColor: position.tooltipColor,
+        backgroundColor: position.backgroundColor,
+        offsetLeft: 2 + count * 40
+      },
+      onClick: (event) => {
+        switch (event.figureKey) {
+          case PositionTPSLLineFigureKey.Close: {
+            position.onCloseClick();
+            break;
+          }
+          // case PositionTPSLLineFigureKey.Reverse: {
+          //   position.onReverseClick();
+          //   break;
+          // }
+        }
+        return true;
+      },
+      onPressedMoving:(event)=>{
+        console.log("拖动",event)
+        position.onOrderdrag(event);
+        return true; 
+      },
+      onPressedMoveEnd: (event) => {
+        position.onOrderdrag(event);
+        return true; 
+      },
+      onMouseEnter: (event) => {
+        switch (event.figureKey) {
+          case PositionTPSLLineFigureKey.Close: {
+            this._chart?.overrideOverlay({
+              id: event.overlay.id,
+              extendData: {
+                ...position,
+                reverseTooltip: ''
+              }
+            });
+            break;
+          }
+          // case PositionTPSLLineFigureKey.Reverse: {
+          //   this._chart?.overrideOverlay({
+          //     id: event.overlay.id,
+          //     extendData: {
+          //       ...position,
+          //       closeTooltip: ''
+          //     }
+          //   });
+          //   break;
+          // }
+        }
+        return true;
+      },
+      onMouseLeave: (event) => {
+        this._chart?.overrideOverlay({
+          id: event.overlay.id,
+          extendData: {
+            ...position,
+            // reverseTooltip: '',
+            closeTooltip: ''
+          }
+        });
+        return true;
+      },
+   
+    });
+    this._positionLineCountMap[key] = (this._positionLineCountMap[key] ?? 0) + 1;
+  }
+//移除持仓线
+  removeAllPositionTPSLLine () {
+    this._positionLineCountMap = {};
+    this._chart?.removeOverlay({ name: 'positionTPTLLine' });
   }
 
   remove () {

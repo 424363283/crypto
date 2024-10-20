@@ -193,6 +193,7 @@ export const PositionList = ({
                   leverage:item.leverage,//杠杠倍数
                   id: item.positionId,
                   side: item.side,
+                  tpSlList:item.orders,
                   
                   sideText: item.side === '1' ? LANG('多') : LANG('空'),
                   openPrice: formatNumber2Ceil(

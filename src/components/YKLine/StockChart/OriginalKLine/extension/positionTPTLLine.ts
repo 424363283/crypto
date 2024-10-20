@@ -1,6 +1,6 @@
 import { OverlayFigure, OverlayTemplate, utils, Coordinate } from 'klinecharts';
 
-export const PositionLineFigureKey = {
+export const PositionTPSLLineFigureKey = {
   Close: 'close',
   Reverse: 'reverse'
 };
@@ -46,8 +46,8 @@ function createOverlayTooltipFigures (coordinate: Coordinate, text: string, colo
   ];
 }
 
-const positionLine: OverlayTemplate = {
-  name: 'positionLine',
+const positionTPTLLine: OverlayTemplate = {
+  name: 'positionTPTLLine',
   totalStep: 2,
   createPointFigures: ({ coordinates, bounding, overlay }) => {
     const PADDING = 8;
@@ -81,6 +81,7 @@ const positionLine: OverlayTemplate = {
           text: profitLossText
         },
         styles: {
+          cursor: 'grabbing',
           style: 'stroke_fill',
           borderStyle: 'solid',
           borderColor: profitLossColor,
@@ -89,7 +90,8 @@ const positionLine: OverlayTemplate = {
           borderRadius: 0,
           paddingTop: 5,
           paddingLeft: PADDING,
-          paddingRight: PADDING
+          paddingRight: PADDING,
+          
         }
       },
       // 数量
@@ -106,6 +108,7 @@ const positionLine: OverlayTemplate = {
           text: volumeText
         },
         styles: {
+          cursor: 'grabbing',
           style: 'stroke_fill',
           borderColor: directionColor,
           backgroundColor: directionColor,
@@ -118,7 +121,7 @@ const positionLine: OverlayTemplate = {
       },
       // 切换按钮
       {
-        key: PositionLineFigureKey.Reverse,
+        key: PositionTPSLLineFigureKey.Reverse,
         type: 'rect',
         ignoreEvent: ['mouseDownEvent', 'mouseRightClickEvent'],
         attrs: {
@@ -128,7 +131,9 @@ const positionLine: OverlayTemplate = {
           height: HEIGHT
         },
         styles: {
+          cursor: 'grabbing',
           style: 'stroke_fill',
+          display:'none',
           borderColor: directionColor,
           color: backgroundColor
         }
@@ -191,7 +196,7 @@ const positionLine: OverlayTemplate = {
       },
       // 关闭按钮
       {
-        key: PositionLineFigureKey.Close,
+        key: PositionTPSLLineFigureKey.Close,
         type: 'text',
         ignoreEvent: ['mouseDownEvent', 'mouseRightClickEvent'],
         attrs: {
@@ -207,6 +212,7 @@ const positionLine: OverlayTemplate = {
           style: 'stroke_fill',
           color: directionColor,
           size: 10,
+
           borderColor: directionColor,
           backgroundColor,
           paddingTop: 7,
@@ -261,6 +267,7 @@ const positionLine: OverlayTemplate = {
           text: `${utils.formatThousands(overlay.points[0].value!.toFixed(precision.price), thousandsSeparator)}`
         },
         styles: {
+          cursor: 'grabbing',
           style: 'fill',
           color: '#ffffff',
           backgroundColor: color,
@@ -277,4 +284,4 @@ const positionLine: OverlayTemplate = {
 
 
 
-export default positionLine;
+export default positionTPTLLine;

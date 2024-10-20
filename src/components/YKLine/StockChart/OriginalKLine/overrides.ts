@@ -45,7 +45,7 @@ export function getTheme (theme: string) {
         },
         last: {
           upColor: Color.Green,
-          downColor: Color.Red
+          downColor: Color.Red,
         }
       },
       tooltip: {
@@ -130,6 +130,7 @@ export function getTheme (theme: string) {
       tickText: {
         color: textColor
       }
-    }
+    },
+  
   };
 }
