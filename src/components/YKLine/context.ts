@@ -13,8 +13,11 @@ interface ExchangeChartContextValue {
   setKLineResolution: (resolution: string) => void;
   showPositionLine: boolean;
   setShowPositionLine: (show: boolean) => void;
+  showPositionTPSLLine: boolean;
+  setShowPositionTPSLLine: (show: boolean) => void;
   showHistoryOrderMark: boolean;
   setShowHistoryOrderMark: (show: boolean) => void;
+
 };
 
 const ExchangeChartContext = createContext<ExchangeChartContextValue>(
@@ -29,6 +32,8 @@ const ExchangeChartContext = createContext<ExchangeChartContextValue>(
     setKLineResolution: () => {},
     showPositionLine: false,
     setShowPositionLine: () => {},
+    showPositionTPSLLine: false,
+    setShowPositionTPSLLine: () => {},
     showHistoryOrderMark: false,
     setShowHistoryOrderMark: () => {}
   }

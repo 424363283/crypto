@@ -81,7 +81,7 @@ const positionTPTLLine: OverlayTemplate = {
           text: profitLossText
         },
         styles: {
-          cursor: 'grabbing',
+          cursor: 'pointer',
           style: 'stroke_fill',
           borderStyle: 'solid',
           borderColor: profitLossColor,
@@ -108,7 +108,7 @@ const positionTPTLLine: OverlayTemplate = {
           text: volumeText
         },
         styles: {
-          cursor: 'grabbing',
+          cursor: 'pointer',
           style: 'stroke_fill',
           borderColor: directionColor,
           backgroundColor: directionColor,
@@ -119,88 +119,14 @@ const positionTPTLLine: OverlayTemplate = {
           paddingRight: (volumeTextRectWidth - volumeTextWidth) / 2
         }
       },
-      // 切换按钮
-      {
-        key: PositionTPSLLineFigureKey.Reverse,
-        type: 'rect',
-        ignoreEvent: ['mouseDownEvent', 'mouseRightClickEvent'],
-        attrs: {
-          x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + PADDING,
-          y: y - HEIGHT / 2,
-          width: 28,
-          height: HEIGHT
-        },
-        styles: {
-          cursor: 'grabbing',
-          style: 'stroke_fill',
-          display:'none',
-          borderColor: directionColor,
-          color: backgroundColor
-        }
-      },
-      {
-        type: 'line',
-        ignoreEvent: true,
-        attrs: {
-          coordinates: [
-            { x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + PADDING + 10, y: y - 5 },
-            { x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + PADDING + 10, y: y + 5 },
-          ]
-        },
-        styles: {
-          color: directionColor
-        }
-      },
-      {
-        type: 'polygon',
-        ignoreEvent: true,
-        attrs: {
-          coordinates: [
-            { x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + PADDING + 10, y: y + 5 },
-            { x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + PADDING + 7, y: y + 1 },
-            { x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + PADDING + 13, y: y + 1 },
-          ]
-        },
-        styles: {
-          style: 'fill',
-          color: directionColor
-        }
-      },
-      {
-        type: 'line',
-        ignoreEvent: true,
-        attrs: {
-          coordinates: [
-            { x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + PADDING + 19, y: y - 5 },
-            { x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + PADDING + 19, y: y + 5 },
-          ]
-        },
-        styles: {
-          color: directionColor
-        }
-      },
-      {
-        type: 'polygon',
-        ignoreEvent: true,
-        attrs: {
-          coordinates: [
-            { x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + PADDING + 19, y: y - 5 },
-            { x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + PADDING + 16, y: y - 1 },
-            { x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + PADDING + 22, y: y - 1 },
-          ]
-        },
-        styles: {
-          style: 'fill',
-          color: directionColor
-        }
-      },
       // 关闭按钮
       {
         key: PositionTPSLLineFigureKey.Close,
         type: 'text',
         ignoreEvent: ['mouseDownEvent', 'mouseRightClickEvent'],
         attrs: {
-          x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + 28 + PADDING,
+          // x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + 28 + PADDING,
+          x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + PADDING,
           y,
           height: HEIGHT,
           width: HEIGHT,
@@ -212,7 +138,7 @@ const positionTPTLLine: OverlayTemplate = {
           style: 'stroke_fill',
           color: directionColor,
           size: 10,
-
+          cursor: 'pointer',
           borderColor: directionColor,
           backgroundColor,
           paddingTop: 7,
@@ -225,10 +151,14 @@ const positionTPTLLine: OverlayTemplate = {
         type: 'line',
         ignoreEvent: true,
         attrs: {
-          coordinates: [{ x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + 28 + 30, y }, { x: bounding.width, y }],
+          
+          coordinates: [
+            { x: offsetLeft + profitLossTextWidth + volumeTextRectWidth  + 30, y }, { x: bounding.width, y }
+          ],
         },
         styles: {
           // style: 'dashed',
+          cursor: 'pointer',
           color: directionColor
         }
       },
@@ -267,7 +197,7 @@ const positionTPTLLine: OverlayTemplate = {
           text: `${utils.formatThousands(overlay.points[0].value!.toFixed(precision.price), thousandsSeparator)}`
         },
         styles: {
-          cursor: 'grabbing',
+          cursor: 'pointer',
           style: 'fill',
           color: '#ffffff',
           backgroundColor: color,

@@ -61,6 +61,7 @@ const Header: FC<HeaderProps> = (props) => {
     kLinePriceType, setKLinePriceType, 
     kLineResolution, setKLineResolution,
     showPositionLine, setShowPositionLine,
+    showPositionTPSLLine,setShowPositionTPSLLine,
     showHistoryOrderMark, setShowHistoryOrderMark
   } = useContext(ExchangeChartContext);
 
@@ -243,6 +244,46 @@ const Header: FC<HeaderProps> = (props) => {
                       // theme={theme}
                       onChange={() => setShowPositionLine?.(!showPositionLine)}
                       label={'仓位'}/>
+                  </div>
+                  <div style={{ padding: '0 12px', height: 32, lineHeight: '32px' }}>
+                    {/* @ts-ignore */}
+                    <CheckBox
+                      checked={showPositionTPSLLine ?? false}
+                      // theme={theme}
+                      onChange={() => setShowPositionTPSLLine?.(!showPositionTPSLLine)}
+                      label={'止盈止损线'}/>
+                  </div>
+                  <div style={{ padding: '0 12px', height: 32, lineHeight: '32px' }}>
+                    {/* @ts-ignore */}
+                    <CheckBox
+                      checked={showPositionLine ?? false}
+                      // theme={theme}
+                      onChange={() => setShowPositionLine?.(!showPositionLine)}
+                      label={'爆仓线'}/>
+                  </div>
+                  <div style={{ padding: '0 12px', height: 32, lineHeight: '32px' }}>
+                    {/* @ts-ignore */}
+                    <CheckBox
+                      checked={showPositionLine ?? false}
+                      // theme={theme}
+                      onChange={() => setShowPositionLine?.(!showPositionLine)}
+                      label={'当前委托'}/>
+                  </div>
+                  <div style={{ padding: '0 12px', height: 32, lineHeight: '32px' }}>
+                    {/* @ts-ignore */}
+                    <CheckBox
+                      checked={showPositionLine ?? false}
+                      // theme={theme}
+                      onChange={() => setShowPositionLine?.(!showPositionLine)}
+                      label={'涨跌幅'}/>
+                  </div>
+                  <div style={{ padding: '0 12px', height: 32, lineHeight: '32px' }}>
+                    {/* @ts-ignore */}
+                    <CheckBox
+                      checked={showPositionLine ?? false}
+                      // theme={theme}
+                      onChange={() => setShowPositionLine?.(!showPositionLine)}
+                      label={'倒计时'}/>
                   </div>
                   {/* 导致CPU增高，先隐藏 */}
                   <div style={{ padding: '0 12px', height: 32, lineHeight: '32px' }}>

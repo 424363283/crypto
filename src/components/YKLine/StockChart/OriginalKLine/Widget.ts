@@ -480,10 +480,10 @@ export default class Widget {
             position.onCloseClick();
             break;
           }
-          // case PositionTPSLLineFigureKey.Reverse: {
-          //   position.onReverseClick();
-          //   break;
-          // }
+          case PositionTPSLLineFigureKey.Reverse: {
+            position.onReverseClick();
+            break;
+          }
         }
         return true;
       },
@@ -508,16 +508,16 @@ export default class Widget {
             });
             break;
           }
-          // case PositionTPSLLineFigureKey.Reverse: {
-          //   this._chart?.overrideOverlay({
-          //     id: event.overlay.id,
-          //     extendData: {
-          //       ...position,
-          //       closeTooltip: ''
-          //     }
-          //   });
-          //   break;
-          // }
+          case PositionTPSLLineFigureKey.Reverse: {
+            this._chart?.overrideOverlay({
+              id: event.overlay.id,
+              extendData: {
+                ...position,
+                closeTooltip: ''
+              }
+            });
+            break;
+          }
         }
         return true;
       },
@@ -526,7 +526,7 @@ export default class Widget {
           id: event.overlay.id,
           extendData: {
             ...position,
-            // reverseTooltip: '',
+            reverseTooltip: '',
             closeTooltip: ''
           }
         });

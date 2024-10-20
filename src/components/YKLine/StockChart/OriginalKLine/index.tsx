@@ -437,8 +437,10 @@ const OriginalKLine: ForwardRefRenderFunction<
               tooltipColor,
               backgroundColor,
               closeTooltip: closeTooltip,
-              // reverseTooltip: "反手开仓",
-        
+              reverseTooltip: "反手开仓",
+              onOrderdrag:(e)=>{
+                console.log("eeeee")
+              },
             });
           }
         });
