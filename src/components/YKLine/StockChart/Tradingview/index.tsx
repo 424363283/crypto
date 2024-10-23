@@ -505,7 +505,7 @@ const TradingView: ForwardRefRenderFunction<ChartRef> = (props, ref) => {
 
     return () => {
       if (widgetRef.current) {
-        widgetRef.current.removeAllPositionLine();
+        widgetRef.current.removeAllLiquidationLine();
       }
     };
   }, [
