@@ -12,7 +12,7 @@ export const useUpdateLoginLog = () => {
     lastLoginLog: { date: '' },
   });
   const { dataSource, lastLoginLog, current, total } = state;
-  // 获取登陆记录
+  // 获取登录记录
   const updateLoginLog = async (page: number) => {
     try {
       Loading.start();

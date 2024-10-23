@@ -42,12 +42,12 @@ export const Tabs = ({ items, children }: { items: Tab[], children?: React.React
 };
 const styles = css`
 .tabs-wrapper {
+  padding: 40px 0 0;
   .tabs {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
-    padding: 16px 0;
     .tabs-title {
       display: flex;
       align-items: center;
@@ -80,7 +80,7 @@ const styles = css`
     }
   }
   .tabs-content {
-    padding: 30px 0px 0px;
+    padding: 24px 0px 0px;
     .tips {
       font-size: 14px;
       font-weight: 400;

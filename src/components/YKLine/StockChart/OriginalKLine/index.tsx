@@ -9,48 +9,76 @@ import {
   memo,
 } from "react";
 
-import { CandleType, registerLocale } from "klinecharts";
+// import { CandleType, registerLocale } from "klinecharts";
+import { CandleType, registerLocale } from './index.esm';
 
 import { useSize } from "ahooks";
 
 import Loading from "@/components/Yloading";
-
-import { useSlugSymbol } from "@/hooks";
-
-import { useFutureOrderStore } from "@/store/future-order";
 
 import { ThemeContext, ConfigContext, UserContext } from "@/context";
 
 import Widget, { IndicatorType } from "./Widget";
 
 import Datafeed from "../Datafeed";
-import { DEPTH } from "@/constants";
 import { ChartRef, createSymbolName } from "../types";
 import ExchangeChartContext from "../../context";
-// import { useKLineSource } from '../useKLineSource';
 import { useKLineHistoryOrder } from "../useKLineHistoryOrder";
 import { useFutureStore, usePositionStore } from "@/store";
 import { SUBSCRIBE_TYPES, useWs } from "@/core/network";
 import { kChartEmitter } from "@/core/events";
 
-import { ChooseTypes, PositionUnitTypes, PriceTypes } from "@/utils/futures";
+// import { ChooseTypes, PriceTypes } from "@/utils/futures";
 
-import { digits, format } from "@/utils/index";
+import {  format } from "@/utils/index";
 
-import { Color, volumeConversion } from "../types";
+import { Color } from "../types";
 
 import { HistoryOrderMarkArrowDirection } from "./extension/historyOrderMark";
 
 import IndicatorModal, { IndicatorOperateType } from "./indicator-modal";
 
+import {
+  LiquidationModal,
+  ReverseConfirmModal
+} from '@/components/trade-ui/order-list/swap/components/modal';
+
+
+import { useModalProps, usePositionActions } from '@/components/order-list/swap/stores/position-list';
+
 import styles from "./index.module.scss";
 
 const intlPrefix = "system.common.klinechart.";
+
+
+/** 仓位单位*/
+export enum PositionUnitTypes {
+  /** 0 张 */
+  CONT = 0,
+  /** 1 币(BTC/ETH etc.) */
+  COIN,
+  /** 2 USDT */
+  USDT
+}
+
 
 const OriginalKLine: ForwardRefRenderFunction<
   ChartRef,
   { containerId?: string }
 > = (props, ref) => {
+
+  const {
+    onVisibleLiquidationModal,
+    liquidationModalProps,
+    onCloseLiquidationModal,
+    onVisibleReverseModal,
+    reverseModalProps,
+    onCloseReverseModal
+  } = useModalProps();
+
+  const { onReverse } = usePositionActions(); // 反向开仓
+
+
   const rootEl = useRef<HTMLDivElement>(null);
   const size = useSize(rootEl.current);
 
@@ -67,27 +95,17 @@ const OriginalKLine: ForwardRefRenderFunction<
     showPositionLine,
     showHistoryOrderMark,
     kLinePriceType,
+    showLiquidationLine,
+    showPositionTPSLLine,
   } = useContext(ExchangeChartContext);
 
   const { theme } = useContext(ThemeContext);
-  //symbolSwapId 下面内容
-  const { indexToken, coinUnitLen, max_digits, contractMultiplier } =
-    useSlugSymbol();
-
-  const { unrealisedPnlPriceType } = useFutureStore();
-
-  // 仓位单位
-  const { positionUnitType } = useFutureOrderStore();
+  
 
   const [loading, setLoading] = useState(true);
 
   const [currentPosition, setCurrentPosition] = useState<any>({}); // 一键反手or平仓当前仓位信息
   const [positionProcessing, setPositionProcessing] = useState(false); //仓位处理
-
-  const { symbolsMap } = useContext(ConfigContext);
-  // const { positionList } = usePositionStore();
-
-  // const historyOrderList = useKLineHistoryOrder();
 
   const { isLogin } = useContext(UserContext);
 
@@ -119,14 +137,16 @@ const OriginalKLine: ForwardRefRenderFunction<
     },
   ]); //历史成交数据
 
-  let symbolSwapId = "btc-usdt";
+  let symbolSwapId = window.location.pathname.split('/').pop() || "btc-usdt";
+  let indexToken = (window.location.pathname.split('/').pop() || "btc-usdt").toUpperCase();
+  let coinUnitLen = 2;
+  const contractMultiplier = ''; //合约系数
+  const max_digits = 2;
+
+  let positionUnitType=2
+
 
   const YKlineRef = useRef<any>(null);
-
-  // const symbol_info = symbolsMap.all[symbolSwapId] || {};
-  // const { minPricePrecision } = symbol_info;
-
-  // useKLineSource({ symbolSwapId, kLineResolution, kLinePriceType, indexToken });
 
   useImperativeHandle(
     ref,
@@ -134,7 +154,7 @@ const OriginalKLine: ForwardRefRenderFunction<
       openIndicatorModal: () => {
         setIndicatorModalVisible(true);
       },
-      openSettingModal: () => {},
+      openSettingModal: () => { },
     }),
     []
   );
@@ -339,15 +359,22 @@ const OriginalKLine: ForwardRefRenderFunction<
       widgetRef.current.changeTheme(theme);
     }
   }, [theme]);
+  useEffect(() => {
+    if (widgetRef.current) {
+      widgetRef.current.setShowCountdown(true);
+    }
+  }, []);
 
   useWs(SUBSCRIBE_TYPES.ws4001, (data) =>
     YKlineRef.current?.updateData?.(data)
   );
 
   kChartEmitter.on(kChartEmitter.K_CHART_POSITION_UPDATE, (data: any) => {
-    // console.log("获取当前持仓",data)
+
     setPositionList(data);
-    setTpSlList(data[0]?.tpSlList);
+    const newTpSlList = data.flatMap(item => item.tpSlList || []);
+
+    setTpSlList(newTpSlList);
 
     // chart.current?.setPositionOrder(data);
   });
@@ -365,13 +392,12 @@ const OriginalKLine: ForwardRefRenderFunction<
           const directionColor = isLong ? Color.Green : Color.Red; //多/空
           const isLight = theme === "light";
           const tooltipColor = isLight ? "#3B3C45" : "#3B3C45";
-          const backgroundColor = isLight ? "#FFFFFF" : "#1D1D21";
+          const backgroundColor = isLight ? "#FFFFFF" : "#FFFFFF";
           widgetRef.current?.createPositionLine({
             direction,
             directionColor,
-            profitLoss: `${direction} ${format(unrealizedPnl, 4)} (${
-              position?.profitRate
-            }%)`,
+            profitLoss: `${direction} ${format(unrealizedPnl, 4)} (${position?.profitRate
+              })`,
             profitLossColor,
             price: +position?.avgPrice,
             volume: `${total}`,
@@ -379,13 +405,15 @@ const OriginalKLine: ForwardRefRenderFunction<
             backgroundColor,
             closeTooltip: "市价平仓",
             reverseTooltip: "反手开仓",
-            onOrderdrag:(e)=>{
+            onOrderdrag: (e) => {
               console.log("eeeee")
             },
             onReverseClick: () => {
+              onReverse(position.orginalItem, ({ onConfirm }) => onVisibleReverseModal(position.orginalItem, onConfirm));
               console.log("点击反手开仓");
             },
             onCloseClick: () => {
+              onVisibleLiquidationModal(position.orginalItem, false);
               console.log("点击平仓");
             },
           });
@@ -409,73 +437,76 @@ const OriginalKLine: ForwardRefRenderFunction<
     positionUnitType,
   ]);
 
-    // 绘制止盈止损
-    useEffect(() => {
-      if (widgetRef.current && showPositionLine) {
-        tpSlList.forEach((position) => {
-          if (position?.symbol === symbolSwapId) {
-          
-            let unrealizedPnl = position.unrealizedPnl;
-            const isLong = position?.side === "1";
-            const direction = isLong ? "做多 " : "SHORT "; //持仓方向
-            let profitLoss= position?.direction === "1"?'止盈':'止损'
-            let total = position?.direction === "1"?'预计止盈(---)':'预计止损(---)'
-            let closeTooltip=position?.direction === "1"?'取消止盈':'取消止损'
-            const profitLossColor = unrealizedPnl >= 0 ? Color.Green : Color.Red;
-            const directionColor = isLong ? Color.Green : Color.Red; //多/空
-            const isLight = theme === "light";
-            const tooltipColor = isLight ? "#3B3C45" : "#3B3C45";
-            const backgroundColor = isLight ? "#FFFFFF" : "#FFFFFF";
-            let price=Number(position?.triggerPrice)
-            widgetRef.current?.createPositionTPSLLine({
-              direction,
-              directionColor,
-              profitLoss:profitLoss,
-              profitLossColor,
-              price:price,
-              volume: `${total}`,
-              tooltipColor,
-              backgroundColor,
-              closeTooltip: closeTooltip,
-              reverseTooltip: "反手开仓",
-              onOrderdrag:(e)=>{
-                console.log("eeeee")
-              },
-            });
-          }
-        });
-      }
-  
-      return () => {
-        if (widgetRef.current) {
-          widgetRef.current.removeAllPositionTPSLLine();
+  // 绘制止盈止损
+  useEffect(() => {
+    if (widgetRef.current && showPositionTPSLLine) {
+      tpSlList?.forEach((position) => {
+        if (position?.symbol === symbolSwapId) {
+
+          let unrealizedPnl = position.unrealizedPnl;
+          const isLong = position?.side === "1";
+          const direction = isLong ? "做多 " : "SHORT "; //持仓方向
+          let profitLoss = position?.direction === "1" ? '止盈' : '止损'
+          let total = position?.direction === "1" ? '预计止盈(---)' : '预计止损(---)'
+          let closeTooltip = position?.direction === "1" ? '取消止盈' : '取消止损'
+          const profitLossColor = unrealizedPnl >= 0 ? Color.Green : Color.Red;
+          const directionColor = isLong ? Color.Green : Color.Red; //多/空
+          const isLight = theme === "light";
+          const tooltipColor = isLight ? "#3B3C45" : "#3B3C45";
+          const backgroundColor = isLight ? "#FFFFFF" : "#FFFFFF";
+          let price = Number(position?.triggerPrice)
+          widgetRef.current?.createPositionTPSLLine({
+            direction,
+            directionColor,
+            profitLoss: profitLoss,
+            profitLossColor,
+            price: price,
+            volume: `${total}`,
+            tooltipColor,
+            backgroundColor,
+            closeTooltip: closeTooltip,
+            reverseTooltip: "反手开仓",
+            onOrderdrag: (e) => {
+
+            },
+            onMoveStart:(e)=>{
+              console.log("反手开仓",e)
+            }
+          });
         }
-      };
-    }, [
-      theme,
-      isLogin,
-      showPositionLine,
-      tpSlList,
-      symbolSwapId,
-      contractMultiplier,
-      coinUnitLen,
-      positionUnitType,
-    ]);
+      });
+    }
+
+    return () => {
+      if (widgetRef.current) {
+        widgetRef.current.removeAllPositionTPSLLine();
+      }
+    };
+  }, [
+    theme,
+    isLogin,
+    showPositionTPSLLine,
+    tpSlList,
+    symbolSwapId,
+    contractMultiplier,
+    coinUnitLen,
+    positionUnitType,
+  ]);
 
 
   // // 创建历史订单标记
   useEffect(() => {
     if (widgetRef.current && showHistoryOrderMark) {
-  
+
       historyOrderList.forEach(order => {
 
         if (order.symbol === symbolSwapId) {
 
           const total = order.dealVolume
           const isBuy = /^BUY/i.test(order.side);
-          const price=order?.dealPrice
+          const price = order?.dealPrice
           const color = isBuy ? Color.Green : Color.Red;
-          const direction = isBuy ?  HistoryOrderMarkArrowDirection.Up : HistoryOrderMarkArrowDirection.Down;
+          const direction = isBuy ? HistoryOrderMarkArrowDirection.Up : HistoryOrderMarkArrowDirection.Down;
           const tooltipColor = theme === 'light' ? '#3B3C45' : '#3B3C45';
           widgetRef.current?.createHistoryOrderMark({
             direction,
@@ -493,6 +524,43 @@ const OriginalKLine: ForwardRefRenderFunction<
       }
     };
   }, [historyOrderList, isLogin, showHistoryOrderMark, positionUnitType, contractMultiplier, coinUnitLen, symbolSwapId]);
+
+
+  // 创建强平线
+
+  useEffect(() => {
+    if (widgetRef.current && showLiquidationLine) {
+      positionList.forEach((position) => {
+        if (position.symbolId === symbolSwapId) {
+          try {
+            const isLong = position?.side === "1";
+            const direction = isLong ? "LONG " : "SHORT "; //持仓方向
+            widgetRef.current?.createLiquidationLine({
+              id: position.id,
+              direction,
+              directionColor: "#2AB26C",
+              profitLoss: direction,
+              profitLossColor: "#2AB26C",
+              price: +position.liquidationPrice,
+              volume: "强平价格",
+              backgroundColor: "#FFFFFF",
+            });
+          } catch (error) { }
+        }
+      });
+    }
+    return () => {
+      if (widgetRef.current) {
+        widgetRef.current.removeAllLiquidationLine();
+      }
+    };
+  }, [historyOrderList, isLogin, contractMultiplier, coinUnitLen, symbolSwapId, positionList, showLiquidationLine]);
+
+
+
+
+
+
 
   const operateIndicator = (
     name: string,
@@ -555,6 +623,13 @@ const OriginalKLine: ForwardRefRenderFunction<
           }}
         />
       )}
+
+      {/* 市价平仓 */}
+      {liquidationModalProps.visible && (
+        <LiquidationModal {...liquidationModalProps} onClose={onCloseLiquidationModal} />
+      )}
+      {/* 反手开仓 */}
+      {reverseModalProps.visible && <ReverseConfirmModal {...reverseModalProps} onClose={onCloseReverseModal} />}
     </div>
   );
 };

@@ -123,7 +123,7 @@ export const PositionList = ({
   }
 
   useEffect(() => {
-      
+
     const onK_CHART_POSITION_REVERSE_CLICK = (id: string) => {
       const item = list?.find((e: any) => e.positionId === id);
       // console.log('持仓反向开仓点击了id:', id);
@@ -179,22 +179,21 @@ export const PositionList = ({
             return `${rate.toFixed(2)}%`;
           };
 
-
-          // console.log('获取当前持仓数据',list)
           kChartEmitter.emit(
             kChartEmitter.K_CHART_POSITION_UPDATE,
             list
               .filter((e: { subWallet: string }) => e?.subWallet === walletId)
               .map((item: any) => {
                 return {
-                  symbolId:item.symbol,
-                  avgPrice:item.avgCostPrice,
-                  unrealizedPnl:item.income,
-                  leverage:item.leverage,//杠杠倍数
+                  symbolId: item.symbol,
+                  avgPrice: item.avgCostPrice,
+                  unrealizedPnl: item.income,
+                  leverage: item.leverage,//杠杠倍数
                   id: item.positionId,
                   side: item.side,
-                  tpSlList:item.orders,
-                  
+                  tpSlList: item.orders,
+                  liquidationPrice: item.liquidationPrice,
+
                   sideText: item.side === '1' ? LANG('多') : LANG('空'),
                   openPrice: formatNumber2Ceil(
                     item.avgCostPrice,
@@ -203,6 +202,7 @@ export const PositionList = ({
                   ).toFixed(Number(item.baseShowPrecision)),
                   volume: item.currentPositionFormat,
                   profitRate: handleRate(item),
+                  orginalItem: item
                 };
               })
           );
@@ -247,7 +247,7 @@ export const PositionList = ({
             onClose={onCloseMarginModal}
           />
         )} */}
-            <ModifyMarginModal {...marginModalProps}  data={list.find((v: any) => Swap.Order.positionIsSame(v, marginModalProps.data as any)) || { symbol: '' }} onClose={onCloseMarginModal} />
+        <ModifyMarginModal {...marginModalProps} data={list.find((v: any) => Swap.Order.positionIsSame(v, marginModalProps.data as any)) || { symbol: '' }} onClose={onCloseMarginModal} />
         {trackModalProps.visible && (
           <TrackModal
             {...trackModalProps}
@@ -257,15 +257,15 @@ export const PositionList = ({
         )}
         {reverseModalProps.visible && <ReverseConfirmModal {...reverseModalProps} onClose={onCloseReverseModal} />}
         {
-        spslModalProps.visible && (
-          <StopProfitStopLossModal
-            {...spslModalProps}
-            data={
-              list.find((v: any) => Swap.Order.positionIsSame(v, spslModalProps.data as any)) || spslModalProps.data
-            }
-            onClose={onCloseSpslModal}
-          />
-        )}
+          spslModalProps.visible && (
+            <StopProfitStopLossModal
+              {...spslModalProps}
+              data={
+                list.find((v: any) => Swap.Order.positionIsSame(v, spslModalProps.data as any)) || spslModalProps.data
+              }
+              onClose={onCloseSpslModal}
+            />
+          )}
         {modalItem && (
           <OrderShare
             visible={!!modalItem}
@@ -354,7 +354,7 @@ const useColumns = ({
     onWalletClick ||
     ((walletData: any) => Swap.Trade.setModal({ walletFormVisible: true, walletFormData: { data: walletData } }));
   if (isDemo) {
-    onWalletClick = () => {};
+    onWalletClick = () => { };
   }
 
   const volumeTitle = (
@@ -368,11 +368,11 @@ const useColumns = ({
           title={
             isUsdtType
               ? LANG(
-                  'U本位合约交易单位为BTC等币单位时，显示的持仓数量为根据实际张数换算而来的，数值随着最新价格变动而变动。'
-                )
+                'U本位合约交易单位为BTC等币单位时，显示的持仓数量为根据实际张数换算而来的，数值随着最新价格变动而变动。'
+              )
               : LANG(
-                  '币本位合约交易单位为BTC等币单位时，显示的持仓数量为根据实际张数换算而来的，数值随着最新价格变动而变动。'
-                )
+                '币本位合约交易单位为BTC等币单位时，显示的持仓数量为根据实际张数换算而来的，数值随着最新价格变动而变动。'
+              )
           }
         >
           <InfoHover componnet='span'>{LANG('数量')}</InfoHover>
@@ -469,8 +469,8 @@ const useColumns = ({
                       )}
                     </div>
                   ) : (
-                    <div style={{ width: 26 }} />
-                  )}
+                      <div style={{ width: 26 }} />
+                    )}
                 </div>
                 <div className={clsx('nowrap')}>
                   <div className={clsx()}>
@@ -666,7 +666,7 @@ const useColumns = ({
         return (
           <div
             className={clsx('margin-wrapper', 'pointer')}
-            onClick={() => (canAdd&&onVisibleMarginModal(item))}
+            onClick={() => (canAdd && onVisibleMarginModal(item))}
           >
             <div className={clsx()}>
               <div className={clsx()}>
@@ -678,7 +678,7 @@ const useColumns = ({
             {canAdd && (
               <>
                 <div style={{ width: 10 }} />
-                <EditButton    />
+                <EditButton />
               </>
             )}
           </div>
@@ -840,10 +840,10 @@ const useColumns = ({
               {LANG('反向开仓')}
             </SubButton>
           ) : (
-            <TrLink href={`/swap/${item.symbol.toLowerCase()}`}>
-              <SubButton className='sub-button'>{LANG('交易')}</SubButton>
-            </TrLink>
-          )}
+              <TrLink href={`/swap/${item.symbol.toLowerCase()}`}>
+                <SubButton className='sub-button'>{LANG('交易')}</SubButton>
+              </TrLink>
+            )}
         </div>
       ),
     }

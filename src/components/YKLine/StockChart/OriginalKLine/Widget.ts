@@ -1,5 +1,7 @@
 
-import { init, Chart, Nullable, dispose, CandleType, registerOverlay, KLineData, Point } from 'klinecharts';
+// import { init, Chart, Nullable, dispose, CandleType, registerOverlay, KLineData, Point } from 'klinecharts';
+
+import { init, Chart, Nullable, dispose, CandleType, registerOverlay, KLineData, Point } from '@/components/YKLine/StockChart/OriginalKLine/index.esm';
 
 import { ResolutionString } from '../../../../../public/tradingView/charting_library/charting_library';
 
@@ -13,6 +15,8 @@ import positionLine, { PositionLineFigureKey } from './extension/positionLine';
 import positionTPTLLine, { PositionTPSLLineFigureKey } from './extension/positionTPTLLine';
 // import positionTPTLLine from './extension/positionTPTLLine'
 import historyOrderMark, { HistoryOrderMarkArrowDirection } from './extension/historyOrderMark';
+
+import liquidationLine from './extension/liquidationLine';
 
 import { DatafeedSymbolInfo } from '../Datafeed';
 
@@ -36,6 +40,7 @@ interface IndicatorInfo {
 }
 
 export interface PositionLineOptions {
+  id?: string;
   direction: string;
   directionColor: string;
   profitLoss: string;
@@ -43,12 +48,12 @@ export interface PositionLineOptions {
   backgroundColor: string;
   price: number;
   volume: string;
-  closeTooltip: string;
-  reverseTooltip: string;
-  tooltipColor: string;
-  onReverseClick: () => void;
-  onCloseClick: () => void,
-  onOrderdrag: (e) => void;
+  closeTooltip?: string;
+  reverseTooltip?: string;
+  tooltipColor?: string;
+  onReverseClick?: () => void;
+  onCloseClick?: () => void,
+  onOrderdrag?: (e) => void;
 }
 
 export interface HistoryOrderMarkOptions {
@@ -70,10 +75,11 @@ export default class Widget {
 
   private _paneIds: Record<string, string> = {};
 
-  constructor (options: WidgetOptions) {
+  constructor(options: WidgetOptions) {
     registerOverlay(positionLine);
     registerOverlay(positionTPTLLine);
     registerOverlay(historyOrderMark);
+    registerOverlay(liquidationLine);
     this._options = options;
     const containerId = options.container ?? 'bv_kline_chart';
     this._chart = init(containerId, {
@@ -102,19 +108,19 @@ export default class Widget {
           (dataList, meta) => {
             params.callback(dataList, !(meta?.noData ?? true));
           },
-          () => {}
+          () => { }
         );
       }
     });
     this.setSymbol(options.symbol, options.interval);
   }
 
-  private _createWatermark () {
+  private _createWatermark() {
     if (this._chart) {
       const container = this._chart.getDom();
       if (container) {
-        const waterMarkId = 'bv_klinecharts_watermark';
-        const background = `url("/images/KlineChart/klinechart_${this._options.theme}.svg")`;
+        const waterMarkId = 'yemx_klinecharts_watermark';
+        const background = `url("/imgs/logobg.png")`;
         let watermark = container.querySelector('#' + waterMarkId);
         if (!watermark) {
           watermark = document.createElement('div');
@@ -122,24 +128,35 @@ export default class Widget {
           container.appendChild(watermark);
         }
         // @ts-ignore
-        watermark.style = `position:absolute;top:0;z-index:0;width: 100%;height:100%;background:${background} repeat;background-position: center center`;
+        watermark.style = `
+        position: absolute;
+        top: 60%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        width: 150px;
+        height: 100px;
+        background: ${background} no-repeat center;
+        background-size: contain;
+      `;
+   
       }
     }
   }
 
-  getCacheIndicators () {
+  getCacheIndicators() {
     let indicators: Record<string, IndicatorInfo[]> = {};
     try {
       indicators = window.JSON.parse(localStorage.getItem(STORAGE_ORIGINAL_INDICATOR_KEY) || '{}');
-    } catch {}
+    } catch { }
     return typeof indicators === 'object' && !Array.isArray(indicators) ? indicators : {};
   }
 
-  private _getTimeRange (to: number, resolution: string, num?: number) {
+  private _getTimeRange(to: number, resolution: string, num?: number) {
     const count = (num ?? 1000) * parseInt(resolution);
     const toDate = dayjs(to);
     let from = 0;
-    const unit = resolution.replace(/\d+/g, '');  
+    const unit = resolution.replace(/\d+/g, '');
     switch (unit) {
       case 'D': {
         from = toDate.subtract(count, 'day').valueOf();
@@ -154,14 +171,46 @@ export default class Widget {
         break;
       }
       default: {
-        from =toDate.subtract(count, 'minute').valueOf();
+        from = toDate.subtract(count, 'minute').valueOf();
         break;
       }
     }
     return { from: Math.floor(from / 1000), to: Math.floor(to / 1000), countBack: count };
   }
 
-  chart () {
+  // 是否显示当前k线倒计时
+  setShowCountdown(show: boolean) {
+    this._chart?.setStyles({
+      candle: {
+        priceMark: {
+          last: {
+            countdown: {
+              show: show,
+            },
+          },
+        },
+      },
+    });
+  }
+   // 是否显示当前k线倒计时
+   setShowKlineScale(show: boolean) {
+    this._chart?.setStyles({
+      candle: {
+        priceMark: {
+          last: {
+            countdown: {
+              show: show,
+            },
+          },
+        },
+      },
+    });
+  }
+
+
+  // CrosshairHorizontalLabelView
+
+  chart() {
     return this._chart;
   }
 
@@ -198,7 +247,7 @@ export default class Widget {
     }
   }
 
-  removeIndicator (indicator: IndicatorInfo) {
+  removeIndicator(indicator: IndicatorInfo) {
     const symbol = this._symbolInfo?.ticker;
     if (symbol) {
       if (indicator.type === IndicatorType.Main) {
@@ -208,7 +257,7 @@ export default class Widget {
         this._chart?.removeIndicator(paneId);
         delete this._paneIds[indicator.name];
       }
-      
+
       const cacheIndicators = this.getCacheIndicators();
       const indicators = cacheIndicators[symbol];
       if (indicators) {
@@ -219,7 +268,7 @@ export default class Widget {
     }
   }
 
-  removeAllIndicator () {
+  removeAllIndicator() {
     const symbol = this._symbolInfo?.ticker;
     if (symbol) {
       this._chart?.removeIndicator('candle_pane');
@@ -234,13 +283,13 @@ export default class Widget {
     }
   }
 
-  changeTheme (theme: string) {
+  changeTheme(theme: string) {
     this._options.theme = theme;
     this._createWatermark();
     this._chart?.setStyles(getTheme(theme));
   }
 
-  setSymbol (symbol: string, resolution: string) {
+  setSymbol(symbol: string, resolution: string) {
     this._options.datafeed.resolveSymbol(symbol, (symbolInfo: DatafeedSymbolInfo) => {
       if (symbolInfo.ticker !== this._symbolInfo?.ticker || resolution !== this._options.interval) {
         const prevSymbol = this._symbolInfo?.ticker;
@@ -255,14 +304,14 @@ export default class Widget {
     });
   }
 
-  symbolInterval () {
+  symbolInterval() {
     return {
       symbol: this._symbolInfo?.ticker,
       interval: this._options.interval
     };
   }
 
-  private _getBars () {
+  private _getBars() {
     const symbolInfo = this._symbolInfo;
     if (symbolInfo) {
       const resolution = this._options.interval as ResolutionString;
@@ -280,15 +329,15 @@ export default class Widget {
               this._chart?.updateData(data);
             },
             `${symbolInfo.ticker}_#_${this._options.interval}`,
-            () => {}
+            () => { }
           );
         },
-        () => {}
+        () => { }
       );
     }
   }
 
-  setChartType (type: CandleType) {
+  setChartType(type: CandleType) {
     if (this._chart) {
       if (type !== this._chart.getStyles().candle.type) {
         this._chart?.setStyles({
@@ -300,10 +349,10 @@ export default class Widget {
     }
   }
 
-  resetData () {
+  resetData() {
     this._getBars();
   }
-//创建持仓线
+  //创建持仓线
   createPositionLine(position: PositionLineOptions) {
     const key = `${position.price}`;
     const count = this._positionLineCountMap[key] ?? 0;
@@ -336,6 +385,7 @@ export default class Widget {
         return true;
       },
       onMouseEnter: (event) => {
+      console.log("hover进来了",event)
         switch (event.figureKey) {
           case PositionLineFigureKey.Close: {
             this._chart?.overrideOverlay({
@@ -361,6 +411,7 @@ export default class Widget {
         return true;
       },
       onMouseLeave: (event) => {
+        console.log("hover走了",event)
         this._chart?.overrideOverlay({
           id: event.overlay.id,
           extendData: {
@@ -374,13 +425,13 @@ export default class Widget {
     });
     this._positionLineCountMap[key] = (this._positionLineCountMap[key] ?? 0) + 1;
   }
-//移除持仓线
-  removeAllPositionLine () {
+  //移除持仓线
+  removeAllPositionLine() {
     this._positionLineCountMap = {};
     this._chart?.removeOverlay({ name: 'positionLine' });
   }
-//创建历史成交标记
-  createHistoryOrderMark (orderMark: HistoryOrderMarkOptions) {
+  //创建历史成交标记
+  createHistoryOrderMark(orderMark: HistoryOrderMarkOptions) {
     const dataList = this._chart?.getDataList() ?? [];
     let candleData: Nullable<KLineData> = null;
     const size = dataList.length;
@@ -418,7 +469,7 @@ export default class Widget {
         },
         points: [{
           timestamp: candleData.timestamp,
-          value: orderMark.direction === HistoryOrderMarkArrowDirection.Up ? candleData.low : candleData.high 
+          value: orderMark.direction === HistoryOrderMarkArrowDirection.Up ? candleData.low : candleData.high
         }],
         styles: {
           color: orderMark.color,
@@ -449,8 +500,8 @@ export default class Widget {
       this._historyMarkCountMap[key] = (this._historyMarkCountMap[key] ?? 0) + 1;
     }
   }
-//移除历史成交标记
-  removeAllHistoryOrderMark () {
+  //移除历史成交标记
+  removeAllHistoryOrderMark() {
     this._historyMarkCountMap = {};
     this._chart?.removeOverlay({ name: 'historyOrderMark' });
   }
@@ -486,15 +537,6 @@ export default class Widget {
           }
         }
         return true;
-      },
-      onPressedMoving:(event)=>{
-        console.log("拖动",event)
-        position.onOrderdrag(event);
-        return true; 
-      },
-      onPressedMoveEnd: (event) => {
-        position.onOrderdrag(event);
-        return true; 
       },
       onMouseEnter: (event) => {
         switch (event.figureKey) {
@@ -532,17 +574,63 @@ export default class Widget {
         });
         return true;
       },
-   
+      onPressedMoveStart:(event)=>{
+        console.log("按住拖动开始回调事件",event)
+        position.onOrderdrag(event);
+        return true;
+      },
+      onPressedMoving: (event) => {
+        console.log("按住拖动回调事件", event)
+        position.onOrderdrag(event);
+        return true;
+      },
+      onPressedMoveEnd: (event) => {
+        console.log("按住拖动结束回调事件", event)
+        position.onOrderdrag(event);
+        return true;
+      },
+
     });
     this._positionLineCountMap[key] = (this._positionLineCountMap[key] ?? 0) + 1;
   }
-//移除持仓线
-  removeAllPositionTPSLLine () {
+  //移除持仓线
+  removeAllPositionTPSLLine() {
     this._positionLineCountMap = {};
     this._chart?.removeOverlay({ name: 'positionTPTLLine' });
   }
 
-  remove () {
+  /* 强平线 */
+  createLiquidationLine(position: PositionLineOptions) {
+    const key = `${position.price}`;
+    const count = this._positionLineCountMap[key] ?? 0;
+    this._chart?.createOverlay({
+      name: 'liquidationLine',
+      points: [{ value: position.price }],
+      extendData: {
+        ...position,
+        closeTooltip: '',
+        reverseTooltip: ''
+      },
+      styles: {
+        directionColor: position.directionColor,
+        profitLossColor: position.profitLossColor,
+        tooltipColor: position.tooltipColor,
+        backgroundColor: position.backgroundColor,
+        offsetLeft: 2 + count * 40
+      },
+    });
+    this._positionLineCountMap[key] = (this._positionLineCountMap[key] ?? 0) + 1;
+  }
+
+  removeAllLiquidationLine() {
+    this._positionLineCountMap = {};
+    this._chart?.removeOverlay({ name: 'liquidationLine' });
+  }
+
+
+
+
+  remove() {
     dispose('bv_kline_chart');
   }
 }

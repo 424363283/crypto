@@ -1,6 +1,7 @@
 import { createContext } from 'react';
 import { ChartType, KLinePriceType } from './types';
-import { CandleType } from 'klinecharts';
+// import { CandleType } from 'klinecharts';
+import { CandleType } from '@/components/YKLine/StockChart/OriginalKLine/index.esm';
 
 interface ExchangeChartContextValue {
   chartType: ChartType;
@@ -17,6 +18,9 @@ interface ExchangeChartContextValue {
   setShowPositionTPSLLine: (show: boolean) => void;
   showHistoryOrderMark: boolean;
   setShowHistoryOrderMark: (show: boolean) => void;
+  // 强平线
+  showLiquidationLine: boolean;
+  setShowLiquidationLine: (show: boolean) => void;
 
 };
 
@@ -35,7 +39,9 @@ const ExchangeChartContext = createContext<ExchangeChartContextValue>(
     showPositionTPSLLine: false,
     setShowPositionTPSLLine: () => {},
     showHistoryOrderMark: false,
-    setShowHistoryOrderMark: () => {}
+    setShowHistoryOrderMark: () => {},
+    showLiquidationLine: false,
+    setShowLiquidationLine: () => {},
   }
 );
 

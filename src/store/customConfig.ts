@@ -1,14 +1,4 @@
 import { isServerSideRender } from '@/utils';
-/*
- * @Author: wade
- * @Date: 2023-12-20 12:22:56
- * @Description: 获取用户自定义配置
- * @PRD:
- * @UI:
- * @FilePath: /src/store/customConfig.ts
- * @LastEditTime: 2023-12-20 12:28:35
- * @LastEditors: wade
- */
 import { StoreApi, UseBoundStore, create } from 'zustand';
 
 type ICustomSetting = {

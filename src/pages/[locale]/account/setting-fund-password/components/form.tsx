@@ -71,7 +71,7 @@ export default function SettingPasswordForm() {
   return (
     <AccountBox title={LANG('开启资金密码')}>
       <div className='funds-wrapper'>
-        <PasswordInput label={LANG('登陆密码')} withBorder value={loginPwd} onInputChange={onInputLoginPassword} />
+        <PasswordInput label={LANG('登录密码')} withBorder value={loginPwd} onInputChange={onInputLoginPassword} />
         <PasswordInput
           label={LANG('资金密码')}
           withBorder

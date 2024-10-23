@@ -362,7 +362,158 @@ export const colorMap = {
   '--color-active':{
     light: '#782ce8',
     dark: '#782ce8',
-  }
+  },
+
+ '--text-4':{
+  light: '#2B2F33',
+  dark: '#ffffff',
+ },
+ '--text-3':{
+  light: '#787D83',
+  dark: '#A5A8AC',
+ },
+ '--text-2':{
+  light: '#9FA1A6',
+  dark: '#717171',
+ },
+ '--text-1':{
+  light: '#FFFFFF',
+  dark: '#2B2F33',
+ },
+
+ '--line-1':{
+  light: '#F4F5F6',
+  dark: '#1F2124',
+ },
+ '--line-2':{
+  light: '#E8E9EA',
+  dark: '#2D3033',
+ },
+ '--theme-light':{
+  light: '#FFF4EB',
+  dark: '#593212',
+ },
+ '--theme-light-hover':{
+  light: '#ffeee1',
+  dark: '#40240D',
+ },
+ '--theme-light-active':{
+  light: '#ffdcc0',
+  dark: '#1C1006',
+ },
+ '--theme-normal':{
+  light: '#ff8f34',
+  dark: '#ff8f34',
+ },
+ '--theme-normal-hover':{
+  light: '#ff8f34',
+  dark: '#D97A2C',
+ },
+ '--theme-normal-active':{
+  light: '#cc722a',
+  dark: '#BA6826',
+ },
+
+ '--green-3':{
+  light: '#cc722a',
+  dark: '#2AB26C',
+ },
+ '--green-2':{
+  light: 'rgba(42, 178, 108, 0.3)',
+  dark: 'rgba(42, 178, 108, 0.3)',
+ },
+ '--green-1':{
+  light: 'rgba(42, 178, 108, 0.1)',
+  dark: 'rgba(42, 178, 108, 0.1)',
+ },
+ '--red-3':{
+  light: '#EF454A',
+  dark: '#EF454A',
+ },
+ '--red-2':{
+  light: 'rgba(239, 69, 74, 0.3)',
+  dark: 'rgba(239, 69, 74, 0.3)',
+ },
+ '--red-1':{
+  light: 'rgba(239, 69, 74, 0.1)',
+  dark: 'rgba(239, 69, 74, 0.1)',
+ },
+
+ '--orange-3':{
+  light: '#FF8F34',
+  dark: '#FF8F34',
+ },
+ '--orange-2':{
+  light: 'rgba(255, 143, 52, 0.3)',
+  dark: 'rgba(255, 143, 52, 0.3)',
+ },
+ '--orange-1':{
+  light: 'rgba(255, 143, 52, 0.1)',
+  dark: 'rgba(255, 143, 52, 0.1)',
+ },
+
+
+ '--blue-3':{
+  light: '#1765FF',
+  dark: '#1765FF',
+ },
+ '--blue-2':{
+  light: 'rgba(23, 101, 255, 0.3)',
+  dark: 'rgba(23, 101, 255, 0.3)',
+ },
+ '--blue-1':{
+  light: 'rgba(23, 101, 255, 0.1)',
+  dark: 'rgba(23, 101, 255, 0.1)',
+ },
+
+ '--static-black':{
+  light: '#000000',
+  dark: '#000000',
+ },
+ '--tooltips':{
+  light: '#29292F',
+  dark: '#29292F',
+ },
+ '--mask':{
+  light: 'rgba(255,255,255,0.6)',
+  dark: 'rgba(255,255,255,0.6)',
+ },
+
+ '--subtab':{
+  light: '#F1F1F1',
+  dark: '#F1F1F1',
+ },
+ '--page-orange':{
+  light: 'rgba(255, 143, 52, 0.1)',
+  dark: 'rgba(255, 143, 52, 0.1)',
+ },
+
+ '--white':{
+  light: '#ffffff',
+  dark: '#ffffff',
+ },
+
+ '--toast':{
+  light: '#ffffff',
+  dark: '#ffffff',
+ },
+
+ '--text-on-btn':{
+  light: '#ffffff',
+  dark: '#ffffff',
+ },
+
+ '--switch-active':{
+  light: '#ffffff',
+  dark: '#ffffff',
+ },
+
+ '--switch-fill-active':{
+  light: '#ffffff',
+  dark: '#ffffff',
+ },
+ 
+ 
 
 
 

@@ -48,6 +48,7 @@ const KChartComponent = ({
     }
   }, [kType]);
   let klineId = id;
+  console.log("klineId",klineId)
   // if (isSwapId) {
   //   switch (klinePriceType) {
   //     // 标记价格
@@ -69,11 +70,12 @@ const KChartComponent = ({
 
   useEffect(() => {
     if (id) {
-      if (/^[im]/.test(klineId) && !klineGroupMode) {
-        WS.subscribe4001([klineId, id]);
-      } else {
-        WS.subscribe4001([id]);
-      }
+      WS.subscribe4001([id]);
+      // if (/^[im]/.test(klineId) && !klineGroupMode) {
+      //   WS.subscribe4001([klineId, id]);
+      // } else {
+      //   WS.subscribe4001([id]);
+      // }
     }
   }, [id, klineId, klineGroupMode]);
 

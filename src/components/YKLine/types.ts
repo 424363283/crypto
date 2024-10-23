@@ -9,19 +9,23 @@ export enum KLinePriceType {
   Index = 1
 }
 
-export const STORAGE_K_LINE_RESOLUTION_KEY = 'bv_current_resolution';
+export const STORAGE_K_LINE_RESOLUTION_KEY = 'ymex_current_resolution';
 
-export const STORAGE_CHART_TYPE_KEY = 'bv_contract_chart_type';
+export const STORAGE_CHART_TYPE_KEY = 'ymex_contract_chart_type';
 
-export const STORAGE_ORIGINAL_KLINE_STYLE = 'bv_original_kline_style';
+export const STORAGE_ORIGINAL_KLINE_STYLE = 'ymex_original_kline_style';
 
-export const STORAGE_SHOW_POSITION_LINE_KEY = 'bv_kline_show_position';
+export const STORAGE_SHOW_POSITION_LINE_KEY = 'ymex_kline_show_position';
 
-export const STORAGE_SHOW_HISTORY_MARK_KEY = 'bv_kline_show_history_order';
+export const STORAGE_SHOW_HISTORY_MARK_KEY = 'ymex_kline_show_history_order';
 
-export const STORAGE_KLINE_PRICE_TYPE_KEY = 'bv_kline_price_type';
+export const STORAGE_KLINE_PRICE_TYPE_KEY = 'ymex_kline_price_type';
 
-export const STORAGE_FAVORITE_RESOLUTION_KEY = 'bv_kline_favorite_resolution';
+export const STORAGE_FAVORITE_RESOLUTION_KEY = 'ymex_kline_favorite_resolution';
+
+export const STORAGE_SHOW_LIQUIDATION_LINE_KEY = 'ymex_kline_liquidation'
+
+export const STORAGE_SHOW_POSIITION_TPSL_LINE_KEY = 'ymex_kline_positiontpslline'
 
 export const SUPPORT_RESOLUTIONS = ['Time', '1', '3', '5', '15', '30', '60', '120', '240', '360', '480', '720', '1D', '1W', '1M'];
 

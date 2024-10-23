@@ -1,13 +1,3 @@
-/*
- * @Author: wade
- * @Date: 2023-12-20 19:04:19
- * @Description:
- * @PRD:
- * @UI:
- * @FilePath: /src/constants/routeMap.ts
- * @LastEditTime: 2024-01-19 11:25:00
- * @LastEditors: wade
- */
 const routeMap = {
   financeRecord: '/finance/record',
   register: '/register', // 注册

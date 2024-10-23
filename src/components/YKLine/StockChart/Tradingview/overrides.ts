@@ -30,7 +30,11 @@ export function getOverrides (theme: ThemeName) {
 
       'paneProperties.backgroundGradientStartColor': paneBackgroundColor,
       'paneProperties.backgroundGradientEndColor': paneBackgroundColor,
-
+      "mainSeriesProperties.showPrevClosePriceLine": "true",
+      "mainSeriesProperties.showCountdown":"true",
+      "scalesProperties.showSeriesLastValue":"true",
+      // 'volumePaneSize': 'medium',
+     
       // Time-Axis and Price-Axis border line color
       'scalesProperties.lineColor': lineColor
     }

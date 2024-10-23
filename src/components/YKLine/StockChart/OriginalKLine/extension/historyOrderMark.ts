@@ -1,4 +1,7 @@
-import { OverlayTemplate, OverlayFigure } from 'klinecharts';
+// import { OverlayTemplate, OverlayFigure } from 'klinecharts';
+import { OverlayTemplate, OverlayFigure } from '@/components/YKLine/StockChart/OriginalKLine/index.esm';
+
+
 
 export const enum HistoryOrderMarkArrowDirection {
   Up,

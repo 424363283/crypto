@@ -56,7 +56,7 @@ export const InputInvitationCode = () => {
         <p
           className='agree-item'
           dangerouslySetInnerHTML={{
-            __html: LANG(`我已阅读并同意XK的{permission1}和{permission2}`, {
+            __html: LANG(`我已阅读并同意YMEX的{permission1}和{permission2}`, {
               permission1: `<a href="https://support.y-mex.com/hc/en-us/articles/5691838199183-Terms-of-Use">${LANG(
                 '用户协议'
               )}</a>`,

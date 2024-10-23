@@ -1,13 +1,3 @@
-/*
- * @Author: wade
- * @Date: 2023-12-20 10:39:47
- * @Description:
- * @PRD:
- * @UI:
- * @FilePath: /src/hooks/use-set-settings.ts
- * @LastEditTime: 2023-12-20 12:32:23
- * @LastEditors: wade
- */
 import { useContext } from 'react';
 import { UserContext } from '@/context';
 import { api, http } from '@/service';

@@ -85,8 +85,22 @@ html.theme-light .chart-container .chart-loading-screen {
   border-left-color: transparent;
 }
 
-.theme-light.k-line-demo-account:root table.chart-markup-table tr:first-of-type td.pane canvas:nth-child(2)  {
+/* .theme-light.k-line-demo-account:root table.chart-markup-table tr:first-of-type td.pane canvas:nth-child(2)  {
   background-image: url(//s1.bycsi.com/bybit/deadpool/f27ce9f10b6f11eebdc72a133fcf998d.svg);
+} */
+
+.theme-light.k-line-demo-account:root table.chart-markup-table tr:first-of-type td.pane canvas:nth-child(2) {
+  background-image: url("/imgs/logobg.png") !important;
+  background-repeat: no-repeat !important;
+  background-position: center bottom 10px !important;
+  background-size: 250px !important;
+}
+
+.chart-markup-table tr:first-of-type .chart-gui-wrapper canvas {
+  background-image: url("/imgs/logobg.png") !important;
+  background-repeat: no-repeat !important;
+  background-position: center bottom 10px !important;
+  background-size: 250px !important;
 }
 
 .theme-light .paneSeparator-ZR_yhubO {

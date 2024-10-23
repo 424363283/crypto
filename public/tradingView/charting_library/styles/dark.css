@@ -76,10 +76,17 @@ html.theme-dark .chart-container .chart-loading-screen {
 
 /* 以上是tooltip */
 /* demoAccount mask */
-.theme-dark.k-line-demo-account:root table.chart-markup-table tr:first-of-type td.pane canvas:nth-child(2)  {
-  background-image: url(//s1.bycsi.com/bybit/deadpool/01b70553f30311edbc4bc60635b792dd.svg);
+.theme-dark.k-line-demo-account:root table.chart-markup-table tr:first-of-type td.pane canvas:nth-child(2) {
+  background-image: url("/imgs/logobg.png") !important;
+  background-repeat: no-repeat !important;
+  background-position: center bottom 10px !important;
 }
 
+.chart-markup-table tr:first-of-type .chart-gui-wrapper canvas {
+  background-image: url("/imgs/logobg.png") !important;
+  background-repeat: no-repeat !important;
+  background-position: center bottom 10px !important;
+}
 /* 以下是tooltip */
 .theme-dark:root .common-tooltip__body-356XFpBj {
   color: #adb1b8;

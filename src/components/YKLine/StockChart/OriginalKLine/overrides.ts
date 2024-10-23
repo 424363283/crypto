@@ -1,4 +1,5 @@
-import { CandleTooltipCustomCallbackData, LineType } from 'klinecharts';
+// import { CandleTooltipCustomCallbackData, LineType } from 'klinecharts';
+import { CandleTooltipCustomCallbackData, LineType } from '@/components/YKLine/StockChart/OriginalKLine/index.esm';
 
 import { Color } from '../types';
 

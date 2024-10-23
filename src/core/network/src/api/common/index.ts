@@ -136,7 +136,7 @@ export function postCommonApplyAffiliateAgentApi(data: object) {
   return http.post<object>(paths['apply_affiliate_agent'], _(data));
 }
 
-/** 登陆二维码 */
+/** 登录二维码 */
 export function getCommonLoginQrCodeApi(random: string, opts: any) {
   return http.get(paths['login_qrcode'] + random, opts);
 }
@@ -232,7 +232,7 @@ export function validateSmsCodeApi_V2<T>(data: { account: string; type: string; 
 }
 
 
-/** 登陆接口 */
+/** 登录接口 */
 export function loginApi(data: any) {
   return http.post<{ next: boolean; phone: string; uid: string }>(paths['login'], _(data));
 }

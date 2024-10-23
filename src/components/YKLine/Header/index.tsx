@@ -1,6 +1,7 @@
 import { useState, FC, useContext, useEffect, ReactNode, useRef } from 'react';
 
-import { CandleType } from 'klinecharts';
+// import { CandleType } from 'klinecharts';
+import { CandleType } from '@/components/YKLine/StockChart/OriginalKLine/index.esm';
 
 import BVIcon from '@/components/YIcons';
 import CheckBox from '@/components/CheckBox';
@@ -20,23 +21,23 @@ import styles from './index.module.scss';
 const originalKLineStyles: Record<string, { text: string, icon: ReactNode }> = {
   [CandleType.CandleSolid]: {
     text: '实心K线',
-    icon: <BVIcon.KLineStyleSolid/>
+    icon: <BVIcon.KLineStyleSolid />
   },
   [CandleType.CandleStroke]: {
     text: '空心K线',
-    icon: <BVIcon.KLineStyleStroke/>
+    icon: <BVIcon.KLineStyleStroke />
   },
   [CandleType.CandleUpStroke]: {
     text: '上涨空心K线',
-    icon: <BVIcon.KLineStyleUpStroke/>
+    icon: <BVIcon.KLineStyleUpStroke />
   },
   [CandleType.CandleDownStroke]: {
     text: '下跌空心K线',
-    icon: <BVIcon.KLineStyleDownStroke/>
+    icon: <BVIcon.KLineStyleDownStroke />
   },
   [CandleType.Area]: {
-     text: '线形图',
-    icon: <BVIcon.KLineStyleLine/>
+    text: '线形图',
+    icon: <BVIcon.KLineStyleLine />
   }
 };
 
@@ -58,11 +59,12 @@ const Header: FC<HeaderProps> = (props) => {
   const {
     chartType,
     originalKLineStyle, setOriginalKLineStyle,
-    kLinePriceType, setKLinePriceType, 
+    kLinePriceType, setKLinePriceType,
     kLineResolution, setKLineResolution,
     showPositionLine, setShowPositionLine,
-    showPositionTPSLLine,setShowPositionTPSLLine,
-    showHistoryOrderMark, setShowHistoryOrderMark
+    showPositionTPSLLine, setShowPositionTPSLLine,
+    showHistoryOrderMark, setShowHistoryOrderMark,
+    showLiquidationLine, setShowLiquidationLine,
   } = useContext(ExchangeChartContext);
 
   const rootEl = useRef<HTMLDivElement>(null);
@@ -77,7 +79,7 @@ const Header: FC<HeaderProps> = (props) => {
     if (result) {
       try {
         periods = JSON.parse(result);
-      } catch {}
+      } catch { }
       if (Array.isArray(periods) && periods.length > 0) {
         return periods;
       }
@@ -128,13 +130,13 @@ const Header: FC<HeaderProps> = (props) => {
             onClick={() => {
               rootEl.current?.scrollTo({ left: 0, behavior: 'smooth' });
               setScrollPosition(ScrollPosition.Left);
-            }}/>
+            }} />
         )
       }
       <div
         ref={rootEl}
         className={styles.header}>
-        
+
         <div className={styles.kline_btn}>
           {
             resolutionList.map((item) => (
@@ -162,7 +164,7 @@ const Header: FC<HeaderProps> = (props) => {
             setResolutionList={resolutions => {
               setResolutionList(resolutions);
               localStorage.setItem(STORAGE_FAVORITE_RESOLUTION_KEY, JSON.stringify(resolutions));
-            }}/>
+            }} />
         </div>
         <div className={styles.headerLine}></div>
         <div className={styles.RightsetTing}>
@@ -183,7 +185,7 @@ const Header: FC<HeaderProps> = (props) => {
                         [
                           CandleType.CandleSolid,
                           CandleType.CandleStroke,
-                          CandleType.CandleUpStroke, 
+                          CandleType.CandleUpStroke,
                           CandleType.CandleDownStroke,
                           CandleType.Area
                         ].map(key => {
@@ -210,10 +212,10 @@ const Header: FC<HeaderProps> = (props) => {
                     title={<div>k线</div>}>
                     <span className={styles.headerIcon}>
                       {originalKLineStyles[originalKLineStyle].icon}
-                      <BVIcon.SquareFilled className={classNames(styles.arrow, originalKLineStyleOpen && styles.rotate)}/>
+                      <BVIcon.SquareFilled className={classNames(styles.arrow, originalKLineStyleOpen && styles.rotate)} />
                     </span>
                   </Tooltip>
-                  
+
                 </Popover>
               </div>
             )
@@ -225,7 +227,7 @@ const Header: FC<HeaderProps> = (props) => {
           {
             chartType === ChartType.TradingView && (
               <span>
-                <BVIcon.KlineSettingOutlined onClick={onSettingClick}/>
+                <BVIcon.KlineSettingOutlined onClick={onSettingClick} />
               </span>
             )
           }
@@ -243,7 +245,7 @@ const Header: FC<HeaderProps> = (props) => {
                       checked={showPositionLine ?? false}
                       // theme={theme}
                       onChange={() => setShowPositionLine?.(!showPositionLine)}
-                      label={'仓位'}/>
+                      label={'仓位'} />
                   </div>
                   <div style={{ padding: '0 12px', height: 32, lineHeight: '32px' }}>
                     {/* @ts-ignore */}
@@ -251,7 +253,14 @@ const Header: FC<HeaderProps> = (props) => {
                       checked={showPositionTPSLLine ?? false}
                       // theme={theme}
                       onChange={() => setShowPositionTPSLLine?.(!showPositionTPSLLine)}
-                      label={'止盈止损线'}/>
+                      label={'止盈止损线'} />
+                  </div>
+                  <div style={{ padding: '0 12px', height: 32, lineHeight: '32px' }}>
+                    {/* @ts-ignore */}
+                    <CheckBox
+                      checked={showLiquidationLine ?? false}
+                      onChange={() => setShowLiquidationLine?.(!showLiquidationLine)}
+                      label={'爆仓线'} />
                   </div>
                   <div style={{ padding: '0 12px', height: 32, lineHeight: '32px' }}>
                     {/* @ts-ignore */}
@@ -259,32 +268,20 @@ const Header: FC<HeaderProps> = (props) => {
                       checked={showPositionLine ?? false}
                       // theme={theme}
                       onChange={() => setShowPositionLine?.(!showPositionLine)}
-                      label={'爆仓线'}/>
+                      label={'当前委托'} />
                   </div>
-                  <div style={{ padding: '0 12px', height: 32, lineHeight: '32px' }}>
-                    {/* @ts-ignore */}
+                  {/* <div style={{ padding: '0 12px', height: 32, lineHeight: '32px' }}>
                     <CheckBox
                       checked={showPositionLine ?? false}
-                      // theme={theme}
                       onChange={() => setShowPositionLine?.(!showPositionLine)}
-                      label={'当前委托'}/>
-                  </div>
-                  <div style={{ padding: '0 12px', height: 32, lineHeight: '32px' }}>
-                    {/* @ts-ignore */}
+                      label={'涨跌幅'} />
+                  </div> */}
+                  {/* <div style={{ padding: '0 12px', height: 32, lineHeight: '32px' }}>
                     <CheckBox
                       checked={showPositionLine ?? false}
-                      // theme={theme}
                       onChange={() => setShowPositionLine?.(!showPositionLine)}
-                      label={'涨跌幅'}/>
-                  </div>
-                  <div style={{ padding: '0 12px', height: 32, lineHeight: '32px' }}>
-                    {/* @ts-ignore */}
-                    <CheckBox
-                      checked={showPositionLine ?? false}
-                      // theme={theme}
-                      onChange={() => setShowPositionLine?.(!showPositionLine)}
-                      label={'倒计时'}/>
-                  </div>
+                      label={'倒计时'} />
+                  </div> */}
                   {/* 导致CPU增高，先隐藏 */}
                   <div style={{ padding: '0 12px', height: 32, lineHeight: '32px' }}>
                     <CheckBox
@@ -297,7 +294,7 @@ const Header: FC<HeaderProps> = (props) => {
                           overlayClassName={styles.antTooltip}
                           title={<div>{'只展示7天内的近100条历史成交订单'}</div>}>
                           <span className={styles.historicalOrdersContent} style={{ marginLeft: 0 }}>
-                          历史委托
+                            历史委托
                           </span>
                         </Tooltip>
                       }
@@ -330,7 +327,7 @@ const Header: FC<HeaderProps> = (props) => {
         <div className={styles.RightBtn}>
           <ChartTypeTab />
         </div>
-        
+
       </div>
       {
         scrollPosition === ScrollPosition.Left && (
@@ -339,7 +336,7 @@ const Header: FC<HeaderProps> = (props) => {
             onClick={() => {
               rootEl.current?.scrollTo({ left: rootEl.current?.scrollWidth, behavior: 'smooth' });
               setScrollPosition(ScrollPosition.Right);
-            }}/>
+            }} />
         )
       }
     </div>

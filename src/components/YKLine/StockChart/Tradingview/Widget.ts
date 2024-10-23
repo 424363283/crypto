@@ -69,19 +69,28 @@ const STUDY_COUNT_LIMIT = 10;
 
 export interface WidgetApi<T = any> extends TradingView.IChartingLibraryWidget {
   createPositionLine: (options: PositionLineOptions<T>) => void;
+  createPositionTPSLLine: (options: PositionLineOptions<T>) => void;
+  createLiquidationLine: (options: PositionLineOptions<T>) => void;
   removeAllPositionLine: () => void;
+  removeAllPositionTPSLLine: () => void;
+  removeAllLiquidationLine: () => void;
   createHistoryOrderMark: (options: HistoryOrderMarkOptions) => void;
   removeAllHistoryOrderMark: () => void;
   setSymbolResolution: (symbol: string, resolution: TradingView.ResolutionString) => void;
 }
 
-export default function createWidget (options: WidgetOptions<TradingView.ResolutionString, TradingView.LanguageCode, TradingView.ThemeName>) {
+export default function createWidget(options: WidgetOptions<TradingView.ResolutionString, TradingView.LanguageCode, TradingView.ThemeName>) {
   class Widget extends window.TradingView.widget implements WidgetApi {
     private _saveStudiesShapesTimeout = -1;
 
     private _options: WidgetOptions<TradingView.ResolutionString, TradingView.LanguageCode, TradingView.ThemeName>;
 
-    private _positionLineMapping: Map<string, TradingView.IPositionLineAdapter> = new Map();
+    private _positionLineMapping: Map<string, TradingView.IPositionLineAdapter> = new Map();//持仓线
+    private _positionTPSLLineMapping: Map<string, TradingView.IPositionLineAdapter> = new Map(); //止盈止损
+
+    private _LiquidationLineMapping: Map<string, TradingView.IPositionLineAdapter> = new Map();//爆仓线
+
+
 
     private _historyOrderMarkMapping: Map<string, TradingView.IExecutionLineAdapter> = new Map();
 
@@ -150,7 +159,7 @@ export default function createWidget (options: WidgetOptions<TradingView.Resolut
       });
     }
 
-    private _saveStudiesShapes () {
+    private _saveStudiesShapes() {
       const chart = this.activeChart();
       const symbol = chart.symbol();
       const cacheStudies = this._getCacheStudies();
@@ -202,11 +211,11 @@ export default function createWidget (options: WidgetOptions<TradingView.Resolut
      * 获取缓存的指标
      * @returns 
      */
-    private _getCacheStudies () {
+    private _getCacheStudies() {
       let studies: Record<string, StudyShapeInfo[]> = {};
       try {
         studies = window.JSON.parse(localStorage.getItem(STORAGE_STUDY_KEY) || '{}');
-      } catch {}
+      } catch { }
       return typeof studies === 'object' && !Array.isArray(studies) ? studies : {};
     }
 
@@ -214,15 +223,15 @@ export default function createWidget (options: WidgetOptions<TradingView.Resolut
      * 获取缓存的图形
      * @returns 
      */
-    private _getCacheShapes () {
-      let shapes:Record<string, StudyShapeInfo[]> = {};
+    private _getCacheShapes() {
+      let shapes: Record<string, StudyShapeInfo[]> = {};
       try {
         shapes = window.JSON.parse(window.localStorage.getItem(STORAGE_DRAWING_KEY) ?? '{}');
-      } catch {}
+      } catch { }
       return typeof shapes === 'object' && !Array.isArray(shapes) ? shapes : {};
     }
 
-    private _restoreStudies () {
+    private _restoreStudies() {
       try {
         const chart = this.activeChart();
         const symbol = chart.symbol();
@@ -261,7 +270,7 @@ export default function createWidget (options: WidgetOptions<TradingView.Resolut
      * 按交易对恢复划线和指标
      * @param symbol 
      */
-    private _restoreShapes () {
+    private _restoreShapes() {
       const chart = this.activeChart();
       const shapes = this._getCacheShapes();
       const symbol = chart.symbol();
@@ -289,7 +298,7 @@ export default function createWidget (options: WidgetOptions<TradingView.Resolut
       });
     }
 
-    setSymbolResolution (symbol: string, resolution: TradingView.ResolutionString) {
+    setSymbolResolution(symbol: string, resolution: TradingView.ResolutionString) {
       const chart = this.activeChart();
       const symbolChanged = symbol !== chart.symbol();
       const resolutionChanged = resolution !== chart.resolution();
@@ -313,7 +322,7 @@ export default function createWidget (options: WidgetOptions<TradingView.Resolut
     /**
      * 创建持仓线
      */
-    createPositionLine<T> (options: PositionLineOptions<T>) {
+    createPositionLine<T>(options: PositionLineOptions<T>) {
       let positionLine = this._positionLineMapping.get(options.id);
       if (positionLine) {
         positionLine.remove();
@@ -323,7 +332,7 @@ export default function createWidget (options: WidgetOptions<TradingView.Resolut
       this.overridePositionLine(options);
     }
 
-    overridePositionLine<T> (options: PositionLineOptions<T>) {
+    overridePositionLine<T>(options: PositionLineOptions<T>) {
       const {
         id, price, text, lineLength, lineStyle, lineColor,
         quantityText, quantityFont, quantityTextColor, quantityBackgroundColor, quantityBorderColor,
@@ -334,6 +343,289 @@ export default function createWidget (options: WidgetOptions<TradingView.Resolut
         extendLeft, onClose, onModify,
       } = options;
       const positionLine = this._positionLineMapping.get(id);
+      if (!positionLine) {
+        return;
+      }
+      if (price || price === 0) {
+        positionLine.setPrice(price);
+      }
+      if (text) {
+        positionLine.setText(text);
+      }
+      if (lineLength) {
+        positionLine.setLineLength(lineLength);
+      }
+      if (lineStyle || lineStyle === 0) {
+        positionLine.setLineStyle(lineStyle);
+      }
+      
+      if (lineColor) {
+        positionLine.setLineColor(lineColor);
+      }
+      if (tooltip) {
+        positionLine.setTooltip(tooltip);
+      }
+      if (protectTooltip) {
+        positionLine.setProtectTooltip(protectTooltip);
+      }
+      if (bodyTextColor) {
+        positionLine.setBodyTextColor(bodyTextColor);
+      }
+      if (bodyFont) {
+        positionLine.setBodyFont(bodyFont);
+      }
+      if (quantityText) {
+        positionLine.setQuantity(quantityText);
+      }
+      if (quantityFont) {
+        positionLine.setQuantityFont(quantityFont);
+      }
+      if (quantityTextColor) {
+        positionLine.setQuantityTextColor(quantityTextColor);
+      }
+      if (quantityBackgroundColor) {
+        positionLine.setQuantityBackgroundColor(quantityBackgroundColor);
+      }
+      if (quantityBorderColor) {
+        positionLine.setQuantityBorderColor(quantityBorderColor);
+      }
+      if (bodyBorderColor) {
+        positionLine.setBodyBorderColor(bodyBorderColor);
+      }
+      if (bodyBackgroundColor) {
+        positionLine.setBodyBackgroundColor(bodyBackgroundColor);
+      }
+      if (reverse) {
+        positionLine.onReverse(reverse.data, reverse.callback);
+      }
+      if (reverseTooltip) {
+        positionLine.setReverseTooltip(reverseTooltip);
+      }
+      if (reverseButtonIconColor) {
+        positionLine.setReverseButtonIconColor(reverseButtonIconColor);
+      }
+      if (reverseButtonBorderColor) {
+        positionLine.setReverseButtonBorderColor(reverseButtonBorderColor);
+      }
+      if (closeButtonBorderColor) {
+        positionLine.setCloseButtonBorderColor(closeButtonBorderColor);
+      }
+      if (closeButtonIconColor) {
+        positionLine.setCloseButtonIconColor(closeButtonIconColor);
+      }
+      if (closeButtonBackgroundColor) {
+        positionLine.setCloseButtonBackgroundColor(closeButtonBackgroundColor);
+      }
+      if (reverseButtonBackgroundColor) {
+        positionLine.setReverseButtonBackgroundColor(reverseButtonBackgroundColor);
+      }
+      if (closeTooltip) {
+        positionLine.setCloseTooltip(closeTooltip);
+      }
+      positionLine.setExtendLeft(!!extendLeft);
+      if (onModify) {
+        positionLine.onModify(onModify);
+      }
+      if (onClose) {
+        positionLine.onClose(onClose);
+      }
+    }
+
+    removeAllPositionLine() {
+      this._positionLineMapping.forEach(positionLine => {
+        positionLine.remove();
+      });
+      this._positionLineMapping.clear();
+    }
+
+    /**
+     * 创建历史订单标识
+     */
+    createHistoryOrderMark(options: HistoryOrderMarkOptions) {
+      let mark = this._historyOrderMarkMapping.get(options.id);
+      if (mark) {
+        mark.remove();
+      }
+      mark = this.activeChart().createExecutionShape();
+      this._historyOrderMarkMapping.set(options.id, mark);
+      this.overrideHistoryOrderMark(options);
+    }
+
+    overrideHistoryOrderMark(options: HistoryOrderMarkOptions) {
+      const {
+        id, price, arrowColor, tooltip, direction, time,
+      } = options;
+      const mark = this._historyOrderMarkMapping.get(id);
+      if (!mark) {
+        return;
+      }
+      if (price || price === 0) {
+        mark.setPrice(price);
+      }
+      if (tooltip) {
+        mark.setTooltip(tooltip);
+      }
+      if (arrowColor) {
+        mark.setArrowColor(arrowColor);
+      }
+      if (direction) {
+        mark.setDirection(direction);
+      }
+      if (time) {
+        mark.setTime(time);
+      }
+    }
+
+    removeAllHistoryOrderMark() {
+      this._historyOrderMarkMapping.forEach(mark => {
+        mark.remove();
+      });
+      this._historyOrderMarkMapping.clear();
+    }
+
+    /**
+   * 创建止盈止损线
+   */
+
+    createPositionTPSLLine<T>(options: PositionLineOptions<T>) {
+      let positionTPSLLine = this._positionTPSLLineMapping.get(options.id);
+      if (positionTPSLLine) {
+        positionTPSLLine.remove();
+      }
+      positionTPSLLine = this.activeChart().createPositionLine();
+      this._positionTPSLLineMapping.set(options.id, positionTPSLLine);
+      this.overridePositionTPSLLine(options);
+    }
+
+    overridePositionTPSLLine<T>(options: PositionLineOptions<T>) {
+      const {
+        id, price, text, lineLength, lineStyle, lineColor,
+        quantityText, quantityFont, quantityTextColor, quantityBackgroundColor, quantityBorderColor,
+        bodyTextColor, bodyFont, bodyBorderColor, bodyBackgroundColor,
+        reverse, reverseButtonIconColor, reverseButtonBorderColor, reverseButtonBackgroundColor, reverseTooltip,
+        closeButtonBorderColor, closeButtonIconColor, closeButtonBackgroundColor,
+        tooltip, protectTooltip, closeTooltip,
+        extendLeft, onClose, onModify,
+      } = options;
+      const positionTPSLLine = this._positionTPSLLineMapping.get(id);
+      if (!positionTPSLLine) {
+        return;
+      }
+      if (price || price === 0) {
+        positionTPSLLine.setPrice(price);
+      }
+      if (text) {
+        positionTPSLLine.setText(text);
+      }
+      if (lineLength) {
+        positionTPSLLine.setLineLength(lineLength);
+      }
+      if (lineStyle || lineStyle === 0) {
+        positionTPSLLine.setLineStyle(lineStyle);
+      }
+      if (lineColor) {
+        positionTPSLLine.setLineColor(lineColor);
+      }
+      if (tooltip) {
+        positionTPSLLine.setTooltip(tooltip);
+      }
+      if (protectTooltip) {
+        positionTPSLLine.setProtectTooltip(protectTooltip);
+      }
+      if (bodyTextColor) {
+        positionTPSLLine.setBodyTextColor(bodyTextColor);
+      }
+      if (bodyFont) {
+        positionTPSLLine.setBodyFont(bodyFont);
+      }
+      if (quantityText) {
+        positionTPSLLine.setQuantity(quantityText);
+      }
+      if (quantityFont) {
+        positionTPSLLine.setQuantityFont(quantityFont);
+      }
+      if (quantityTextColor) {
+        positionTPSLLine.setQuantityTextColor(quantityTextColor);
+      }
+      if (quantityBackgroundColor) {
+        positionTPSLLine.setQuantityBackgroundColor(quantityBackgroundColor);
+      }
+      if (quantityBorderColor) {
+        positionTPSLLine.setQuantityBorderColor(quantityBorderColor);
+      }
+      if (bodyBorderColor) {
+        positionTPSLLine.setBodyBorderColor(bodyBorderColor);
+      }
+      if (bodyBackgroundColor) {
+        positionTPSLLine.setBodyBackgroundColor(bodyBackgroundColor);
+      }
+      if (reverse) {
+        positionTPSLLine.onReverse(reverse.data, reverse.callback);
+      }
+      if (reverseTooltip) {
+        positionTPSLLine.setReverseTooltip(reverseTooltip);
+      }
+      if (reverseButtonIconColor) {
+        positionTPSLLine.setReverseButtonIconColor(reverseButtonIconColor);
+      }
+      if (reverseButtonBorderColor) {
+        positionTPSLLine.setReverseButtonBorderColor(reverseButtonBorderColor);
+      }
+      if (closeButtonBorderColor) {
+        positionTPSLLine.setCloseButtonBorderColor(closeButtonBorderColor);
+      }
+      if (closeButtonIconColor) {
+        positionTPSLLine.setCloseButtonIconColor(closeButtonIconColor);
+      }
+      if (closeButtonBackgroundColor) {
+        positionTPSLLine.setCloseButtonBackgroundColor(closeButtonBackgroundColor);
+      }
+      if (reverseButtonBackgroundColor) {
+        positionTPSLLine.setReverseButtonBackgroundColor(reverseButtonBackgroundColor);
+      }
+      if (closeTooltip) {
+        positionTPSLLine.setCloseTooltip(closeTooltip);
+      }
+      positionTPSLLine.setExtendLeft(!!extendLeft);
+      if (onModify) {
+        positionTPSLLine.onModify(onModify);
+      }
+      if (onClose) {
+        positionTPSLLine.onClose(onClose);
+      }
+    }
+
+    removeAllPositionTPSLLine() {
+      this._positionTPSLLineMapping.forEach(positionTPSLLine => {
+        positionTPSLLine.remove();
+      });
+      this._positionTPSLLineMapping.clear();
+    }
+
+   /**
+   * 创建爆仓线
+   */
+    createLiquidationLine<T>(options: PositionLineOptions<T>) {
+      let positionLine = this._LiquidationLineMapping.get(options.id);
+      if (positionLine) {
+        positionLine.remove();
+      }
+      positionLine = this.activeChart().createPositionLine();
+      this._LiquidationLineMapping.set(options.id, positionLine);
+      this.overrideLiquidationLine(options);
+    }
+
+    overrideLiquidationLine<T>(options: PositionLineOptions<T>) {
+      const {
+        id, price, text, lineLength, lineStyle, lineColor,
+        quantityText, quantityFont, quantityTextColor, quantityBackgroundColor, quantityBorderColor,
+        bodyTextColor, bodyFont, bodyBorderColor, bodyBackgroundColor,
+        reverse, reverseButtonIconColor, reverseButtonBorderColor, reverseButtonBackgroundColor, reverseTooltip,
+        closeButtonBorderColor, closeButtonIconColor, closeButtonBackgroundColor,
+        tooltip, protectTooltip, closeTooltip,
+        extendLeft, onClose, onModify,
+      } = options;
+      const positionLine = this._LiquidationLineMapping.get(id);
       if (!positionLine) {
         return;
       }
@@ -421,64 +713,21 @@ export default function createWidget (options: WidgetOptions<TradingView.Resolut
       }
     }
 
-    removeAllPositionLine () {
-      this._positionLineMapping.forEach(positionLine => {
+    removeAllLiquidationLine() {
+      this._LiquidationLineMapping.forEach(positionLine => {
         positionLine.remove();
       });
-      this._positionLineMapping.clear();
+      this._LiquidationLineMapping.clear();
     }
 
-    /**
-     * 创建历史订单标识
-     */
-    createHistoryOrderMark (options: HistoryOrderMarkOptions) {
-      let mark = this._historyOrderMarkMapping.get(options.id);
-      if (mark) {
-        mark.remove();
-      }
-      mark = this.activeChart().createExecutionShape();
-      this._historyOrderMarkMapping.set(options.id, mark);
-      this.overrideHistoryOrderMark(options);
-    }
 
-    overrideHistoryOrderMark (options: HistoryOrderMarkOptions) {
-      const {
-        id, price, arrowColor, tooltip, direction, time,
-      } = options;
-      const mark = this._historyOrderMarkMapping.get(id);
-      if (!mark) {
-        return;
-      }
-      if (price || price === 0) {
-        mark.setPrice(price);
-      }
-      if (tooltip) {
-        mark.setTooltip(tooltip);
-      }
-      if (arrowColor) {
-        mark.setArrowColor(arrowColor);
-      }
-      if (direction) {
-        mark.setDirection(direction);
-      }
-      if (time) {
-        mark.setTime(time);
-      }
-    }
-
-    removeAllHistoryOrderMark () {
-      this._historyOrderMarkMapping.forEach(mark => {
-        mark.remove();
-      });
-      this._historyOrderMarkMapping.clear();
-    }
 
     remove(): void {
       try {
         clearTimeout(this._saveStudiesShapesTimeout);
         this.unsubscribe('study_event', this._studyEvent);
         super.remove();
-      } catch {}
+      } catch { }
     }
   }
 

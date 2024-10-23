@@ -136,7 +136,8 @@ export default class Datafeed implements IDatafeedChartApi {
 
     let time_from = start / 1000;
     let time_to = end / 1000;
-    let symbol = 'BTC-USDT';
+    // let symbol = 'BTC-USDT';
+    let symbol = (window.location.pathname.split('/').pop() || "btc-usdt").toUpperCase();
     const TV_LINK = `https://dev-swap.83uvgv.com/api/tv/tradingView/history?symbol=${symbol}&from=${time_from}&to=${time_to}&resolution=${resolution}`;
 
     const res3 = await fetch(TV_LINK).then(response => response.json());
@@ -239,12 +240,6 @@ export default class Datafeed implements IDatafeedChartApi {
     //   console.log('订阅响应:', response);
     // };
 
-    const ids = ['BTC-USDT'];
-
-    // 调用 subscribe4001 方法进行订阅
-    WS.subscribe4001(ids, 1, (response) => {
-      console.log('订阅响应:', response);
-    });
 
     // 使用 getDataAfterSubscription 方法来处理推送的数据
     

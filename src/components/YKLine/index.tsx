@@ -8,7 +8,8 @@ import OriginalKLine from './StockChart/OriginalKLine';
 import { getKineState } from '@/store/kline';
 import { SUPPORT_RESOLUTIONS } from './types';
 
-import { CandleType } from 'klinecharts';
+// import { CandleType } from 'klinecharts';
+import { CandleType } from '@/components/YKLine/StockChart/OriginalKLine/index.esm';
 
 import {
   ChartType,
@@ -16,6 +17,8 @@ import {
   STORAGE_CHART_TYPE_KEY, STORAGE_K_LINE_RESOLUTION_KEY,
   STORAGE_SHOW_POSITION_LINE_KEY, STORAGE_SHOW_HISTORY_MARK_KEY,
   STORAGE_KLINE_PRICE_TYPE_KEY,
+  STORAGE_SHOW_LIQUIDATION_LINE_KEY,
+  STORAGE_SHOW_POSIITION_TPSL_LINE_KEY,
   KLinePriceType
 } from './types';
 
@@ -25,7 +28,7 @@ import { ChartRef } from './StockChart/types';
 import styles from './index.module.scss';
 
 
-export default function ExchangeChart ({ originalKLineChartContainerId }: { originalKLineChartContainerId?: string }) {
+export default function ExchangeChart({ originalKLineChartContainerId }: { originalKLineChartContainerId?: string }) {
   const chartRef = useRef<ChartRef>(null);
 
   const [chartType, setChartType] = useState<ChartType>(() => {
@@ -68,6 +71,19 @@ export default function ExchangeChart ({ originalKLineChartContainerId }: { orig
     return !!show;
   });
 
+
+
+  const [showLiquidationLine, setShowLiquidationLine] = useState(() => {
+    const show = +(localStorage.getItem(STORAGE_SHOW_LIQUIDATION_LINE_KEY) ?? '1');
+    return !!show;
+  });
+
+  const [showPositionTPSLLine, setShowPositionTPSLLine] = useState(() => {
+    const show = +(localStorage.getItem(STORAGE_SHOW_POSIITION_TPSL_LINE_KEY) ?? '1');
+    return !!show;
+  });
+
+
   const [kLinePriceType, setKLinePriceType] = useState(() => {
     const type = +(localStorage.getItem(STORAGE_KLINE_PRICE_TYPE_KEY) ?? '0');
     if (type === KLinePriceType.Last || type === KLinePriceType.Index) {
@@ -75,7 +91,7 @@ export default function ExchangeChart ({ originalKLineChartContainerId }: { orig
     }
     return KLinePriceType.Last;
   });
-  
+
   const { disableKlinePointEvent } = getKineState();
 
   const contextValue = useMemo(() => {
@@ -86,6 +102,8 @@ export default function ExchangeChart ({ originalKLineChartContainerId }: { orig
       kLineResolution,
       showPositionLine,
       showHistoryOrderMark,
+      showLiquidationLine,
+      showPositionTPSLLine,
       setChartType: (type: ChartType) => {
         if (type === ChartType.Original || type === ChartType.TradingView) {
           localStorage.setItem(STORAGE_CHART_TYPE_KEY, `${type}`);
@@ -111,9 +129,17 @@ export default function ExchangeChart ({ originalKLineChartContainerId }: { orig
       setShowHistoryOrderMark: (show: boolean) => {
         localStorage.setItem(STORAGE_SHOW_HISTORY_MARK_KEY, show ? '1' : '0');
         setShowHistoryOrderMark(show);
+      },
+      setShowLiquidationLine: (show: boolean) => {
+        localStorage.setItem(STORAGE_SHOW_LIQUIDATION_LINE_KEY, show ? '1' : '0');
+        setShowLiquidationLine(show);
+      },
+      setShowPositionTPSLLine: (show: boolean) => {
+        localStorage.setItem(STORAGE_SHOW_LIQUIDATION_LINE_KEY, show ? '1' : '0');
+        setShowPositionTPSLLine(show);
       }
     };
-  }, [chartType, originalKLineStyle, kLinePriceType, kLineResolution, showPositionLine, showHistoryOrderMark]);
+  }, [chartType, originalKLineStyle, kLinePriceType, kLineResolution, showPositionLine, showHistoryOrderMark, showLiquidationLine, showPositionTPSLLine]);
 
 
 
@@ -126,11 +152,11 @@ export default function ExchangeChart ({ originalKLineChartContainerId }: { orig
     // return <OriginalKLine key="OriginalKLine" ref={chartRef} containerId={originalKLineChartContainerId}/>
     switch (chartType) {
       case ChartType.Original: {
-        return <OriginalKLine key="OriginalKLine" ref={chartRef} containerId={originalKLineChartContainerId}/>;
+        return <OriginalKLine key="OriginalKLine" ref={chartRef} containerId={originalKLineChartContainerId} />;
       }
       case ChartType.TradingView: {
         return (
-          <TradingView key="TradingView" ref={chartRef}/>
+          <TradingView key="TradingView" ref={chartRef} />
         );
       }
       // case ChartType.Depth: {
@@ -153,7 +179,7 @@ export default function ExchangeChart ({ originalKLineChartContainerId }: { orig
             if (chartRef.current) {
               chartRef.current.openSettingModal();
             }
-          }}/>
+          }} />
         <div
           className={styles.klineContainer}
           style={{ pointerEvents: disableKlinePointEvent ? 'none' : 'initial' }}>

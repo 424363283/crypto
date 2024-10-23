@@ -182,7 +182,7 @@ class Assets {
   // @fetchIfNotFetched
   public static async getPerpetualUAsset(forceFetch = false) {
     const perpetualUAsset = await getPerpetualUAssetApi();
-    const defaultAsset = perpetualUAsset.data.find((e) => e.wallet === SWAP_DEFAULT_WALLET_ID) || SWAP_U_STORE.assets;
+    const defaultAsset = perpetualUAsset?.data?.find((e) => e.wallet === SWAP_DEFAULT_WALLET_ID) || SWAP_U_STORE.assets;
     SWAP_U_STORE.assets = defaultAsset;
     const formatAssets = perpetualUAsset.data.map((v) => {
       const { alias, pic, remark, url } = Object.values(v.accounts)[0] as any;

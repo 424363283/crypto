@@ -3,7 +3,7 @@
  */
 export enum EVENT_NAME {
     /**
-     * 进入注册/登陆页面
+     * 进入注册/登录页面
      */
     RegisterSignPageEnter = 'RegisterSignPageEnter',
     /**
@@ -23,7 +23,7 @@ export enum EVENT_NAME {
      */
     KycInfoSubmit = 'KycInfoSubmit',
     /**
-     * 提交注册/登陆信息
+     * 提交注册/登录信息
      */
     SubRegisteSign = 'SubRegisteSign',
     /**

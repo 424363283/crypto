@@ -1,10 +1,6 @@
 // import { OverlayFigure, OverlayTemplate, utils, Coordinate } from 'klinecharts';
 
 import { OverlayFigure, OverlayTemplate, utils, Coordinate } from '@/components/YKLine/StockChart/OriginalKLine/index.esm';
-export const PositionTPSLLineFigureKey = {
-  Close: 'close',
-  Reverse: 'reverse'
-};
 
 function createOverlayTooltipFigures (coordinate: Coordinate, text: string, color: string, backgroundColor: string) {
   const GAP = 2;
@@ -47,8 +43,8 @@ function createOverlayTooltipFigures (coordinate: Coordinate, text: string, colo
   ];
 }
 
-const positionTPTLLine: OverlayTemplate = {
-  name: 'positionTPTLLine',
+const liquidationLine: OverlayTemplate = {
+  name: 'liquidationLine',
   totalStep: 2,
   createPointFigures: ({ coordinates, bounding, overlay }) => {
     const PADDING = 8;
@@ -71,8 +67,7 @@ const positionTPTLLine: OverlayTemplate = {
     let figures: OverlayFigure[] = [
       {
         type: 'text',
-        // ignoreEvent: true,
-      
+        ignoreEvent: true,
         attrs: {
           x: offsetLeft + PADDING,
           y: y,
@@ -83,7 +78,6 @@ const positionTPTLLine: OverlayTemplate = {
           text: profitLossText
         },
         styles: {
-        
           style: 'stroke_fill',
           borderStyle: 'solid',
           borderColor: profitLossColor,
@@ -92,15 +86,13 @@ const positionTPTLLine: OverlayTemplate = {
           borderRadius: 0,
           paddingTop: 5,
           paddingLeft: PADDING,
-          paddingRight: PADDING,
-          
+          paddingRight: PADDING
         }
       },
       // 数量
       {
         type: 'text',
-        // ignoreEvent: true,
-        // ignoreEvent: ['onPressedMoveStart', 'onPressedMoving','onPressedMoveEnd'],
+        ignoreEvent: true,
         attrs: {
           x: offsetLeft + profitLossTextWidth + PADDING,
           y: y,
@@ -111,7 +103,6 @@ const positionTPTLLine: OverlayTemplate = {
           text: volumeText
         },
         styles: {
-          cursor: 'pointer',
           style: 'stroke_fill',
           borderColor: directionColor,
           backgroundColor: directionColor,
@@ -122,68 +113,18 @@ const positionTPTLLine: OverlayTemplate = {
           paddingRight: (volumeTextRectWidth - volumeTextWidth) / 2
         }
       },
-      // 关闭按钮
-      {
-        key: PositionTPSLLineFigureKey.Close,
-        type: 'text',
-        // ignoreEvent: ['mouseDownEvent', 'mouseRightClickEvent'],
-        attrs: {
-          // x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + 28 + PADDING,
-          x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + PADDING,
-          y,
-          height: HEIGHT,
-          width: HEIGHT,
-          align: 'left',
-          baseline: 'middle',
-          text: '✕'
-        },
-        styles: {
-          style: 'stroke_fill',
-          color: directionColor,
-          size: 10,
-          cursor: 'pointer',
-          borderColor: directionColor,
-          backgroundColor,
-          paddingTop: 7,
-          paddingLeft: 7,
-          paddingRight: 7,
-          borderRadius: 0
-        }
-      },
       {
         type: 'line',
-        // ignoreEvent: true,
+        ignoreEvent: true,
         attrs: {
-          
-          coordinates: [
-            { x: offsetLeft + profitLossTextWidth + volumeTextRectWidth  + 30, y }, { x: bounding.width, y }
-          ],
+          coordinates: [{ x: offsetLeft + profitLossTextWidth + volumeTextRectWidth, y }, { x: bounding.width, y }],
         },
         styles: {
-          // style: 'dashed',
-          cursor: 'pointer',
+          style: 'dashed',
           color: directionColor
         }
       },
     ];
-
-    if (reverseTooltip && reverseTooltip.length > 0) {
-      figures = figures.concat(
-        createOverlayTooltipFigures(
-          { x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + PADDING + 14, y: y - HEIGHT / 2 },
-          reverseTooltip, '#fff', tooltipColor
-        )
-      );
-    }
-
-     if (closeTooltip && closeTooltip.length > 0) {
-      figures = figures.concat(
-        createOverlayTooltipFigures(
-          { x: offsetLeft + profitLossTextWidth + volumeTextRectWidth + PADDING + 28 + 12, y: y - HEIGHT / 2 },
-          closeTooltip, '#fff', tooltipColor
-        )
-      );
-    }
 
     return figures;
   },
@@ -192,7 +133,7 @@ const positionTPTLLine: OverlayTemplate = {
     return [
       {
         type: 'text',
-        // ignoreEvent: true,
+        ignoreEvent: true,
         attrs: {
           x: 0,
           y: coordinates[0].y,
@@ -200,7 +141,6 @@ const positionTPTLLine: OverlayTemplate = {
           text: `${utils.formatThousands(overlay.points[0].value!.toFixed(precision.price), thousandsSeparator)}`
         },
         styles: {
-          cursor: 'pointer',
           style: 'fill',
           color: '#ffffff',
           backgroundColor: color,
@@ -217,4 +157,4 @@ const positionTPTLLine: OverlayTemplate = {
 
 
 
-export default positionTPTLLine;
+export default liquidationLine;

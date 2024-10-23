@@ -1,4 +1,6 @@
-import { OverlayFigure, OverlayTemplate, utils, Coordinate } from 'klinecharts';
+// import { OverlayFigure, OverlayTemplate, utils, Coordinate } from 'klinecharts';
+import { OverlayFigure, OverlayTemplate, utils, Coordinate } from '@/components/YKLine/StockChart/OriginalKLine/index.esm';
+
 
 export const PositionLineFigureKey = {
   Close: 'close',
