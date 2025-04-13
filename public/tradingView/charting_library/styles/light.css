@@ -90,17 +90,19 @@ html.theme-light .chart-container .chart-loading-screen {
 } */
 
 .theme-light.k-line-demo-account:root table.chart-markup-table tr:first-of-type td.pane canvas:nth-child(2) {
-  background-image: url("/imgs/logobg.png") !important;
+  background-image: url("/imgs/lightLogo.svg") !important;
   background-repeat: no-repeat !important;
-  background-position: center bottom 10px !important;
-  background-size: 250px !important;
+  /* background-position: center bottom 10px !important; */
+  background-position: left 10px bottom 10px !important;
+  background-size: 200px 37px !important; 
 }
 
 .chart-markup-table tr:first-of-type .chart-gui-wrapper canvas {
-  background-image: url("/imgs/logobg.png") !important;
+  background-image: url("/imgs/lightLogo.svg") !important;
   background-repeat: no-repeat !important;
-  background-position: center bottom 10px !important;
-  background-size: 250px !important;
+  /* background-position: center bottom 10px !important; */
+  background-position: left 10px bottom 10px !important;
+  background-size: 200px 37px !important; 
 }
 
 .theme-light .paneSeparator-ZR_yhubO {

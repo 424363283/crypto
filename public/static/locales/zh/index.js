@@ -21,7 +21,7 @@ var appLang = {
     "There are already <span>{number}</span>users over 150 countries trading with us": "已经有来自超过150个国家的<span>{number}</span>用户与我们交易",
     "您有200$礼金待领取": "您有200美元礼金待领取",
     "完成身份认证即可领取": "完成身份认证即可领取",
-    "现货": "现货",
+    "币币": "币币",
     "U本位合约": "U本位合约",
     "币本位合约": "币本位合约",
     "简易合约": "简易合约",

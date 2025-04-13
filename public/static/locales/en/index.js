@@ -21,7 +21,7 @@ var appLang = {
     "There are already <span>{number}</span>users over 150 countries trading with us": "There are already <span>{number}</span>users over 150 countries trading with us",
     "您有200$礼金待领取": "You have a $200 bonus to be claimed",
     "完成身份认证即可领取": "Complete KYC to claim",
-    "现货": "Spot",
+    "币币": "Spot",
     "U本位合约": "USDT-M",
     "币本位合约": "COIN-M",
     "简易合约": "Lite Contracts",
