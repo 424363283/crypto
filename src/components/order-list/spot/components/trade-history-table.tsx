@@ -7,21 +7,19 @@ import { useEffect, useMemo } from 'react';
 import css from 'styled-jsx/css';
 import RecordList from '../../components/record-list';
 import { BaseTableStyle } from './base-table-style';
+import clsx from 'clsx';
+import ClipboardItem from '@/components/clipboard-item';
 
 const { Position } = Spot;
 
 const columns = [
-  {
-    title: LANG('成交时间'),
-    width: 160,
-    dataIndex: 'dealTime',
-    render: (dealTime: number) => dayjs(dealTime).format('YYYY/MM/DD HH:mm:ss'),
-  },
+
+
   {
     title: LANG('交易对'),
     dataIndex: 'symbol',
-    width: 120,
-    render: (symbol: string) => symbol.replace('_', '/'),
+    width: 80,
+    render: (symbol: string) => symbol.replace('_', '/')
   },
   {
     title: LANG('方向'),
@@ -29,63 +27,82 @@ const columns = [
     width: 80,
     render: (side: SideType) =>
       side === SideType.BUY ? (
-        <span className='main-raise'>{LANG('买')}</span>
+        <span className="main-raise">{LANG('买')}</span>
       ) : (
-        <span className='main-fall'>{LANG('卖')}</span>
-      ),
+        <span className="main-fall">{LANG('卖')}</span>
+      )
   },
   {
     title: LANG('成交均价'),
     dataIndex: 'price',
-    render: (price: number) => price?.toFormat(),
+    width: 80,
+    render: (price: number) => price?.toFormat()
   },
   {
     title: LANG('成交数量'),
     dataIndex: 'volume',
-    render: (volume: number) => volume.toFormat(),
+    width: 80,
+    render: (volume: number) => volume.toFormat()
   },
   {
     title: LANG('手续费'),
     dataIndex: 'fee',
+    width: 80,
     render: (_: any, { fee, targetCoin, openType }: SpotPositionListItem) => {
       return `${fee.toFormat()} ${openType === 2 ? 'USDT' : targetCoin}`;
-    },
+    }
   },
   {
     title: LANG('成交金额'),
-    align: 'right',
-    width: 120,
+    // align: 'right',
+    width: 80,
     dataIndex: 'amount',
     render: (_: any, { amount, sourceCoin, side, targetCoin }: SpotPositionListItem) => {
       return <span>{`${amount.toFormat(4)} ${side === SideType.BUY ? sourceCoin : targetCoin}`}</span>;
-    },
+    }
   },
+  {
+    title: LANG('订单编号'),
+    dataIndex: 'id',
+    width: 80,
+    render: (id: any, item: any) => {
+      return <ClipboardItem text={id} />
+    }
+  },
+  {
+    title: LANG('成交时间'),
+    width: 80,
+    align: 'right',
+    dataIndex: 'dealTime',
+    render: (dealTime: number) => dayjs(dealTime).format('YYYY/MM/DD HH:mm:ss')
+  },
+
 ];
 
 const optionsList = [
   {
     value: HistoryRange.DAY,
-    label: LANG('本日'),
+    label: LANG('本日')
   },
   {
     value: HistoryRange.WEEK,
-    label: LANG('本周'),
+    label: LANG('本周')
   },
   {
     value: HistoryRange.MONTH,
-    label: LANG('本月'),
+    label: LANG('本月')
   },
   {
     value: HistoryRange.THREE_MONTH,
-    label: LANG('近三月'),
-  },
+    label: LANG('近三月')
+  }
 ];
 
-const items: MenuProps['items'] = optionsList.map((item) => {
+const items: MenuProps['items'] = optionsList.map(item => {
   return {
     id: item.value,
     key: item.label,
-    label: <div onClick={() => Position.changeHistoryRange(item.value)}>{item.label}</div>,
+    label: <div onClick={() => Position.changeHistoryRange(item.value)}>{item.label}</div>
   };
 });
 
@@ -110,29 +127,36 @@ const TradeHistoryTable = () => {
   useEffect(() => {
     Position.resetHistoryRange();
     Position.fetchTradeHistoryList();
+    setTimeout(() => Position.pollingTradeHistory.start(), 1000);
+    return () => {
+      Position.pollingTradeHistory.stop();
+    };
+
   }, []);
+  const scrollProps = { y: 500 };
 
   return (
     <>
       <div className={`container ${theme}`}>
-        <div className='filter-wrapper'>
-          <Dropdown
-            menu={{ items }}
-            trigger={['click']}
-            overlayClassName={theme}
-            placement='bottom'
-            autoAdjustOverflow={false}
-          >
-            <div className='title'>
-              <span>{optionsList[historyRange].label}</span>
-            </div>
-          </Dropdown>
+        <div className="filter-wrapper">
+          {optionsList.map(item => {
+            return (
+              <div
+                onClick={() => Position.changeHistoryRange(item.value)}
+                className={clsx('spot_optionsListLable', historyRange == item.value && 'spot_optionsListLableActive')}
+              >
+                {item.label}
+              </div>
+            );
+          })}
         </div>
+
         <RecordList
           loading={loading}
           columns={columns}
           data={filterTradeHistoryList}
-          className={`${theme} spot-table`}
+          scroll={{ x: 800, y: 500 }}
+          className={`${theme} spot-table spot_history_tab`}
         />
       </div>
       <BaseTableStyle />
@@ -143,10 +167,35 @@ const TradeHistoryTable = () => {
 
 export default TradeHistoryTable;
 const styles = css`
+
+.spot_history_tab{
+  :global(.ant-table-content) {
+    overflow: hidden !important;
+    tr th:last-child{
+      padding-left: 48px !important;
+    }
+  }
+}
   .filter-wrapper {
     display: flex;
     align-items: center;
     padding: 12px 20px;
+    .spot_optionsListLable {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid var(--fill-3);
+      margin-right: 16px;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 400;
+      cursor: pointer;
+    }
+    .spot_optionsListLableActive {
+      background: var(--fill-3);
+      color: var(--text-primary);
+      border: none;
+    }
     .title {
       background: var(--theme-background-color-2-4);
       height: 22px;
@@ -220,6 +269,7 @@ const styles = css`
       }
     }
   }
+
   .dark {
     .title {
       background: var(--theme-tips-color);

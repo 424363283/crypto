@@ -129,7 +129,7 @@ export const ResolutionPopover = ({ qty, isTypeKline }: { qty: number; isTypeKli
         <Item item={item} />
         <Popover
             overlayInnerStyle={{
-              backgroundColor: 'var(--theme-trade-bg-color-2)',
+              backgroundColor: 'var(--bg-1)',
               padding: 0,
               border: '1px solid var(--theme-trade-border-color-2)',
             }}

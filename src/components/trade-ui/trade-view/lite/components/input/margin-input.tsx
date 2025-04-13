@@ -31,7 +31,7 @@ const MarginInput = ({
   decimal = 0,
   isPrice = false,
   placeholder = '',
-  theme,
+  theme
 }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
   const [originVal, setOriginVal] = useState<number | string>(value === '' ? '' : Number(value.toFixed(decimal)));
@@ -49,7 +49,7 @@ const MarginInput = ({
     }
 
     // isNegative 为 true 不允许输入 - 号
-    if (isNegative && currentValue.indexOf('-') === 0) {
+    if ((isNegative && currentValue.indexOf('-') === 0) || Number(max) <= 0) {
       currentValue = '';
     }
 
@@ -143,11 +143,11 @@ const MarginInput = ({
   return (
     <>
       <div className={`container ${isFocus && 'focus'} ${theme}`}>
-        {label && <div className='prefix'>{label}</div>}
-        <div className='inputWrapper'>
+        {label && <div className="prefix">{label}</div>}
+        <div className="inputWrapper">
           <input
             value={originVal}
-            type='text'
+            type="text"
             onInput={_onInput}
             onFocus={() => setIsFocus(true)}
             onBlur={_onBlur}
@@ -155,17 +155,19 @@ const MarginInput = ({
             placeholder={placeholder}
           />
           {!isPrice && (
-            <span className='symbol' style={{ left: _getSymbolLeft(String(originVal).length) }}>
+            <span className="symbol" style={{ left: _getSymbolLeft(String(originVal).length) }}>
               %
             </span>
           )}
         </div>
-        <div className='controller'>
-          <button className='btn-control' onClick={_onAdd}>
-            <PlusIcon width='13px' height='13px' color='#fff' />
+        <div className="controller btnAdd">
+          <button className="btn-control " onClick={_onAdd}>
+            <PlusIcon width="10px" height="11px" />
           </button>
-          <button className='btn-control' onClick={_onMinus}>
-            <MinusIcon width='13px' height='3px' color='#fff' />
+        </div>
+        <div className="controller minus">
+          <button className="btn-control" onClick={_onMinus}>
+            <MinusIcon width="13px" height="3px" />
           </button>
         </div>
       </div>
@@ -178,17 +180,19 @@ export default MarginInput;
 const styles = css`
   .container {
     position: relative;
-    width: 100%;
-    height: 40px;
-    border-radius: 6px;
-    margin: 10px 0;
+    margin: 16px 0 0;
     display: flex;
     align-items: center;
-    border: 1px solid transparent;
-    background: var(--theme-trade-tips-color);
-    &:hover {
-      border-color: var(--skin-primary-color) !important;
-    }
+    border-radius: 8px;
+    background: var(--fill-3);
+
+    display: flex;
+    height: 48px;
+    padding: 0px 16px;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+
     &.focus {
       box-shadow: 0 0 0 2px rgba(248, 187, 55, 0.1);
       border-color: var(--skin-primary-color) !important;
@@ -203,14 +207,15 @@ const styles = css`
       flex: 1;
       position: relative;
       input {
-        background: var(--theme-trade-tips-color);
+        background: transparent;
         font-size: 14px;
         font-weight: 400;
         text-indent: 12px;
         outline: none;
         border: 0;
         width: 100%;
-        color: var(--theme-font-color-1);
+        color: var(--text-tertiary);
+        text-align: center;
         &::placeholder,
         input::placeholder,
         input::-webkit-input-placeholder,
@@ -230,25 +235,31 @@ const styles = css`
     }
     .controller {
       width: auto;
-      right: 0;
       overflow: hidden;
       position: absolute;
       display: flex;
       justify-content: space-evenly;
+
       .btn-control {
         border: none;
         outline: 0;
         height: 22px;
         width: 22px;
-        background: var(--theme-font-color-3);
         margin-right: 6px;
         display: flex;
         justify-content: space-evenly;
         align-items: center;
         border-radius: 2px;
+        background: transparent;
         cursor: pointer;
         padding: 0;
       }
+    }
+    .btnAdd {
+      left: 8px;
+    }
+    .minus {
+      right: 0;
     }
   }
 `;

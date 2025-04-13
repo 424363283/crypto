@@ -66,20 +66,17 @@ const useColumns = (onFavorite: (latestFavorsList: FAVORS_LIST[]) => void) => {
       key: 'coinName',
       sorter: true,
       align: 'left',
-      fixed: isMobile ? false : 'left',
+      // fixed: isMobile ? false : 'left',
       render(a, item: MarketItem) {
         return (
           <div className='trade_pair' key={item?.id}>
-            <Star code={item.id} type={getCoinType()} onFavorite={onFavorite} />
-            <div className='coin-logo-wrapper'>
-              <CryptoLogo id={item.id} width='20' height='20' />
-            </div>
+            <Star width={24} height={24} code={item.id} inQuoteList type={getCoinType()} onFavorite={onFavorite} />
             <div className='right-coin'>
+              <CryptoLogo id={item.id} width='32' height='32' />
               <div className='name'>
                 <TradePair item={item} />
-                <Tags id={item.id} />
+                {/* <Tags id={item.id} /> */}
               </div>
-              <div className='full-name'>{item?.fullName || '--'}</div>
             </div>
           </div>
         );
@@ -93,7 +90,7 @@ const useColumns = (onFavorite: (latestFavorsList: FAVORS_LIST[]) => void) => {
       align: isMobile ? 'right' : 'left',
       render: (a: any, item: MarketItem) => {
         const coinName = formatSpotCoinName(item);
-        return <LatestPriceColumnMemo latestPrice={a.toFormat(item.digit)} code={coinName} />;
+        return <LatestPriceColumnMemo hideRate={true} latestPrice={a.toFormat(item.digit)} code={coinName} />;
       },
       sorter: true,
     },
@@ -131,7 +128,7 @@ const useColumns = (onFavorite: (latestFavorsList: FAVORS_LIST[]) => void) => {
       sorter: true,
     },
     {
-      title: `${LANG('24H交易量')}(USDT)`,
+      title: `${LANG('24H成交额')}(USDT)`,
       dataIndex: 'total',
       key: 'total',
       width: totalWidth / 8,

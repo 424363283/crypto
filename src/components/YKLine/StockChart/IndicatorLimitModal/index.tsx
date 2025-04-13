@@ -1,31 +1,31 @@
 import { FC, memo } from 'react';
 import { Button } from 'antd';
 
-import BVIcon from '@/components/YIcons';
+import YIcon from '@/components/YIcons';
 
-import BvModal from '@/components/YModal';
+import YModal from '@/components/YModal';
 
-interface IndicatorLimitModalProps{
+interface IndicatorLimitModalProps {
   onClose: () => void;
 }
 
-const IndicatorLimitModal: FC<IndicatorLimitModalProps> = ({  onClose }) => {
+const IndicatorLimitModal: FC<IndicatorLimitModalProps> = ({ onClose }) => {
 
 
   return (
-    <BvModal
+    <YModal
       open={true}
       header={
         <>
           <h3>{'历史委托'}</h3>
-          <BVIcon.CloseOutlined className="close-btn" onClick={onClose} />
+          <YIcon.CloseOutlined className="close-btn" onClick={onClose} />
         </>
       }
       contentStyle={{ paddingTop: 16 }}
       content={'指标数量超过10个，请删除一些指标'}
       footer={
         <Button className="primary" onClick={onClose}>
-         确认
+          确认
         </Button>
       }
     />

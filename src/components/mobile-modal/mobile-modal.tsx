@@ -1,5 +1,5 @@
 import { clsx } from '@/core/utils';
-import React, { ReactNode, useEffect, useMemo } from 'react';
+import React, { ReactNode, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import css from 'styled-jsx/css';
 
@@ -16,8 +16,7 @@ const MobileModal = ({
   type?: 'default' | 'bottom';
   zIndex?: any;
 }) => {
-  const [visible, setVisible] = React.useState(false);
-
+  const [visible, setVisible] = useState(false);
   const visibleClassName = type;
 
   useEffect(() => {

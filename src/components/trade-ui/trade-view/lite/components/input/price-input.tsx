@@ -27,6 +27,8 @@ interface Props {
   canEmpty?: boolean;
   onBlur?: () => void;
   bonusId?: string;
+  controls?: boolean;
+  controlsAlign?: 'between' | 'left';
 }
 
 const PriceInput = ({
@@ -47,6 +49,8 @@ const PriceInput = ({
   canEmpty = false,
   onBlur,
   bonusId = '',
+  controls = true,
+  controlsAlign = 'between',
 }: Props) => {
   const { isDark, theme } = useTheme();
   const [isFocus, setIsFocus] = useState(false);
@@ -145,30 +149,34 @@ const PriceInput = ({
 
   return (
     <>
-      <div className={`${theme} ${clsx('container', isFocus && 'focus')}`}>
+      <div className='trade-input'>
         {labelRender ? labelRender() : <span className={`label ${labelClass && labelClass}`}>{label}</span>}
-        <input
-          value={isCoupon && bonusId === '' ? LANG('暂无赠金') : originVal}
-          type='text'
-          onInput={_onInput}
-          placeholder={placeholder}
-          onFocus={() => setIsFocus(true)}
-          onBlur={_onBlur}
-          onChange={_onChange}
-          disabled={isCoupon}
-        />
-        {isCoupon ? (
-          renderCoupon()
-        ) : (
-          <div className='controller'>
+        <div className={`${theme} ${clsx('container', isFocus && 'focus')}`}>
+          {(!isCoupon && controls && controlsAlign === 'between') && <div className='controller'>
             <button className='btn-control' onClick={onAdd}>
-              <Svg src='/static/images/lite/plus.svg' width={12} height={12} />
+              <span>+</span>
             </button>
+          </div>}
+          <input
+            value={isCoupon && bonusId === '' ? LANG('暂无赠金') : originVal}
+            type='text'
+            onInput={_onInput}
+            placeholder={placeholder}
+            onFocus={() => setIsFocus(true)}
+            onBlur={_onBlur}
+            onChange={_onChange}
+            disabled={isCoupon}
+          />
+          {(!isCoupon && controls) && <div className='controller'>
+            {controlsAlign === 'left' && <button className='btn-control' onClick={onAdd}>
+              <span>+</span>
+            </button>}
             <button className='btn-control' onClick={onMinus}>
-              <Svg src='/static/images/lite/minus.svg' width={12} height={12} />
+              <span>-</span>
             </button>
-          </div>
-        )}
+          </div>}
+          {isCoupon && renderCoupon()}
+        </div>
       </div>
       <style jsx>{styles}</style>
     </>
@@ -177,87 +185,95 @@ const PriceInput = ({
 
 export default PriceInput;
 const styles = css`
-  .container {
-    width: 100%;
-    height: 40px;
-    border: 1px solid var(--theme-background-color-2-3);
-    border-radius: 6px;
-    padding: 0 10px;
-    margin: 0 0 14px 0;
+  .trade-input {
     display: flex;
-    align-items: center;
-    background: var(--theme-trade-tips-color);
-    &:hover {
-      border-color: var(--skin-color-active) !important;
-    }
-    &.focus {
-      box-shadow: 0 0 0 2px rgba(248, 187, 55, 0.1);
-      border-color: var(--skin-color-active) !important;
-    }
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
     .label {
+      color: var(--text-tertiary);
       font-size: 12px;
-      font-weight: 500;
-      color: var(--theme-font-color-placeholder);
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
     }
-    input {
-      flex: 1;
-      color: var(--theme-font-color-1);
-      padding-right: 10px;
-      font-size: 14px;
-      font-weight: 500;
-      outline: none;
-      border: 0;
+    .container {
       width: 100%;
-      background: var(--theme-trade-tips-color);
-      &::placeholder,
-      input::placeholder,
-      input::-webkit-input-placeholder,
-      &::-webkit-input-placeholder {
-        color: var(--theme-font-color-placeholder);
-      }
-      &:disabled {
-        background: transparent;
-      }
-    }
-    .controller {
-      width: auto;
-      overflow: hidden;
+      height: 40px;
+      border-radius: 6px;
+      padding: 0 8px;
       display: flex;
-      justify-content: space-evenly;
       align-items: center;
-      span {
-        font-size: 12px;
+      background: var(--fill-3);
+      input {
+        flex: 1;
+        color: var(--text-primary);
+        padding: 0 8px;
+        font-size: 14px;
         font-weight: 500;
+        outline: none;
+        border: 0;
+        width: 100%;
+        text-align: center;
+        background: var(--fill-3);
+        &::placeholder,
+        input::placeholder,
+        input::-webkit-input-placeholder,
+        &::-webkit-input-placeholder {
+          color: var(--text-tertiary);
+        }
+        &:disabled {
+          background: transparent;
+        }
       }
-      .btn-control {
-        border: none;
-        outline: 0;
-        height: 36px;
-        width: 36px;
-        background: transparent;
+      .controller {
+        width: auto;
+        overflow: hidden;
         display: flex;
         justify-content: space-evenly;
         align-items: center;
-        border-radius: 6px;
+        span {
+          font-size: 12px;
+          font-weight: 500;
+        }
+        .btn-control {
+          border: none;
+          outline: 0;
+          height: 40px;
+          width: auto;
+          background: transparent;
+          display: flex;
+          justify-content: space-evenly;
+          align-items: center;
+          border-radius: 6px;
+          cursor: pointer;
+          padding: 0 8px;
+          span {
+            color: var(--text-tertiary);
+            text-align: center;
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+          }
+        }
+      }
+      :global(.select-coupon) {
+        padding-right: 5px;
         cursor: pointer;
-        padding: 0;
-      }
-    }
-    :global(.select-coupon) {
-      padding-right: 5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      color: var(--theme-font-color-1);
-      &:after {
-        content: '';
-        display: inline-block;
-        border: 5px solid transparent;
-        border-top-color: #6c6c6d;
-        margin: 5px 0 0 4px;
-      }
-      :global(.coupon-icon) {
-        margin-right: 4px;
+        display: flex;
+        align-items: center;
+        color: var(--text-primary);
+        &:after {
+          content: '';
+          display: inline-block;
+          border: 5px solid transparent;
+          border-top-color: #6c6c6d;
+          margin: 5px 0 0 4px;
+        }
+        :global(.coupon-icon) {
+          margin-right: 4px;
+        }
       }
     }
   }

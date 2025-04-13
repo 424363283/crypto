@@ -1,4 +1,4 @@
-import TabBar from '@/components/tab-bar';
+import TabBar, { TAB_TYPE } from '@/components/tab-bar';
 import { LANG } from '@/core/i18n';
 import { getUrlQueryParams } from '@/core/utils';
 import { useEffect, useState } from 'react';
@@ -9,6 +9,7 @@ import { SpotCurrentCommissionTable } from './components/current-commission/tabl
 import { SpotHistoryCommissionTable } from './components/history-commission/table';
 import { SpotHistoryTransactionTable } from './components/history-transaction/table';
 import { SPOT_HISTORY_TAB_KEY } from './types';
+import { Size } from '@/components/constants';
 
 function SpotHistoryOrder({ onTabChange }: { onTabChange: (url: string, { id }: { id: string }) => void }) {
   const queryId = (getUrlQueryParams('tab') as SPOT_HISTORY_TAB_KEY) || SPOT_HISTORY_TAB_KEY.CURRENT_COMMISSION;
@@ -35,8 +36,10 @@ function SpotHistoryOrder({ onTabChange }: { onTabChange: (url: string, { id }: 
   };
   return (
     <CommonContainer>
-      <AssetTableCard>
+      <AssetTableCard border={false} rounded={false}>
         <TabBar
+          type ={TAB_TYPE.CARD}
+          size ={Size.XS}
           options={[
             { label: LANG('当前委托'), value: SPOT_HISTORY_TAB_KEY.CURRENT_COMMISSION },
             { label: LANG('历史委托'), value: SPOT_HISTORY_TAB_KEY.HISTORY_COMMISSION },

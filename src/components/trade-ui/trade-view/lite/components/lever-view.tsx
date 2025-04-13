@@ -52,8 +52,9 @@ const LeverView = () => {
     setSliderData((draft) => {
       draft.min = leverageRange[0];
       draft.max = leverageRange[leverageRange.length - 1];
+      draft.value = leverage;
     });
-  }, [leverageRange]);
+  }, [leverageRange, leverage]);
 
   const leverageButtonsData = useMemo(() => {
     if (!leverageRange) return [5, 10, 20];
@@ -86,7 +87,7 @@ const LeverView = () => {
       <div className='container'>
         <div className='header'>
           <div className='title'>
-            {LANG('杠杆倍率')}
+            {LANG('杠杆倍率')}:
             <span>{leverage}X</span>
           </div>
           <div className='right'>
@@ -107,10 +108,8 @@ const LeverView = () => {
               grid={leverageRange.length - 1 > 0 ? leverageRange.length - 1 : 0}
               grids={leverageRange}
               onChange={onLeverChanged}
-              renderText={() => `${sliderData.value}X`}
+              renderMarkText={(value: number | string) => `${value}X`}
               {...sliderData}
-              min={leverageRange[0]}
-              max={maxLever}
             />
           </div>
         ) : (
@@ -146,29 +145,30 @@ export default React.memo(LeverView);
 const styles = css`
   .container {
     .header {
-      margin: 15px 0;
-      padding-bottom: 4px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       .title {
-        color: var(--theme-font-color-1);
+        color: var(--text-primary);
+        leading-trim: both;
+        text-edge: cap;
+        font-size: 12px;
+        font-style: normal;
         font-weight: 400;
-        span {
-          margin-left: 6px;
-          font-size: 12px;
-          font-weight: 400;
-          color: var(--theme-font-color-2);
-        }
+        line-height: normal;
       }
       .right {
         display: flex;
         align-items: center;
+        gap: 8px;
         span {
-          margin-right: 7px;
+          color: var(--text-primary);
+          leading-trim: both;
+          text-edge: cap;
           font-size: 12px;
+          font-style: normal;
           font-weight: 400;
-          color: var(--theme-font-color-2);
+          line-height: normal;
         }
         :global(.ant-switch-checked) {
           background: var(--skin-primary-color) !important;
@@ -176,11 +176,11 @@ const styles = css`
       }
     }
     .slider-container {
-      margin-bottom: 11px;
+      display: flex;
     }
     .input-container {
       display: flex;
-      margin-bottom: 15px;
+      margin: 16px 0;
       .buttons {
         display: flex;
         align-items: center;

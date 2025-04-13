@@ -3,14 +3,22 @@ import { Swap } from '@/core/shared';
 import { clsxWithScope } from '@/core/utils';
 import css from 'styled-jsx/css';
 import { CheckboxItem } from '../checkbox-item';
+import { ORDER_TRADE_TYPE } from '@/core/shared/src/swap/modules/trade/constants';
+import { useEffect } from 'react';
 
 export const OnlyReducePositionCheckbox = () => {
   const onlyReducePosition = Swap.Trade.store.onlyReducePosition;
   const twoWayMode = Swap.Trade.twoWayMode;
+  const orderTradeType = Swap.Trade.store.orderTradeType;
+  const isMarketOrder = orderTradeType === ORDER_TRADE_TYPE.MARKET;
+  useEffect(() => {
+    return () => {
+      Swap.Trade.onChangeOnlyReducePosition(false);
+    }
+  }, [orderTradeType]);
 
-  if (twoWayMode) {
-    return <div style={{ height: 10 }} />;
-  }
+  if (twoWayMode || isMarketOrder) return <></>;
+
   return (
     <>
       <CheckboxItem
@@ -27,7 +35,8 @@ export const OnlyReducePositionCheckbox = () => {
 
 const { className, styles } = css.resolve`
   .only-reduce-position {
-    margin-bottom: 10px;
+    margin-top: 16px;
+    margin-bottom: 0px;
   }
 `;
 const clsx = clsxWithScope(className);

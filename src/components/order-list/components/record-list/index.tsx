@@ -1,14 +1,45 @@
 import { ConfigProvider, Table, TableProps } from 'antd';
-import { useLayoutEffect, useMemo, useRef } from 'react';
-
+import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { LANG } from '@/core/i18n';
 import { AntdLanguageConfigProvider } from '@/components/antd-config-provider/language-config-provider';
 import { EmptyComponent } from '@/components/empty';
+import ArrowBox from '@/components/ArrowBox';
+import YIcon from '@/components/YIcons';
 import { useTheme } from '@/core/hooks';
 import { MediaInfo, clsxWithScope, debounce, isSwapDemo } from '@/core/utils';
 import css from 'styled-jsx/css';
+import { Button } from '@/components/button';
+import { createRoot } from 'react-dom/client';
+import CommonIcon from '@/components/common-icon';
 
 export { ColSelectTitle } from './components/col-select-title';
 export { ColSortTitle } from './components/col-sort-title';
+import type { TableLayout } from 'antd/';
+
+
+const TableArrowBox = memo(({ selector, dataSource }: { selector: string; dataSource: any[] }) => {
+  const prevStep: number = -50;
+  const nextStep: number = 50;
+  return (
+    <>
+      <div className={clsx('arrow-left', dataSource?.length === 0 ? 'hidden' : '')} onClick={() => {
+        const tableBodyView = document.querySelector<HTMLDivElement>(selector);
+        tableBodyView?.scrollBy(prevStep, 0);
+        console.log('----tableBodyView?.scrollLeft: ', tableBodyView?.scrollLeft);
+      }}>
+        <CommonIcon name='common-double-arrow-left-0' size={14} enableSkin />
+      </div>
+      <div className={clsx('arrow-right', dataSource?.length === 0 ? 'hidden' : '')} onClick={() => {
+        const tableBodyView = document.querySelector<HTMLDivElement>(selector);
+        tableBodyView?.scrollBy(nextStep, 0);
+        console.log('----tableBodyView?.scrollLeft: ', tableBodyView?.scrollLeft);
+      }}>
+        <CommonIcon name='common-double-arrow-right-0' size={14} enableSkin />
+      </div>
+    </>
+
+  );
+});
 
 export const formatListData = (data: any[], value: any, key = 'symbol') => {
   const reg = !isSwapDemo() ? /-usdt?/i : /s?-s?usdt?/i;
@@ -27,6 +58,7 @@ const RecordList = ({
   onRowClick,
   getScrollElement,
   scroll = { y: 500 },
+  tableLayout = 'auto'
 }: {
   className?: string;
   data?: any[];
@@ -37,11 +69,16 @@ const RecordList = ({
   rowClassName?: TableProps<any>['rowClassName'];
   onRowClick?: (item: any) => any;
   getScrollElement?: (ele: any) => any;
-  scroll?: { x?: number; y: number };
+  scroll?: { x?: number | string; y: number };
+  tableLayout?: TableProps<any>['tableLayout']
 }) => {
   const { isDark } = useTheme();
   const tableRef = useRef<any>();
   const id = useMemo(() => (Math.random() + '').replace('0.', 'table'), []);
+  let tableArrowBoxRoot: any = null;
+  const [scrollArrowsRoot, setScrollArrowsRoot] = useState<any>(null)
+  const [count, setCount] = useState(0);
+  const [dataList, setDataList] = useState([]);
 
   useLayoutEffect(() => {
     const parent = document.getElementsByClassName(`${id}`)?.[0];
@@ -72,7 +109,7 @@ const RecordList = ({
   //         ),
   //   [data, hide, quoteId]
   // );
-
+  const scrollProps = list?.length > 0 ? { ...scroll } : { x: 'max-content' };
   const others = useMemo(() => {
     return {
       rowKey: renderRowKey || ((v: any) => `${v.id}`), // 函数的形式不支持第二个参数了
@@ -85,10 +122,36 @@ const RecordList = ({
     };
   }, [onRowClick, renderRowKey]);
 
+
+  useEffect(() => {
+    let scrollArrowsNode = document.createElement('div');
+    scrollArrowsNode.className = 'table-scroll-arrows';
+    document.querySelector(`.${id} .ant-table`)?.appendChild(scrollArrowsNode);
+    setScrollArrowsRoot(createRoot(scrollArrowsNode));
+    scrollArrowsRoot?.render(
+      <TableArrowBox selector={`.${id} .ant-table-body`} dataSource={list || []} />
+    );
+
+    return () => {
+      let scrollArrowsNode = document.querySelector(`.${id} .ant-table .table-scroll-arrows`);
+      if (scrollArrowsNode) {
+        document.querySelector(`.${id} .ant-table`)?.removeChild(scrollArrowsNode);
+      }
+    };
+
+  }, [id]);
+
+  useEffect(() => {
+    scrollArrowsRoot?.render(
+      <TableArrowBox selector={`.${id} .ant-table-body`} dataSource={list || []} />
+    );
+  }, [list]);
+
   return (
     <>
+
       <AntdLanguageConfigProvider>
-        <ConfigProvider renderEmpty={() => (loading ? <></> : <EmptyComponent active className={clsx('empty')} />)}>
+        <ConfigProvider renderEmpty={() => (loading ? <></> : <EmptyComponent text={LANG('暂无数据')} active className={clsx('empty')} />)}>
           <Table
             ref={tableRef}
             className={clsx('record-list', !isDark && 'light', className, id)}
@@ -97,11 +160,44 @@ const RecordList = ({
             pagination={false}
             loading={loading}
             rowClassName={rowClassName}
-            scroll={scroll}
+            tableLayout={tableLayout}
+            scroll={scrollProps}
             {...others}
           />
         </ConfigProvider>
       </AntdLanguageConfigProvider>
+
+      {
+        // <AntdLanguageConfigProvider>
+        //   <ArrowBox
+        //     iconContainerStyle={{ backgroundColor: 'transparent' }}
+        //     leftArrowIcon={
+        //       <div className="arrowCircle">
+        //         {/* <YIcon name="arrow-left"} /> */}
+        //       </div>
+        //     }
+        //     rightArrowIcon={
+        //       <div className="arrowCircle">
+        //         {/* <YIcon name="arrow-right"} /> */}
+        //       </div>
+        //     }
+        //     step={300}>
+        //     <ConfigProvider renderEmpty={() => (loading ? <></> : <EmptyComponent text={LANG('暂无数据')} active className={clsx('empty')} />)}>
+        //       <Table
+        //         ref={tableRef}
+        //         className={clsx('record-list', !isDark && 'light', className, id)}
+        //         columns={columns}
+        //         dataSource={list}
+        //         pagination={false}
+        //         loading={loading}
+        //         rowClassName={rowClassName}
+        //         scroll={scroll}
+        //         {...others}
+        //       />
+        //     </ConfigProvider>
+        //   </ArrowBox>
+        // </AntdLanguageConfigProvider>
+      }
       {styles}
     </>
   );
@@ -109,37 +205,91 @@ const RecordList = ({
 
 const { className, styles } = css.resolve`
   .record-list {
+    
+      
+    :global(.table-scroll-arrows) {
+      width: 100%;
+      position: absolute;
+      top: 50%;
+      z-index: 100;
+      transform: translate(0, -50%);
+      :global(.arrow-left) {
+        position: absolute;
+        display:none;
+        cursor: pointer;
+        left: 0;
+        transform: translateX(50%);
+      }
+      :global(.arrow-right) {
+        position: absolute;
+        display:none;
+        cursor: pointer;
+        right: 0;
+        transform: translateX(-50%);
+      }
+
+    }
+    :global(.ant-table-ping-left) {
+      :global(.table-scroll-arrows) {
+        :global(.arrow-left) {
+          display:block;
+        }
+      }
+    }
+
+    :global(.ant-table-ping-right) {
+      :global(.table-scroll-arrows) {
+        :global(.arrow-right) {
+          display:block;
+        }
+      }
+    }
     :global(.ant-table) {
       background: transparent;
       font-size: 12px;
+    }
+    :global(.ant-table-cell-row-hover){
+      background: var(--bg-1) !important;
     }
     :global(.ant-table-thead) {
       :global(tr) {
         :global(th),
         :global(td) {
-          height: 30px;
-          padding-bottom: 0;
-          padding-top: 10px;
+          height: 14px;
+          line-height: 14px;
+          padding-bottom: 8px;
+          padding-top: 8px;
           padding-left: 0px;
-          padding-right: 9px;
-          background: var(--theme-background-color-1);
+          padding-right: 8px;
+          background: var(--bg-1);
           font-size: 12px;
-          font-weight: 500;
-          color: var(--theme-font-color-2);
+          font-weight: 400;
+          color: var(--text-tertiary);
           transition: none;
+          white-space: nowrap;
+        }
+      }
+    }
+    :global(.ant-table-thead){
+      :global(tr) {
+        :global(th),
+        :global(td) {
+          border-bottom:none !important;
         }
       }
     }
     :global(tr) {
       :global(th),
       :global(td) {
-        border: 0;
+        // border-bottom: 1px solid var(--line-1);
+        border-bottom: none;
+
         vertical-align: middle;
         &:first-child {
-          padding-left: 20px;
+          padding-left: 24px;
         }
         &:last-child {
-          padding-right: 10px;
+          padding-right: 24px;
         }
         &::before {
           display: none !important;
@@ -148,16 +298,27 @@ const { className, styles } = css.resolve`
           white-space: nowrap;
         }
       }
+
+
+     
       :global(td) {
-        padding: 10px 5px;
+        line-height: 14px;
+        padding: 8px 5px;
         padding-left: 2px;
-        color: var(--theme-font-color-1);
+        font-weight: 500;
+        color: var(--text-primary);
+        font-size:12px;
       }
       @media ${MediaInfo.desktop} {
         :global(td.ant-table-cell-row-hover) {
-          background: transparent !important;
+          // background: transparent !important;
         }
       }
+    }
+
+    :global(.ant-table-cell-fix-left),
+    :global(.ant-table-cell-fix-right) {
+      background: var(--bg-1);
     }
     :global(.ant-table-thead)
       > :global(tr.ant-table-row-hover:not(.ant-table-expanded-row):not(.ant-table-row-selected))
@@ -171,7 +332,7 @@ const { className, styles } = css.resolve`
     :global(.ant-table-tbody)
       > :global(tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected))
       > :global(td) {
-      background: var(--theme-background-color-1);
+      background: var(--fill-1);
     }
 
     // loading
@@ -197,6 +358,10 @@ const { className, styles } = css.resolve`
     :global(.ant-table-cell-scrollbar) {
       box-shadow: none;
     }
+          :global(.ant-table-cell) {
+
+    }
+   
 
     :global(.ant-table-header),
     :global(.ant-spin-container::after) {
@@ -210,9 +375,9 @@ const { className, styles } = css.resolve`
     }
     // 自定义样式
     :global(.multi-line-item) {
-      line-height: 16px;
+      line-height: 14px;
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 500;
       color: var(--theme-font-color-1);
     }
   }
@@ -222,6 +387,29 @@ const { className, styles } = css.resolve`
     display: flex;
     flex-direction: column;
     justify-content: center;
+  }
+
+  .arrowCircle {
+    width: 24px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--fill-tertiary-bg);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
+    color: #6e7278;
+
+    .left {
+      transform: rotate(180deg);
+    }
+
+    & svg {
+      pointer-events: none;
+    }
+
+    &:hover {
+      color: #ff7800;
+    }
   }
 `;
 const clsx = clsxWithScope(className);

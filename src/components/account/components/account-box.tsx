@@ -1,6 +1,7 @@
 /* account/security-setting,account/verify,/account/resetType等页面的样式抽象 */
 import CommonIcon from '@/components/common-icon';
 import Nav from '@/components/nav';
+import { Svg } from '@/components/svg';
 import { useRouter } from '@/core/hooks/src/use-router';
 // import { MediaInfo, clsx } from '@/core/utils';
 import { clsx } from '@/core/utils/src/clsx';
@@ -24,8 +25,7 @@ export const AccountBox = (props: {
         <div className='content'>
           {prompt && (
             <div className='prompt-box'>
-              <CommonIcon name='common-warning-tips-0' size={12} />
-              {state?.prompt || prompt}
+              <div className='prompt'><Svg src='/static/icons/primary/common/tips.svg' width={14} height={14} color='var(--yellow)' /> <span>{state?.prompt || prompt}</span></div>
             </div>
           )}
           {children}
@@ -40,8 +40,8 @@ const styles = css`
     height: 100%;
     display: flex;
     flex-direction: column;
-    background: var(--theme-background-color-2);
-    padding: 20px;
+    background: var(--bg-1);
+    // padding: 20px;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     @media ${MediaInfo.tablet} {
@@ -56,12 +56,54 @@ const styles = css`
     .main-box {
       width: 100%;
       flex: 1 1;
+      :global(.nav-title) {
+        position: fixed;
+        width: 100%;
+        z-index: 100;
+        @media ${MediaInfo.mobile} {
+          position: relative;
+          width: auto;
+          padding:0;
+          background: var(--bg-1);
+        }
+      }
+      :global(.nav-title+.content) {
+        margin-top: 83px;
+      }
+      .prompt-box {
+          padding: 8px 12px;
+          font-weight: 400;
+          color: var(--yellow);
+          border-radius: 5px;
+          margin-bottom: 30px;
+          background: var(--tips);
+          @media ${MediaInfo.mobile} {
+           margin-bottom: 15px;
+          }
+          .prompt{ 
+            display:flex;
+            flex-direction: row;
+            align-items: center;
+            width: 1400px;
+            margin: auto;
+            font-size: 12px;
+            span{
+              padding-left: 6px;
+            }
+            @media ${MediaInfo.mobile} {
+              width: auto;
+            }
+          }
+          :global(img) {
+            margin-right: 10px;
+          }
+      }
       .content {
-        border: 1px solid var(--theme-border-color-2);
-        border-radius: 8px;
-        padding: 20px;
         height: calc(100vh - 180px);
         overflow-y: auto;
+        @media ${MediaInfo.mobile} {
+          margin-top:15px;
+        }
         @media ${MediaInfo.tablet} {
           height: 92%;
         }
@@ -70,18 +112,7 @@ const styles = css`
           border: 0;
           height: 100%;
         }
-        .prompt-box {
-          padding: 12px 20px;
-          font-size: 12px;
-          font-weight: 400;
-          color: var(--theme-font-color-1);
-          border-radius: 5px;
-          margin-bottom: 30px;
-          background: rgba(240, 78, 63, 0.08);
-          :global(img) {
-            margin-right: 10px;
-          }
-        }
+        
       }
     }
   }

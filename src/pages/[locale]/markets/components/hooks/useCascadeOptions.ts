@@ -57,10 +57,10 @@ const useCascadeOptions = () => {
     const group = await Group.getInstance();
     // const spotUnits = group?.getSpotUnits() || []; //  现货二级菜单
     const swapZones = group?.getSwapZones()?.slice() || []; // 现货三级菜单
-    // const swapUnitConfigs: {
-    //   id: string;
-    //   name: string;
-    // }[] = [];
+    const swapUnitConfigs: {
+      id: string;
+      name: string;
+    }[] = [];
     if (!swapZones.includes(LANG('全部'))) {
       swapZones.unshift(LANG('全部'));
     }
@@ -99,9 +99,9 @@ const useCascadeOptions = () => {
     [CURRENT_TAB.LITE]: {
       secondOptions: LITE_OPTIONS,
     },
-    [CURRENT_TAB.ETF]: {
-      secondOptions: [{ name: 'USDT', id: ETF_OPTION_ID.USDT }],
-    },
+    // [CURRENT_TAB.ETF]: {
+    //   secondOptions: [{ name: 'USDT', id: ETF_OPTION_ID.USDT }],
+    // },
   };
   return OPTION_MAP[currentId];
 };

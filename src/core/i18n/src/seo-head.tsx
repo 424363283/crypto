@@ -1,24 +1,24 @@
 import { SUBSCRIBE_TYPES, useWs } from '@/core/network/src/hooks/use-ws';
-import { isTradePage } from '@/core/utils/src/is';
+import { isLite, isTradePage } from '@/core/utils/src/is';
 import { NextSeo, WebPageJsonLd } from 'next-seo';
 import { useRouter } from 'next/router';
 import React, { useCallback, useRef, useState } from 'react';
 import { PAGE_ENV } from './cache';
 
+
+
 // 接管页面的head
 export const SeoHead = (Component: React.ComponentType) => {
   const HeadComponent = (props: any) => {
+    const forceDesktopMode = process.env.NEXT_PUBLIC_FORCE_DESKTOP_MODE === 'true';
     const { meta, env, locales, locale, auth, robots, id, key1, copyTradingName } = props || {};
-
-    // console.log('metametameta',meta)
-
     const getCoin = useCallback((id: string) => (id || '')?.replace(/-|_/, '')?.toUpperCase(), []);
     const getTitle = useCallback((title: string) => `%s | ${meta.title?.trim() || ''}`.replace('%s', title), []);
     const getDescription = useCallback((coin: string) => meta.description?.replace(/\{coin\}/g, coin), []);
     const getKeywords = useCallback((coin: string) => meta.keywords?.replace(/\{coin\}/g, coin), []);
 
     const [{ title, coin }, setTitle] = useState<{ title: string; coin: string }>(() => {
-      const coin = getCoin(id);
+      const coin = isLite(id) ? getCoin(id?.replace(/usdt.*/i, '')) : getCoin(id);
       if (isTradePage(`/${key1}/`) && id) {
         return {
           title: getTitle(coin),
@@ -46,7 +46,7 @@ export const SeoHead = (Component: React.ComponentType) => {
       (data) => {
         if (isTradePage(route)) {
           const { price, id } = data;
-          const coin = getCoin(id);
+          const coin = isLite(id) ? getCoin(id?.replace(/usdt.*/i, '')) : getCoin(id);
           if (ref.current === price) return;
           ref.current = price;
           if (price == '--') {
@@ -120,7 +120,7 @@ export const SeoHead = (Component: React.ComponentType) => {
             },
             {
               name: 'viewport',
-              content: 'width=device-width,initial-scale=1.0',
+              content: `width=${forceDesktopMode ? 1440 : "device-width"},initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no`,
             },
             {
               name: 'renderer',
@@ -150,7 +150,7 @@ export const SeoHead = (Component: React.ComponentType) => {
           additionalLinkTags={[
             {
               rel: 'icon',
-              href: process.env.NEXT_PUBLIC_BASE_URL + '/favicon.ico',
+              href: '/favicon.svg',
             },
           ]}
           openGraph={{
@@ -180,7 +180,7 @@ export const SeoHead = (Component: React.ComponentType) => {
     return (
       <>
         <HeadComponent {...props} />
-        { <Component {...props} /> }
+        {<Component {...props} />}
       </>
     );
   };

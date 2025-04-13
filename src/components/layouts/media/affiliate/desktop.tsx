@@ -69,7 +69,7 @@ export const AffiliateDesktopLayout = ({ children }: any) => {
             <div className='uid'>
               UID: {uid}
               <CopyToClipboard text={uid || ''} onCopy={() => message.success(LANG('复制成功'))}>
-                <CommonIcon name='common-copy-2-grey-0' className='copy' size={12} />
+                <CommonIcon  size={10} name='common-copy' className='copy' />
               </CopyToClipboard>
             </div>
           </div>

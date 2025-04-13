@@ -38,8 +38,8 @@ export default React.memo(PositionButton);
 const styles = css`
   .trade-type-bar {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: center;
     color: var(--theme-font-color-2);
     :global(path) {
       fill: var(--theme-background-color-3);
@@ -56,9 +56,12 @@ const styles = css`
         fill: var(--color-red);
       }
     }
+    .buy-wrapper {
+      width: 156px;
+    }
     .buy-wrapper,
     .sell-wrapper {
-      height: 30px;
+      height: 40px;
       position: relative;
       cursor: pointer;
       span {

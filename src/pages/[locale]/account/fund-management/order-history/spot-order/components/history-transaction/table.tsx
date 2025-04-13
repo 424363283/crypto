@@ -60,7 +60,7 @@ export const SpotHistoryTransactionTable = () => {
         draft.data = res.data.list;
         draft.loading = false;
         draft.page = 1;
-        draft.total = res.data.count;
+        draft.total = res?.data?.total || '0';
         draft.filters = params;
       });
     } else {

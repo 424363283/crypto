@@ -86,7 +86,7 @@ export const SpotTable = () => {
 const styles = css`
   .spot-table-container {
     @media ${MediaInfo.mobile} {
-      padding: 0 10px 20px;
+      padding: 12px;
     }
   }
 `;

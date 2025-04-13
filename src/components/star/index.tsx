@@ -1,9 +1,9 @@
 import { LANG } from '@/core/i18n';
-import { FAVORITE_TYPE, Favors, FAVORS_LIST } from '@/core/shared';
+import { Account, FAVORITE_TYPE, Favors, FAVORS_LIST } from '@/core/shared';
 import { message } from '@/core/utils';
 import React, { useEffect, useState } from 'react';
 import CommonIcon from '../common-icon';
-
+import { useSymbolStore } from '@/store/symbol-change';
 /* eslint-disable react/display-name */
 const StarComponent = (props: {
   code: string;
@@ -13,17 +13,23 @@ const StarComponent = (props: {
   width?: number;
   height?: number;
 }) => {
-  const { code, type, onFavorite, inQuoteList = false, width = 12, height = 12 } = props;
+  const { code, type, onFavorite, inQuoteList = false, width = 14, height = 14 } = props;
   const [isFavorite, setIsFavorite] = useState(false);
+  const { togglesymbolStatus, symbolStatus } = useSymbolStore();
   useEffect(() => {
     const handleIsFavorite = async () => {
       const favors = await Favors.getInstance();
-      const isFavor = [] as any;// TODO await favors.isFavor(code);
+      const isFavor = await favors.isFavor(code);
       setIsFavorite(isFavor);
     };
     handleIsFavorite();
-  }, [code]);
+  }, [code, symbolStatus]);
+
   const handleFavorite = async (id: string) => {
+    if (!Account.isLogin) {
+      message.error(LANG('请先登录'));
+      return;
+    }
     const favors = await Favors.getInstance();
 
     const res = await favors.toggleFavors(id, type);
@@ -33,6 +39,9 @@ const StarComponent = (props: {
       setIsFavorite(isFavor);
       const latestFavorsList = favors.getFavorsList();
       onFavorite?.(latestFavorsList);
+      if (code === id) {
+        togglesymbolStatus();
+      }
     }
   };
 
@@ -43,12 +52,13 @@ const StarComponent = (props: {
         width={width}
         enableSkin
         height={height}
+        style={{ cursor: 'pointer' }}
+        className="star_icon"
         onClick={(e: React.MouseEvent) => {
           e.preventDefault();
           e.stopPropagation();
           handleFavorite(code);
         }}
-        className='star_icon'
       />
     );
   }

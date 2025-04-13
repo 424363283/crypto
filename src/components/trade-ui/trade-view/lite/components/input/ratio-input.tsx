@@ -15,8 +15,8 @@ interface Props {
   isPercent?: boolean;
   max?: number;
   min: number;
-  addStep: number;
-  minusStep: number;
+  addStep?: number;
+  minusStep?: number;
   least?: number;
   onOriginValueChange?: (value: string) => void;
 }
@@ -29,8 +29,8 @@ const RatioInput = ({
   isNegative = true,
   min,
   max,
-  addStep,
-  minusStep,
+  addStep=0,
+  minusStep=0,
   isPercent = false,
   onFocus,
   onBlur,
@@ -135,11 +135,11 @@ const RatioInput = ({
   return (
     <>
       <div className={`${theme} ${clsx('container', isFocus && 'focus')}`}>
-        <div className='controller'>
-          <button className='btn-control' onClick={_onMinus}>
-            <Svg src='/static/images/lite/minus.svg' width={12} height={12} />
+        {addStep > 0 && <div className='controller'>
+          <button className='btn-control' onClick={_onAdd}>
+            <span>+</span>
           </button>
-        </div>
+        </div>}
         <input
           value={originVal}
           type='text'
@@ -153,17 +153,17 @@ const RatioInput = ({
           <span
             className={'symbol'}
             style={{
-              left: `${value.toString().length * 4 + 132}px`,
+              left: `${value.toString().length * 4 + 160}px`,
             }}
           >
             %
           </span>
         )}
-        <div className='controller'>
-          <button className='btn-control' onClick={_onAdd}>
-            <Svg src='/static/images/lite/plus.svg' width={12} height={12} />
+        { minusStep > 0 && <div className='controller'>
+          <button className='btn-control' onClick={_onMinus}>
+            <span>-</span>
           </button>
-        </div>
+        </div> }
       </div>
       <style jsx>{styles}</style>
     </>
@@ -176,11 +176,11 @@ const styles = css`
     width: 100%;
     height: 40px;
     border-radius: 6px;
-    margin: 0 0 14px 0;
+    padding: 0 8px;
     display: flex;
     align-items: center;
     position: relative;
-    background: var(--theme-trade-tips-color);
+    background: var(--fill-3);
     &:hover {
       border-color: var(--skin-color-active) !important;
     }
@@ -190,14 +190,14 @@ const styles = css`
     }
     input {
       flex: 1;
-      color: var(--theme-font-color-1);
-      padding-right: 10px;
+      color: var(--text-primary);
+      padding: 0 8px;
       font-size: 14px;
       outline: none;
       text-align: center;
       border: 0;
       width: 100%;
-      background: var(--theme-trade-tips-color);
+      background: var(--fill-3);
       &::placeholder,
       input::placeholder,
       input::-webkit-input-placeholder,
@@ -209,7 +209,7 @@ const styles = css`
       position: absolute;
       font-size: 14px;
       pointer-events: none;
-      color: var(--theme-font-color-1);
+      color: var(--text-primary);
     }
     .controller {
       width: auto;
@@ -220,14 +220,22 @@ const styles = css`
         border: none;
         outline: 0;
         height: 36px;
-        width: 44px;
-        background: var(--theme-trade-tips-color);
+        width: auto;
+        background: var(--fill-3);
         display: flex;
         justify-content: space-evenly;
         align-items: center;
         border-radius: 6px;
         cursor: pointer;
-        padding: 0;
+        padding: 0 8px;
+        span {
+          color: var(--text-tertiary);
+          text-align: center;
+          font-size: 20px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: normal;
+        }
       }
     }
   }

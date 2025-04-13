@@ -6,7 +6,7 @@ import { useAppContext } from '@/core/store';
 import { clsx } from '@/core/utils/src/clsx';
 import { useState } from 'react';
 
-export default function Steps() {
+export default function XSteps() {
   const appContext = useAppContext();
   const [active, setActive] = useState(0);
   const { setResponsiveClsx } = useResponsiveClsx();

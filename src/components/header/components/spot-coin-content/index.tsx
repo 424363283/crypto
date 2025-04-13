@@ -7,7 +7,7 @@ export default function SpotCoinContent() {
       tips: LANG('所有操作可在一个荧幕完成'),
       href: '/spot/btc_usdt',
     },
-    { name: LANG('币币闪兑'), tips: LANG('一键兑换不同数字货币'), href: '/convert' },
+    // { name: LANG('币币闪兑'), tips: LANG('一键兑换不同数字货币'), href: '/convert' },
   ];
 
   return (
@@ -48,9 +48,15 @@ export default function SpotCoinContent() {
               :global(> a) {
                 display: block;
                 width: 100%;
+                color: var(--text-secondary)!important;
+                :global(>*:nth-last-child(2)) {
+                  color: var(--text-primary);
+                }
+                :global(>*:nth-child(2)) {
+                  color: var(--text-tertiary);
+                }
               }
               .description {
-                color: var(--theme-font-color-3);
                 font-size: 12px;
                 font-weight: 400;
               }
@@ -58,15 +64,13 @@ export default function SpotCoinContent() {
                 font-size: 16px;
                 font-weight: 500;
                 margin-bottom: 11px;
-                color: var(--theme-font-color-1);
               }
               :global(.icon-arrow) {
                 display: none;
               }
               &:hover {
-                background-color: var(--theme-background-color-3);
                 .name {
-                  color: var(--skin-hover-font-color);
+                  color: var(--text-brand);
                 }
                 :global(.icon-arrow) {
                   display: inline-block;

@@ -32,30 +32,23 @@ export const CaptchaButton = (props: CaptchaButtonProps) => {
 const styles = css`
   .init-btn-status {
     border-radius: 5px;
-    color: var(--const-color-grey);
+    color: var(--text-brand);
     font-size: 14px;
-    background-color: var(--theme-background-color-disabled-light);
-    padding: 6px 20px;
-    font-weight: 500;
+    padding: 6px 0 6px 16px;
+    font-weight: 400;
     flex-shrink: 0;
     text-align: center;
-    @media ${MediaInfo.mobile} {
-      font-size: 12px;
-      padding: 6px 14px;
-    }
   }
   .verify-btn {
     cursor: pointer;
-    color: var(--skin-font-color);
+    color: var(--text-brand);
     border-radius: 5px;
-    background-color: var(--skin-primary-color);
     font-weight: 500;
     display: inline-block;
   }
   .verify-btn-active {
     cursor: not-allowed;
-    background-color: var(--theme-background-color-disabled-light);
-    color: var(--theme-font-color-3);
+    color: var(--text-brand);
     border: none;
   }
 `;

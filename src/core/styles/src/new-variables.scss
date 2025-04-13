@@ -1,0 +1,103 @@
+// Base size
+
+$nui-base-size: 10px !default;
+
+// Body
+
+$nui-body-bg: var(-bg-1) !default;
+$nui-body-color: var(--text-primary) !default;
+$nui-body-font-size: $nui-base-size * 1.6 !default;
+
+// Fonts
+
+$nui-font-size:    floor($nui-base-size) * 1.4 !default;
+$nui-font-size-xs: floor($nui-base-size) * 1.2 !default;
+$nui-font-size-sm: floor($nui-base-size) * 1.4 !default;
+$nui-font-size-lg: floor($nui-base-size) * 1.4 !default;
+$nui-font-size-xl: floor($nui-base-size) * 1.6 !default;
+
+$nui-font-size-map: (
+  xs: $nui-font-size-xs,
+  sm: $nui-font-size-sm,
+  lg: $nui-font-size-lg,
+  xl: $nui-font-size-xl
+);
+
+$nui-font-weight-light:           300 !default;
+$nui-font-weight-normal:          400 !default;
+$nui-font-weight-middle:          500 !default;
+$nui-font-weight-bold:            700 !default;
+
+
+// UI colors
+
+$nui-intents: 'primary', 'positive', 'negative', 'warning';
+
+$nui-text-color:                $nui-body-color !default;
+$nui-placeholder-color:         var(--text-secondary) !default;
+$nui-placeholder-color-focus:   var(--text-secondary) !default;
+
+$nui-base-text-color:          var(--text-primary) !default;
+$nui-base-text-color-hover:    var(--text-primary) !default;
+$nui-base-gradient:            var(--fill-3) !default;
+$nui-base-gradient-hover:      var(--fill-pop) !default;
+$nui-base-border-color:        var(--line-3) !default;
+$nui-base-border-color-hover:  var(--line-3) !default;
+
+$nui-primary-gradient:            var(--brand) !default;
+$nui-primary-gradient-hover:      var(--hover) !default;
+
+$nui-primary-border-color:        var(--brand) !default;
+$nui-primary-border-color-hover:  var(--brand) !default;
+
+$nui-gradient-map: (
+  primary:  $nui-primary-gradient,
+
+);
+$nui-gradient-hover-map: (
+  primary:  $nui-primary-gradient-hover,
+);
+$nui-border-color-map: (
+  primary:  $nui-primary-border-color,
+);
+
+$nui-border-color-hover-map: (
+  primary:  $nui-primary-border-color-hover,
+);
+
+// Base dimensions
+$nui-sizes: 'xs', 'sm', 'lg', 'xl';
+
+$nui-base-height:     $nui-base-size * 4 !default;
+$nui-base-height-xs:  $nui-base-size * 2.4 !default;
+$nui-base-height-sm:  $nui-base-size * 3.2 !default;
+$nui-base-height-lg:  $nui-base-size * 4.8 !default;
+$nui-base-height-xl:  $nui-base-size * 5.6 !default;
+
+$nui-height-map: (
+  xs: $nui-base-height-xs,
+  sm: $nui-base-height-sm,
+  lg: $nui-base-height-lg,
+  xl: $nui-base-height-xl
+);
+
+$nui-base-padding:      $nui-base-size * 1.6 !default;
+$nui-base-padding-xs:   $nui-base-size * 1.6 !default;
+$nui-base-padding-sm:   $nui-base-size * 1.6 !default;
+$nui-base-padding-lg:   $nui-base-size * 1.6 !default;
+$nui-base-padding-xl:   $nui-base-size * 1.6 !default;
+
+$nui-padding-map: (
+  xs: $nui-base-padding-xs,
+  sm: $nui-base-padding-sm,
+  lg: $nui-base-padding-lg,
+  xl: $nui-base-padding-xl
+);
+
+// Component shapes
+$nui-border-radius-1:         8px !default;
+$nui-border-radius-2:         12px !default;
+$nui-border-radius-3:         16px !default;
+$nui-border-radius-rounded: floor(map-get($nui-height-map, 'xl')) !default;
+$nui-border-width:          1px !default;
+

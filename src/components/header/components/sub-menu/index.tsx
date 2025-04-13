@@ -20,8 +20,5 @@ const styles = css`
     margin: 0 22px 0 0px;
     border-radius: 5px;
     height: 479px;
-    &:hover {
-      background-color: var(--theme-background-color-3);
-    }
   }
 `;

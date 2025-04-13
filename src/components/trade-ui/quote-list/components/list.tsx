@@ -195,16 +195,9 @@ export const List = ({
             {LANG('名称')}
             <span>
               <CommonIcon
-                className='up'
-                name={sort[SORT_TYPE.NAME] === 1 ? 'common-sort-up-active-0' : 'common-sort-up-0'}
-                width={5}
-                height={5}
-                enableSkin
-              />
-              <CommonIcon
-                name={sort[SORT_TYPE.NAME] === -1 ? 'common-sort-down-active-0' : 'common-sort-down-0'}
-                width={5}
-                height={5}
+                name={sort[SORT_TYPE.NAME] === 1 ? 'common-sort-up-active-icon-0' : (sort[SORT_TYPE.NAME] === -1 ? 'common-sort-down-active-icon-0' : 'common-sort-icon-0')}
+                width={10}
+                height={10}
                 enableSkin
               />
             </span>
@@ -212,16 +205,9 @@ export const List = ({
           <div className='title-item' onClick={clickSort.bind(this, SORT_TYPE.PRICE)}>
             <span>
               <CommonIcon
-                className='up'
-                name={sort[SORT_TYPE.PRICE] === 1 ? 'common-sort-up-active-0' : 'common-sort-up-0'}
-                width={5}
-                height={5}
-                enableSkin
-              />
-              <CommonIcon
-                name={sort[SORT_TYPE.PRICE] === -1 ? 'common-sort-down-active-0' : 'common-sort-down-0'}
-                width={5}
-                height={5}
+                name={sort[SORT_TYPE.PRICE] === 1 ? 'common-sort-up-active-icon-0' : (sort[SORT_TYPE.PRICE] === -1 ? 'common-sort-down-active-icon-0' : 'common-sort-icon-0')}
+                width={10}
+                height={10}
                 enableSkin
               />
             </span>
@@ -230,16 +216,9 @@ export const List = ({
           <div className='title-item' onClick={clickSort.bind(this, SORT_TYPE.CHANGE)}>
             <span>
               <CommonIcon
-                className='up'
-                name={sort[SORT_TYPE.CHANGE] === 1 ? 'common-sort-up-active-0' : 'common-sort-up-0'}
-                width={5}
-                height={5}
-                enableSkin
-              />
-              <CommonIcon
-                name={sort[SORT_TYPE.CHANGE] === -1 ? 'common-sort-down-active-0' : 'common-sort-down-0'}
-                width={5}
-                height={5}
+                name={sort[SORT_TYPE.CHANGE] === 1 ? 'common-sort-up-active-icon-0' : (sort[SORT_TYPE.CHANGE] === -1 ? 'common-sort-down-active-icon-0' : 'common-sort-icon-0')}
+                width={10}
+                height={10}
                 enableSkin
               />
             </span>
@@ -249,13 +228,15 @@ export const List = ({
         <style jsx>{`
           .title {
             display: flex;
-            height: 30px;
             display: flex;
             align-items: center;
             font-size: 12px;
+            line-height: 14px;
+            padding: 0 16px;
+            margin-bottom: 8px;
             white-space: nowrap;
             > div {
-              color: var(--theme-font-color-2);
+              color: var(--text-secondary);
               cursor: pointer;
               display: flex;
               align-items: center;
@@ -264,13 +245,9 @@ export const List = ({
                 display: flex;
                 flex-direction: column;
                 margin-left: 2px;
-                :global(.up) {
-                  margin-bottom: 2px;
-                }
               }
             }
             > div:nth-child(1) {
-              padding-left: 10px;
               width: 140px;
             }
             > div:nth-child(2) {
@@ -278,7 +255,6 @@ export const List = ({
               flex-flow: row-reverse;
             }
             > div:nth-child(3) {
-              padding-right: 10px;
               flex-flow: row-reverse;
               flex: 1;
             }
@@ -400,8 +376,7 @@ export const List = ({
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 16px 0;
-          padding-bottom: 3px;
+          margin-bottom: 16px;
           :global(.search-wrap) {
             flex: 1;
           }
@@ -412,6 +387,7 @@ export const List = ({
           overflow: auto;
           flex: 1;
           content-visibility: auto;
+          margin-bottom: 8px;
           .empty-wrapper {
             flex: 1;
             display: flex;

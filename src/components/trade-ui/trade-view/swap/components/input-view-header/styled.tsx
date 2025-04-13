@@ -1,4 +1,4 @@
-import { clsxWithScope } from '@/core/utils';
+import { clsxWithScope, MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
 
 const { className, styles: _styles } = css.resolve`
@@ -6,23 +6,34 @@ const { className, styles: _styles } = css.resolve`
   }
   .section-1 {
     display: flex;
+    align-items: center;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    height: 40px;
+    @media ${MediaInfo.mobile} {
+      height: 2.5rem;
+    }
     .left {
       flex: 1;
       display: flex;
       flex-direction: row;
+      align-items: center;
       .option {
         cursor: pointer;
-        line-height: 20px;
+        line-height: 16px;
         font-size: 14px;
-        font-weight: 400;
-        color: var(--theme-trade-text-color-2);
-        margin-right: 10px;
+        font-weight: 500;
+        margin-right: 24px;
+        @media ${MediaInfo.mobile} {
+          line-height: 1.5rem;
+          height: 1.5rem;
+        }
+        color: var(--text-secondary);
+
         &.active {
           font-weight: 500;
-          color: var(--skin-hover-font-color);
+          color: var(--text-brand);
         }
         &:last-child {
           margin-right: 0;

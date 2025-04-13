@@ -1,14 +1,28 @@
 import { getAccountProfitApi, getSwapTotalProfitsApi, getSwapUTotalProfitsApi } from '@/core/api';
 import { LANG } from '@/core/i18n';
 import { Account, Assets } from '@/core/shared';
-import { Polling, clsx, message } from '@/core/utils';
+import { MediaInfo, Polling, clsx, message } from '@/core/utils';
 import { useEffect } from 'react';
 import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
 import { WalletType } from '../types';
 
+export const INTERVAL_DAY: { [key: string]: number } = {
+  TODAY: 0,
+  DAY7: 7,
+  DAY30: 30
+}
+
+const TITLE_MAP: { [key: string]: string } = {
+  0: LANG('今日盈亏'),
+  1: LANG('今日盈亏'),
+  7: LANG('7日盈亏'),
+  30: LANG('30日盈亏'),
+};
+
 interface DaysPNLProps {
   type: WalletType;
+  dayType?: number;
 }
 interface SpotProfits {
   balance: number;
@@ -22,22 +36,60 @@ interface SwapProfits {
   indexDay: number;
 }
 
+export const SwapDayProfitAndLoss = (props: SwapProfits) => {
+  const { ...item } = props;
+  return (
+    <div className={clsx('day-profit-card', +item.totalPnl < 0 ? 'negative-card' : 'positive-card')} key={item.indexDay}>
+      <p className='name'>{TITLE_MAP[item.indexDay]}</p>
+      <p className='price'>${item.totalPnl?.toFixed(2) || '0.00'}</p>
+      <p className='rate'>({item.totalPnlRate?.mul(100).toFixed(2) || '0.00'} %)</p>
+      <style jsx>{`
+          .day-profit-card {
+            display: flex;
+            margin: -8px 16px 16px;
+            flex-direction: row;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 400;
+            @media ${MediaInfo.mobile} {
+              margin: 10px 0 0;
+            }
+            .name {
+              margin-right: 8px;
+              color: var(--text-tertiary);
+            }       
+            .rate {
+              margin-right: 8px;
+            }       
+            .price {
+              margin-right: 8px;
+            }       
+          }     
+          .negative-card {
+            color: var(  --color-red);
+          }     
+          .positive-card {
+            color: var(--color-green);
+          }  
+            
+        `}</style>
+
+    </div>
+  )
+}
+const defaultSpotProfits: SpotProfits[] = [ {balance:0, dateType:0, netIncome:0}, {balance:0, dateType:0, netIncome:0}, {balance:0, dateType:0, netIncome:0}] 
+const defaultSwapProfits: SwapProfits[] = [ {indexDay:0, totalPnl:0, totalPnlRate:0, pnl:0}, {indexDay:7, totalPnl:0, totalPnlRate:0, pnl:0}, {indexDay:30, totalPnl:0, totalPnlRate:0, pnl:0}] 
 // 今日/7日/30日盈亏
 export const DaysProfitAndLossSmallCard = (props: DaysPNLProps) => {
-  const { type } = props;
+  const { type, dayType } = props;
   const [state, setState] = useImmer({
-    spotProfits: [] as SpotProfits[],
-    swapProfits: [] as SwapProfits[],
+    spotProfits: defaultSpotProfits as SpotProfits[],
+    swapProfits: defaultSwapProfits as SwapProfits[],
   });
   const { spotProfits, swapProfits } = state;
   const { spotAssetsStore } = Account.assets;
   const { spotTotalBalance } = spotAssetsStore;
-  const TITLE_MAP: { [key: string]: string } = {
-    0: LANG('今日盈亏'),
-    1: LANG('今日盈亏'),
-    7: LANG('7日盈亏'),
-    30: LANG('30日盈亏'),
-  };
+
   const getAccountProfit = async () => {
     const PROFITS_REQUESTS: any = {
       [WalletType.ASSET_SPOT]: async () => await getAccountProfitApi({ type: 2 }),
@@ -72,6 +124,16 @@ export const DaysProfitAndLossSmallCard = (props: DaysPNLProps) => {
     };
   }, []);
 
+  if (dayType !== undefined) {
+    if (type === WalletType.ASSET_SWAP || type === WalletType.ASSET_SWAP_U) {
+      const item = swapProfits.find(elem => elem.indexDay === dayType) || swapProfits[0] || { indexDay: dayType };
+      return <SwapDayProfitAndLoss {...item} />
+
+    } else {
+      return null;
+    }
+
+  }
   if (type === WalletType.ASSET_SPOT) {
     const spotElements = spotProfits.map((item) => {
       // 盈亏
@@ -118,19 +180,23 @@ const styles = css`
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-size: 12px;
+    font-weight: 500;
     border-right: 1px solid var(--theme-border-color-2);
     flex-grow: 1;
     .name {
       color: var(--theme-font-color-3);
-      font-size: 12px;
+      padding: 4px 0;
     }
     .rate {
-      margin: 4px 0;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 4px 0;
       word-break: break-all;
     }
     .price {
-      font-size: 12px;
       word-break: break-all;
+      padding: 4px 0;
     }
     &:first-child {
       align-items: flex-start;
@@ -140,14 +206,10 @@ const styles = css`
       border-right: none;
     }
   }
-  .negative-card {
-    color: var(--color-red);
-    font-size: 14px;
-    font-weight: 500;
-  }
+  .negative-card {      
+    color: var(  --color-red);
+  }     
   .positive-card {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--color-green);
+    color: var( --color-green);
   }
 `;

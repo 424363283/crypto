@@ -15,57 +15,55 @@ interface Last {
   auditTime: number;
   createTime: number;
 }
-export const useKycState = () => {
+export const useKycState = (isRefresh = false) => {
   const [kycState, setState] = useImmer({
     isLoadingKycState: true,
     kyc: 0, // 暂未认证
     last: {} as Last,
-    ready: false,
+    ready: false
   });
 
   // 获取kyc状态
-  const updateKYCAsync = async () => {
+  const updateKYCAsync = async (isRefresh = false) => {
     try {
-      const result = await Account.getKycStatus();
+      const result = isRefresh ? await Account.refreshKycStatus() : await Account.getKycStatus();
       const userInfo = await Account.getUserInfo();
       const { last } = result || {};
-      setState((draft) => {
+      setState(draft => {
         draft.last = last;
         draft.ready = true;
       });
       if (userInfo?.verified) {
-        setState((draft) => {
+        setState(draft => {
           draft.kyc = 3; // 认证成功
         });
       } else {
         if (last === null) {
-          setState((draft) => {
+          setState(draft => {
             draft.kyc = 0; // 暂未认证
           });
         } else if (last.state === 0) {
-          setState((draft) => {
+          setState(draft => {
             draft.kyc = 1; // 审核中
           });
         } else if (last.state === 2) {
-          setState((draft) => {
+          setState(draft => {
             draft.kyc = 2; // 认证失败
           });
         }
       }
-      setState((draft) => {
+      setState(draft => {
         draft.isLoadingKycState = false;
       });
     } catch (error) {
-      setState((draft) => {
+      setState(draft => {
         draft.ready = true;
         draft.isLoadingKycState = false;
       });
     }
   };
   React.useEffect(() => {
-    if (Account.isLogin) {
-      updateKYCAsync();
-    }
+    updateKYCAsync(isRefresh);
   }, []);
   const isKyc = kycState.kyc === 3; // 认证成功
   let { state } = kycState?.last || {};
@@ -77,6 +75,6 @@ export const useKycState = () => {
     kycState,
     updateKYCAsync,
     disabled,
-    state,
+    state
   };
 };

@@ -39,7 +39,7 @@ const MarketTable = () => {
   const [page, setPage] = useState(1);
   const [columnKey, setKey] = useState('');
   const [order, setOrder] = useState('');
-  const [idbKey, setIdbKey] = useState<string>(IDB_STORE_KEYS.MARKETS_DATA_SPOT_USDT_LIST);
+  const [idbKey, setIdbKey] = useState<string>(IDB_STORE_KEYS.MARKETS_DATA_SWAP_FEATURE_LIST);
 
   const [favorsList, setFavorsList] = useState<FAVORS_LIST[]>([]);
   const { secondItem, thirdItem, currentId, searchValue } = store;
@@ -53,7 +53,8 @@ const MarketTable = () => {
   const [filterSwapIds, setFilterSwapIds] = useState<string[]>([]);
   // table数据
   const [tableData, setTableData] = useState<MarketItem[]>([]);
-  const [marketsLocalData, setMarketsData] = useIndexedDB(idbKey, tableData);
+  const [marketsLocalData, setMarketsData] = useState<MarketItem[]>(tableData);
+  // const [marketsLocalData, setMarketsData] = useIndexedDB(idbKey, tableData);
 
   const getIdsCallback = async (detail: any, curId: string) => {
     const group = await Group.getInstance();
@@ -67,8 +68,8 @@ const MarketTable = () => {
         setIdbKey(IDB_STORE_KEYS.MARKETS_DATA_SPOT_USDC_LIST);
       }
       if (!isLoading) {
-        const hotIds = group.getHotIds();
-        const spotIds = group.getSpotIds;
+        const hotIds = group?.getHotIds();
+        const spotIds = group?.getSpotIds;
         const spots = Markets.getMarketList(detail, spotIds);
         setList((draft) => {
           // 创建 spots 数组的副本并排序
@@ -79,27 +80,29 @@ const MarketTable = () => {
     };
     const setSwapCoinIds = () => {
       setIdbKey(IDB_STORE_KEYS.MARKETS_DATA_SWAP_COIN_LIST);
-      const swapCoinIds = group.getSwapCoinIds();
+      const swapCoinIds = group?.getSwapCoinIds();
       setList((draft) => {
         draft.swapCoin = Markets.getMarketList(detail, swapCoinIds);
       });
     };
     const setSwapUsdtIds = () => {
       setIdbKey(IDB_STORE_KEYS.MARKETS_DATA_SWAP_FEATURE_LIST);
-      const swapUsdtIds = group.getSwapUsdtIds();
+      const swapUsdtIds = group?.getSwapUsdtIds();
       setList((draft) => {
         draft.swapUsdt = Markets.getMarketList(detail, swapUsdtIds);
       });
     };
     const setLiteIds = () => {
-      const liteIds = group.getLiteIds;
+      setIdbKey(IDB_STORE_KEYS.MARKETS_DATA_LITE_LIST);
+
+      const liteIds = group?.getLiteQuoteIds;
       setList((draft) => {
         draft.lite = Markets.getMarketList(detail, liteIds);
       });
     };
     const setEtfIds = () => {
       setIdbKey(IDB_STORE_KEYS.MARKETS_DATA_ETF_LIST);
-      const etfIds = group.getSpotEtfIds();
+      const etfIds = group?.getSpotEtfIds();
       setList((draft) => {
         draft.etf = Markets.getMarketList(detail, etfIds);
       });
@@ -145,7 +148,7 @@ const MarketTable = () => {
     const getToggleAllSpotList = async () => {
       const group = await Group.getInstance();
       const thirdItemName = thirdItem.name;
-      // console.log('thirdItem.name spot', thirdItem.name, LANG('全部'));
+      console.log('thirdItem.name spot', thirdItem.name, LANG('全部'));
       const ids = group.getSpotByIds(secondItemName, thirdItemName === LANG('全部') ? 'All' : thirdItemName);
       setFilterSpotIds(ids);
     };
@@ -169,8 +172,13 @@ const MarketTable = () => {
   }, [secondId, thirdId, currentId, LANG('全部')]);
   const fetchFavorsList = async () => {
     const favors = await Favors.getInstance();
-    const favList = favors.getFavorsList();
-    setFavorsList(favList);
+    if (favors) {
+      const favList = favors.getFavorsList();
+      setFavorsList(favList);
+    } else {
+      setFavorsList([]);
+    }
+
   };
   useEffect(() => {
     fetchFavorsList();
@@ -207,20 +215,29 @@ const MarketTable = () => {
   // 简单合约
   const getLiteList = () => {
     const { lite = [] } = list;
-    const { mainListIds, liteOrderListIds, liteInnovateListIds } = liteList;
-    const mainList = lite.filter((item) => {
-      return mainListIds.includes(item.id);
+    const { liteCryptoIds, liteDerivIds, liteUStockIds, liteHKStockIds, liteOrderListIds } = liteList;
+
+    const liteCryptoList = lite.filter((item) => {
+      return liteCryptoIds.includes(item.id);
+    });
+    const liteDerivList = lite.filter((item) => {
+      return liteDerivIds.includes(item.id);
+    });
+    const liteUStockList = lite.filter((item) => {
+      return liteUStockIds.includes(item.id);
+    });
+    const liteHKStockList = lite.filter((item) => {
+      return liteHKStockIds.includes(item.id);
     });
     const liteOrderList = lite.filter((item) => {
       return liteOrderListIds.includes(item.id);
     });
-    const liteInnovateList = lite.filter((item) => {
-      return liteInnovateListIds.includes(item.id);
-    });
     const LIST_MAP: { [key: string]: MarketItem[] } = {
       [LITE_OPTION_ID.ALL]: lite,
-      [LITE_OPTION_ID.MAIN_STREAM]: mainList,
-      [LITE_OPTION_ID.CREATIVE_AREA]: liteInnovateList,
+      [LITE_OPTION_ID.CRYPTO]: liteCryptoList,
+      [LITE_OPTION_ID.DERIV]: liteDerivList,
+      [LITE_OPTION_ID.USTOCK]: liteUStockList,
+      [LITE_OPTION_ID.HKSTOCK]: liteHKStockList,
       [LITE_OPTION_ID.COPY_ORDER]: liteOrderList,
     };
     if (LIST_MAP.hasOwnProperty(secondId)) {
@@ -345,7 +362,7 @@ const MarketTable = () => {
       return item.id.includes(searchValue) || item.name.includes(searchValue);
     });
     setDataSource(filterData);
-  }, [searchValue, currentId, secondId, thirdItem.id, list, favorsList]);
+  }, [searchValue, currentId, secondId, thirdItem.id, list, favorsList, filterSpotIds, filterSwapIds]);
 
   useEffect(() => {
     if (columnKey && order) {
@@ -391,9 +408,10 @@ const MarketTable = () => {
     handlePaginationChange();
   };
   useEffect(() => {
-    if (tableData.length) {
-      setMarketsData(tableData);
-    }
+    setMarketsData(tableData);
+    // if (searchValue || tableData.length) {
+    //   setMarketsData(tableData);
+    // }
   }, [tableData, secondId]);
 
   const MARKETS_TABLE_CONTAINER = (
@@ -405,6 +423,7 @@ const MarketTable = () => {
         rowKey={(record: any) => record.id}
         style={{ tableLayout: 'fixed' }}
         showSorterTooltip={false}
+        isHistoryList
         onRow={(record: any) => {
           return {
             onClick: () => handleRowClick(record),
@@ -414,7 +433,7 @@ const MarketTable = () => {
           setKey(sorter.columnKey);
           setOrder(sorter.order);
         }}
-        pagination={{ pageSize: 30, current: page, onChange: handlePageChange, showQuickJumper: false }}
+        pagination={{ pageSize: 8, current: page, onChange: handlePageChange, showQuickJumper: false }}
       />
       <style jsx>{styles}</style>
     </div>
@@ -429,11 +448,11 @@ export default MarketTable;
 
 const styles = css`
   .markets-table-container {
-    overflow-x: auto;
     height: 100%;
+    min-height: 500px;
     :global(.market-table) {
       :global(.ant-table-cell) {
-        font-weight: 500;
+        font-weight: 400;
         :global(.sub-price) {
           font-size: 12px;
           color: var(--theme-font-color-3);
@@ -444,7 +463,7 @@ const styles = css`
         }
       }
       :global(.ant-table-column-title) {
-        font-size: 13px;
+        font-size: 14px;
       }
       :global(.ant-table-container table) {
         min-width: var(--const-max-page-width) !important;
@@ -455,16 +474,14 @@ const styles = css`
     }
     :global(.trade_pair) {
       display: flex;
+      width: 200px;
       align-items: center;
-      :global(.coin-logo-wrapper) {
-        width: 20px;
-        height: 20px;
-        margin-right: 10px;
-        margin-left: 10px;
-      }
+      gap: 16px;
       :global(.right-coin) {
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        flex: 1 0 0;
         :global(.full-name) {
           font-size: 12px;
           color: var(--theme-font-color-3);
@@ -485,22 +502,7 @@ const styles = css`
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      :global(.trade) {
-        color: var(--theme-font-color-1);
-        font-size: 14px;
-        border: 1px solid var(--theme-border-color-2);
-        font-weight: 500;
-        padding: 7px 16px;
-        border-radius: 5px;
-        cursor: pointer;
-        z-index: 111;
-        display: flex;
-        min-width: 70px;
-        justify-content: center;
-        align-items: center;
-        display: inline-block;
-        margin-left: 10px;
-      }
+      gap: 8px;
     }
 
     :global(.change-rate) {
@@ -527,12 +529,20 @@ const styles = css`
     :global(.ant-table) {
       table-layout: fixed !important;
     }
+    :global(.ant-table-content, .ant-table-tbody) {
+     min-height: 500px;
+    }
+  
+    :global(.ant-table-container .ant-table-thead > tr > th), :global(.ant-table-container .ant-table-tbody > tr > td) {
+      &:first-child {
+        padding: 16px 24px 16px 0;
+      }
+      &:last-child {
+        padding: 16px 0 16px 24px;
+      }
+    }
     :global(.ant-table-container .ant-table-content .ant-table-tbody .ant-table-row) {
       &:hover {
-        :global(.trade) {
-          background-color: var(--skin-primary-color);
-          color: var(--skin-font-color);
-        }
       }
     }
   }

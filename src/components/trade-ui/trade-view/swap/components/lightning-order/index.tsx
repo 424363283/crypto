@@ -88,6 +88,7 @@ export const LightningOrder = () => {
           background-color: var(--theme-trade-bg-color-3);
           position: absolute;
           height: 41px;
+          left:'10%';
           display: flex;
           flex-direction: row;
           align-items: center;

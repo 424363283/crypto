@@ -52,8 +52,8 @@ const Menu = ({ title, tips, hot, className, subMenu, active, onHover, href, arr
         {arrow && (
           <CommonIcon
             name={active ? 'common-arrow-right-active-0' : 'common-arrow-right-0'}
-            width={22}
-            height={14}
+            width={24}
+            height={24}
             className='arrow'
             enableSkin
           />
@@ -86,6 +86,17 @@ const menuStyles = css`
       width: 304px;
       .item-wrapper {
         padding: 16px;
+        color: var(--text-secondary)!important;
+        :global(>*:nth-last-child(2)) {
+          color: var(--text-primary);
+        }
+        :global(>*:nth-child(2)) {
+          color: var(--text-tertiary);
+        }
+        :global(a) {
+          color: inherit;
+        }
+
         :global(.title) {
           display: flex;
           flex-direction: row;
@@ -100,7 +111,6 @@ const menuStyles = css`
             line-height: 14px;
             font-size: 16px;
             font-weight: 500;
-            color: var(--theme-font-color-1);
             :global(.hot) {
               line-height: 0;
               margin-left: 5px;
@@ -145,7 +155,6 @@ const menuStyles = css`
           padding-top: 11px;
           font-size: 12px;
           font-weight: 400;
-          color: var(--theme-font-color-3);
           display: block;
         }
       }
@@ -159,11 +168,10 @@ const menuStyles = css`
       top: 0;
       bottom: 6px;
       left: 324px;
-      border-left: 1px solid var(--skin-border-color-1);
+      border-left: 1px solid var(--common-line-color);
     }
   }
   .hover .left-wrapper {
-    background-color: var(--theme-background-color-3);
     border-radius: 6px;
     .sub-menu {
       z-index: 1;
@@ -212,7 +220,7 @@ const ContractMenu = ({ onContractLeftMenuHover }: { onContractLeftMenuHover: (i
           subMenu={<Perpetual />}
           href='/swap/btc-usd'
         /> */}
-        {/* {enableLite && (
+        { enableLite && (
           <Menu
             title={LANG('简易合约')}
             tips={LANG('适合初学者的简单差价合约交易')}
@@ -221,7 +229,7 @@ const ContractMenu = ({ onContractLeftMenuHover }: { onContractLeftMenuHover: (i
             subMenu={<Simple active={subIndex === 0} />}
             href='/lite/btcusdt'
           />
-        )} */}
+        )}
         {/* <Menu
           title={LANG('杠杆代币')}
           tips={LANG('永不爆仓，安享收益')}
@@ -254,8 +262,7 @@ const styles = css`
   :global(.contract-menu-wrapper) {
     width: 340px;
     height: 480px;
-    background: var(--theme-background-color-2);
-    box-shadow: 0px 8px 12px -5px rgba(0, 0, 0, 0.28);
+    background: var(--dropdown-select-bg-color);
     box-sizing: border-box;
     padding: 16px;
     position: relative;

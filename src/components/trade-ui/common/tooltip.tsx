@@ -11,7 +11,7 @@ const Index = ({ className, ...props }: { className?: string } & TooltipProps) =
 
   return (
     <>
-      <AntdTooltip overlayClassName={overlayClassName} {...props} />
+      <AntdTooltip arrow={false} overlayClassName={overlayClassName} {...props} />
       {styles}
     </>
   );
@@ -27,12 +27,14 @@ const { className, styles } = css.resolve`
       max-width: 314px;
       word-break: break-word;
       white-space: unset !important;
-      padding: 6px 12px !important;
-      font-size: 14px !important;
+      padding: 16px !important;
+      font-size: 12px !important;
       font-weight: 400 !important;
-      color: var(--theme-font-color-1) !important;
-      line-height: 18px !important;
-      background: var(--theme-tips-color-2) !important;
+      color: var(--text-tertiary) !important;
+      line-height: 1.5;
+      border-radius: 16px;
+      background: var(--dropdown-select-bg-color) !important;
+      box-shadow: 0px 4px 16px 0px var(--dropdown-select-shadow-color) !important;
     }
     :global(.ant-tooltip-arrow::before) {
       background-image: url(/static/images/trade/tip_arrow.svg) !important;

@@ -1,9 +1,9 @@
 import CoinLogo from '@/components/coin-logo';
 import { getCommonCommodityInfoApi } from '@/core/api';
-import { useRouter } from '@/core/hooks';
+import { useRouter, useResponsive } from '@/core/hooks';
 import { LANG } from '@/core/i18n/src/page-lang';
 import { TradeMap } from '@/core/shared';
-import { formatDefaultText, getEtfCryptoInfo, isLite, isSpot, isSpotEtf, isSwap } from '@/core/utils';
+import { formatDefaultText, getEtfCryptoInfo, isLite, isSpot, isSpotEtf, isSwap, MediaInfo } from '@/core/utils';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -16,6 +16,7 @@ const TradeCountDown = ({ KChart }: { KChart: React.ReactNode }) => {
   const [time, setTime] = useState('-:-:-');
   const [rules, setRules] = useState<any>({});
   const [onlineTime, setOnlineTime] = useState<any>(null);
+  const { isMobile } = useResponsive();
 
   useEffect(() => {
     (async () => {
@@ -92,11 +93,23 @@ const TradeCountDown = ({ KChart }: { KChart: React.ReactNode }) => {
 
   const [h, m, s] = time.split(':');
 
-  if (time === '-:-:-') return <>{KChart}</>;
+  if (time === '-:-:-')
+    return isMobile ? (
+      <div className={isMobile ? 'mobileKChart' : ''}>
+        {KChart}
+        <style jsx>{`
+          .mobileKChart {
+            height: 25rem;
+          }
+        `}</style>
+      </div>
+    ) : (
+      <>{KChart}</>
+    );
   return (
     <div className={'trade-count-down'}>
       <div className={'coin'}>
-        <CoinLogo coin={rules?.code || ''} width='26' height='26' className='icon' />
+        <CoinLogo coin={rules?.code || ''} width="26" height="26" className="icon" />
         {formatDefaultText(id).replace('_', '/')}
         {rules?.name && `(${formatDefaultText(rules?.name)})`}
       </div>
@@ -108,7 +121,7 @@ const TradeCountDown = ({ KChart }: { KChart: React.ReactNode }) => {
         <div>{m}</div>
         <span>:</span>
         <div>{s}</div>
-        <Image src='/static/images/brand/mascot_2.png' className={'img'} alt='' width='105' height='100' />
+        <Image src="/static/images/brand/mascot_2.png" className={'img'} alt="" width="105" height="100" />
       </div>
       <div className={'prompt'}>{LANG('敬请关注')}！</div>
       <style jsx>{styles}</style>
@@ -130,7 +143,7 @@ const styles = css`
     width: 100%;
     height: 100%;
     flex: 1;
-    background: var(--theme-trade-bg-color-2);
+    background: var(--bg-1);
     .coin {
       font-weight: 500;
       font-size: 24px;
@@ -181,7 +194,7 @@ const styles = css`
         border-radius: 8px;
         font-weight: 500;
         font-size: 32px;
-        color: #782CE8;
+        color: #07828b;
       }
       span {
         display: inline-block;

@@ -11,7 +11,7 @@ import { GoVerifyBtn } from './go-verify-btn';
 const logoArr = [
   '/static/images/account/kyc/0.png',
   '/static/images/account/kyc/1.png',
-  '/static/images/account/kyc/2.png',
+  '/static/images/account/kyc/2.png'
 ];
 const ResultCard = () => {
   const { apiState, setApiState } = useApiContext();
@@ -21,7 +21,7 @@ const ResultCard = () => {
   const promptArr = [
     LANG('您提交的信息正在审核中，请稍等！'),
     LANG('您提交的信息审核已通过'),
-    LANG('您提交的信息审核未通过，请重新认证！'),
+    LANG('您提交的信息审核未通过，请重新认证！')
   ];
   useEffect(() => {
     if (kycState.isLoadingKycState) {
@@ -32,40 +32,45 @@ const ResultCard = () => {
   }, [state]);
   const Item = ({ title, content }: { title: string; content: string }) => {
     return (
-      <div className='item'>
-        <div className='title'>{title}</div>
-        <div className='content'>{content || '--'}</div>
+      <div className="item">
+        <div className="title">{title}</div>
+        <div className="content">
+          <p>{content || '--'}</p>
+        </div>
       </div>
     );
   };
   return (
-    <div className='result-box'>
-      <div className='main'>
+    <div className="result-box">
+      <div className="main">
         {logoArr[state] ? (
-          <div className='prompt'>
-            <Image src={logoArr[state]} className='img' alt='' width={14} height={14} />
+          <div className="prompt">
+            <Image src={logoArr[state]} className="img" alt="" width={12} height={12} />
             <span>{promptArr[state]}</span>
           </div>
         ) : null}
         {isEmpty(kycState.last) && (
-          <>
-            <Item title={LANG('国籍')} content={country} />
+          <div className="kyc-info">
+            <Item title={LANG('国家/地区')} content={country} />
             <Item title={LANG('姓名')} content={identityName} />
             <Item title={LANG('证件类型')} content={idType[identityType - 1]} />
             <Item title={LANG('证件号码')} content={identityNumber} />
             {remark && <Item title={LANG('失败原因')} content={remark} />}
-          </>
+          </div>
         )}
       </div>
-      <GoVerifyBtn
-        onBtnClick={() => {
-          setApiState((draft) => {
-            draft.pageStep = 'init';
-            draft.showUploadPage = true;
-          });
-        }}
-        disabled={disabled}
-      />
+      {!disabled ? (
+        <GoVerifyBtn
+          btnText={state == 2 ? '重新认证' : '去认证'}
+          onBtnClick={() => {
+            setApiState(draft => {
+              draft.pageStep = 'init';
+              draft.showUploadPage = true;
+            });
+          }}
+          disabled={disabled}
+        />
+      ) : null}
       <style jsx>{styles}</style>
     </div>
   );
@@ -79,22 +84,31 @@ const styles = css`
     .main {
       width: 100%;
       .prompt {
-        padding: 13px 10px;
+        padding: 10px 16px;
         display: flex;
         align-items: center;
-        font-size: 15px;
-        border-radius: 5px;
-        font-weight: 500;
-        color: #f04e3f;
-        height: 37px;
+
         background-color: rgba(240, 78, 63, 0.15);
-        margin-bottom: 30px;
+        margin-bottom: 32px;
+
+        font-family: 'HarmonyOS Sans SC';
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 12px;
+
+        border-radius: 8px;
+
         :global(.img) {
-          margin-right: 10px;
+          margin-right: 8px;
         }
       }
+      :global(.kyc-info) {
+        display: flex;
+        gap: 24px;
+        flex-direction: column;
+      }
       :global(.item) {
-        padding-bottom: 20px;
         display: flex;
         :global(div) {
           flex: 1;
@@ -106,10 +120,16 @@ const styles = css`
           color: var(--theme-font-color-3);
           font-size: 14px;
           text-align: left;
+          white-space: nowrap;
         }
         :global(.content) {
           text-align: right;
           color: var(--theme-font-color-1);
+          :global(p) {
+            word-break: break-all;
+            white-space: normal;
+            overflow-wrap: break-word;
+          }
         }
       }
     }

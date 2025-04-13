@@ -54,7 +54,7 @@ const FiatList = ({ onClick }: { onClick: () => void }) => {
   });
   return (
     <ul className='fiat-list'>
-      {list.map((item, index) => {
+      {list.filter(currency => Rate.store.rateMap[currency] > 0).map((item, index) => {
         return (
           <li key={index} onClick={() => updateCurrency(item)} className={clsx(currency === item && 'checked-item')}>
             <span>

@@ -11,7 +11,11 @@ const getLoadImagePromise = (url: string, { cache }: { cache?: boolean } = {}) =
         URL_CACHES.push(url);
         img.style.display = 'none';
         if (!/.gif/.test(url)) {
-          document.body.appendChild(img);
+          try{
+            document.body.appendChild(img);
+          }catch(e){
+            console.log(e)
+          }
         }
         res(null);
       };

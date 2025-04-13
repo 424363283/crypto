@@ -20,7 +20,7 @@ export interface CaptchaResponse {
 }
 
 class Captcha {
-  private static _geetestLang = { zh: 'zho-tw', en: 'eng', vi: 'eng', ru: 'rus', ko: 'kor', id: 'ind', ja: 'jpn', pt: 'pon', tr: 'tr', es: 'es', fr: 'fra', th: 'eng', tl: 'tl' };
+  private static _geetestLang = { zh: 'zho-cn','zh-tw': 'zho-tw',  en: 'eng', vi: 'eng', ru: 'rus', ko: 'kor', id: 'ind', ja: 'jpn', pt: 'pon', tr: 'tr', es: 'es', fr: 'fra', th: 'eng', tl: 'tl' };
 
   // 开始验证方法
   public static async verification(): Promise<CaptchaResponse> {
@@ -30,7 +30,7 @@ class Captcha {
       const result = await new Promise<CaptchaResponse>((resolve) => {
         let key: string = 'en';
         try {
-          const list = location.pathname.match(/^\/[a-z]{0,10}\//);
+          const list = location.pathname.match(/^\/[-a-z]{0,10}\//);
           key = list ? list[0].replace(/\//g, '') : 'en';
         } catch (e) {
           // console.log(e);

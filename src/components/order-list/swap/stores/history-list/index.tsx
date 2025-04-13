@@ -5,6 +5,7 @@ import { resso } from '@/core/store';
 import { message } from '@/core/utils';
 import dayjs from 'dayjs';
 import { useCallback, useRef } from 'react';
+import { ORDER_TYPES } from '../../media/desktop/components/pending-list/components/order-type-select';
 
 export const store: any = resso({
   data: [],
@@ -15,6 +16,7 @@ export const store: any = resso({
   code: undefined,
   loading: false,
   isEnd: false,
+  orderType: ORDER_TYPES.LIMIT
 });
 
 export const useData = ({ isUsdtType, scrollToTop }: { isUsdtType: boolean; scrollToTop?: () => any }) => {
@@ -50,29 +52,28 @@ export const useData = ({ isUsdtType, scrollToTop }: { isUsdtType: boolean; scro
           size: size || 15,
         },
         isUsdtType
-      )
-        .then((r) => {
-          if (r.code === 200) {
-            const result = r.data;
-            const nextPage = result.currentPage;
-            const newData = [...(nextPage === 1 ? [] : store.getSnapshot('data')), ...result.pageData];
+      ).then((r) => {
+        if (r.code === 200) {
+          const result = r.data;
+          const nextPage = result.currentPage;
+          const newData = [...(nextPage === 1 ? [] : store.getSnapshot('data')), ...result.pageData];
 
-            if (nextPage === 1) {
-              scrollToTop?.();
-            }
-
-            store.page = nextPage;
-            store.data = newData;
-            store.isEnd = newData.length === result.totalCount;
-          } else {
-            message.error(r);
+          if (nextPage === 1) {
+            scrollToTop?.();
           }
-          store.loading = false;
-        })
-        .catch((err) => {
-          message.error(err);
-          store.loading = false;
-        });
+
+          store.page = nextPage;
+          store.data = newData;
+          store.isEnd = newData.length === result.totalCount;
+        } else {
+          message.error(r);
+        }
+        store.loading = false;
+
+      }).catch((err) => {
+        message.error(err);
+        store.loading = false;
+      });
     },
     [isUsdtType, _, scrollToTop]
   );

@@ -1,6 +1,7 @@
 import { useRouter } from '@/core/hooks';
 import { Lite } from '@/core/shared';
 import { useEffect } from 'react';
+import { resso, useResso } from '@/core/resso';
 
 export const TradeWrap = (Com: any) => {
   return (...props: any) => {
@@ -8,6 +9,7 @@ export const TradeWrap = (Com: any) => {
     useEffect(() => {
       Lite.Trade.init(id);
       Lite.Position.init();
+      Lite.Info.init({ resso });
 
       return () => {
         Lite.Trade.destroy();

@@ -10,6 +10,7 @@ import { Option } from '@/components/trade-ui/common/dropdown/select';
 import { Dropdown } from 'antd';
 import { useState } from 'react';
 import { clsx, styles } from './styled';
+import CommonIcon from '@/components/common-icon';
 
 /**
  * @prop {{value:any, label:string}} options 选项
@@ -55,7 +56,7 @@ const Select = ({
     <div className={clsx('content', className, !isDark && 'light')}>
       {option && <span className={clsx(onlyOne && 'no-arrow')}>{option?.label}</span>}
       {option && !onlyOne && (
-        <Svg src='/static/images/common/arrow_down.svg' width={12} height={12} className={clsx('arrow')} />
+        <CommonIcon name='common-tiny-triangle-down-2' size={10} />
       )}
     </div>
   );

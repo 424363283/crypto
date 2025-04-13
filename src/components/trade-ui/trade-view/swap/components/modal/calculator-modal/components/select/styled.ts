@@ -10,19 +10,20 @@ const { className, styles: _styles } = css.resolve`
     max-height: 300px;
     overflow-y: scroll;
     .menu {
+      width: 100%;
       height: 28px;
       cursor: pointer;
-      text-align: center;
+      text-align: left;
       line-height: 28px;
       font-size: 14px;
       font-weight: 400;
-      color: var(--theme-trade-text-color-1);
+      color: var(--text-primary);
       margin-bottom: 1px;
+      padding: 0 16px;
       &:last-child {
         margin-bottom: 0;
       }
       &.active {
-        color: var(--theme-primary-color) !important;
         font-weight: 500;
       }
     }
@@ -31,15 +32,16 @@ const { className, styles: _styles } = css.resolve`
   .content {
     cursor: pointer;
     width: 100%;
-    height: 28px;
+    height: 40px;
     line-height: 28px;
-    background: var(--theme-trade-tips-color);
-    border-radius: 6px;
+    background: var(--fill-3);
+    border-radius: 8px;
     text-align: left;
-    padding: 0 13px;
+    padding: 0 16px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
     span {
       position: relative;
       color: var(--theme-trade-text-color-1);

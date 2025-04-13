@@ -95,6 +95,7 @@ export const ResetPwdForm = () => {
 const styles = css`
   .reset-pwd-wrapper {
     width: 530px;
+    margin: auto;
     @media ${MediaInfo.mobile} {
       width: 100%;
     }

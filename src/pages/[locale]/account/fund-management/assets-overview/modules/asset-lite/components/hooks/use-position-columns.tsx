@@ -88,10 +88,10 @@ export const usePositionColumns = ({ onAddMarginClicked, onSettingClicked }: Pro
       title: LANG('最新价'),
       width: 120,
       dataIndex: 'cpPrice',
-      render: (v: any, { commodity, priceDigit }: LiteListItem) => {
+      render: (v: any, { commodity, contract, priceDigit }: LiteListItem) => {
         if (marketMap) {
-          const price = marketMap[commodity]?.price || 0;
-          const prevPrice = marketMap[commodity]?.prevPrice || 0;
+          const price = marketMap[contract]?.price || 0;
+          const prevPrice = marketMap[contract]?.prevPrice || 0;
           return (
             <span className={Number(price) >= Number(prevPrice) ? 'main-green' : 'main-red'}>
               {price.toFormat(priceDigit) || '--'}

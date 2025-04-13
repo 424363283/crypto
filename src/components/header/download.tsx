@@ -13,7 +13,9 @@ export const MobileHeaderDownload = ({ className }: { className?: string }) => {
   const [show, setShow] = useState(true);
   if (!show) return null;
   return (
-    <div className={clsx('mobile-header', className)}>
+    <>
+   
+    {/* <div className={clsx('mobile-header', className)}>
       <div className='logo-area'>
         <CommonIcon name='common-close-0' className='close-icon' onClick={() => setShow(false)} size={12} />
         <Image
@@ -37,7 +39,8 @@ export const MobileHeaderDownload = ({ className }: { className?: string }) => {
         </div>
       </div>
       <style jsx>{styles}</style>
-    </div>
+    </div> */}
+    </>
   );
 };
 const styles = css`

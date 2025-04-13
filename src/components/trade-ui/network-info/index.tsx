@@ -74,7 +74,7 @@ export const NetworkInfo = () => {
                 '/static/images/trade/network/menus/func_active.svg',
               ]}
               label={LANG('功能更新')}
-              href={useZendeskLink('/categories/5715146934287')}
+              href={useZendeskLink('/categories/11310192831119')}
             />
             <TgDetail>
               <div>
@@ -97,7 +97,7 @@ export const NetworkInfo = () => {
                 '/static/images/trade/network/menus/feedback_active.svg',
               ]}
               label={LANG('公告中心')}
-              href={useZendeskLink('/categories/5708257368591')}
+              href={useZendeskLink('/categories/11310192831119')}
             />
             <Menu
               last
@@ -128,7 +128,7 @@ export const NetworkInfo = () => {
           justify-content: space-between;
           align-items: center;
           height: 100%;
-          background: var(--theme-trade-bg-color-9);
+          background: var(--bg-1);
           .left {
             display: flex;
             flex-direction: row;

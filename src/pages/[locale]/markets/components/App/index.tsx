@@ -20,7 +20,7 @@ const App = () => {
       <style jsx>
         {`
           .market-wrapper {
-            background-color: var(--theme-secondary-bg-color);
+            background-color: var(--bg-1);
             margin: 0 auto;
             width: 100%;
             color: #1e2329;

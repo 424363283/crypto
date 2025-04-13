@@ -6,22 +6,26 @@ import { SafetyVerificationModal } from '@/components/modal';
 import SelectCoin from '@/components/select-coin';
 import TabBar from '@/components/tab-bar';
 import { postAccountVerifyPasswordApi } from '@/core/api';
-import { useRouter } from '@/core/hooks';
+import { useResponsive, useRouter } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Account, SENCE, UserInfo, Wallet } from '@/core/shared';
-import { MediaInfo, getUrlQueryParams, message } from '@/core/utils';
+import { MediaInfo, clsx, getUrlQueryParams, message } from '@/core/utils';
 import { useEffect, useRef, useState } from 'react';
 import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
 import { CommonResponsiveStyle } from '../../components/common-style';
 import { Description } from '../../components/description';
 import { HistoryCoins } from '../../components/history-coin';
-import FiatCurrency from '../../components/purchase-coin';
 import StepContent from '../../components/step-content';
 import TimeTips from '../../components/time-tips';
-import { TopCommonCard } from '../../components/top-common-card';
 import { TopInfoCard } from '../../components/top-info-card';
 import WithdrawTimeBtn from '../../components/withdraw-time-btn';
+import Nav from '@/components/nav';
+import { StepProps, Steps } from 'antd';
+import { Size } from '@/components/constants';
+import { Desktop, Mobile } from '@/components/responsive';
+import { MobileBottomSheet } from '@/components/mobile-modal';
+
 
 export const Transfer = ({
   getTransferHistoryData,
@@ -32,6 +36,7 @@ export const Transfer = ({
 }) => {
   const queryCode = getUrlQueryParams('code') || 'USDT';
   const router = useRouter();
+  const { isMobile } = useResponsive();
   const childRef = useRef<{ invokeFetchTodayRemainWithdrawLimit: () => void }>();
   const [tabKey, setTabKey] = useState('UID');
   const [state, setState] = useImmer({
@@ -53,7 +58,8 @@ export const Transfer = ({
     transferUserName: '',
     via: 'UID',
     selectedCoin: 'USDT',
-    isShowEnableVerify: false,
+    isShowEnableVerify: true,
+    step: 1
   });
   const {
     transferUserName,
@@ -74,6 +80,7 @@ export const Transfer = ({
     selectedCoin,
     isShowEnableVerify,
     via,
+    step
   } = state;
   const getUser = async () => {
     const users = await Account.getUserInfo();
@@ -95,6 +102,7 @@ export const Transfer = ({
     });
     Loading.end();
   };
+
   const getTransferCoinList = async () => {
     const list = await Wallet.getTransferableCurrencyList();
     const cryptoName = queryCode;
@@ -122,8 +130,8 @@ export const Transfer = ({
 
   //点击代币列表中的coin
   const onSelectCoin = async (value: number[] | number | null | undefined) => {
-    Loading.start();
     if (!value || (Array.isArray(value) && !value.length)) return;
+    Loading.start();
     const oIndex = Array.isArray(value) ? value[0] : value;
     const cryptoName = transferAbleList?.[oIndex]?.code;
     if (!cryptoName) return;
@@ -134,6 +142,7 @@ export const Transfer = ({
       draft.transferUserName = '';
       draft.password = '';
       draft.selectedCoin = cryptoName;
+      draft.step = 1;
     });
     if (Array.isArray(value)) {
       router.replace({
@@ -150,28 +159,38 @@ export const Transfer = ({
       onSelectCoin([oIndex]);
     }
   };
+
   const onVerifyStateChange = (state: boolean) => {
     setState((draft) => {
       draft.isShowEnableVerify = state;
     });
   };
+
   // 设置是否显示资金密码
   const setIsShowAssetPwd = () => {
     setState((draft) => {
       draft.isShowAssetPwd = user?.pw_w != 0;
     });
   };
+
   const onChangePassword = (password: string, hasError: boolean = false) => {
     setState((draft) => {
       draft.password = password;
       draft.hasAssetPwdError = !password ? true : hasError;
+      if (password) {
+        draft.step = Math.max(4, draft.step);
+      } else {
+        draft.step = 3;
+      }
     });
   };
+
   const onChangeTime = (bool: boolean) => {
     setState((draft) => {
       draft.isShowTimeTips = bool;
     });
   };
+
   const _onWithdrawVerify = async () => {
     if (!password) {
       setState((draft) => {
@@ -198,16 +217,25 @@ export const Transfer = ({
     if (isShowAssetPwd && hasAssetPwdError) return false;
     return +transferAmount >= transferMin;
   };
+
   const onChangeTransferAmount = (amount: string) => {
     setState((draft) => {
       draft.transferAmount = amount;
+      if (amount) {
+        draft.step = Math.max(3, draft.step);
+      } else {
+        draft.password = '';
+        draft.step = 2;
+      }
     });
   };
+
   const onSafetyVerificationModalClose = () => {
     setState((draft) => {
       draft.showSafetyVerification = false;
     });
   };
+
   // 需要把右侧栏输入框都清空
   const onSecuritySafetyVerifyDone = async (success: boolean) => {
     setState((draft) => {
@@ -219,6 +247,7 @@ export const Transfer = ({
         draft.transferAmount = '';
         draft.password = '';
         draft.transferUserName = '';
+        draft.step = 1;
       });
       setTimeout(async () => {
         if (childRef?.current) {
@@ -229,169 +258,242 @@ export const Transfer = ({
       await getTransferHistoryData();
     }
   };
+
   const onChangeTransfer = (value: string, via: string) => {
     setState((draft) => {
       draft.transferUserName = value;
       draft.via = via;
+      if (value) {
+        draft.step = Math.max(2, draft.step);
+      } else {
+        draft.transferAmount = '';
+        draft.password = '';
+        draft.step = 1;
+      }
     });
   };
+
   const onTabChange = (value: string) => {
     setTabKey(value);
+    setState((draft) => {
+      draft.transferUserName = '';
+      draft.transferAmount = '';
+      draft.password = '';
+      draft.step = 1;
+    })
   };
+
   const onClickFillAllAmount = () => {
     setState((draft) => {
       draft.transferAmount = String(balance);
+      draft.step = Math.max(3, draft.step);
     });
   };
-  const renderMainLeftContent = () => {
+
+  const createStepsItems = () => {
+    let stepItems: StepProps[] = [];
+    stepItems[0] = {
+      title: LANG('选择币种'),
+      description: (
+        <div className={clsx('bottom-card', step < stepItems.length && 'hidden')}>
+          <SelectCoin
+            values={[coinIndex]}
+            options={transferAbleList}
+            icon='common-arrow-down-0'
+            height={isMobile ? 40: 56}
+            bgColor='var(--fill-3)'
+            borderColor='transparent'
+            onChange={onSelectCoin}
+            className='recharge-select-coin'
+          />
+          <HistoryCoins options={transferAbleList} coins={selectedCoin} name='transfer' onClick={onClickHistoryCoins} />
+        </div>
+      ),
+      status: step >= stepItems.length ? 'process' : 'wait'
+    }
+    if (isShowEnableVerify) {
+      stepItems[stepItems.length] = {
+        description: <>
+          <EnableAuthentication
+            description={LANG('为提升您账户安全等级请至少再多绑定一项2FA。至少开启两项2FA验证项才能提现和转账。')}
+            onVerifyStateChange={onVerifyStateChange}
+          />
+        </>,
+        status: step >= stepItems.length ? 'process' : 'wait'
+      }
+      return stepItems;
+    }
     if (isShowTimeTips) {
-      return (
-        <>
-          <TimeTips isShowTimeTips={isShowTimeTips} isTransfer />
-          <WithdrawTimeBtn
+      stepItems[stepItems.length] = {
+        description: <>
+          {user?.withdrawTime > 0 && <TimeTips isShowTimeTips={isShowTimeTips} isTransfer countDownTime={<WithdrawTimeBtn
             disabledSubmit={!submitAvailable()}
             withdrawTime={+user?.withdrawTime}
             onWithdrawal={_onWithdrawVerify}
             onChangeTime={onChangeTime}
           >
-            {LANG('转账')}
-          </WithdrawTimeBtn>
-        </>
-      );
+            {LANG('确认')}
+          </WithdrawTimeBtn>} />}
+        </>,
+        status: step >= stepItems.length ? 'process' : 'wait'
+      }
+      return stepItems;
     }
-    const renderTabContent = () => {
-      const TAB_CONTENT_MAP: any = {
-        UID: (
-          <BasicInput
-            label={LANG('接收账户')}
-            type={INPUT_TYPE.NORMAL_TEXT}
-            value={transferUserName}
-            onInputChange={(value) => onChangeTransfer(value, 'UID')}
-            withBorder
-            placeholder={LANG('请输入用户UID')}
-          />
-        ),
-        userName: (
-          <BasicInput
-            label={LANG('接收账户')}
-            type={INPUT_TYPE.NORMAL_TEXT}
-            value={transferUserName}
-            onInputChange={(value) => onChangeTransfer(value, 'USERNAME')}
-            withBorder
-            placeholder={LANG('请输入用户昵称')}
-          />
-        ),
-      };
-      return TAB_CONTENT_MAP[tabKey];
-    };
-    return (
-      <>
-        <StepContent line={false} childrenSpace className='chains-box'>
-          <TabBar
-            options={[
-              { label: 'UID', value: 'UID' },
-              { label: LANG('用户昵称'), value: 'userName' },
-            ]}
-            value={tabKey}
-            onChange={onTabChange}
-          />
-          <div className='user-data-input'>{renderTabContent()}</div>
-          <AmountInput
-            label={LANG('转账数量（免手续费）')}
-            value={transferAmount}
-            showBtn
-            currency={currency}
-            max={Math.min(transferMax, balance)}
-            onClickFillAllAmount={onClickFillAllAmount}
-            min={transferMin}
-            onInputChange={onChangeTransferAmount}
-            placeholder={LANG('请输入转账数量')}
-            suffix={
-              <span className='unit-wrap'>
-                {selectedCoin}
-                <span style={{ margin: '0 10px' }}>
-                  <CommonIcon name='common-verticle-line-0' width={4} height={16} />
-                </span>
+    stepItems[stepItems.length] = {
+      title: (
+        <TabBar
+          size={isMobile? Size.DEFAULT : Size.XL}
+          options={[
+            { label: 'UID', value: 'UID' },
+            { label: LANG('用户昵称'), value: 'userName' },
+          ]}
+          value={tabKey}
+          onChange={onTabChange}
+        />
+      ),
+      description: <StepContent line={false} childrenSpace className={clsx('chains-box', step < stepItems.length && 'hidden')}>
+        <div className='user-data-input'>{renderTabContent()}</div>
+      </StepContent>,
+      status: step >= stepItems.length ? 'process' : 'wait'
+    }
+    stepItems[stepItems.length] = {
+      title: LANG('转账数量（免手续费）'),
+      description: <StepContent line={false} className={clsx(step < stepItems.length && 'hidden')}>
+        <AmountInput
+          value={transferAmount}
+          showBtn
+          currency={currency}
+          max={Math.min(transferMax, balance)}
+          onClickFillAllAmount={onClickFillAllAmount}
+          min={transferMin}
+          onInputChange={onChangeTransferAmount}
+          placeholder={LANG('请输入转账数量')}
+          suffix={
+            <span className='unit-wrap'>
+              {selectedCoin}
+              <span style={{ margin: '0 10px' }}>
+                <CommonIcon name='common-verticle-line-0' width={4} height={16} />
               </span>
-            }
-          />
-          <div className='assets-pwd-wrapper'>
+            </span>
+          }
+        /></StepContent>,
+      status: step >= stepItems.length ? 'process' : 'wait'
+    }
+    if (isShowAssetPwd) {
+      stepItems[stepItems.length] = {
+        title: LANG('资金密码'),
+        description: <StepContent line={false} className={clsx(step < stepItems.length && 'hidden')}>
+          <div className={'assets-pwd-wrapper'}>
             {isShowAssetPwd && (
               <PasswordInput
                 type={INPUT_TYPE.RESET_PASSWORD}
                 placeholder={LANG('请输入资金密码')}
                 value={password}
                 onInputChange={onChangePassword}
-                label={<span style={{ marginRight: '4px' }}>{LANG('资金密码')}</span>}
+                showLabel={false}
                 withBorder
               />
             )}
+          </div>
+        </StepContent>,
+        status: step >= stepItems.length ? 'process' : 'wait'
+      }
+    }
+    return stepItems;
+  }
+  const renderTabContent = () => {
+    const TAB_CONTENT_MAP: any = {
+      UID: (
+        <BasicInput
+          size={ isMobile? Size.DEFAULT : Size.XL}
+          showLabel={false}
+          label={LANG('接收账户')}
+          type={INPUT_TYPE.USER_ID}
+          value={transferUserName}
+          onInputChange={(value) => onChangeTransfer(value, 'UID')}
+          placeholder={LANG('请输入用户UID')}
+        />
+      ),
+      userName: (
+        <BasicInput
+          size={isMobile? Size.DEFAULT : Size.XL}
+          showLabel={false}
+          label={LANG('接收账户')}
+          type={INPUT_TYPE.NORMAL_TEXT}
+          value={transferUserName}
+          onInputChange={(value) => onChangeTransfer(value, 'USERNAME')}
+          placeholder={LANG('请输入用户昵称')}
+        />
+      ),
+    };
+    return TAB_CONTENT_MAP[tabKey];
+  };
+  
+  return (
+    <div className='main-content-wrapper'>
+      <div className='asset-account-content'>
+        <div className='asset-account-steps-wrapper'>
+          <Mobile>
+            <TopInfoCard currency={currency} balance={balance} minWithdraw={transferMin || 0} ref={childRef} />
+          </Mobile>
+          <Desktop>
+            <Steps
+              className='asset-account-steps'
+              direction="vertical"
+              size="small"
+              current={step}
+              items={createStepsItems()}
+            />
+          </Desktop>
+          <Mobile>
+            {
+              createStepsItems().map((item, key: number) => {
+                return <div className='mobile-asset-account-steps' key={key}>
+                  {!!item.title && <div className='title'>{item.title}</div>}
+                  {item.description}
+                </div>
+              })
+            }
+          </Mobile>
+          {
+            <div className={clsx('withdraw-btn', (step < createStepsItems().length || isShowEnableVerify || isShowTimeTips) && 'hidden')}>
             <WithdrawTimeBtn
               disabledSubmit={!submitAvailable()}
               withdrawTime={+user?.withdrawTime}
               onWithdrawal={_onWithdrawVerify}
               onChangeTime={onChangeTime}
             >
-              {LANG('转账')}
-            </WithdrawTimeBtn>
-          </div>
-        </StepContent>
-        <style jsx>{styles}</style>
-      </>
-    );
-  };
-  return (
-    <div className='main-content-wrapper'>
-      <TopCommonCard title={LANG('内部转账')}>
-        <HistoryCoins options={transferAbleList} coins={selectedCoin} name='transfer' onClick={onClickHistoryCoins} />
-        <div className='bottom-card'>
-          <SelectCoin
-            values={[coinIndex]}
-            options={transferAbleList}
-            bgColor='var(--theme-background-color-2)'
-            icon='common-arrow-down-0'
-            height={48}
-            onChange={onSelectCoin}
-            className='recharge-select-coin'
-          />
-          <TopInfoCard currency={currency} balance={balance} minWithdraw={transferMin || 0} ref={childRef} />
+              {LANG('确认')}
+              </WithdrawTimeBtn>
+            </div>
+          }
         </div>
-      </TopCommonCard>
-      <div className='main-container'>
-        <div className='main-column'>
-          <div className='left-column'>
-            {isShowEnableVerify ? (
-              <EnableAuthentication
-                description={LANG('为提升您账户安全等级请至少再多绑定一项2FA。至少开启两项2FA验证项才能转账。')}
-                onVerifyStateChange={onVerifyStateChange}
-              />
-            ) : (
-              renderMainLeftContent()
-            )}
-          </div>
-          <div className='right-column'>
+        <div className='right-column'>
+          <Desktop>
+            <TopInfoCard currency={currency} balance={balance} minWithdraw={transferMin || 0} ref={childRef} />
+          </Desktop>
+          <div className='bottom-row'>
             <Description
-              title={LANG('转账说明')}
-              contents={[LANG('转账时，请务必确认好用户信息'), LANG('可转账时间段为 9-21 Gst')]}
+              title={LANG('内部转账说明')}
+              contents={[LANG('转账时，请务必确认好用户信息。'), LANG('YMEX 支持24小时转账。')]}
             />
-            <FiatCurrency oIndex={coinIndex} options={transferAbleList} />
           </div>
-          <SafetyVerificationModal
-            visible={showSafetyVerification}
-            onCancel={onSafetyVerificationModalClose}
-            onDone={onSecuritySafetyVerifyDone}
-            sence={SENCE.CREATE_TRANSFER}
-            destroyOnClose
-            transferData={{
-              address: transferUserName,
-              currency,
-              vToken: verifyToken,
-              amount: +transferAmount,
-              via,
-            }}
-          />
         </div>
       </div>
+      <SafetyVerificationModal
+        visible={showSafetyVerification}
+        onCancel={onSafetyVerificationModalClose}
+        onDone={onSecuritySafetyVerifyDone}
+        sence={SENCE.CREATE_TRANSFER}
+        destroyOnClose
+        transferData={{
+          address: transferUserName,
+          currency,
+          vToken: verifyToken,
+          amount: +transferAmount,
+          via,
+        }}
+      />
       <CommonResponsiveStyle />
       <style jsx>{styles}</style>
     </div>
@@ -399,9 +501,200 @@ export const Transfer = ({
 };
 const styles = css`
   .main-content-wrapper {
-    background-color: var(--theme-secondary-bg-color);
+    background-color: var(--bg-1);
     margin: 0 auto;
     width: 100%;
+    @media ${MediaInfo.mobile} {
+      padding-bottom: 12px;
+    }
+    .asset-account-header {
+      background-color: var(--fill-2);
+      @media ${MediaInfo.mobile} {
+        background-color: transparent;
+      }
+      :global(.nav-title) {
+        max-width: 1224px;
+        line-height: 20px;
+        padding: 36px 0;
+        margin: 0 auto;
+        @media ${MediaInfo.tablet} {
+          padding: 36px 20px;
+        }
+        @media ${MediaInfo.mobile} {
+          padding: 36px 0;
+        }
+      }
+    }
+    .asset-account-content {
+      display: flex;
+      max-width: 1224px;
+      margin: 12px auto 0;
+      padding: 12px 0;
+      gap: 90px;
+      @media ${MediaInfo.mobileOrTablet} {
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 0 auto;
+        padding: 0;
+      }
+      @media ${MediaInfo.mobile} {
+        gap: 15px;
+      }
+      .asset-account-steps-wrapper {
+        @media ${MediaInfo.mobileOrTablet} {
+          width: 100%;
+        }
+        :global(.asset-account-steps) {
+          @media ${MediaInfo.mobileOrTablet} {
+            margin-right: 0;
+            width: 100%;
+          }
+          :global(.tab-bar) {
+            z-index: 8;
+            height: 22px;
+            padding: 0;
+            :global(.tabs) {
+              height: 22px;
+              :global(.tab) {
+                height: 22px;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 14px;
+                padding-right: 24px;
+              }
+              :global(.tab.active >div) {
+                font-size: 14px;
+                font-weight: 400;
+              }
+            }
+          }
+          :global(.amount-input-wrapper) {
+            margin-top:0;
+          }
+          :global(.left-bottom-tips) {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+            color: var(--theme-font-color-3);
+            font-size: 14px;
+          }
+          .charge-select-container {
+            .title {
+              color: var(--spec-font-color-1);
+              font-size: 16px;
+              font-weight: 500;
+              margin-bottom: 10px;
+              margin-top: 30px;
+            }
+          }
+          :global(.qrcode-container) {
+            background-color: var(--theme-background-color-3);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            @media ${MediaInfo.mobile} {
+              flex-direction: column;
+            }
+            :global(.address-content) {
+              margin-left: 27px;
+              @media ${MediaInfo.mobile} {
+                margin-top: 10px;
+                margin-left: 0;
+              }
+              :global(.label) {
+                font-size: 14px;
+                color: var(--theme-font-color-3);
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                cursor: pointer;
+              }
+              :global(.address) {
+                font-size: 16px;
+                font-weight: 500;
+                color: var(--theme-font-color-1);
+                display: flex;
+                align-items: center;
+                margin-top: 8px;
+                word-break: break-all;
+                :global(.copy-icon) {
+                  padding: 7px;
+                  border-radius: 8px;
+                  background-color: var(--theme-background-color-disabled-light);
+                  margin-left: 30px;
+                  cursor: pointer;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                }
+              }
+            }
+            :global(.qrcode-wrapper) {
+              margin: 0;
+              border: 0;
+              background-color: #fff;
+              border-radius: 12px;
+            }
+          }
+          :global(.qrcode-container.disable-top-radius) {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+          }
+          .title {
+            margin-bottom: 15px;
+          }
+
+          :global(.red) {
+            color: #fd374b;
+            font-weight: 600;
+          }
+        }
+        .withdraw-btn {
+          margin-left: 32px;
+        }
+      }
+      > :global(div) {
+        @media ${MediaInfo.desktop}{
+          flex:1;
+        }
+      }
+      .right-column {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        @media ${MediaInfo.mobile}{
+          width: calc(100% - 24px);
+          margin: 0 12px;
+        }
+        .bottom-row {
+          padding: 20px;
+          border: 1px solid var(--fill-3);
+          border-radius: 8px;
+          @media ${MediaInfo.mobile}{
+            padding:12px;
+          }
+        }
+      }
+    }
+      
+    :global( .top-info-card ) {
+      padding: 24px 0;
+      margin: 24px 0;
+      border: 1px solid var(--fill-3);
+      border-radius: 8px;
+      @media ${MediaInfo.mobile}{
+        margin: 12px 12px 0;
+        width: calc(100% - 24px);
+      }
+      :global( .card ) {
+        text-align: center;
+        &:not(:last-child) {
+          border-right: 1px solid var(--skin-border-color-1);
+        }
+      }
+    }
     :global(.top-common-card) {
       :global(.bottom-card) {
         display: flex;
@@ -409,6 +702,7 @@ const styles = css`
         justify-content: space-between;
       }
     }
+
     .main-column {
       @media ${MediaInfo.mobileOrTablet} {
         flex-direction: column;
@@ -432,9 +726,7 @@ const styles = css`
           padding: 0px;
           z-index: 1;
         }
-        :global(.user-data-input) {
-          margin-top: 18px;
-        }
+       
         :global(.suffix-container .unit-wrap) {
           font-size: 14px;
           color: var(--theme-font-color-1);
@@ -448,6 +740,23 @@ const styles = css`
           background-color: var(--theme-background-color-disabled-dark);
         }
       }
+    }
+  }
+
+  .mobile-asset-account-steps{
+    padding: 0 12px;
+    margin: 24px 0;
+    .title{
+      margin-bottom: 5px;
+    }
+    :global(.step-content) {
+       width:100%;
+    }
+    :global(.amount-input-wrapper) {
+      margin-top:0;
+    }
+    input{
+      border-radius: 8px;
     }
   }
 `;

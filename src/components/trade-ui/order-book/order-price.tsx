@@ -1,9 +1,11 @@
 import { useRouter } from '@/core/hooks';
+import { Svg } from '@/components/svg';
 import { DetailMap, Rate, TradeMap } from '@/core/shared';
 import { formatDefaultText, isSpot, isSpotEtf, isSwap } from '@/core/utils';
 import { useEffect, useState } from 'react';
 import { EtfNetVal } from './etf-netval';
 import { MarkPrice } from './mark-price';
+import YIcon from '@/components/YIcons';
 
 const formatPrice = (text: string) => {
   // 判断是否以 .[0-9]+结尾，如 1.07000，需要显示为 1.07
@@ -39,39 +41,91 @@ export const OrderPrice = ({ marketDetail }: { marketDetail?: DetailMap }) => {
 
   return (
     <>
-      <div className='order-price'>
+      <div className="order-price">
         <div className={`price ${formatDefaultText(marketDetail?.price).length > 11 ? 'small' : ''}`}>
           <span>
-            <span>{marketDetail?.isUp ? '↑' : '↓'}</span>
             {formatDefaultText(marketDetail?.price)}
+            {/* <div className={`${marketDetail?.isUp ? 'up' : 'down'}`}> */}
+            {marketDetail?.isUp ? (
+              <div className={`up`}>
+                {/* <Svg
+                    src='/static/images/new_common/up.svg'
+                    width={16}
+                    height={16}
+                    className="svg-icon"
+                    currentColor={'var(--color-green)'}
+                  /> */}
+                <YIcon.orderBookUp className="svg-icon" />
+              </div>
+            ) : (
+              <div className={`down`}>
+                <YIcon.orderBookdown className="svg-downicon"  />
+              </div>
+            )}
           </span>
           {isSwap(id) ? (
             <MarkPrice />
           ) : (
-            <span className='price-rate'> ≈ {formatPrice(formatDefaultText(ratePrice))}</span>
+            <span className="price-rate"> ≈ {(formatDefaultText(ratePrice))}</span>
           )}
         </div>
         {isSpotEtf(id) && <EtfNetVal />}
       </div>
       <style jsx>
         {`
+
+         .svg-icon {
+               path {
+                fill: var(--color-green) !important;
+              }
+                }
+
+           .svg-downicon{
+               path {
+               fill: var(--color-red)  !important; 
+              }
+                }
           .order-price {
-            height: 45px;
-            padding-left: 12px;
             display: flex;
             align-items: center;
             flex-shrink: 0;
             justify-content: space-between;
+            padding: 16px 16px 0;
             .price {
-              font-size: 14px;
+              font-size: 16px;
               display: flex;
-              color: ${marketDetail?.isUp ? 'var(--color-green)' : 'var(--color-red)'};
-              font-weight: 500;
-              span span {
-                font-size: 12px;
+              color: var(--text-secondary, #a5a8ac);
+              font-weight: 400;
+              font-family: 'HarmonyOS Sans SC';
+              span {
+                font-weight: 700;
+                font-size: 24px;
+                color: ${marketDetail?.isUp ? 'var(--color-green)' : 'var(--color-red)'};
+                display: flex;
+                align-items: center;
+                justify-content: center;
+               line-height:24px;
               }
               .price-rate {
-                color: var(--theme-trade-text-color-1);
+                color: var(--text-secondary);
+                font-size: 16px;
+font-style: normal;
+font-weight: 400;
+margin-left:8px;
+              }
+              .down {
+                // transform: rotate(180deg);
+                svg {
+                  fill: var(--color-red);
+                }
+              }
+                
+              .up {
+                transform: rotate(0);
+               
+                svg {
+                  fill: var(--color-green);
+                }
               }
               &.small {
                 font-size: 12px;

@@ -74,7 +74,7 @@ const { styles, className } = css.resolve`
       padding: 0;
     }
     :global(.ant-drawer-content) {
-      background-color: var(--theme-background-color-2);
+      background: var(--fill-pop);
     }
   }
 `;

@@ -1,4 +1,5 @@
 import Image from '@/components/image';
+import { LANG } from '@/core/i18n';
 import { clsx, compressImage } from '@/core/utils';
 import React, { useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
@@ -8,7 +9,7 @@ export const UpButton = ({
   onChange,
   className,
   width = 204,
-  height = 130,
+  height = 130
 }: {
   src: string;
   onChange: (file: any) => void;
@@ -32,8 +33,14 @@ export const UpButton = ({
 
   return (
     <div className={clsx('up-button', className)}>
-      <Image src={imgSrc} alt='' width={width} height={height} enableSkin />
-      <input type='file' accept='image/png,image/jpg' className='up-input-file' onChange={_onChange} />
+      <Image src={imgSrc} alt="" width={width} height={height} enableSkin />
+      <input
+        type="file"
+        accept="image/png,image/jpg"
+        className="up-input-file"
+        onChange={_onChange}
+        title={LANG('请选择文件')}
+      />
       <style jsx>{styles}</style>
     </div>
   );

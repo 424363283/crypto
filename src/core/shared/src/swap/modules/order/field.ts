@@ -64,6 +64,8 @@ export type PendingItemType = {
   triggerPrice: string | null;
   type: string;
   volume: number;
+  linkedOrderId: string;
+  isAssociatedOrder: boolean;
 };
 
 export type StoreType = Store<{
@@ -137,7 +139,23 @@ export class OrderField {
 
     return { buyPosition, sellPosition };
   };
+  getTwoWayPending = ({ usdt, code }: { usdt: boolean; code: string }) => {
+    let buyPending: PendingItemType | undefined;
+    let sellPending: PendingItemType | undefined;
+    const positionData = this.getPending(usdt);
 
+    positionData.forEach((v) => {
+      if (v.symbol.toUpperCase() === code) {
+        if (v.side === '1') {
+          buyPending = v;
+        } else {
+          sellPending = v;
+        }
+      }
+    });
+
+    return { buyPending, sellPending };
+  }
   formatPendingType(item: PendingItemType) {
     let strategyType = '';
     const isLimit = item.type === '1' || item.type === '4';

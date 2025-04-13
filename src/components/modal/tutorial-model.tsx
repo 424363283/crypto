@@ -52,7 +52,7 @@ const TutorialModel = ({ type = 'spot', ...props }: any) => {
         title: LANG('杠杆与保证金模式'),
         text: [
           LANG(
-            '根据自身喜好选择保证金模式（全仓或逐仓），同时根据自身的风险承受能力选择合适的杠杆倍数；XK最高支持200倍杠杆倍数。'
+            '根据自身喜好选择保证金模式（全仓或逐仓），同时根据自身的风险承受能力选择合适的杠杆倍数；YMEX最高支持200倍杠杆倍数。'
           ),
         ],
         prompt: LANG('新手用户建议使用10倍以下杠杆'),
@@ -69,7 +69,7 @@ const TutorialModel = ({ type = 'spot', ...props }: any) => {
         title: LANG('平仓'),
         text: [LANG('持有仓位后，您可以在持有仓位区域平仓。')],
         textBtn: (
-          <Zendesk className='more' href='/sections/5692040237583-Perpetual-Contracts-USDT-M-'>
+          <Zendesk className='more' href='/categories/11309463310991-%E6%B0%B8%E7%BA%8C%E5%90%88%E7%B4%84'>
             {LANG('了解更多')}
           </Zendesk>
         ),
@@ -98,6 +98,7 @@ const TutorialModel = ({ type = 'spot', ...props }: any) => {
                   router.push('/login');
                 }
               }}
+              className='TransferButton'
             >
               {LANG('划转')}
             </div>
@@ -112,7 +113,7 @@ const TutorialModel = ({ type = 'spot', ...props }: any) => {
         title: LANG('买入现货'),
         text: [
           LANG(
-            '在买入区域输入您预期的买入价格与数量，并点击下方买入，当市场价格与您设置的价格相符时，则完成率一笔买入交易。'
+            '在买入区域输入您预期的买入价格与数量，并点击下方买入，当市场价格与您设置的价格相符时，则完成了一笔买入交易。'
           ),
         ],
       },
@@ -124,7 +125,7 @@ const TutorialModel = ({ type = 'spot', ...props }: any) => {
         title: LANG('卖出现货'),
         text: [
           LANG(
-            '在卖出区域输入您预期的买入价格与数量，并点击下方卖出，当市场价格与您设置的价格相符时，则完成了一笔卖交易。'
+            '在卖出区域输入您预期的卖出价格与数量，并点击下方卖出，当市场价格与您设置的价格相符时，则完成了一笔卖出交易。'
           ),
         ],
       },
@@ -134,14 +135,29 @@ const TutorialModel = ({ type = 'spot', ...props }: any) => {
   const _onCloseTransferModal = () => {
     setTransferModalVisible(false);
   };
+
+ let langMap={
+  'zh':'zh_cn',
+  'zh-tw':'zh_tw',
+  'en':'en_us',
+  
+ }
+ const getLang=langMap[lang]
+
+  // console.log('获取图片地址',iconsUrl,)
+  // console.log('type',type,)
+  // console.log('lang',lang,theme,index)
+
+
+
   return (
     <>
-      <BasicModal width={720} {...props} footer={null}>
+      <BasicModal width={828} {...props} footer={null}>
         <div className='box'>
           <div className='left'>
             {arr[type]?.map((item: any, key: number) => {
               return (
-                <div key={key} className={clsx('item', index === key && 'active')} onClick={() => setIndex(key)}>
+                <div key={key} className={clsx('item', index === key && 'active', 'bg')} onClick={() => setIndex(key)}>
                   <div className='title'>
                     {key + 1}.{item.title}
                   </div>
@@ -168,46 +184,59 @@ const TutorialModel = ({ type = 'spot', ...props }: any) => {
           </div>
           <div className='right'>
             <Image
-              src={`${iconsUrl}tutorial/${type}_${lang}_${theme}_${index + 1}.png`}
+              src={`${iconsUrl}tutorial/${type}_${getLang}_${theme}_${index + 1}.png`}
+              // src={'/static/images/swap-info/Transfer.png'}   
               alt=''
-              width={325}
+              width={432}
               height={416}
             />
           </div>
           <style jsx>{styles}</style>
         </div>
       </BasicModal>
-      <TransferModal
+     {transferModalVisible &&  <TransferModal
         open={transferModalVisible}
         defaultSourceAccount={ACCOUNT_TYPE.SWAP_U}
         defaultTargetAccount={ACCOUNT_TYPE.SPOT}
         onCancel={_onCloseTransferModal}
-      />
+      />}
     </>
   );
 };
 
 const styles = css`
+.TransferButton{
+  background: var(--fill-projection);
+}
   .box {
     display: flex;
     .left {
       flex: 1;
       .item {
         cursor: pointer;
-        margin-bottom: 15px;
+        margin-bottom: 24px;
         display: flex;
         flex-direction: column;
         gap: 10px;
+        :last-child{
+          margin-bottom: 0px;
+        }
+ 
         .title {
-          font-size: 16px;
+          color: var(--text-secondary);
+          font-size: 14px;
+          font-style: normal;
           font-weight: 500;
-          color: var(--theme-font-color-3);
+          line-height: normal;
           display: block;
+         
         }
         .text {
-          font-size: 14px;
+          color: var(--text-secondary);
+          font-size: 12px;
+          font-style: normal;
           font-weight: 400;
-          color: var(--theme-font-color-1);
+          line-height: normal;
           :global(.more) {
             color: var(--color-active-yellow);
             text-decoration: underline;
@@ -216,17 +245,19 @@ const styles = css`
         .prompt {
           font-size: 14px;
           font-weight: 400;
-          color: var(--color-error);
+          color: var(--text-error);
         }
         & > :global(div) {
           display: none;
         }
         &.active {
-          background: var(--theme-background-color-8);
-          border-radius: 8px;
-          padding: 10px;
+           padding: 16px; 
           .title {
-            color: var(--color-active-yellow);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
           }
           & > :global(div) {
             display: block;
@@ -234,47 +265,54 @@ const styles = css`
           :global(.button) {
             display: flex;
             align-items: center;
-            gap: 10px;
+            margin-top: 8px;
+            gap: 24px;
             & > :global(div),
             & > :global(a) {
               line-height: 30px;
-              border-radius: 6px;
+              border-radius: 4px;
               min-width: 90px;
-              background: var(--color-yellow);
+              width: 100%;
+              background: var(--brand);
               text-align: center;
               display: inline-block;
               font-size: 14px;
               font-weight: 500;
-              color: #141717;
+              color: #fff;
               &:nth-child(2) {
-                background: var(--theme-background-color-2);
-                color: var(--theme-font-color-1);
+                background: var(--fill-pop);
+                color: var(--text-primary);
               }
             }
+          }
+          &.bg {
+            border-radius: 8px;
+            background: var(--fill-3);
           }
         }
         :global(.btn) {
           width: 100%;
           :global(span) {
-            line-height: 30px;
+            line-height: 48px;
             border-radius: 6px;
             width: 100%;
-            background: var(--color-yellow);
+            background: var(--brand);
+            border-radius: 40px;
             text-align: center;
             display: inline-block;
             font-size: 14px;
             font-weight: 500;
-            color: #141717;
+            color: #fff;
           }
         }
       }
     }
     .right {
-      padding-left: 35px;
+      padding-left: 24px;
       :global(img) {
-        border: 2px solid var(--color-yellow);
-        border-radius: 16px;
-        width: 325px;
+        /* border: 2px solid var(--brand); */
+        /* border-radius: 16px; */
+        width: 432px;
         height: auto;
       }
     }

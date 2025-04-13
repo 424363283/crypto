@@ -17,6 +17,8 @@ interface Props {
   isPrice?: boolean;
   placeholder?: string;
   theme: THEME;
+  className?: string;
+  inputType?: string;
 }
 
 const PercentInput = ({
@@ -32,6 +34,8 @@ const PercentInput = ({
   isPrice = false,
   placeholder = '',
   theme,
+  className = '',
+  inputType = 'number'
 }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
   const [originVal, setOriginVal] = useState<number | string>(value === '' ? '' : Number(value.toFixed(decimal)));
@@ -114,7 +118,7 @@ const PercentInput = ({
       }
     }
 
-    if (max && max <= 0) {
+    if (max && max < 0) {
       if (!originVal || Number(originVal) > max || originVal === '-') {
         onChange(String(max));
         setOriginVal(max);
@@ -149,30 +153,32 @@ const PercentInput = ({
 
   return (
     <>
-      <div className={`container ${isFocus && 'focus'} ${theme}`}>
-        {label && <div className='prefix'>{label}</div>}
-        <div className='inputWrapper'>
+      {label && <div className="prefix">{label}</div>}
+      <div className={`container ${isFocus && 'focus'} ${theme} ${className}`}>
+        <div className="inputWrapper">
           <input
-            value={originVal}
-            type='text'
+            value={isFocus || inputType === 'price' ? originVal : originVal + '%'}
+            type="text"
             onInput={_onInput}
             onFocus={() => setIsFocus(true)}
             onBlur={_onBlur}
             onChange={_onChange}
             placeholder={placeholder}
           />
-          {!isPrice && (
+          {/* {!isPrice && (
             <span className='symbol' style={{ left: _getSymbolLeft(String(originVal).length) }}>
               %
             </span>
-          )}
+          )} */}
         </div>
-        <div className='controller'>
-          <button className='btn-control' onClick={_onAdd}>
-            <PlusIcon width='13px' height='13px' color='#fff' />
+        <div className="controller add">
+          <button className="btn-control" onClick={_onAdd}>
+            <PlusIcon width="13px" height="13px" />
           </button>
-          <button className='btn-control' onClick={_onMinus}>
-            <MinusIcon width='13px' height='3px' color='#fff' />
+        </div>
+        <div className="controller minus">
+          <button className="btn-control" onClick={_onMinus}>
+            <MinusIcon width="13px" height="3px" />
           </button>
         </div>
       </div>
@@ -183,50 +189,50 @@ const PercentInput = ({
 
 export default PercentInput;
 const styles = css`
+  .prefix {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 400;
+  }
   .container {
     position: relative;
     width: 100%;
-    height: 40px;
+    height: 48px;
     border: 1px solid transparent;
-    border-radius: 6px;
-    margin: 10px 0;
+    border-radius: 8px;
+    margin: 16px 0 8px;
     display: flex;
     align-items: center;
-    background: var(--theme-trade-tips-color);
+    background: var(--fill-3);
     &:hover {
-      border-color: var(--skin-color-active) !important;
+      border-color: var(--brand) !important;
     }
     &.focus {
       box-shadow: 0 0 0 2px rgba(248, 187, 55, 0.1);
-      border-color: var(--skin-color-active) !important;
-    }
-    .prefix {
-      margin-left: 10px;
-      font-size: 14px;
-      color: var(--theme-font-color-2);
-      font-weight: 400;
+      border-color: var(--brand) !important;
     }
     .inputWrapper {
       flex: 1;
       position: relative;
       input {
-        color: var(--theme-font-color-1);
+        color: var(--text-primary);
         font-size: 14px;
-        font-weight: 400;
+        font-weight: 500;
         text-indent: 12px;
         outline: none;
         border: 0;
         width: 100%;
-        background: var(--theme-trade-tips-color);
+        background: var(--fill-3);
+        text-align: center;
         &::placeholder,
         input::placeholder,
         input::-webkit-input-placeholder,
         &::-webkit-input-placeholder {
-          color: var(--theme-font-color-1);
+          color: var(--text-tertiary);
         }
       }
       .symbol {
-        color: var(--theme-font-color-1);
+        color: var(--text-tertiary);
         position: absolute;
         font-size: 14px;
         pointer-events: none;
@@ -237,25 +243,35 @@ const styles = css`
     }
     .controller {
       width: auto;
-      right: 0;
+
       overflow: hidden;
       position: absolute;
       display: flex;
-      justify-content: space-evenly;
+      justify-content: center;
       .btn-control {
         border: none;
         outline: 0;
         height: 22px;
         width: 22px;
-        background: var(--theme-font-color-3);
+        background: transparent;
         margin-right: 6px;
         display: flex;
-        justify-content: space-evenly;
+        justify-content: center;
         align-items: center;
         border-radius: 2px;
         cursor: pointer;
         padding: 0;
       }
     }
+    .add {
+      left: 8px;
+    }
+    .minus {
+      right: 0;
+    }
+  }
+  .pure-container {
+    border-radius: 8px;
+    margin: 0;
   }
 `;

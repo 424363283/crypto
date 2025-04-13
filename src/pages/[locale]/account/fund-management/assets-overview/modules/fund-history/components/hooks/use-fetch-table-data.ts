@@ -4,7 +4,7 @@ import {
   getExchangeRecordsApi,
   getPaymentsRecordsApi,
   getTransferRecordApi,
-  getWithdrawRecordsApi,
+  getWithdrawRecordsApi
 } from '@/core/api';
 import { LANG } from '@/core/i18n';
 import { message } from '@/core/utils';
@@ -15,7 +15,7 @@ import { FUND_HISTORY_TAB_KEY } from '../../types';
 export const useFetchTableData = ({
   type,
   startDate,
-  endDate,
+  endDate
 }: {
   type: FUND_HISTORY_TAB_KEY;
   startDate: string;
@@ -27,7 +27,7 @@ export const useFetchTableData = ({
     listPage: 1,
     selectedTime: { label: LANG('最近7天'), value: 7 },
     selectedCoinIndex: 0,
-    searchParam: {} as any,
+    searchParam: {} as any
   });
   const { total, tableData, listPage } = state;
   // 法币查询/充币记录查询
@@ -36,7 +36,7 @@ export const useFetchTableData = ({
     const params: any = {
       createTimeGe: startDate || '',
       createTimeLe: endDate || '',
-      page,
+      page
     };
     if (coin && coin !== 'all') {
       params['currency'] = coin;
@@ -46,7 +46,7 @@ export const useFetchTableData = ({
     }
     const res = await getDepositRecordsApi(params);
     if (res.code === 200) {
-      setState((draft) => {
+      setState(draft => {
         draft.tableData = res.data?.list || [];
         draft.total = Number(res.data.count) || 0;
         draft.listPage = res.data?.page || 0;
@@ -64,14 +64,14 @@ export const useFetchTableData = ({
       createTimeGe: startDate || '',
       createTimeLe: endDate || '',
       transfer: type === FUND_HISTORY_TAB_KEY.TRANSFER_RECORD,
-      page,
+      page
     };
     if (coin && coin !== 'all') {
       params['currency'] = coin;
     }
     const res = await getWithdrawRecordsApi(params);
     if (res.code === 200) {
-      setState((draft) => {
+      setState(draft => {
         draft.tableData = res.data?.list || [];
         draft.total = Number(res.data?.count) || 0;
         draft.listPage = res.data?.page || 0;
@@ -81,6 +81,7 @@ export const useFetchTableData = ({
     }
     Loading.end();
   };
+
   // 转账记录
   const fetchPaymentsRecords = async ({ page = 1 }) => {
     Loading.start();
@@ -91,12 +92,12 @@ export const useFetchTableData = ({
       rows: 13,
       fund: 'ASSET',
       source: 'SPOT',
-      target: 'SPOT',
+      target: 'SPOT'
     };
 
     const res = await getPaymentsRecordsApi(params);
     if (res.code === 200) {
-      setState((draft) => {
+      setState(draft => {
         draft.tableData = res.data?.list || [];
         draft.total = Number(res.data?.count) || 0;
         draft.listPage = res.data?.page || 0;
@@ -114,14 +115,14 @@ export const useFetchTableData = ({
       createTimeGe: startDate || '',
       createTimeLe: endDate || '',
       targetCurrency: 'USDT',
-      page,
+      page
     };
     if (coin && coin !== 'all') {
       params['sourceCurrency'] = coin;
     }
     const res = await getExchangeRecordsApi(params);
     if (res.code === 200) {
-      setState((draft) => {
+      setState(draft => {
         draft.tableData = res.data?.list || [];
         draft.total = Number(res.data?.count) || 0;
         draft.listPage = res.data?.page || 0;
@@ -143,9 +144,9 @@ export const useFetchTableData = ({
       Loading.start();
       const params: any = {
         page,
-        size: 10,
+        rows: 13,
         createTimeGe: startDate || '',
-        createTimeLe: endDate || '',
+        createTimeLe: endDate || ''
       };
       if (source !== 'ALL') {
         params['sourceWallet'] = source;
@@ -165,7 +166,7 @@ export const useFetchTableData = ({
         return;
       }
       const data = response?.data?.list || [];
-      setState((draft) => {
+      setState(draft => {
         draft.tableData = data;
         draft.total = response.data?.count || 0;
         draft.listPage = response.data?.page || 0;
@@ -185,7 +186,7 @@ export const useFetchTableData = ({
     [FUND_HISTORY_TAB_KEY.RECHARGE_RECORD, fetchFiatHistory],
     [FUND_HISTORY_TAB_KEY.WITHDRAW_RECORD, fetchWithdrawRecords],
     [FUND_HISTORY_TAB_KEY.TRANSFER_RECORD, fetchPaymentsRecords],
-    [FUND_HISTORY_TAB_KEY.FLASH_EXCHANGE_RECORD, fetchFlashExchangeRecords],
+    [FUND_HISTORY_TAB_KEY.FLASH_EXCHANGE_RECORD, fetchFlashExchangeRecords]
   ]);
   const fetchRecordData = HISTORY_DATA_ROUTE_MAP.get(type);
 
@@ -196,6 +197,6 @@ export const useFetchTableData = ({
     total,
     listPage,
     tableData,
-    fetchRecordData,
+    fetchRecordData
   };
 };

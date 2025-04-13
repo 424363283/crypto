@@ -59,12 +59,13 @@ const BarChart = (props: BarChartProps) => {
         data: dates,
         axisLine: {
           lineStyle: {
-            color: isDark ? '#515656' : '#e5e5e4', // 设置X轴线条颜色
+            color: isDark ? '#34343B' : '#D7D9DE', // 设置X轴线条颜色
           },
           onZero: false, // 防止X轴线在柱状图上
         },
         axisLabel: {
           rotate: 0,
+          color: isDark ? '#717171' : '#9FA1A6', // 设置X轴线条颜色
           interval: dates.length > 40 ? 6 : dates.length > 20 ? 3 : 0, // 控制日期的显示间隔
         },
         axisTick: { show: false }, // 隐藏刻度线
@@ -73,11 +74,12 @@ const BarChart = (props: BarChartProps) => {
         type: 'value',
         axisLabel: {
           margin: 7, // 设置Y轴标签和底部X轴的间距为7px
+          color: isDark ? '#717171' : '#9FA1A6', // 设置X轴线条颜色
         },
         splitLine: {
           lineStyle: {
             type: 'dashed',
-            color: isDark ? '#404545' : '#F2F2F0',
+            color: isDark ? '#717171' : '#9FA1A6', // 设置X轴线条颜色
           },
         },
       },
@@ -115,7 +117,7 @@ const BarChart = (props: BarChartProps) => {
   if (!reportPnls.length) {
     return <EmptyComponent />;
   }
-  return <div ref={chartRef} style={{ width: isMobile ? '100%' : '757px', height: '334px' }} />;
+  return <div ref={chartRef} style={{ width: '100%', height: '252px' }} />;
 };
 
 export default BarChart;

@@ -10,6 +10,7 @@ import { useCallback, useEffect } from 'react';
 import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
 import { BaseModalStyle } from './base-modal-style';
+import YIcon from '@/components/YIcons';
 
 const { Position } = Lite;
 
@@ -29,12 +30,12 @@ const AddMarginModal = ({ theme, balance, isReal = false }: { theme: THEME; bala
     tempLever: lever,
     tempFprice: 0,
     tempLprice: 0,
-    addMarginAuto: addMarginAuto,
+    addMarginAuto: addMarginAuto
   });
 
   const initData = useCallback(async () => {
     const { Fprice, Lprice } = Position.calculateProfitAndLoss(addMarginModalData);
-    setState((draft) => {
+    setState(draft => {
       draft.Fprice = Fprice;
       draft.Lprice = Lprice;
       draft.tempFprice = Fprice;
@@ -45,13 +46,13 @@ const AddMarginModal = ({ theme, balance, isReal = false }: { theme: THEME; bala
   }, [addMarginModalData, balance, isKyc]);
 
   const updateMaxMargin = useCallback(async () => {
-    TradeMap.getLiteTradeMap().then(async (list) => {
+    TradeMap.getLiteTradeMap().then(async list => {
       const lite = list.get(commodity);
       if (lite) {
         const leverList = isKyc ? lite.lever2List : lite.lever0List;
         const marginList = isKyc ? lite.margin2List : lite.margin0List;
         const m = await Position.calculateMaxMargin(addMarginModalData, leverList[0], marginList[1]);
-        setState((draft) => {
+        setState(draft => {
           draft.maxMargin = Math.min(m, balance);
         });
       }
@@ -75,7 +76,7 @@ const AddMarginModal = ({ theme, balance, isReal = false }: { theme: THEME; bala
       stopLossRate,
       newLever
     );
-    setState((draft) => {
+    setState(draft => {
       draft.tempMargin = newMargin;
       draft.tempLever = newLever;
       draft.tempFprice = Fprice;
@@ -101,96 +102,106 @@ const AddMarginModal = ({ theme, balance, isReal = false }: { theme: THEME; bala
         className={`${theme} addMarginModal baseModal`}
         okText={LANG('确认')}
         cancelText={LANG('取消')}
-        width={400}
-        onCancel={() => Position.setAddMarginModalData(null)}
+        width={480}
         onOk={onOKClicked}
+        onCancel={() => Position.setAddMarginModalData(null)}
         okButtonProps={{
-          disabled: Number(state.addMargin) <= 0 && state.addMarginAuto === addMarginAuto,
+          disabled: Number(state.addMargin) <= 0 && state.addMarginAuto === addMarginAuto
         }}
-        closable={false}
+        cancelButtonProps={{ style: { display: 'none' } }}
+        closable={true}
       >
         <MarginInput
           value={state.addMargin}
-          onChange={(val) =>
-            setState((draft) => {
+          onChange={val =>
+            setState(draft => {
               draft.addMargin = val;
             })
           }
           min={0}
-          max={state.maxMargin}
-          placeholder={`0 ~ ${state.maxMargin}`}
+          max={Number(state.maxMargin.toFixed(2))}
+          placeholder={`0 ~ ${state.maxMargin.toFixed(2)}`}
           decimal={2}
           addStep={0.01}
           minusStep={0.01}
           isPrice
           theme={theme}
         />
-        <div className='balanceWrapper'>
-          <span className='smallLabel'>{LANG('可用余额')}</span>
-          <span className='value'>
-            <ScaleText money={balance} currency='USDT' /> USDT
+        <div className="balanceWrapper">
+          <span className="smallLabel">{LANG('可用余额')}</span>
+          <span className="value">
+            <ScaleText money={balance} currency="USDT" /> USDT
           </span>
           <span
-            className='setMaxBtn'
+            className="setMaxBtn"
             onClick={() =>
-              setState((draft) => {
-                draft.addMargin = state.maxMargin;
+              setState(draft => {
+                draft.addMargin = state.maxMargin.toFixed(2);
               })
             }
           >
             {LANG('最大')}
           </span>
         </div>
-        <div className='grid-box'>
-          <div className='grid'>
-            <label className='label'>{LANG('保证金')}</label>
+        <div className="grid-box">
+          <div className="grid">
+            <label className="label">{LANG('保证金')}</label>
             <div>
-              <span className='label'>{margin.toFixed(2)}</span>
-              <span className='arrow'>→</span>
-              <span className='value'>{state.tempMargin.toFixed(2)}</span>
+              <span className="label">{margin.toFixed(2)} USDT</span>
+              <span className="arrow">
+                <YIcon.arrorLeft />
+              </span>
+              <span className="value">{state.tempMargin.toFixed(2)} USDT</span>
             </div>
           </div>
-          <div className='grid'>
-            <label className='label'>{LANG('杠杆')}</label>
+          <div className="grid">
+            <label className="label">{LANG('杠杆')}</label>
             <div>
-              <span className='label'>{lever.toFixed(2)}</span>
-              <span className='arrow'>→</span>
-              <span className='value'>{state.tempLever.toFixed(2)}</span>
+              <span className="label">{lever.toFixed(2)} X</span>
+              <span className="arrow">
+                <YIcon.arrorLeft />
+              </span>
+              <span className="value">{state.tempLever.toFixed(2)} X</span>
             </div>
           </div>
-          <div className='grid'>
-            <label className='label'>{LANG('止盈价')}</label>
+          <div className="grid">
+            <label className="label">{LANG('止盈价')}</label>
             <div>
-              <span className='label'>{state.Fprice.toFixed(priceDigit)}</span>
-              <span className='arrow'>→</span>
-              <span className='value'>{state.tempFprice.toFixed(priceDigit)}</span>
+              <span className="label">{state.Fprice.toFixed(priceDigit)}</span>
+              <span className="arrow">
+                <YIcon.arrorLeft />
+              </span>
+              <span className="value">{state.tempFprice.toFixed(priceDigit)}</span>
             </div>
           </div>
-          <div className='grid'>
-            <label className='label'>{LANG('强平价')}</label>
+          <div className="grid">
+            <label className="label">{LANG('强平价')}</label>
             <div>
-              <span className='label'>{state.Lprice.toFixed(priceDigit)}</span>
-              <span className='arrow'>→</span>
-              <span className='value'>{state.tempLprice.toFixed(priceDigit)}</span>
+              <span className="label">{state.Lprice.toFixed(priceDigit)}</span>
+              <span className="arrow">
+                <YIcon.arrorLeft />
+              </span>
+              <span className="value">{state.tempLprice.toFixed(priceDigit)}</span>
             </div>
           </div>
         </div>
-        <div className='result'>
+        <div className="result">
           <div>
-            <span className='label'>{LANG('追加手续费')}</span>
-            <span className='value'>0.00 USDT</span>
+            <span className="label">{LANG('追加手续费')}</span>
+            <span className="value">0.00 USDT</span>
           </div>
           <div>
-            <span className='label'>{LANG('合计')}</span>
-            <span className='value'>{state.addMargin === '' ? 0 : state.addMargin} USDT</span>
+            <span className="label">{LANG('合计')}</span>
+
+            <span className="value">{state.addMargin === '' ? '0.00' : state.addMargin.toFixed(2)} USDT</span>
           </div>
-          {isReal && (
+          {false && isReal && (
             <div>
-              <span className='label'>{LANG('自动追加保证金')}</span>
+              <span className="label">{LANG('自动追加保证金')}</span>
               <Switch
                 checked={state.addMarginAuto}
-                onChange={(checked) => {
-                  setState((draft) => {
+                onChange={checked => {
+                  setState(draft => {
                     draft.addMarginAuto = checked;
                   });
                 }}
@@ -210,80 +221,151 @@ export default AddMarginModal;
 const styles = css`
   :global(.addMarginModal) {
     :global(.container) {
-      background: var(--theme-trade-tips-color);
+      border-radius: 8px;
+      background: var(--fill-3);
+      margin: 0;
       :global(input) {
-        background: var(--theme-trade-tips-color);
+        border-radius: 8px;
+        background: var(--fill-3);
+
+        color: var(--text-primary) !important;
+        font-family: 'HarmonyOS Sans SC';
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        &::placeholder {
+          color: var(--text-tertiary);
+          font-family: 'HarmonyOS Sans SC';
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: normal;
+        }
       }
     }
     :global(.btn-control) {
       background: var(--theme-font-color-3);
       :global(svg) {
-        height: 9px;
-        width: 9px;
+        height: 24px;
+        width: 12px;
         fill: #fff;
       }
     }
+    :glabal(.ant-modal-footer) {
+      padding: 24px 16px !important;
+      margin: 0;
+    }
+    :global(.ant-btn-primary) {
+      border-radius: 40px !important;
+      background: var(--text-brand) !important;
+      color: var(--text-white) !important;
+      font-size: 16px !important;
+      font-weight: 500 !important;
+      width: 100% !important;
+    }
     .balanceWrapper {
-      height: 43px;
       display: flex;
       align-items: center;
-      border-bottom: 1px solid rgba(121, 130, 150, 0.15);
+      padding: 16px 0 24px;
+      gap: 8px;
     }
     .smallLabel {
-      color: var(--theme-font-color-2);
-      font-size: 12px;
-      font-weight: 500;
-      margin-right: 10px;
+      color: var(--text-secondary);
+      font-family: 'HarmonyOS Sans SC';
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 150%; /* 21px */
     }
     .label {
-      color: var(--theme-font-color-2);
+      color: var(--text-secondary);
+      font-family: 'HarmonyOS Sans SC';
       font-size: 14px;
-      font-weight: 600;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
     }
     .arrow {
-      color: var(--theme-font-color-2);
+      height: 16px;
     }
     .value {
       font-weight: 500;
-      color: var(--theme-font-color-1);
+      color: var(--text-primary);
+      font-family: 'HarmonyOS Sans SC';
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
     }
     .setMaxBtn {
-      color: var(--skin-primary-color);
-      padding-left: 10px;
+      color: var(--text-brand);
+      font-family: 'HarmonyOS Sans SC';
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 500;
       cursor: pointer;
     }
     .grid-box {
       display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      border-bottom: 1px solid rgba(121, 130, 150, 0.15);
-      padding-bottom: 16px;
+      padding: 16px;
+      gap: 16px;
+      align-items: flex-start;
+      align-self: stretch;
+      border-radius: 12px;
+      background: var(--fill-3);
+      flex-direction: column;
+
       .grid {
-        width: 50%;
-        &:nth-child(odd) {
-          padding-right: 14px;
-        }
-        &:nth-child(even) {
-          padding-left: 14px;
-        }
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+
         label {
           display: block;
-          margin-top: 20px;
-          margin-bottom: 5px;
+          color: var(--text-secondary);
+          font-family: 'HarmonyOS Sans SC';
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
         }
         div {
           display: flex;
           align-items: center;
           justify-content: space-between;
+          gap: 12px;
         }
       }
     }
     .result {
+      margin-top: 24px;
+      border-top: 1px solid var(--line-1);
+      padding: 24px 0 0;
+      display: flex;
+      gap: 24px;
+      flex-direction: column;
       div {
-        margin-top: 15px;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 24px;
+      }
+      .label {
+        color: var(--text-secondary);
+        font-family: 'HarmonyOS Sans SC';
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+      }
+      .value {
+        color: var(--text-primary);
+        font-family: 'HarmonyOS Sans SC';
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 150%; /* 21px */
       }
     }
   }

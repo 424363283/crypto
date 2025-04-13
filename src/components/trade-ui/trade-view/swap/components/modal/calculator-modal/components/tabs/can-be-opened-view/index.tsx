@@ -9,6 +9,7 @@ import { TradeTypeBar } from '../../trade-type-bar';
 import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
 import { useRiskList, useStore } from '../../../store';
+import css from 'styled-jsx/css';
 
 export const CanBeOpenedView = () => {
   const [result, setResult] = useState({ openBalance: '--', openVolume: '--' });
@@ -50,21 +51,44 @@ export const CanBeOpenedView = () => {
   ];
 
   return (
-    <ResultLayout disabled={!openPrice || !balance} onSubmit={_onSubmit}>
-      <div>
-        <QuoteSelect
-          onChange={() => {
-            _resetInputs();
-          }}
-        />
-        <TradeTypeBar />
-        <LeverSlider />
-        <PriceInput value={openPrice} onChange={setOpenPrice} newPriceEnable />
-        <BalanceInput value={balance} onChange={setBalance} />
-      </div>
-      <Result results={results} tips={LANG('在计算最大可开数量时将不考虑您的开仓损失。')} />
-    </ResultLayout>
+    <>
+      <ResultLayout disabled={!openPrice || !balance} onSubmit={_onSubmit}>
+        <div className={'can-be-opened-view'}>
+          <QuoteSelect
+            onChange={() => {
+              _resetInputs();
+            }}
+          />
+          <TradeTypeBar />
+          <LeverSlider />
+          <div className={'input-item'}>
+            <div className={'label'}>{LANG('开仓价格')}</div>
+            <PriceInput label={null} value={openPrice} onChange={setOpenPrice} newPriceEnable />
+          </div>
+          <div className={'input-item'}>
+            <div className={'label'}>{LANG('钱包余额')}</div>
+            <BalanceInput label={null} value={balance} onChange={setBalance} />
+          </div>
+        </div>
+        <Result results={results} tips={LANG('在计算最大可开数量时将不考虑您的开仓损失。')} />
+      </ResultLayout>
+      <style jsx>{styles}</style>
+    </>
   );
 };
 
+const styles = css`
+  .can-be-opened-view {
+    .input-item {
+      >.label {
+        color: var(--text-tertiary);
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 16px;
+      }
+
+    }
+
+  }
+`;
 export default CanBeOpenedView;

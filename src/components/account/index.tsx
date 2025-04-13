@@ -28,6 +28,7 @@ import { RegisterSwitchLoginReg } from './register/register-switch-register-reg'
 import { LoginSwitchLoginReg } from './login/login-switch-register-reg';
 
 export const EntryPoint = () => {
+  const phoneEnable = process.env.NEXT_PUBLIC_PHONE_ENABLE === 'true';
   const { isMobile } = useResponsive();
   const lastPath = useLastPath();
   const { showForgetStep } = store;
@@ -45,11 +46,11 @@ export const EntryPoint = () => {
     }
   }, []);
   const HEADER_TITLE_MAP: { [key: string]: string } = {
-    [ROUTE_PATH_KEY.LOGIN]: LANG('登录 Ymex'),
+    [ROUTE_PATH_KEY.LOGIN]: LANG('账号登录'),
     // [ROUTE_PATH_KEY.REGISTER]: LANG('加入 YMEX'),
-    [ROUTE_PATH_KEY.REGISTER]: '账号注册',
+    [ROUTE_PATH_KEY.REGISTER]: LANG('账号注册'),
     [ROUTE_PATH_KEY.INVITE]: LANG('加入 YMEX'),
-    [ROUTE_PATH_KEY.FORGET]: LANG('忘记密码'),
+    [ROUTE_PATH_KEY.FORGET]: LANG('重置密码'),
     [ROUTE_PATH_KEY.THIRD_REGISTER]: LANG('创建账号'),
     [ROUTE_PATH_KEY.THIRD_BIND]: LANG('关联账号'),
   };
@@ -80,6 +81,7 @@ export const EntryPoint = () => {
     // },
     // { label: LANG('扫码登录'), key: ACCOUNT_TAB_KEY.QRCODE, children: <LoginQrCode onLoginSuccess={onLoginSuccess} /> },
   ];
+
   // if (isMobile) {
   //   LOGIN_TABS.splice(2, 1);
   // }
@@ -87,13 +89,13 @@ export const EntryPoint = () => {
     {
       label: LANG('手机'),
       key: ACCOUNT_TAB_KEY.PHONE,
-      tips: LANG('重置登录密码后，24小时内禁止提币'),
+      tips: '',
       children: <PhoneForget />,
     },
     {
       label: LANG('邮箱'),
       key: ACCOUNT_TAB_KEY.EMAIL,
-      tips: LANG('重置登录密码后，24小时内禁止提币'),
+      tips: '',
       children: <EmailForget />,
     },
   ];
@@ -102,10 +104,10 @@ export const EntryPoint = () => {
     { label: LANG('邮箱'), key: ACCOUNT_TAB_KEY.EMAIL, children: <EmailRegister /> },
   ];
   const THIRD_REGISTER_TABS: Tab[] = [
-    { label: '创建账号', key: ACCOUNT_TAB_KEY.THIRD_REGISTER, children: <ThirdRegister onLoginSuccess={onLoginSuccess} /> }
+    { label: LANG('创建账号'), key: ACCOUNT_TAB_KEY.THIRD_REGISTER, children: <ThirdRegister onLoginSuccess={onLoginSuccess} /> }
   ]
   const THIRD_BIND_TABS: Tab[] = [
-    { label: '关联账号', key: ACCOUNT_TAB_KEY.THIRD_BIND, children: <ThirdBind onLoginSuccess={onLoginSuccess} /> }
+    { label: LANG('关联账号'), key: ACCOUNT_TAB_KEY.THIRD_BIND, children: <ThirdBind onLoginSuccess={onLoginSuccess} /> }
   ]
   const TABS_MAP: any = {
     [ROUTE_PATH_KEY.LOGIN]: LOGIN_TABS,
@@ -118,7 +120,9 @@ export const EntryPoint = () => {
   if (showForgetStep && lastPath === 'forget') {
     return (
       <div className='account-wrapper'>
-        <ResetPwd />
+        <div className='account-content'>
+          <ResetPwd />
+        </div>
         <style jsx>{styles}</style>
       </div>
     );
@@ -127,42 +131,68 @@ export const EntryPoint = () => {
   return (
     <ThirdPartAuthProvider value={{ onLoginSuccess: onLoginSuccess }}>
       <div className='account-wrapper'>
-
-        <h1 className='title'>{HEADER_TITLE_MAP[lastPath]}</h1>
-        {!singleTab ?
-          <Tabs items={TABS_MAP[lastPath]} >
-            <Desktop >
-              {SWITCH_LOGIN_REG_MAP[lastPath]}
-            </Desktop>
-          </Tabs>
-          : TABS_MAP[lastPath][0].children
-        }
-        <SecurityVerify />
-        <style jsx>{styles}</style>
+        <div className='account-content'>
+          <h1 className='title'>{HEADER_TITLE_MAP[lastPath]}</h1>
+          {lastPath === ROUTE_PATH_KEY.FORGET && <div className='sub-title'>{LANG('重置登录密码后，24小时内禁止提币')}</div>}
+          {!singleTab ?
+            <Tabs items={TABS_MAP[lastPath]?.filter((item:{key:string}) => item.key !== ACCOUNT_TAB_KEY.PHONE || phoneEnable)} ></Tabs>
+            : TABS_MAP[lastPath][0].children
+          }
+          <SecurityVerify />
+          <style jsx>{styles}</style>
+        </div>
       </div>
     </ThirdPartAuthProvider>
   );
 };
 const styles = css`
   :global(.account-wrapper) {
+    display: flex;
+    flex: 1 auto;
     position: relative;
-    @media ${MediaInfo.desktop} {
-      width: 464px;
-    }
-    @media ${MediaInfo.tablet} {
-      width: 464px;
-    }
-    @media ${MediaInfo.mobile} {
-      padding: 16px;
-    }
+    align-items: center;
+    justify-content: center;
     border-radius: 12px;
-    padding: 30px;
+    padding: 16px;
+    @media ${MediaInfo.mobile} {
+      padding: 24px 16px;
+    }
+    .account-content {
+      @media ${MediaInfo.desktop} {
+        width: 840px;
+        padding: 0 120px;
+      }
+      @media ${MediaInfo.tablet} {
+        width: 464px;
+      }
+      @media ${MediaInfo.mobile} {
+        width: 100%;
+      }
+    }
     .title {
       text-align: center;
-      
-      color: var(--theme-font-color-1);
+      color: var(--text-primary);
       font-size: 24px;
       font-weight: 700;
+      @media ${MediaInfo.desktop} {
+        font-size: 40px;
+        line-height: 40px;
+        text-align: left;
+      }
+    }
+    .sub-title {
+      margin-top: 16px;
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-tertiary);
+      text-align: center;
+      @media ${MediaInfo.desktop} {
+        text-align: left;
+      }
+    }
+    :global(.tabs) {
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line-2);
     }
   }
 

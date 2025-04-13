@@ -51,7 +51,7 @@ export const List = ({
             color: var(--theme-font-color-3);
           }
           :global(.ant-pagination-item-active) {
-            border-color: var(--skin-primary-color);
+            border-color: var(--brand);
             background: var(--skin-primary-color) !important;
             :global(a) {
               color: #141717 !important;

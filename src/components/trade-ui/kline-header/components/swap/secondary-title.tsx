@@ -7,10 +7,12 @@ import React, { useEffect, useMemo, useState } from 'react';
 const TAB_LIMIT = 3;
 
 const SecondaryTitle = ({
+  className,
   activeIndex,
   onTabsChange,
   tabs = [],
 }: {
+  className?: string;
   tabs: string[];
   activeIndex: number;
   onTabsChange: (index: number) => void;
@@ -44,7 +46,7 @@ const SecondaryTitle = ({
 
   return (
     <>
-      <div className='list-wrap'>
+      <div className={clsx('list-wrap', className)}>
         <div className='list'>
           {tabs1.slice(0, 4).map((item: string, index: number) => {
             return (
@@ -91,8 +93,8 @@ const SecondaryTitle = ({
           display: flex;
           align-items: center;
           width: 100%;
-          margin-top: 16px;
-          padding-right: 10px;
+          padding-bottom: 8px;
+          border-bottom: 1px solid var(--fill-3);
           :global(.drop-down-icon) {
             cursor: pointer;
           }
@@ -102,21 +104,22 @@ const SecondaryTitle = ({
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 0 10px;
           padding-right: 5px;
           > .item {
-            font-size: 12px;
-            color: var(--theme-font-color-3);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
             cursor: pointer;
             border-radius: 5px;
-            border: 1px solid transparent;
+            border: none;
             white-space: nowrap;
-            background: var(--theme-background-color-3);
-            padding: 2px 10px;
+            background: transparent;
+            padding: 0;
             min-width: 56px;
+            text-align: left;
             &.active {
-              color: var(--skin-font-color);
-              background-color: var(--skin-primary-color);
+              color: var(--text-brand);
+              background-color: transparent;
             }
             &.etf {
               position: relative;
@@ -151,11 +154,11 @@ const SecondaryTitle = ({
             }
             :global(.ant-dropdown-menu-item) {
               &:hover {
-                background: var(--skin-primary-bg-color-opacity-3) !important;
-                color: var(--skin-primary-color) !important;
+                background: var(--label) !important;
+                color: var(--brand) !important;
               }
               :global(.active) {
-                color: var(--skin-primary-color) !important;
+                color: var(--brand) !important;
               }
             }
           }

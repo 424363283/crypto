@@ -1,38 +1,36 @@
-import { clsxWithScope } from '@/core/utils';
+import { clsxWithScope, MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
 
 const { className, styles } = css.resolve`
   .calculator-modal {
     width: 720px !important;
-    padding: 0 !important;
     .title {
-      border-bottom: 1px solid var(--theme-trade-border-color-1);
       padding-top: 0;
       padding-left: 0;
       margin-right: 0;
-      .calculator-close {
-        right: 8px;
-        top: 2px;
-      }
       .menus {
-        padding-left: 20px;
-
-        flex: 1;
-        height: 100%;
         display: flex;
-        flex-direction: row;
+        align-items: center;
+        gap: 24px;
+        align-self: stretch;
+        color: var(--text-secondary);
         > div {
           cursor: pointer;
-          height: 52px;
-          line-height: 54px;
-          font-size: 14px;
-          font-weight: 400;
-          color: var(--theme-trade-text-color-3);
-          border-bottom: 1px solid transparent;
-          margin-right: 37px;
+          color: var(--text-secondary);
+          text-align: justify;
+          font-family: 'HarmonyOS Sans SC';
+          font-size: 16px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: normal;
           &.active {
-            color: var(--theme-trade-text-color-1);
-            border-bottom-color: var(--skin-primary-color);
+            color: var(--text-brand);
+            text-align: justify;
+            font-family: 'HarmonyOS Sans SC';
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
           }
           &:last-child {
             margin-right: 0px;
@@ -44,6 +42,11 @@ const { className, styles } = css.resolve`
       display: flex;
       flex-direction: column;
       min-height: 402px;
+    }
+  }
+  @media ${MediaInfo.mobile} {
+    :global(.modal) {
+      background-color: var(--fill-pop) !important;
     }
   }
 `;

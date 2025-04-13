@@ -4,7 +4,7 @@ import { Svg } from '@/components/svg';
 import { InfoHover } from '@/components/trade-ui/common/info-hover';
 import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
-import { clsxWithScope } from '@/core/utils';
+import { clsxWithScope, MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
 
 export const EffectiveTime = () => {
@@ -13,12 +13,12 @@ export const EffectiveTime = () => {
   let options = [
     ['GTC', 0],
     ['IOC', 8],
-    ['FOK', 1],
+    ['FOK', 1]
   ];
-  const label = options.find((v) => v[1] === value)?.[0] || '';
+  const label = options.find(v => v[1] === value)?.[0] || '';
   const content = (
     <Tooltip
-      placement='top'
+      placement="top"
       title={
         <div className={clsx('tooltip')}>
           <div>{LANG('生效时间')}</div>
@@ -37,7 +37,9 @@ export const EffectiveTime = () => {
         </div>
       }
     >
-      <InfoHover className={clsx('label')}>{LANG('生效时间')}</InfoHover>
+      <InfoHover className={clsx('label')} hoverColor={false}>
+        {LANG('生效时间')}
+      </InfoHover>
     </Tooltip>
   );
 
@@ -59,7 +61,7 @@ export const EffectiveTime = () => {
         > */}
         <span className={clsx('value')} onClick={() => Swap.Trade.setModal({ effectiveTimeVisible: true })}>
           {label}
-          <Svg src='/static/images/common/arrow_down.svg' width={12} height={12} className={clsx('arrow')} />
+          <Svg src="/static/images/common/arrow_down.svg" width={12} height={12} className={clsx('arrow')} />
         </span>
         {/* </DropdownSelect> */}
       </div>
@@ -71,13 +73,13 @@ export const EffectiveTime = () => {
 const { className, styles } = css.resolve`
   .label {
     font-size: 12px;
-    color: var(--theme-trade-text-color-2);
+    color: var(--text-secondary);
   }
   .value {
     position: relative;
     cursor: pointer;
     font-size: 12px;
-    color: var(--theme-trade-text-color-1);
+    color: var(--text-primary);
 
     display: flex;
     flex-direction: row;
@@ -100,7 +102,13 @@ const { className, styles } = css.resolve`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-top: 16px;
+    gap: 4px;
+    @media ${MediaInfo.mobile} {
+      :global(.info-hover) {
+        border-bottom: 0;
+      }
+    }
   }
   .tooltip {
     padding: 5px 0;

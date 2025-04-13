@@ -17,7 +17,7 @@ export const OrderTypeSelect = ({
   onChange: (value?: string) => any;
   listLength: any;
 }) => {
-  const options = [LANG('限价委托'), LANG('止盈止损委托'), LANG('止盈/止损')];
+  const options = [LANG('限价丨市价'), LANG('计划委托'), LANG('止盈止损')];
   const values = [ORDER_TYPES.LIMIT, ORDER_TYPES.SPSL, ORDER_TYPES.SP_OR_SL, ORDER_TYPES.TRACK];
   return (
     <>
@@ -25,7 +25,7 @@ export const OrderTypeSelect = ({
         {options.map((v, i) => {
           const active = values.findIndex((v) => v === value) === i;
           return (
-            <div key={i} onClick={() => onChange(active ? undefined : values[i])} className={clsx(active && 'active')}>
+            <div key={i} onClick={() => onChange(values[i])} className={clsx(active && 'active', values[i] === ORDER_TYPES.SPSL && 'hidden')}>
               {v}
               {listLength[i] ? `(${listLength[i]})` : ''}
             </div>
@@ -35,22 +35,26 @@ export const OrderTypeSelect = ({
       <style jsx>{`
         .order-type-select {
           display: flex;
-          margin-left: 20px;
-          margin-top: 10px;
+          padding: 16px 24px;
+          align-items: center;
+          gap: 16px;
+          width:100%;
           > div {
             cursor: pointer;
+            color: var(--text-secondary);
             font-size: 12px;
-            margin-right: 15px;
-            color: var(--theme-trade-text-color-3);
-            line-height: 17px;
-            padding: 8px 0;
+            font-weight: 400;
             user-select: none;
+            display: flex;
+            padding: 8px 16px;
+            align-items: center;
+            gap: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--line-3);
+            height: 30px;
             &.active {
-              font-weight: 500;
-              padding: 8px 10px;
-              background-color: var(--theme-trade-select-bg-color);
-              border-radius: 6px;
-              color: var(--theme-trade-text-color-1);
+              border: 1px solid var(--fill-3);
+              background: var(--fill-3);
             }
           }
         }

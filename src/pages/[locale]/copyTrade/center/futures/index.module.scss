@@ -1,0 +1,200 @@
+$sm: 768px;
+.centerfuturesContent {
+    width: 1200px;
+    margin: 24px auto;
+}
+
+.centerfuturesHeader {
+    width: 100%;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    color: var(--text-tertiary);
+}
+
+.centerfuturesinterval {
+    margin: auto 8px;
+}
+
+.centerfuturesActive {
+    color: var(--text-primary);
+
+}
+
+.centerfuturesUser {
+    margin-top: 44px;
+    display: flex;
+    justify-content: space-between;
+   
+    .centerfuturesUserImg {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+
+        img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+    }
+
+    .enterFuturesUserName {
+        margin-left: 24px;
+        color: var(--text-tertiary);
+
+        p {
+            font-size: 40px;
+            font-style: normal;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        span {
+            display: flex;
+            align-items: center;
+        }
+
+        svg {
+            margin-right: 8px;
+        }
+
+    }
+}
+@media (max-width: $sm) {
+    .centerfuturesUser {
+      flex-direction: column;
+    }
+  }
+.centerfuturesLeft {
+    display: flex;
+    align-items: center;
+}
+
+.centerfuturesRight {
+    display: flex;
+    align-items: center;
+
+    .centerfuturesPK {
+        width: 48px;
+        height: 48px;
+        margin-right: 32px;
+        cursor: pointer;
+
+        svg {
+            width: 48px;
+            height: 48px;
+        }
+    }
+
+    .centerfuturesShare {
+        width: 32px;
+        height: 32px;
+        cursor: pointer;
+
+        svg {
+            width: 32px;
+            height: 32px;
+        }
+    }
+
+    .centerfuturesSetting {
+        padding: 13px 40px;
+        border-radius: 24px;
+        background: var(--brand);
+        min-width: 200px;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 500;
+        text-align: center;
+        color: var(--text-white);
+        margin-left: 32px;
+        cursor: pointer;
+    }
+}
+
+.centerfuturesUserAmount {
+    margin-top: 40px;
+    padding: 40px;
+    background: var(--fill-2);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    gap: 92px;
+
+
+    .centerAmountListOne {
+
+        .AmountAvbTitle {
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 500;
+            color: var(--text-primary);
+            line-height: 23px;
+            margin-bottom: 10px;
+        }
+
+        .AmountAvb {
+            font-size: 40px;
+            font-style: normal;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 47px;
+            margin-bottom: 16px;
+        }
+
+        .lastProfitAndLoss {
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            color: var(--text-primary);
+        }
+
+        .profitAndLoss {
+            color: var(--color-green) !important;
+        }
+    }
+
+    .centerfuturesUserList {
+
+        color: var(--text-primary);
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 500;
+
+        .centerfuturesUserListTitle {
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .centerfuturesUserListProfit {
+            color: var(--color-green) !important;
+        }
+    }
+
+    .depositBtn {
+        padding: 10px 52px;
+        border-radius: 24px;
+        background: var(--brand);
+        color: var(--text-white);
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .TransferBtn {
+        font-size: 16px;
+        font-style: normal;
+        padding: 10px 52px;
+        font-weight: 500;
+        border-radius: 24px;
+        color: var(--brand);
+        border: 1px solid var(--brand);
+        margin-top: 16px;
+        cursor: pointer;
+    }
+}

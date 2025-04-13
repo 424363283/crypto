@@ -96,7 +96,7 @@ const formatData = (type: any, data: any[]) => {
     if (type === '1') {
       types = ['1', '4'];
     } else {
-      types = ['2'];
+      types = ['2', '5'];
     }
     if (type === '3') {
       types = ['3'];

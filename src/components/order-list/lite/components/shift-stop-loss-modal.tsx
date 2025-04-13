@@ -15,11 +15,12 @@ interface Props {
   id: string;
   open: boolean;
   commodity: string;
+  contract: string;
   shiftValue: string;
   onCancel: () => void;
 }
 
-const ShiftStopLossModal = ({ id, open, onCancel, commodity, shiftValue }: Props) => {
+const ShiftStopLossModal = ({ id, open, onCancel, commodity, contract, shiftValue }: Props) => {
   const { theme } = useTheme();
   const { marketMap, liteTradeMap } = Position.state;
   const [offset, setOffset] = useState('');
@@ -31,7 +32,7 @@ const ShiftStopLossModal = ({ id, open, onCancel, commodity, shiftValue }: Props
       const info = liteTradeMap.get(commodity);
       if (info) {
         setCurrentContractInfo(info);
-        setMax(Number(marketMap[commodity]?.price.mul(info.trailRate).toFixed(info.digit)));
+        setMax(Number(marketMap[contract]?.price.mul(info.trailRate).toFixed(info.digit)));
       }
       if (shiftValue) {
         setOffset(shiftValue);
@@ -42,7 +43,7 @@ const ShiftStopLossModal = ({ id, open, onCancel, commodity, shiftValue }: Props
   const onOKClicked = useCallback(() => {
     const params = {
       id,
-      price: Number(marketMap[commodity]?.price),
+      price: Number(marketMap[contract]?.price),
       offset: Number(offset),
     };
 
@@ -58,7 +59,7 @@ const ShiftStopLossModal = ({ id, open, onCancel, commodity, shiftValue }: Props
         open={open}
         okText={LANG('确认')}
         cancelText={null}
-        width={400}
+        width={480}
         onCancel={() => {
           setOffset('');
           onCancel();
@@ -86,8 +87,8 @@ const ShiftStopLossModal = ({ id, open, onCancel, commodity, shiftValue }: Props
           isPrice
           theme={theme}
         />
-        <div className='tips'>
-          {LANG('最新成交价格回撤{offset}USDT时讲激活止损订单', { offset: offset !== '' ? offset : '--' })}
+        <div className='tips' dangerouslySetInnerHTML={{ __html: LANG('最新成交价格回撤{offset}时讲激活止损订单', { offset: offset !== '' ? `<span>${offset}USDT</span>` : '<span>--USDT</span>' }) }}>
+
         </div>
       </Modal>
       <BaseModalStyle />
@@ -99,22 +100,49 @@ const ShiftStopLossModal = ({ id, open, onCancel, commodity, shiftValue }: Props
 export default ShiftStopLossModal;
 
 const styles = css`
-  :global(.shiftModal) {
+  :global(.ant-modal.baseModal.shiftModal) {
     :global(.close-icon) {
       cursor: pointer;
       position: absolute;
-      top: 7px;
+      top: 16px;
       right: 11px;
     }
+    :global(.ant-modal-content){
+      padding: 24px !important;
+      border-radius: 24px !important;
+      background: var(--fill-1) !important;
+    }
+    :global(.ant-modal-header){
+      border-bottom:none;
+      background:transparent;
+      padding:0;
+      :global(.ant-modal-title){
+        text-align:left !important;
+        color: var(--text-primary);
+        font-size: 16px;
+        font-weight: 500;
+      }
+      
+    }
+    :global(.ant-modal-body){
+      padding:26px 0 0 !important;
+    }
+  
+
+     :global(.ant-modal-footer){
+      margin:0 !important;
+    }
+
+    
     .labelWrapper {
-      margin-top: 14px;
-      margin-bottom: 17px;
       display: flex;
       justify-content: space-between;
-      color: var(--theme-font-color-2);
-      font-weight: 500;
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 400;
+  
       button {
-        color: var(--skin-primary-color);
+        color: var(--text-brand);
         border: none;
         outline: none;
         background: transparent;
@@ -122,7 +150,19 @@ const styles = css`
       }
     }
     .tips {
-      color: var(--theme-font-color-2);
+      color: var(--text-secondary);
+      font-family: "HarmonyOS Sans SC";
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 150%; /* 21px */
+      padding:24px 0;
+      :global(span){
+        color: var(--text-primary);
+        font-size: 14px;
+        font-weight: 500;
+        padding:0 3px;
+      }
     }
     :global(.ant-btn) {
       display: none;

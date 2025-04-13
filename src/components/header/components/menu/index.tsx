@@ -1,9 +1,10 @@
 import CommonIcon from '@/components/common-icon';
 import { clsx } from '@/core/utils';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { resetZeroHeight } from '../contract-menu';
+import { useKycState } from '@/core/hooks';
 
 export default function Menu({
   children,
@@ -19,6 +20,8 @@ export default function Menu({
   className,
   itemClassName,
   openContent,
+  boxRadius = '12px',
+  menuType
 }: {
   children: React.ReactNode;
   height: string;
@@ -33,7 +36,10 @@ export default function Menu({
   className?: string;
   itemClassName?: string;
   isIcon?: boolean; // 是否是icon，例如download icon menu
+  boxRadius?: string;
+  menuType?:string;
 }) {
+  const { updateKYCAsync } = useKycState(true);
   const { ref, inView } = useInView();
   const [hovering, setIsHovering] = useState(false);
   const onMenuMouseEnter = () => {
@@ -53,6 +59,12 @@ export default function Menu({
   const onSubMenuLeave = () => {
     setIsHovering(false);
   };
+
+  useEffect(() => {
+    if(menuType === 'user' && hovering){
+      updateKYCAsync(true)
+    }
+  },[menuType,hovering])
   return (
     <>
       <div
@@ -64,11 +76,11 @@ export default function Menu({
         <div className={clsx('item', hovering && 'hovering', isActive && 'active-path', isIcon && 'icon-item')}>
           <div className={itemClassName}>
             {children}
-            {hot && <Image src='/static/images/common/hot.svg' width='15' height='15' alt='hot' className='hot' />}
+            {hot && <Image src='/static/images/common/hot.svg' width='16' height='16' alt='hot' className='hot' />}
             {showArrow && (
               <CommonIcon
-                name={hovering ? 'common-triangle-up-active-0' : 'common-tiny-triangle-down'}
-                size={14}
+                name={hovering ? 'common-tiny-triangle-down-2' : 'common-tiny-triangle-down-2'}
+                size={10}
                 enableSkin={hovering}
                 className={clsx('menu-arrow', hovering && 'hovering')}
               />
@@ -102,7 +114,7 @@ export default function Menu({
               font-size: 14px;
               font-weight: 500;
               margin: 0 12px;
-              color: var(--theme-font-color-1);
+              color: var(--text-primary);
               > div {
                 min-height: 30px;
                 display: flex;
@@ -113,24 +125,23 @@ export default function Menu({
                 transition: all ease-in-out 0.2s;
                 transform: rotate(0deg);
                 background-size: cover;
-                margin-left: 1px;
+                margin-left: 8px;
               }
             }
 
             .item.hovering {
-              color: var(--skin-hover-font-color);
+              color: var(--brand);
               .menu-arrow {
                 background-image: url('/static/images/common/triangle-up-light.svg');
               }
             }
             .active-path {
-              border-bottom: 2px solid var(--skin-primary-color);
-              color: var(--skin-hover-font-color);
+              color: var(--text-brand);
             }
             .icon-item {
               padding: 0;
               margin-right: 0;
-              margin-left: 18px;
+              margin-left: 24px;
             }
             .box,
             .commodity-menu-box {
@@ -139,9 +150,8 @@ export default function Menu({
               min-width: ${width};
               transition: all 0.3s;
               top: 100%;
-              border-radius: 8px;
-              border-bottom-left-radius: 8px;
-              border-bottom-right-radius: 8px;
+              background: var(--dropdown-select-bg-color);
+              border-radius: ${boxRadius};
               overflow: hidden;
               z-index: 999;
               ${position}
@@ -152,8 +162,7 @@ export default function Menu({
             .show-commodity-menu-box {
               top: 100% !important;
               height: ${height}!important;
-              box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.3) !important;
-              background-color: var(--theme-background-color-2) !important;
+              box-shadow: 0px 4px 16px 0px var(--dropdown-select-shadow-color) !important;
             }
           }
         `}

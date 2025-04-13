@@ -34,6 +34,7 @@ const Responsive: React.FC<IResponsiveProps> = ({ breakpoint, children, forceIni
   };
   return BREAK_POINTS_MAP[breakpoint];
 };
+
 const Desktop: React.FC<IProps> = ({ children, forceInitRender = true }: IProps) => {
   return (
     <Responsive breakpoint='desktop' forceInitRender={forceInitRender}>
@@ -41,6 +42,7 @@ const Desktop: React.FC<IProps> = ({ children, forceInitRender = true }: IProps)
     </Responsive>
   );
 };
+
 const Tablet: React.FC<IProps> = ({ children, forceInitRender = true }: IProps) => {
   return (
     <Responsive breakpoint='tablet' forceInitRender={forceInitRender}>
@@ -48,6 +50,7 @@ const Tablet: React.FC<IProps> = ({ children, forceInitRender = true }: IProps) 
     </Responsive>
   );
 };
+
 const Mobile: React.FC<IProps> = ({ children, forceInitRender = true }: IProps) => {
   return (
     <Responsive breakpoint='mobile' forceInitRender={forceInitRender}>
@@ -63,6 +66,7 @@ const MobileOrTablet: React.FC<IProps> = ({ children, forceInitRender = true }: 
     </Responsive>
   );
 };
+
 // 桌面或平板的情况下显示
 const DesktopOrTablet: React.FC<IProps> = ({ children, forceInitRender = true }: IProps) => {
   return (

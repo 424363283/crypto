@@ -129,9 +129,9 @@ const Rate = () => {
 
 const styles = css`
   .content {
-    background: var(--theme-background-color-3-2);
+    background: var(--bg-1);
     .box {
-      margin: 30px auto 66px auto;
+      margin: 24px auto 66px auto;
       display: flex;
       flex-direction: column;
       max-width: var(--const-max-page-width);
@@ -146,19 +146,16 @@ const styles = css`
       position: relative;
       font-size: 12px;
       font-weight: 400;
-      color: var(--theme-font-color-3);
+      color: var(--text-tertiary);
       line-height: 17px;
-      padding: 20px 0;
-      &::before {
-        content: '';
-        display: block;
-        position: absolute;
-        top: 26px;
-        left: 30px;
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--theme-font-color-3);
+      margin-bottom: 40px;
+    }
+    .table{
+
+      .ant-table-thead{
+         tr th{
+          color: red;
+         }
       }
     }
     @media ${MediaInfo.tablet} {

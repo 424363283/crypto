@@ -3,7 +3,7 @@ import { ConfigProvider } from 'antd';
 
 export const AntdThemeConfigProvider = ({ children }: any) => {
   const { skin } = useTheme();
-  
+
   const COLOR_PRIMARY_MAP = {
     blue: '#1772F8',
     primary: '#f8bb37',
@@ -11,6 +11,7 @@ export const AntdThemeConfigProvider = ({ children }: any) => {
   return (
     <ConfigProvider
       theme={{
+        hashed: false,
         token: { colorPrimary: COLOR_PRIMARY_MAP[skin] },
         components: {
           Checkbox: {

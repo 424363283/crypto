@@ -37,7 +37,7 @@ const Perpetual = ({ isUsdtType }: { isUsdtType?: boolean }) => {
                   {name}
                   <Tags id={item?.id} />
                 </div>
-                <div>
+                <div className='description'>
                   {fullName} {tag}
                 </div>
               </div>
@@ -56,7 +56,7 @@ const styles = css`
   .perpetual-wrapper {
     width: 265px;
     height: 479px;
-    background: var(--theme-background-color-2);
+    background: var(--dropdown-select-bg-color);
     padding: 10px;
     overflow: auto;
     :global(.coin-menu-item) {
@@ -64,6 +64,11 @@ const styles = css`
       margin-bottom: 10px;
       &:last-child {
         margin-bottom: 40px;
+      }
+      &:hover {
+        :global(.link-wrapper .coin-content .title) {
+          color: var(--text-brand);
+        }
       }
     }
     :global(.link-wrapper) {
@@ -80,13 +85,19 @@ const styles = css`
         flex-shrink: 0;
       }
       :global(.coin-content) {
+        color: var(--text-secondary)!important;
+        :global(>*:nth-last-child(2)) {
+          color: var(--text-primary);
+        }
+        :global(>*:nth-child(2)) {
+          color: var(--text-tertiary);
+        }
         :global(.title) {
           display: flex;
           flex-direction: row;
           align-items: center;
           font-size: 14px;
           font-weight: 500;
-          color: var(--theme-font-color-1);
           margin-bottom: 7px;
           :global(.hot, .new) {
             margin-left: 5px;
@@ -94,10 +105,9 @@ const styles = css`
             height: 12px;
           }
         }
-        > *:nth-child(2) {
+        :global(.description) {
           font-size: 12px;
           font-weight: 400;
-          color: var(--theme-font-color-3);
         }
       }
     }

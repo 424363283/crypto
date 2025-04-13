@@ -1,8 +1,11 @@
 import Modal, { ModalTitle } from '@/components/trade-ui/common/modal';
+import { BottomModal, MobileModal } from '@/components/mobile-modal';
+
 import { useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
 import { useEffect, useState } from 'react';
+import { useResponsive } from '@/core/hooks';
 
 import { CanBeOpenedView } from './components/tabs/can-be-opened-view';
 import { IncomeView } from './components/tabs/income-view';
@@ -19,6 +22,7 @@ export const CalculatorModal = () => {
   const [menuIndex, setMenuIndex] = useState(0);
   const { getRiskList } = useRiskList();
   const { quoteId, cryptoData } = useStore();
+  const { isMobile } = useResponsive();
 
   // const menus = [LANG('收益'), LANG('目标价格'), LANG('强平价格'), LANG('可开'), LANG('开仓价格')];
   const menus = [LANG('收益'), LANG('目标价格'), LANG('强平价格'), LANG('可开')];
@@ -39,6 +43,28 @@ export const CalculatorModal = () => {
       store.lever = cryptoData.leverageConfig?.[1] || 1;
     }
   }, [quoteId]);
+  if (isMobile) {
+    return (
+      <>
+        <MobileModal visible={visible} onClose={onClose} type="bottom">
+          <BottomModal
+            titles={menus}
+            onChangeIndex={setMenuIndex}
+            tabIndex={menuIndex}
+            displayConfirm={false}
+            // onConfirm={onConfirm}
+            // disabledConfirm={!stopProfitEnable && !stopLossEnable}
+          >
+            {/* {content} */}
+            <div className={clsx('content')}>
+              <ContentView />
+            </div>
+          </BottomModal>
+          {styles}
+        </MobileModal>
+      </>
+    );
+  }
 
   return (
     <>
@@ -51,7 +77,6 @@ export const CalculatorModal = () => {
             <div className={clsx('menus')}>
               {menus.map((menu, index) => {
                 const active = menuIndex === index;
-
                 return (
                   <div key={index} className={clsx(active && 'active')} onClick={() => setMenuIndex(index)}>
                     {menu}

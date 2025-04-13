@@ -7,6 +7,18 @@ const _state = {
    */
   id: '',
   /**
+   * 交易名称
+   */
+  name: '',
+  /**
+   * 交易币种
+   */
+  coin: '',
+   /**
+   * 商品合约
+   */
+   contract: '' as string | undefined,
+  /**
    * 是否登录
    */
   isLogin: false,
@@ -26,6 +38,18 @@ const _state = {
    * 账户余额(可用保证金)
    */
   balance: 0,
+  /**
+   * 现货挂单冻结金额
+   */
+  frozen: 0,
+  /**
+   * 账户持仓金额
+   */
+  holdings: 0,
+  /**
+   * 简易合约挂单冻结金额
+   */
+  plan: 0,
   /**
    * 用户输入保证金
    */
@@ -222,6 +246,38 @@ const _state = {
    * 当前商品的精度
    */
   currentCommodityDigit: 0,
+  /**
+   * 递延api配置
+   */
+  defer: false,
+  /**
+   * 递延最大天数
+   */
+  deferDays: 0,
+  /**
+   * 递延手续费
+   */
+  deferFee: 0,
+  /**
+   * 仓位显示精度
+   */
+  volumeDigit: 8,
+  /**
+   * 递延偏好设置
+   */
+  deferPref: false,
+  /**
+   * 下单递延开关设置
+   */
+  deferOrderChecked: false,
+  /**
+   * 是否开启委托价格范围限制
+   */
+  isPriceRangeLimited: false,
+  /**
+   * 是否保证金范围限制
+   */
+  isMarginRangeLimited: false,
 };
 
 export const state = resso(_state);

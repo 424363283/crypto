@@ -87,7 +87,7 @@ const styles = css`
         background: var(--theme-background-color-3-1);
         font-size: 32px;
         font-weight: 700;
-        color: var(--skin-main-font-color);
+        color: var(--brand);
         @media ${MediaInfo.mobile} {
           font-size: 20px;
           font-weight: 500;

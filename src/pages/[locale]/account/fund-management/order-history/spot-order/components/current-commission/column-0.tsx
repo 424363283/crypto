@@ -1,3 +1,6 @@
+import { Button } from '@/components/button';
+import ClipboardItem from '@/components/clipboard-item';
+import { Size } from '@/components/constants';
 import { closeSpotOrderApi } from '@/core/api';
 import { LANG } from '@/core/i18n';
 import { message } from '@/core/utils';
@@ -7,7 +10,7 @@ const handleCloseOrder = async (value: string) => {
   const res = await closeSpotOrderApi([value]);
   if (res.code === 200) {
     message.success(LANG('撤单成功'));
-    window.location.reload();
+    // window.location.reload();
   } else {
     message.error(res.message);
   }
@@ -45,12 +48,12 @@ const columns0 = [
       return <div className={`fw-300 ${value === 1 ? 'raise' : 'fall'}`}>{value === 1 ? LANG('买') : LANG('卖')}</div>;
     },
   },
-  {
-    title: LANG('触发价'),
-    dataIndex: 'triggerPrice',
-    render: (triggerPrice: number, { triggerType }: any) =>
-      triggerPrice ? `${triggerType === 1 ? '≥' : '≤'}${triggerPrice?.toFormat()}` : '--',
-  },
+  // {
+  //   title: LANG('触发价'),
+  //   dataIndex: 'triggerPrice',
+  //   render: (triggerPrice: number, { triggerType }: any) =>
+  //     triggerPrice ? `${triggerType === 1 ? '≥' : '≤'}${triggerPrice?.toFormat()}` : '--',
+  // },
   {
     title: LANG('委托价'),
     dataIndex: 'price',
@@ -59,7 +62,7 @@ const columns0 = [
     ),
   },
   {
-    title: `${LANG('委托量')}/${LANG('完成')}`,
+    title: `${LANG('委托量')}/${LANG('成交量')}`,
     dataIndex: 'volume',
     render: (_: any, { volume, dealVolume, targetCoin, sourceCoin, side, type }: any) => {
       const isBuy = side === 1;
@@ -69,7 +72,7 @@ const columns0 = [
     },
   },
   {
-    title: `${LANG('委托金额')}/${LANG('完成')}`,
+    title: `${LANG('委托金额')}/${LANG('成交金额')}`,
     dataIndex: 'amount',
     render: (_: any, { amount, dealAmount, targetCoin, sourceCoin, side, type }: any) => {
       const isSell = side === 2;
@@ -79,14 +82,28 @@ const columns0 = [
     },
   },
   {
+    title: LANG('订单编号'),
+    dataIndex: 'id',
+    width: 100,
+    render: (id: any, item: any) => {
+      return <ClipboardItem text={id} />
+    }
+  },
+  {
     title: LANG('操作'),
     align: 'right',
     dataIndex: 'id',
     render: (value: string) => {
       return (
-        <div className={'control fw-300'} style={{ cursor: 'pointer' }} onClick={() => handleCloseOrder(value)}>
+        <Button
+          rounded
+          width={72}
+          size={Size.SM}
+          style={{ margin: 'auto', marginRight: 0 }}
+          onClick={() => handleCloseOrder(value)}
+        >
           {LANG('撤单')}
-        </div>
+        </Button>
       );
     },
   },

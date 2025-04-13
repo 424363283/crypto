@@ -1,50 +1,71 @@
 import { useEffect, useState } from 'react';
 
 import Tooltip from '@/components/trade-ui/common/tooltip';
-// import { FlagPriceListener } from '@perpetual/Listener/FlagPrice';
 
 import { CryptoSelect } from './components/crypto-select';
 
 import { Svg } from '@/components/svg';
 import { InfoHover } from '@/components/trade-ui/common/info-hover';
-import { Button } from '@/components/trade-ui/trade-view/components/button';
-import { useTheme } from '@/core/hooks';
+import { useRouter, useTheme } from '@/core/hooks';
 import { LANG, TrLink } from '@/core/i18n';
 import { Account, Swap } from '@/core/shared';
 import { colorMap } from '@/core/styles/src/theme/trade/color';
 import { clsx } from '@/core/utils';
 import { isSwapDemo } from '@/core/utils/src/is';
 import { useLocation } from 'react-use';
+import CommonIcon from '@/components/common-icon';
+import { BalanceTips } from '@/components/trade-ui/trade-view/swap/components/input-view-header/components/balance-tips';
+import MarginRatio, { MARGIN_RATIO } from '../margin-ratio';
 
-export const Assets = () => {
+export const Assets = ({ showSettleCoin = false }: { showSettleCoin?: boolean }) => {
   const agreeAgreement = Swap.Info.store.agreement.allow;
   const { isDark } = useTheme();
   const { isUsdtType, quoteId } = Swap.Trade.base;
   const [crypto, setCrypto] = useState(quoteId);
-  const { basePrecision, settleCoin } = Swap.Info.getCryptoData(crypto);
-  const links = [
-    [
-      LANG('划转'),
-      () => {
-        if (agreeAgreement) {
-          Swap.Trade.setTransferModalVisible();
-        }
-      },
-      Account.isLogin ? !agreeAgreement : false,
-    ],
-    // [LANG('买币'), '/fiat-crypto'],
-    [LANG('转换'), '/convert'],
-  ];
+  const { settleCoin } = Swap.Info.getCryptoData(crypto);
+  const router = useRouter();
   const cryptoLower = crypto?.toLowerCase();
   const cryptoCode = Swap.Trade.getBaseSymbol(crypto);
   Swap.Socket.getFlagPrice(cryptoLower);
-  const balanceData = Swap.Assets.getBalanceData({ code: crypto, walletId: Swap.Info.getWalletId(isUsdtType) });
+  const walletId = Swap.Info.getWalletId(isUsdtType);
+  //可用余额
+  const availableBalance = Swap.Assets.getDisplayBalance({ code: crypto, walletId });
+  const balanceData = Swap.Assets.getBalanceData({ code: crypto, walletId });
   const accb = balanceData.accb;
-  const usdtVolumeDigit = Swap.Info.usdtVolumeDigit;
+  const balanceDigit = Swap.Assets.getBalanceDigit({ usdt: isUsdtType, code: crypto });
   const positionData = Swap.Order.getPosition(isUsdtType);
   const positionProfitAndLoss = getIncome({ isUsdtType, crypto, positionData });
   const isDemo = isSwapDemo(useLocation().pathname);
   const disabled = !Account.isLogin;
+  const calcPositionData = Swap.Calculate.positionData({
+    usdt: isUsdtType,
+    data: positionData,
+    twoWayMode: Swap.Trade.twoWayMode,
+  });
+  const calcItem = calcPositionData.wallets?.[walletId]?.data?.[crypto];
+  const { allCrossIncomeLoss } = calcPositionData.wallets[walletId] || {};
+  const bounsCanWithdrawAmount = Swap.Calculate.balance({
+    isTransfer: true,
+    usdt: isUsdtType,
+    balanceData: balanceData,
+    isCross: isUsdtType ? true : Swap.Info.getIsCrossByPositionData(quoteId, positionData),
+    crossIncome: Number((isUsdtType ? allCrossIncomeLoss : calcItem?.crossIncomeLoss) || 0),
+    twoWayMode: false,
+  });
+  const onTransfer = () => {
+    if (!Account.isLogin) {
+      router.replace('/login');
+      return;
+    } else if (!agreeAgreement) {
+      Swap.Trade.setModal({ openContractVisible: true });
+      return;
+    }
+    if (!isDemo) {
+      Swap.Trade.setTransferModalVisible();
+    } else {
+      Swap.Trade.setModal({ rechargeVisible: true });
+    }
+  };
 
   useEffect(() => {
     setCrypto(quoteId);
@@ -54,7 +75,19 @@ export const Assets = () => {
     <>
       <div className={clsx('assets', !isDark && 'light')}>
         <div className={'title'}>
-          {LANG('资产')}
+          <span>{LANG('资产')}</span>
+          <div className='operate'>
+            <TrLink href='/account/fund-management/asset-account/recharge' >
+              <div className='recharge'>
+                <CommonIcon name='common-recharge-0' size={14} /><span>{LANG('充值')}</span>
+              </div>
+            </TrLink>
+            {Account.isLogin && <div className='transfer' onClick={onTransfer}>
+              <CommonIcon name='common-exchange-0' size={14} /><span>{LANG('划转')}</span>
+            </div>}
+          </div>
+        </div>
+        <div className='subtitle'>
           {agreeAgreement &&
             Account.isLogin &&
             (!isUsdtType ? (
@@ -70,101 +103,104 @@ export const Assets = () => {
         </div>
         {
           <>
+            <MarginRatio showHeader={false} showSettleCoin={showSettleCoin} list={[MARGIN_RATIO.BALANCE]} />
             <div className={'row'}>
               <Tooltip
                 placement='topLeft'
-                title={LANG('钱包余额 = 总共净划入 + 总共已实现盈亏 + 总共净资金费用 - 总共手续费')}
+                title={LANG('钱包余额=总共净划入+总共已实现盈亏+总共净资金费用+总共手续费；')}
               >
                 <InfoHover hoverColor={false}>{LANG('钱包余额')}</InfoHover>
               </Tooltip>
               <div>
-                {disabled ? 0 : accb.toFormat(isUsdtType ? usdtVolumeDigit : basePrecision)} {settleCoin}
+                {disabled ? 0 : accb.toFormat(balanceDigit)} {showSettleCoin && settleCoin}
               </div>
             </div>
             <div className={'row'}>
-              <Tooltip placement='topLeft' title={LANG('采用标记价格计算得出的未实现盈亏，以及回报率。')}>
+              <Tooltip placement='topLeft' title={LANG('采用标记价格计算得出的未实现盈亏以及回报率；')}>
                 <InfoHover hoverColor={false}>{LANG('未实现盈亏')}</InfoHover>
               </Tooltip>
               <div>
-                {disabled ? 0 : positionProfitAndLoss.toFormat(isUsdtType ? usdtVolumeDigit : basePrecision)}{' '}
-                {settleCoin}
+                {disabled ? 0 : positionProfitAndLoss.toFormat(balanceDigit)}{' '}
+                {showSettleCoin && settleCoin}
+              </div>
+            </div>
+            <div className={'row'}>
+              <Tooltip
+                placement='bottomLeft'
+                title={(
+                  <BalanceTips
+                    bonusAmount={balanceData.bonusAmount.toFormat(balanceDigit)}
+                    canWithdrawAmount={bounsCanWithdrawAmount.toFormat(balanceDigit)}
+                    unit={settleCoin}
+                  />
+                )}
+              >
+                <InfoHover hoverColor={false} className={clsx('label')}>{LANG('可用余额')}&nbsp;</InfoHover>
+              </Tooltip>
+              <div className={clsx('text')} >
+                {availableBalance.toFormat(balanceDigit)} {showSettleCoin && settleCoin}
               </div>
             </div>
           </>
         }
-        {!isDemo ? (
-          <div className={clsx('buttons')}>
-            {links.map(([label, url, _disabled], index) => {
-              let Comp = TrLink;
-              let others: any = {
-                component: Comp,
-                native: true,
-              };
-
-              if (typeof url === 'function') {
-                others.onClick = url;
-                others.component = 'div';
-              } else {
-                others.href = url;
-              }
-              if (disabled) {
-                others.href = '/login';
-                others.component = TrLink;
-                // others = { component: 'div' };
-              }
-
-              if (others.component === 'div') {
-                delete others.native;
-              }
-
-              return (
-                <Button key={index} className={clsx('perpetual-button', _disabled && 'disabled')} {...others}>
-                  {label}
-                </Button>
-              );
-            })}
-          </div>
-        ) : (
-          <Button
-            className={clsx('perpetual-button', 'perpetual-demo-button', disabled && 'disabled')}
-            onClick={() => {
-              Swap.Trade.setModal({ rechargeVisible: true });
-            }}
-          >
-            {LANG('添加模拟金')}
-          </Button>
-        )}
       </div>
       <style jsx>
         {`
           .assets {
-            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
             background: ${!isDemo
-              ? 'var(--theme-primary-color)'
-              : isDark
+            ? 'var(--theme-primary-color)'
+            : isDark
               ? 'var(--theme-trade-bg-color-8)'
               : '#E5E5E4'};
-            color: ${!isDemo ? colorMap['--theme-trade-text-color-1'].light : 'var(--theme-trade-text-color-1)'};
-            padding: 16px 12px;
-            margin: 0 10px;
+            color: var(--text-tertiary);
+            padding: 0 16px 24px;
+            border-bottom: 2px solid var(--line-1);
+            :global(.margin-rate) {
+              padding: 0;
+            }
             .title {
               display: flex;
               flex-direction: row;
+              align-items: center;
               justify-content: space-between;
-              line-height: 18px;
+              line-height: 16px;
               font-size: 14px;
               font-weight: 500;
+              height: 40px;
+              color: var(--text-primary);
+              .operate {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                font-size: 12px;
+                font-weight: 400;
+                line-height: 14px;
+                .recharge, .transfer {
+                  display: flex;
+                  align-items: center;
+                  gap: 4px;
+                  cursor: pointer;
+                  color: var(--text-brand);
+                }
+              }
 
-              margin-bottom: 12px;
+            }
+            .subtitle {
+              display: flex;
+              height: 24px;
+              flex-direction: column;
+              justify-content: center;
               .select {
                 cursor: pointer;
-                font-size: 12px;
+                font-size: 14px;
                 font-weight: 500;
-
-                opacity: 0.5;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
+                color: var(--text-primary);
                 .arrow {
                   margin-left: 4px;
                 }
@@ -212,24 +248,20 @@ export const Assets = () => {
               cursor: not-allowed;
               opacity: 0.6;
             }
-            .row {
+            :global(.row) {
               display: flex;
               flex-direction: row;
               align-items: center;
               justify-content: space-between;
-              margin-bottom: 12px;
+              height: 14px;
+              font-size: 12px;
+              font-weight: 400;
               > :global(*) {
                 &:nth-child(1) {
-                  line-height: 14px;
-                  font-size: 12px;
-                  font-weight: 400;
-
-                  opacity: 0.5;
+                  color: var(--text-tertiary);
                 }
                 &:nth-child(2) {
-                  line-height: 10px;
-                  font-size: 12px;
-                  font-weight: 500;
+                  color: var(--text-primary);
                 }
               }
             }

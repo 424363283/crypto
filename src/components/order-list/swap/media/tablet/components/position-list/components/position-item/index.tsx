@@ -1,4 +1,4 @@
-import { store } from '@/components/order-list/swap/store';
+import { store } from '@/components/order-list/swap/stores/position-list';
 import { LANG } from '@/core/i18n';
 import { SUBSCRIBE_TYPES, useWs } from '@/core/network';
 import { Markets, Swap } from '@/core/shared';
@@ -22,7 +22,7 @@ const useMarketPrice = (code?: string) => {
 
   useWs(
     SUBSCRIBE_TYPES.ws3001,
-    (data) => {
+    data => {
       const list = isUsdtType ? data.getSwapUsdtList() : data.getSwapCoinList();
       setPrice(list.find((v: any) => v.id === code?.toUpperCase())?.price || 0);
     },
@@ -42,7 +42,7 @@ export const PositionItem = ({
   onChangeMargin,
   onReverse,
   onWalletClick,
-  assetsPage,
+  assetsPage
 }: {
   data: any;
   onShare: (item: any) => any;
@@ -64,7 +64,7 @@ export const PositionItem = ({
   const liquidationPrice = item.liquidationPrice?.toFormat(fixed);
   const leverage = item?.leverage;
   const unit = Swap.Info.getUnitText({
-    symbol: item.symbol,
+    symbol: item.symbol
   });
   const buy = item?.side === '1';
   const volume = item?.currentPositionFormat;
@@ -89,49 +89,43 @@ export const PositionItem = ({
     isBuy: item.side === '1',
     avgCostPrice: item.avgCostPrice,
     volume: item.currentPosition,
-    flagPrice: incomeType === 0 ? undefined : marketPrice,
+    flagPrice: incomeType === 0 ? undefined : marketPrice
   });
+
   // 未实现利率计算
   const incomeRate = Swap.Calculate.positionROE({
     usdt: isUsdtType,
     data: item,
-    income: income,
+    income: income
   });
   const onLever = () => {
     if (!assetsPage) {
       Swap.Trade.setModal({
         leverVisible: true,
-        leverData: { lever: leverage, symbol: code.toUpperCase(), wallet: item.subWallet },
+        leverData: { lever: leverage, symbol: code.toUpperCase(), wallet: item.subWallet }
       });
     }
   };
 
   return (
     <>
-      <div className='position-item'>
+      <div className="position-item">
         <ItemHeader
-          buy={buy}
           code={name}
           symbol={item.symbol}
           onShare={() => onShare(item)}
-          codeRight={
+          info={
             <ItemInfo
+              buy={buy}
               lever={leverage}
               marginType={item.marginType === 1 ? LANG('全仓') : LANG('逐仓')}
               onLeverClick={onLever}
               assetsPage={assetsPage}
             />
           }
+          right={<ItemLrInfo income={income} incomeRate={incomeRate} scale={scale} />}
         />
-        <ItemLrInfo
-          income={income}
-          incomeRate={incomeRate}
-          scale={scale}
-          openPrice={formatNumber2Ceil(item.avgCostPrice, Number(item.baseShowPrecision), buy).toFormat(
-            Number(item.baseShowPrecision)
-          )}
-          flagPrice={flagPrice}
-        />
+
         <ItemStatistics
           marginType={item.marginType}
           volume={volume}
@@ -162,12 +156,6 @@ export const PositionItem = ({
       </div>
       <style jsx>{`
         .position-item {
-          padding: 0 0 14px;
-          margin: 0 var(--trade-spacing) 20px;
-          border-bottom: 1px solid var(--theme-trade-border-color-2);
-          &:last-child {
-            border-bottom: 0;
-          }
         }
       `}</style>
     </>

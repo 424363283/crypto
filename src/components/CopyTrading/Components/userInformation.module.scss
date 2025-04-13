@@ -1,0 +1,416 @@
+$sm: 768px;
+
+.centerfuturesContent {
+  width: 1200px;
+  margin: 24px auto;
+
+  @media (max-width: $sm) {
+    width: 100%;
+  }
+
+  .centerfuturesUserBox {
+    @media (max-width: $sm) {
+      padding: 0 24px;
+    }
+  }
+}
+
+.mb80 {
+  margin-bottom: 80px;
+}
+
+.centerfuturesHeader {
+  width: 100%;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  color: var(--text-tertiary);
+}
+
+.centerfuturesinterval {
+  margin: auto 8px;
+}
+
+.centerfuturesActive {
+  color: var(--text-primary);
+}
+
+.centerfuturesInActive {
+  color: var(--text-tertiary);
+}
+
+.centerfuturesUser {
+  margin-top: 44px;
+  display: flex;
+  justify-content: space-between;
+
+  @media (max-width: $sm) {
+    flex-direction: column;
+    margin-top: 24px;
+  }
+
+  .centerfuturesUserImg {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+
+    @media (max-width: $sm) {
+      width: 80px;
+      height: 80px;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+  }
+
+  .enterFuturesUserName {
+    margin-left: 24px;
+    color: var(--text-tertiary);
+
+    @media (max-width: $sm) {
+      margin-left: 0;
+    }
+
+    p {
+      font-size: 40px;
+      font-style: normal;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+
+    span {
+      display: flex;
+      align-items: center;
+    }
+
+    svg {
+      margin-right: 8px;
+    }
+  }
+}
+
+.enterFuturesNickName {
+  @media (max-width: $sm) {
+    margin-top: 16px;
+  }
+}
+
+.centerfuturesLeft {
+  display: flex;
+  align-items: center;
+
+  @media (max-width: $sm) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.centerfuturesRight {
+  display: flex;
+  align-items: center;
+  @media (max-width: $sm) {
+    justify-content: space-between;
+    flex-direction: row-reverse;
+    margin-top: 24px;
+  }
+
+  .centerfuturesPK {
+    margin-right: 32px;
+    cursor: pointer;
+  }
+
+  .centerfuturesShare {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+
+    svg {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  .centerfuturesSetting {
+    padding: 13px 0;
+    border-radius: 24px;
+    background: var(--brand);
+    min-width: 200px;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    color: var(--text-white);
+    margin-left: 32px;
+    cursor: pointer;
+
+    @media (max-width: $sm) {
+      margin-left: 0;
+    }
+  }
+}
+
+.centerfuturesUserAmount {
+  margin-top: 40px;
+  padding: 40px;
+  background: var(--fill-2);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  gap: 92px;
+
+  @media (max-width: $sm) {
+    flex-direction: column;
+    gap: 0;
+    padding: 24px;
+    margin: 24px;
+    align-items: flex-start;
+  }
+
+  .centerAmountListOne {
+    .AmountAvbTitle {
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 23px;
+      margin-bottom: 10px;
+    }
+
+    .AmountAvb {
+      font-size: 40px;
+      font-style: normal;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 47px;
+      margin-bottom: 16px;
+    }
+
+    .lastProfitAndLoss {
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      color: var(--text-primary);
+    }
+
+    .profitAndLoss {
+      color: var(--color-green) !important;
+    }
+  }
+
+  .centerfuturesUserList {
+    color: var(--text-primary);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+
+    @media (max-width: $sm) {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 24px;
+      gap: 24px;
+    }
+
+    .centerfuturesUserListTitle {
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+
+      @media (max-width: $sm) {
+        margin-bottom: 0;
+      }
+    }
+
+    .centerfuturesUserListProfit {
+      color: var(--color-green) !important;
+    }
+  }
+
+  .depositBtn {
+    font-size: 16px;
+    font-style: normal;
+    width: 136px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    border-radius: 24px;
+    border: 1px solid var(--brand);
+    background-color: (var(--brand));
+    color: var(--text-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @media (max-width: $sm) {
+      margin-top: 0;
+      flex: 1;
+    }
+
+    cursor: pointer;
+  }
+
+  .TransferBtn {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    width: 136px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 24px;
+    color: var(--brand);
+    border: 1px solid var(--brand);
+    margin-top: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media (max-width: $sm) {
+      margin-top: 0;
+      flex: 1;
+    }
+  }
+}
+
+.incomeBox {
+  color: var(--text-secondary);
+  font-family: 'HarmonyOS Sans SC';
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  @media (max-width: $sm) {
+    margin: 24px;
+  }
+  .flexSpan {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .girdRow {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 80px;
+    @media (max-width: $sm) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+  .girdRow5 {
+    display: grid;
+    grid-template-columns: repeat(5,224px);
+    @media (max-width: $sm) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+
+  .mb16 {
+    margin-bottom: 16px;
+  }
+
+  .incomeLeft {
+    width: 364px;
+    color: var(--text-primary);
+    font-family: 'HarmonyOS Sans SC';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+
+    .net {
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .profix {
+      color: var(--text-true);
+    }
+
+    .loss {
+      color: var(--text-error);
+      font-weight: 500;
+    }
+
+    .todayIncome {
+      font-weight: 400;
+    }
+  }
+
+  .incomeRight {
+    border-radius: 24px;
+    background: var(--fill-2);
+    padding: 40px;
+    flex: 1;
+    @media (max-width: $sm) {
+      padding: 24px;
+      margin-top: 24px;
+      .rowLine {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+  }
+
+  .incomTotal {
+    color: var(--text-true, #2ab26c);
+    font-family: 'HarmonyOS Sans SC';
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-top: 8px;
+    margin-bottom: 16px;
+  }
+
+  .incomeValue {
+    color: var(--text-primary);
+    font-family: 'HarmonyOS Sans SC';
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+}
+
+.mt40 {
+  margin-top: 40px;
+}
+.gap16 {
+  gap: 16px;
+}
+
+.remark {
+  margin-top: 10px;
+  margin-bottom: 16px;
+}
+
+.tagsBox {
+  display: flex;
+
+  .tagItem {
+    padding: 8px 16px;
+    color: var(--text-primary);
+    text-align: center;
+    font-family: 'HarmonyOS Sans SC';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    border-radius: 6px;
+    background: var(--fill-3);
+    margin-right: 8px;
+  }
+}
+.textDashed {
+  display: inline;
+  border-bottom: 1px dashed var(--line-2);
+}

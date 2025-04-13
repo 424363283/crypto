@@ -31,7 +31,9 @@ export const FundsList = ({ active }: { active: boolean }) => {
   return (
     <>
       <div className={clsx('funds-list')}>
-        <FilterBar onSubmit={onSubmit} defaultWallet={Swap.Info.getWalletId(isUsdtType)} />
+        {
+          // <FilterBar onSubmit={onSubmit} defaultWallet={Swap.Info.getWalletId(isUsdtType)} /> 
+        }
         <RecordList
           renderRowKey={(v) => v.orderId}
           data={data}
@@ -40,6 +42,7 @@ export const FundsList = ({ active }: { active: boolean }) => {
           onLoadMore={onLoadMore}
           rowClassName={(item: any) => (item.status !== '4' ? '' : clsx('cancel-row'))}
           getScrollElement={useCallback((v: any) => (scrollRef.current = v), [])}
+          scroll={{ x: 'max-content', y: 500 }}
         />
       </div>
       {styles}
@@ -53,35 +56,31 @@ const useColumns = ({ isUsdtType }: any) => {
   const storeType = store.type;
 
   const columns = [
+
     {
-      title: LANG('时间'),
-      dataIndex: 'time',
-      render: (time: any) => dayjs(time).format('YYYY-MM-DD HH:mm:ss'),
-    },
-    {
-      title: LANG('币种'),
+      title: LANG('合约'),
       dataIndex: 'symbol',
+      minWidth: 150,
       render: (symbol: any, item: any) => {
         return (
           <div className='multi-line-item'>
-            <div className={clsx('code-text')}>{symbol?.replace('-', '')?.toUpperCase()}</div>
-            <div>{perpetualText}</div>
+            <div className={clsx('code-text')}>{Swap.Info.getCryptoData(item.symbol, { withHooks: false }).name} {LANG('永续')}</div>
           </div>
         );
       },
     },
-    {
-      title: LANG('资金账户'),
-      dataIndex: 'subWallet',
-      render: (v: any, item: any) => {
-        return (
-          <WalletName>
-            {item?.alias ||
-              Swap.Assets.getWallet({ walletId: item.subWallet, usdt: isUsdtType, withHooks: false })?.alias}
-          </WalletName>
-        );
-      },
-    },
+    // {
+    //   title: LANG('资金账户'),
+    //   dataIndex: 'subWallet',
+    //   render: (v: any, item: any) => {
+    //     return (
+    //       <WalletName>
+    //         {item?.alias ||
+    //           Swap.Assets.getWallet({ walletId: item.subWallet, usdt: isUsdtType, withHooks: false })?.alias}
+    //       </WalletName>
+    //     );
+    //   },
+    // },
     {
       title: () => {
         const types: any = { ...SWAP_FUNDS_RECORD_TYPE() };
@@ -94,22 +93,31 @@ const useColumns = ({ isUsdtType }: any) => {
         );
       },
       dataIndex: 'type',
+      minWidth: 150,
       render: (type: any) => {
         return (SWAP_FUNDS_RECORD_TYPE() as any)[type];
       },
     },
-    {
-      title: LANG('资金类型'),
-      dataIndex: 'fundsType',
-      render: (type: any, item: any) => {
-        return (SWAP_FUNDS_RECORD_FUNDS_TYPE() as any)[type] || '--';
-      },
-    },
+    // {
+    //   title: LANG('资金类型'),
+    //   dataIndex: 'fundsType',
+    //   render: (type: any, item: any) => {
+    //     return (SWAP_FUNDS_RECORD_FUNDS_TYPE() as any)[type] || '--';
+    //   },
+    // },
     {
       title: LANG('总额'),
       dataIndex: 'amount',
+      minWidth: 150,
       render: (amount: any, item: any) => {
-        return isUsdtType ? amount : amount.toFixed(Number(item.scale));
+        const formatNum = isUsdtType ? amount : amount.toFixed(Number(item.scale));
+        if(item.type === 'taker_fee' || item.type === 'maker_fee') {
+          return formatNum;
+        }
+        return <span className={Number(amount) > 0 ? 'positive-text' : 'negative-text'}>
+          {formatNum}
+        </span>;
+        // return isUsdtType ? amount : amount.toFixed(Number(item.scale));
       },
     },
     {
@@ -130,9 +138,17 @@ const useColumns = ({ isUsdtType }: any) => {
         },
 
       dataIndex: 'currency',
+      minWidth: 150,
       render: (v: any) => {
         return v;
       },
+    },
+    {
+      title: LANG('时间'),
+      dataIndex: 'time',
+      align: 'right',
+      minWidth: 150,
+      render: (time: any) => dayjs(time).format('YYYY-MM-DD HH:mm:ss'),
     },
     // {
     //   width: 100,

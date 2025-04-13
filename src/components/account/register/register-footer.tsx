@@ -6,7 +6,7 @@ export const RegisterFooter = () => {
   return (
     <>
       <p className='register-footer'>
-        {LANG('已经是Y-MEX用户？')}
+        {LANG('已经是YMEX用户？')}
         <TrLink href='/login'>&nbsp;&nbsp;{LANG('登录')}</TrLink>
         <style jsx>
           {`

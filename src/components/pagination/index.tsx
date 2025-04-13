@@ -63,7 +63,7 @@ const Pagination = (props: any): JSX.Element => {
         :global(.ant-pagination-item-ellipsis) {
           color: var(--theme-font-color-3) !important;
           border-radius: 4px;
-          border: 1px solid var(--theme-border-color-2);
+          // border: 1px solid var(--theme-border-color-2);
         }
         .page_container {
           display: flex;

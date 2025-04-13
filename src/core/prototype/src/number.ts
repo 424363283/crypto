@@ -1,9 +1,10 @@
 /// <reference path="./prototype.d.ts" />
+import BigNumber from 'bignumber.js';
 import { BN } from './bn.conf';
 
 declare global {
   interface Number {
-    toFixed(digit?: number): string;
+    toFixed(digit?: number, roundingMode?: BigNumber.RoundingMode): string;
     toRound(digit?: number): string;
     toFormat(digit?: number): string;
     add(arg: number | string): string;
@@ -16,13 +17,13 @@ declare global {
 
 
 // 正确获取小数位数
-Number.prototype.toFixed = function (digit?: number): string {
+Number.prototype.toFixed = function(digit?: number, roundingMode?: BigNumber.RoundingMode): string {
   if (isNaN(+this)) return '--';
   try {
     if (digit === undefined) {
       return new BN(+this).toFixed();
     } else {
-      return new BN(+this).toFixed(digit, 1);
+      return new BN(+this).toFixed(digit, roundingMode ?? BN.ROUND_DOWN);
     }
   } catch {
     return this + '';
@@ -30,7 +31,7 @@ Number.prototype.toFixed = function (digit?: number): string {
 };
 
 // 四舍五入
-Number.prototype.toRound = function (digit?: number): string {
+Number.prototype.toRound = function(digit?: number): string {
   if (isNaN(+this)) return '--';
   try {
     if (digit === undefined) {
@@ -44,7 +45,7 @@ Number.prototype.toRound = function (digit?: number): string {
 };
 
 // 格式化千分位
-Number.prototype.toFormat = function (digit?: number): string {
+Number.prototype.toFormat = function(digit?: number): string {
   if (isNaN(+this)) return '--';
   try {
     if (digit === undefined) {
@@ -62,7 +63,7 @@ Number.prototype.toFormat = function (digit?: number): string {
 };
 
 // 加法
-Number.prototype.add = function (arg: number | string): string {
+Number.prototype.add = function(arg: number | string): string {
   if (isNaN(+this)) return '--';
   try {
     const a = new BN(+this);
@@ -74,7 +75,7 @@ Number.prototype.add = function (arg: number | string): string {
 };
 
 // 减法
-Number.prototype.sub = function (arg: number | string): string {
+Number.prototype.sub = function(arg: number | string): string {
   if (isNaN(+this)) return '--';
   try {
     const a = new BN(+this);
@@ -86,7 +87,7 @@ Number.prototype.sub = function (arg: number | string): string {
 };
 
 // 乘法
-Number.prototype.mul = function (arg: number | string): string {
+Number.prototype.mul = function(arg: number | string): string {
   if (isNaN(+this)) return '--';
   try {
     const a = new BN(+this);
@@ -98,7 +99,7 @@ Number.prototype.mul = function (arg: number | string): string {
 };
 
 // 除法
-Number.prototype.div = function (arg: number | string): string {
+Number.prototype.div = function(arg: number | string): string {
   if (isNaN(+this)) return '--';
   try {
     const a = new BN(+this);
@@ -110,7 +111,7 @@ Number.prototype.div = function (arg: number | string): string {
 };
 
 // 格式化千分位&带单位
-Number.prototype.toFormatUnit = function (digit?: number): string {
+Number.prototype.toFormatUnit = function(digit?: number): string {
   if (isNaN(+this)) return '--';
   // 如果大于一百万 用M单位  || 千位符
   const trillion = 1000000000000;

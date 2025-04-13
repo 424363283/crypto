@@ -1,4 +1,6 @@
 import CoinLogo from '@/components/coin-logo';
+import { MobileBottomSheet } from '@/components/mobile-modal';
+import { Desktop, Mobile } from '@/components/responsive';
 import Modal, { ModalTitle } from '@/components/trade-ui/common/modal';
 import { useResponsive } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
@@ -122,15 +124,24 @@ export const AssetListModal = ({
 
   return (
     <>
-      <Modal
-        visible={visible}
-        onClose={onClose}
-        contentClassName={clsx(isMobile && 'asset-swap-asset-list-modal')}
-        modalContentClassName={'asset-swap-asset-list-modal-content'}
-      >
-        <ModalTitle title={LANG('资产详情')} onClose={onClose} />
-        {content}
-      </Modal>
+      <Desktop>
+        <Modal
+          visible={visible}
+          onClose={onClose}
+          contentClassName={clsx(isMobile && 'asset-swap-asset-list-modal')}
+          modalContentClassName={'asset-swap-asset-list-modal-content'}
+        >
+          <ModalTitle title={LANG('资产详情')} onClose={onClose} />
+          {content}
+        </Modal>
+      </Desktop>
+      <Mobile>
+        <MobileBottomSheet
+          title={ LANG('资产详情') }
+          visible={visible}
+          content={content}
+          close={ onClose } /> 
+      </Mobile>
     </>
   );
 };

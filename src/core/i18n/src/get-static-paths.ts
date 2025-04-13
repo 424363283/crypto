@@ -48,7 +48,7 @@ export const getStaticPathsTradeCallback = (fileName: string) => {
     const ids: [] = await new Promise((resolve) => {
       const filePath = path.join(process.cwd(), 'src', 'core', 'i18n', 'src', 'coin', `${fileName}.json`);
       const _ids = fs.readFileSync(filePath, 'utf-8');
-      console.log(filePath,_ids,'getStaticPathsTradeCallback filePath')
+      //console.log(filePath,_ids,'getStaticPathsTradeCallback filePath')
 
       resolve(JSON.parse(_ids));
     });
@@ -149,7 +149,7 @@ export const getStaticPathsSpotHistoryOrderCallback = () => {
 export const getStaticPathsOrderHistoryCallback = () => {
   return async () => {
     const paths = [];
-    const ids = ['spot-order', 'swap-order', 'swap-u-order'];
+    const ids = ['spot-order', 'swap-order', 'swap-u-order', 'lite-order'];
     for (const locale of LOCALES) {
       for (const id of ids) {
         paths.push({ params: { locale, id } });

@@ -8,8 +8,7 @@ import css from 'styled-jsx/css';
 import { checkIsUsdtType } from '../../../assets-overview/helper';
 import { SWAP_HISTORY_ORDER_STATUS, SWAP_HISTORY_ORDER_TYPES } from '../constants';
 
-import { isSwapDemo } from '@/core/utils/src/is';
-const _isSwapDemo = isSwapDemo();
+import ClipboardItem from '@/components/clipboard-item';
 export const useHistoryCommissionColumns = () => {
   const isUsdtType = checkIsUsdtType();
   useEffect(() => {
@@ -45,19 +44,19 @@ export const useHistoryCommissionColumns = () => {
         );
       },
     },
-    {
-      title: LANG('子钱包账户'),
-      dataIndex: 'subWallet',
-      render: (v: string, item: any) => {
-        return (
-          <span>
-            {_isSwapDemo
-              ? LANG('模拟交易账户')
-              : item?.alias || Swap.Assets.getWallet({ walletId: v, usdt: isUsdtType, withHooks: false })?.alias}
-          </span>
-        );
-      },
-    },
+    // {
+    //   title: LANG('子钱包账户'),
+    //   dataIndex: 'subWallet',
+    //   render: (v: string, item: any) => {
+    //     return (
+    //       <span>
+    //         {_isSwapDemo
+    //           ? LANG('模拟交易账户')
+    //           : item?.alias || Swap.Assets.getWallet({ walletId: v, usdt: isUsdtType, withHooks: false })?.alias}
+    //       </span>
+    //     );
+    //   },
+    // },
     {
       title: LANG('类型'),
       dataIndex: 'type',
@@ -129,7 +128,6 @@ export const useHistoryCommissionColumns = () => {
     },
     {
       title: LANG('触发条件'),
-      align: 'right',
       dataIndex: 'orderType',
       render: (orderType: number, item: any) => {
         if (orderType !== 2) {
@@ -139,6 +137,13 @@ export const useHistoryCommissionColumns = () => {
           item.direction === '1' ? '≥' : '≤'
         } ${Number(item.triggerPrice).toFixed(4)}`;
       },
+    },
+    {
+      title: LANG('订单编号'),
+      dataIndex: 'orderId',
+      render: (orderId: any, item: any) => {
+        return <ClipboardItem text={orderId} />
+      }
     },
     {
       title: LANG('状态'),

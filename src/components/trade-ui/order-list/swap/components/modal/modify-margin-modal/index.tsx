@@ -1,5 +1,5 @@
 import { BottomModal, MobileModal } from '@/components/mobile-modal';
-import Modal, { ModalFooter, ModalTabsTitle } from '@/components/trade-ui/common/modal';
+import Modal, { ModalTitle, ModalFooter, ModalTabsTitle } from '@/components/trade-ui/common/modal';
 import Input from '@/components/trade-ui/trade-view/components/input';
 import { useResponsive } from '@/core/hooks';
 import { Swap } from '@/core/shared';
@@ -12,6 +12,7 @@ import { message } from '@/core/utils';
 import { useEffect } from 'react';
 import { TYPES, store, useMethods } from './store';
 import { clsx, styles } from './styled';
+import { Mobile } from '@/components/responsive';
 
 const ModifyMarginModal = ({ data, visible, onClose }: { data?: any; visible?: any; onClose?: any }) => {
   const { type, inputAmount, liquidationPrice } = store;
@@ -19,7 +20,7 @@ const ModifyMarginModal = ({ data, visible, onClose }: { data?: any; visible?: a
   const { getMaxSubMargin, onChangeAmount } = useMethods({ data, isUsdtType });
   const types = [
     [LANG('增加保证金'), TYPES.ADD],
-    [LANG('减少保证金'), TYPES.MINUS],
+    [LANG('减少保证金'), TYPES.MINUS]
   ];
   const { isMobile } = useResponsive();
   const { settleCoin: code } = Swap.Info.getCryptoData(data.symbol);
@@ -37,6 +38,10 @@ const ModifyMarginModal = ({ data, visible, onClose }: { data?: any; visible?: a
     }
   }, [visible]);
 
+  useEffect(() => {
+    store.inputAmount = '';
+  }, [type]);
+
   const _onConfirm = async () => {
     Loading.start();
     try {
@@ -46,7 +51,7 @@ const ModifyMarginModal = ({ data, visible, onClose }: { data?: any; visible?: a
           positionId: data.positionId,
           type: isAdd ? 1 : 2,
           symbol: data.symbol,
-          amount: inputAmount.toFixed(),
+          amount: inputAmount.toFixed()
         },
         isUsdtType
       );
@@ -67,21 +72,30 @@ const ModifyMarginModal = ({ data, visible, onClose }: { data?: any; visible?: a
 
   const content = (
     <>
+      <Mobile>
+        <ModalTabsTitle
+          closable={false}
+          titles={types.map(v => v[0])}
+          index={isAdd ? 0 : 1}
+          onChange={(i: number) => (store.type = i === 0 ? TYPES.ADD : TYPES.MINUS)}
+          className={clsx('custom-tab')}
+        />
+      </Mobile>
       <div className={clsx('modify-margin-modal')}>
         <div className={clsx('input-label')}>
-          {LANG('总额')} ({code})
+          {LANG('总额')}
         </div>
         <Input
           className={clsx('input')}
           focusActive
-          type='number'
+          type="number"
           placeholder={LANG('输入金额')}
           value={inputAmount}
           onChange={onChangeAmount}
           min={0}
           max={Number(maxValue)}
           digit={scale}
-          blankDisplayValue=''
+          blankDisplayValue=""
           suffix={() => (
             <div className={clsx('suffix')}>
               <span
@@ -92,22 +106,23 @@ const ModifyMarginModal = ({ data, visible, onClose }: { data?: any; visible?: a
               >
                 {LANG('最大')}
               </span>
-              : {maxValue} {code}
+              {maxValue} {code}
             </div>
           )}
         />
-        <div>
-          <Info label={LANG('当前仓位保证金')} value={data?.margin} />
-          <Info label={LANG('最多可增加')} value={inputMax} />
-          <Info label={LANG('最多可减少')} value={inputMin} />
-          <Info label={LANG('调整后参考强平价')} value={liquidationPrice} />
+        <div className={clsx('info-list')}>
+          <Info label={LANG('当前仓位保证金')} value={`${data?.margin} ${code}`} />
+          <Info label={LANG('最多可增加')} value={`${inputMax} ${code}`} />
+          <Info label={LANG('最多可减少')} value={`${inputMin} ${code}`} />
+          <Info label={LANG('调整后参考强平价')} value={`${liquidationPrice} ${code}`} />
         </div>
-        {data?.marginType !== 1 && (
+        {/* {data?.marginType !== 1 && (
           <div className={clsx('auto-margin')}>
             <div>{LANG('自动追加保证金')}</div>
             <Switch
               bgType={2}
               size='small'
+              className={clsx('custom-switch')}
               checked={data?.autoAddMargin == 1}
               onChange={async (value) => {
                 Loading.start();
@@ -140,19 +155,19 @@ const ModifyMarginModal = ({ data, visible, onClose }: { data?: any; visible?: a
               }}
             />
           </div>
-        )}
-        <div className={clsx('bottom-span')}></div>
+        )} */}
       </div>
       {styles}
     </>
   );
   if (isMobile) {
     return (
-      <MobileModal visible={visible} onClose={onClose} type='bottom'>
+      <MobileModal visible={visible} onClose={onClose} type="bottom">
         <BottomModal
-          titles={types.map((v) => v[0])}
-          tabIndex={isAdd ? 0 : 1}
-          onChangeIndex={(i: number) => (store.type = i === 0 ? TYPES.ADD : TYPES.MINUS)}
+          title={LANG('修改保证金')}
+          // titles={types.map((v) => v[0])}
+          // tabIndex={isAdd ? 0 : 1}
+          // onChangeIndex={(i: number) => (store.type = i === 0 ? TYPES.ADD : TYPES.MINUS)}
           onConfirm={_onConfirm}
           disabledConfirm={!inputAmount}
         >
@@ -165,11 +180,13 @@ const ModifyMarginModal = ({ data, visible, onClose }: { data?: any; visible?: a
   return (
     <>
       <Modal visible={visible} onClose={onClose}>
+        <ModalTitle title={LANG('修改保证金')} onClose={onClose} />
         <ModalTabsTitle
-          titles={types.map((v) => v[0])}
+          closable={false}
+          titles={types.map(v => v[0])}
           index={isAdd ? 0 : 1}
           onChange={(i: number) => (store.type = i === 0 ? TYPES.ADD : TYPES.MINUS)}
-          onClose={onClose}
+          className={clsx('custom-tab')}
         />
         {content}
         <ModalFooter onConfirm={_onConfirm} onCancel={onClose} disabledConfirm={!inputAmount} />

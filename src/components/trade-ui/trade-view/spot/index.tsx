@@ -9,7 +9,7 @@ import { Account, SideType, Spot, SpotOrderType } from '@/core/shared';
 import { MarketsMap } from '@/core/shared/src/markets/types';
 import { LOCAL_KEY } from '@/core/store';
 import { getActive, isSpotEtf, message, toMinNumber } from '@/core/utils';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
 import EtfTips from './components/etf-tips';
@@ -41,11 +41,13 @@ function SpotTradeUI() {
     initialPrice: false,
     buyRatioActiveTab: 0,
     sellRatioActiveTab: 0,
-    transferModalVisible: false,
     minPrice: '' as NS,
     maxPrice: '' as NS,
     newPrice: '' as NS,
   });
+
+  const [transferModalVisible, setTransferModalVisible] = useState(false);
+  
 
   useEffect(() => {
     if (!currentSpotContract.market) {
@@ -279,9 +281,7 @@ function SpotTradeUI() {
         enableSkin
         onClick={() => {
           if (isLogin) {
-            setState((draft) => {
-              draft.transferModalVisible = true;
-            });
+            setTransferModalVisible(true);
           } else {
             router.push('/login');
           }
@@ -581,17 +581,15 @@ function SpotTradeUI() {
           </div>
         )}
       </div>
-      <TransferModal
+      {transferModalVisible && <TransferModal
+        open={transferModalVisible}
         defaultSourceAccount={ACCOUNT_TYPE.SWAP_U}
         defaultTargetAccount={enableLite ? ACCOUNT_TYPE.LITE : ACCOUNT_TYPE.SPOT}
-        open={state.transferModalVisible}
         onCancel={() => {
-          setState((draft) => {
-            draft.transferModalVisible = false;
-          });
+          setTransferModalVisible(false);
         }}
         onTransferDone={() => Trade.getBalance()}
-      />
+      />}
       <style jsx>{styles}</style>
     </>
   );

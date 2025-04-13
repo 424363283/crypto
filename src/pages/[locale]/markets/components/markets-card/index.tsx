@@ -35,10 +35,9 @@ const styles = css`
       margin: 0 auto;
       display: grid;
       @media ${MediaInfo.desktop} {
-        height: 134px;
       }
       grid-template-columns: repeat(4, 1fr);
-      grid-gap: 20px;
+      grid-gap: 16px;
       margin-bottom: 40px;
       @media ${MediaInfo.mobileOrTablet} {
         grid-template-columns: repeat(2, 1fr);

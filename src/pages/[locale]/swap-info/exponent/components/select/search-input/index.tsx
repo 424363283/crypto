@@ -16,7 +16,7 @@ const SearchInput = ({ onChange, value, setVisible }: any) => {
 
   return (
     <div className={clsx('search-input', isFocus && 'focus')}>
-      <Image src='/static/images/swap-info/search.png' className='icon' alt='' width='16' height='16' />
+      <Image src='/static/images/account/security-setting/search.svg' className='icon' alt='' width='16' height='16' />
       <input value={value} onChange={(e) => onChange(e.target.value)} onFocus={_focus} onBlur={_blur} />
       <style jsx>{styles}</style>
     </div>
@@ -31,7 +31,8 @@ const styles = css`
     flex-direction: row;
     align-items: center;
     padding: 0 10px;
-    background: var(--theme-background-color-3-2);
+    background: var(--fill-3);
+  
     &:hover {
       border-color: var(--skin-primary-color);
     }
@@ -51,7 +52,9 @@ const styles = css`
       height: 32px;
       border: none;
       flex: 1;
-      background: var(--theme-background-color-3-2);
+      background: var(--fill-3);
+      color: var(--text-primary);
+      
     }
   }
 `;

@@ -49,7 +49,7 @@ function BottomQuotes() {
                     <TradeLink className='chart-link-container' key={item.id} id={item.id} native>
                       <div className='chart-content'>
                         <div className='top-area'>
-                          <CoinLogo coin={item.coin} alt='y-mex' width='24' height='24' className='coin-logo' />
+                          <CoinLogo coin={item.coin} alt='YMEX' width='24' height='24' className='coin-logo' />
                           {`${item.coin}/${item.quoteCoin} ` || '--/--'}
                         </div>
                         <div className='center-area'>
@@ -119,7 +119,7 @@ function BottomQuotes() {
               justify-content: space-between;
               position: relative;
               cursor: pointer;
-              background-color: var(--theme-background-color-4);
+              background-color: var(--fill-2);
               transition: all 0.3s;
               .chart-content {
                 display: flex;

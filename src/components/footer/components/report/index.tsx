@@ -9,23 +9,23 @@ export default function Report({ text }: { text?: string }) {
             placement='top'
             title={
               <div className='report'>
-                <div className='title'>{LANG('若您發現如下內容')}:</div>
-                <div className='text'>1、{LANG('收受賄賂')}</div>
-                <div className='text'>2、{LANG('弄虛作假')}</div>
-                <div className='text'>3、{LANG('洩漏機密')}</div>
-                <div className='text'>4、{LANG('侵佔資產')}</div>
-                <div className='text'>5、{LANG('盜用資源')}</div>
-                <div className='text'>6、{LANG('讓渡利益')}</div>
+                <div className='title'>{LANG('若您发现如下内容')}:</div>
+                <div className='text'>1、{LANG('收受贿赂')}</div>
+                <div className='text'>2、{LANG('弄虚作假')}</div>
+                <div className='text'>3、{LANG('泄漏机密')}</div>
+                <div className='text'>4、{LANG('侵占资产')}</div>
+                <div className='text'>5、{LANG('盗用资源')}</div>
+                <div className='text'>6、{LANG('让渡利益')}</div>
                 <div className='text'>7、{LANG('其他')}</div>
                 <div className='prompt'>
-                  {LANG('您可向{brand}進行舉報。我們將根據舉報內容，向線索提供者予以獎勵，並對提供者信息予以保密', {
+                  {LANG('您可向{brand}进行举报。我们将根据举报内容，向线索提供者予以奖励，并对提供者信息予以保密', {
                     brand: process.env.NEXT_PUBLIC_APP_NAME,
                   })}
                 </div>
                 <div
                     className='email'
                     dangerouslySetInnerHTML={{
-                      __html: LANG('举报邮箱：<span>{email}</span>', { email: 'cs@y-mex.com' }),
+                      __html: LANG('举报邮箱：<span>{email}</span>', { email: 'service@ml.y-mex.com' }),
                     }}
                 />
                 <style jsx>{styles}</style>

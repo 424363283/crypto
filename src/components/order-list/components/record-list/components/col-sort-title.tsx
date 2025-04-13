@@ -22,10 +22,10 @@ export const ColSortTitle = ({
                 '/static/images/common/sort_arrow.svg',
                 '/static/images/common/sort_arrow2.svg',
                 '/static/images/common/sort_arrow1.svg',
-              ][[null, undefined].includes(value as any) ? 0 : (value || 0) + 1]
+              ][value ? 0 : (value || 0) + 1]
             }
-            width={12}
-            height={12}
+            width={10}
+            height={10}
             className={clsx('up', value === 1 && 'selected')}
           />
         </div>

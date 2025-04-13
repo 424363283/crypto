@@ -1,7 +1,7 @@
 import { useResponsive } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
-import { clsx } from '@/core/utils';
+import { clsx, MediaInfo } from '@/core/utils';
 import { memo } from 'react';
 
 const _TradePositionMode = () => {
@@ -32,27 +32,38 @@ const _TradePositionMode = () => {
         {`
           .root {
             display: flex;
-            flex-direction: row;
-            margin-bottom: 25px;
-            height: 35px;
-            border-radius: 8px;
-            padding: 3px;
-            margin: 0 ${isMobile ? '0' : '10px'} 15px;
-            background: var(--theme-trade-bg-color-8);
+            height: 32px;
+            gap: 2px;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+
+            background: var(--fill-3);
+            margin: 16px 10px 16px;
+            @media ${MediaInfo.mobile} {
+              margin: 0 0.5rem;
+              margin-top: 8px;
+              height: 2rem;
+              border-radius: 8px;
+              // padding: 0 0.5rem;
+            }
             > div {
               cursor: pointer;
-              position: relative;
-              flex: 1;
               display: flex;
+              flex: 1 auto;
+              height: 30px;
+              padding: 10px;
               justify-content: center;
               align-items: center;
-              cursor: pointer;
-              user-select: none;
+              gap: 10px;
               border-radius: 8px;
-              color: var(--theme-trade-text-color-1);
-
+              color: var(--text-secondary);
+              @media ${MediaInfo.mobile} {
+                padding: 0;
+              }
               &[data-active='true'] {
-                color: var(--theme-dark-text-1);
+                color: var(--text-white);
+                border-radius: 8px;
                 &:first-child {
                   background: var(--color-green);
                 }

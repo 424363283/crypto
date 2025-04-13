@@ -4,14 +4,17 @@ import css from 'styled-jsx/css';
 const { className, styles } = css.resolve`
   .picker-content {
     display: flex;
-    background: var(--theme-background-color-14);
+    background: var(--fill-3);
     border-radius: 5px;
     align-items: center;
-    padding-left: 10px;
+    padding: 0 16px;
+    >.icon {
+      margin-left: 8px;
+    }
   }
   .picker {
     padding: 0;
-    height: 30px;
+    height: 40px;
     border: 0;
     border-radius: 0;
     background: transparent;
@@ -71,24 +74,23 @@ const { className, styles } = css.resolve`
     :global(.ant-picker-range-wrapper) {
       border: 1px solid rgba(121, 130, 150, 0.1);
     }
-
     :gloabl(.ant-picker-range-arrow::before) {
       background: rgba(121, 130, 150, 0.1);
     }
     :global(.ant-picker-panel-container) {
-      background: var(--theme-background-color-3-2);
+      background: var(--fill-3);
     }
     :global(.ant-picker-cell) :global(.ant-picker-cell-inner),
     :global(.ant-picker-cell-in-view) :global(.ant-picker-cell-inner),
     :global(.ant-picker-content) :global(th),
     :global(.ant-picker-header-view) :global(button),
     :global(.ant-picker-header button) {
-      color: var(--theme-font-color-1);
+      color: var(--text-primary);
     }
     :global(.ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single)::before),
     :global(.ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single)::before),
     :global(.ant-picker-cell-in-view.ant-picker-cell-in-range::before) {
-      background: rgba(248, 187, 55, 0.1);
+      background: var(--label);
     }
     :global(.ant-picker-cell-in-vie.ant-picker-cell-selected::before) {
       background: var(--theme-primary-color);
@@ -98,6 +100,16 @@ const { className, styles } = css.resolve`
     }
     :global(.ant-picker-header-view) {
       color: var(--theme-font-color-1);
+    }
+    :global(.ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-disabled) .ant-picker-cell-inner) {
+      background: var(--text-brand);
+    }
+    :global(.ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-disabled) .ant-picker-cell-inner) {
+      color: var(--text-white);
+      background: var(--text-brand);
+    }
+    :global(.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before) {
+      border: 1px solid var(--brand);
     }
   }
 `;

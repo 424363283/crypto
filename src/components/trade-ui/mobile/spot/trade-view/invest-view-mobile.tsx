@@ -448,6 +448,7 @@ export const InvestViewMobile = () => {
         <TransferModal
           defaultSourceAccount={ACCOUNT_TYPE.SPOT}
           defaultTargetAccount={enableLite ? ACCOUNT_TYPE.LITE : ACCOUNT_TYPE.SWAP_U}
+
           open={transferModalVisible}
           onCancel={() => setTransferModalVisible(false)}
           onTransferDone={() => Trade.getBalance()}

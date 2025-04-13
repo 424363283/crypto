@@ -8,17 +8,20 @@ import { LANG } from '@/core/i18n';
 import { Account } from '@/core/shared';
 import { useLoginUser } from '@/core/store';
 import { MediaInfo, message } from '@/core/utils';
+import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
-import { AddressContentModal } from './address-content';
 import { ColumnItem } from './types';
 import { useColumns } from './useColumns';
+import { Svg } from '@/components/svg';
+const AddressContentModal = dynamic(() => import('./address-content'));
+import { Desktop, MobileOrTablet } from '@/components/responsive';
+import { Size } from '@/components/constants';
 
 export default function AddressTable() {
   const { user } = useLoginUser();
   const router = useRouter();
-  const { theme } = useTheme();
   const [state, setState] = useImmer({
     dataSource: [],
     addAddressVisible: false,
@@ -63,8 +66,9 @@ export default function AddressTable() {
     AlertFunction({
       title: LANG('确定刪除此地址吗？'),
       onOk: () => _deleteAddress(id),
-      theme: theme,
       content: '',
+      centered: true,
+      width: 378,
     });
   };
   const columns = useColumns({ edit: _edit, onConfirmDeleteAddress });
@@ -92,13 +96,13 @@ export default function AddressTable() {
     checkUserAuthentication(() => {
       setState((draft) => {
         draft.addAddressVisible = true;
+        draft.addressItem = null;
       });
     });
   };
   const _hideModal = () => {
     setState((draft) => {
       draft.addAddressVisible = false;
-      draft.addressItem = null;
     });
   };
   // 添加地址成功回调
@@ -115,16 +119,20 @@ export default function AddressTable() {
 
   return (
     <div className='address-content'>
-      <div className='title-box'>
-        <span className='title'>{LANG('地址管理')}</span>
-        <Button type='primary' onClick={_showModal} className='add-address-btn'>
-          {LANG('新建提币地址')}
-        </Button>
-      </div>
+      <Desktop>
+        <div className='title-box'>
+          <span className='title'>{LANG('地址管理')}</span>
+          <Button type='primary' onClick={_showModal} className='add-address-btn'>
+            <Svg src='/static/icons/primary/common/add_address.svg' width={14} height={14}/>
+          <span style={{paddingLeft:'5px'}}> {LANG('新建提币地址')}</span>
+          </Button>
+        </div>
+      </Desktop>
       <Table
         columns={columns}
         dataSource={dataSource}
         showMobileTable
+        isHistoryList
         pagination={{
           current,
           pageSize: 10,
@@ -139,11 +147,21 @@ export default function AddressTable() {
         onCancel={_hideModal}
         hideModal={_hideModal}
       />
-      <EnableAuthenticationModal
-        user={user}
-        visible={safetyVisible}
-        onClose={() => setState((draft) => void (draft.safetyVisible = false))}
-      />
+      {safetyVisible && (
+        <EnableAuthenticationModal
+          user={user}
+          visible={safetyVisible}
+          onClose={() => setState((draft) => void (draft.safetyVisible = false))}
+        />
+      )}
+      <MobileOrTablet>
+        <div className='title-box'>
+          <Button type='primary' size={Size.XL} rounded  onClick={_showModal} className='add-address-btn'>
+            <Svg src='/static/icons/primary/common/add_address.svg' width={14} height={14}/>
+            <span style={{paddingLeft:'5px'}}> {LANG('新建提币地址')}</span>
+          </Button>
+        </div>
+      </MobileOrTablet>
       <style jsx>{styles}</style>
     </div>
   );
@@ -151,51 +169,66 @@ export default function AddressTable() {
 const styles = css`
   .address-content {
     min-height: calc(100vh - 82px);
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+    border-radius: 15px;
+    border:1px solid var(--line-1);
+    background: var(--bg-1);
+    :global(.bottom-pagination) {
+      padding: 15px 20px;
+    }
     @media ${MediaInfo.tablet} {
       min-height: calc(100vh - 300px);
     }
     @media ${MediaInfo.mobile} {
-      height: 100%;
+      position: relative;
+      margin: 0 12px 12px;
     }
     @media ${MediaInfo.mobileOrTablet} {
       border-radius: 15px;
     }
-    background: var(--theme-background-color-2);
     .title-box {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 20px;
       height: 75px;
-      border-bottom: 1px solid var(--theme-border-color-2);
-      @media ${MediaInfo.tablet} {
+      background:var(--bg-1);
+      @media ${MediaInfo.mobileOrTablet} {
         padding: 0 15px;
+        position: absolute;
+        bottom: 20px;
+        left:0;
+        width: calc(100% - 30px);
       }
       .title {
-        font-size: 20px;
+        font-size: 24px;
         font-weight: 500;
-        color: var(--theme-font-color-1);
+        color: var(--text-primary);
         @media ${MediaInfo.mobile} {
           font-size: 16px;
         }
       }
       :global(.add-address-btn) {
-        min-width: 120px;
-        padding: 10px 27px;
-        font-size: 12px;
+        min-width: 140px;
+        font-size: 14px;
+        height: 32px;
+        min-height: 32px;
+        line-height:32px;
+        @media ${MediaInfo.mobile} {
+          width:100%;
+          height: 48px;
+         
+        }
       }
     }
     :global(.ant-table-content .ant-table-cell) {
       word-break: break-all;
     }
     :global(.ant-table-thead .ant-table-cell) {
-      color: var(--theme-font-color-3);
+      color: var(--spec-font-color-2);
       font-size: 12px;
     }
     :global(td.ant-table-cell-row-hover) {
-      background-color: var(--theme-background-color-8);
+      background-color: var(--spec-background-color-3);
     }
   }
   :global(.common-mobile-table) {

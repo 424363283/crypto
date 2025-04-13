@@ -8,6 +8,7 @@ import { orderInstance as Order } from '../order';
 import { socketInstance as Socket } from '../socket';
 import { Utils } from '../utils';
 import { ORDER_TRADE_TYPE, POSITION_MODE, PRICE_TYPE } from './constants';
+import { BN } from '@/core/prototype/src/bn.conf';
 
 export const DEFAULT_SPSL_VALUE = {
   enable: false, // 是否开启
@@ -18,7 +19,13 @@ export const DEFAULT_SPSL_VALUE = {
   stopLossPrice: '', // 下单止损价格
   stopProfitPriceType: PRICE_TYPE.FLAG, // 止盈价格类型
   stopLossPriceType: PRICE_TYPE.FLAG, // 止损价格类型
+  stopProfitRoe: '',
+  stopLossRoe: '',
   isBuy: true, //是否开多
+  stopProfitLimitPrice: '', // 止盈限价
+  stopProfitLimitPriceType: false,// 止盈限价类型[限价|市价]
+  stopLossLimitPrice: '', //止损限价
+  stopLossLimitPriceType: false, // 止损价格类型[限价|市价]
 };
 
 type StoreType = Store<{
@@ -66,6 +73,7 @@ type StoreType = Store<{
     paintOrderData: any;
     paintOrderOptionsVisible: boolean;
     paintOrderOptionsData: any;
+    openContractVisible: boolean;
   };
   spslMode: {
     enable: boolean; // 是否开启
@@ -76,7 +84,14 @@ type StoreType = Store<{
     stopLossPrice: string; // 下单止损价格
     stopProfitPriceType: string; // 止盈价格类型 0 标记 1最新
     stopLossPriceType: string; // 止损价格类型 0 标记 1最新
+    stopLossRoe: string,
+    stopProfitRoe: string,
     isBuy: boolean; //是否开多
+
+    stopProfitLimitPrice: string, // 止盈限价
+    stopLossLimitPrice: string, //止损限价
+    stopProfitLimitPriceType: boolean,// 止盈限价类型[限价|市价]
+    stopLossLimitPriceType: boolean, // 止损价格类型[限价|市价]
   };
   // 下单时间类型
   effectiveTime: number;
@@ -118,10 +133,36 @@ export class TradeField {
     return maxVolume;
   }
   get buyMaxVolumeNumber() {
-    return this.formatPositionNumber(this.buyMaxVolume, Info.getVolumeDigit(this.base.quoteId));
+    let orderPrice = undefined;
+    const { isUsdtType, quoteId } = this.base;
+    const { buyPosition } = Order.getTwoWayPosition({
+      usdt: isUsdtType,
+      openPosition: false,
+      code: quoteId,
+    });
+    const twoWayMode = this.twoWayMode;
+    const isOpenPositionMode = this.isOpenPositionMode;
+    const isClosePosMode = twoWayMode && !isOpenPositionMode;
+    if (isClosePosMode) {
+      orderPrice = Number(buyPosition?.avgCostPrice);
+    }
+    return this.formatPositionNumber(this.buyMaxVolume, Info.getVolumeDigit(this.base.quoteId), orderPrice);
   }
   get sellMaxVolumeNumber() {
-    return this.formatPositionNumber(this.sellMaxVolume, Info.getVolumeDigit(this.base.quoteId));
+    let orderPrice = undefined;
+    const { isUsdtType, quoteId } = this.base;
+    const { sellPosition } = Order.getTwoWayPosition({
+      usdt: isUsdtType,
+      openPosition: false,
+      code: quoteId,
+    });
+    const twoWayMode = this.twoWayMode;
+    const isOpenPositionMode = this.isOpenPositionMode;
+    const isClosePosMode = twoWayMode && !isOpenPositionMode;
+    if (isClosePosMode) {
+      orderPrice = Number(sellPosition?.avgCostPrice);
+    }
+    return this.formatPositionNumber(this.sellMaxVolume, Info.getVolumeDigit(this.base.quoteId), orderPrice);
   }
   get maxVolumeNumber() {
     return this.formatPositionNumber(this.maxVolume, Info.getVolumeDigit(this.base.quoteId));
@@ -198,19 +239,20 @@ export class TradeField {
     // 1）开仓方向与持仓相同，最大可开固定0
     // 2）开仓方向与持仓方向相反，最大可开=持仓总量
 
-    if (!twoWayMode && onlyReducePosition) {
-      const item = positionData.find((v: any) => {
-        if (v.symbol.toUpperCase() === quoteId) {
-          return v;
-        }
-      });
-
-      if (item != null) {
-        const itemBuy = item?.['side'] === '1';
-
-        return itemBuy == isBuy ? 0 : Number(item?.currentPosition || 0);
-      }
-    } else if (!isOpenPosition) {
+    // if (!twoWayMode && onlyReducePosition) {
+    //   const item = positionData.find((v: any) => {
+    //     if (v.symbol.toUpperCase() === quoteId) {
+    //       return v;
+    //     }
+    //   });
+    //
+    //   if (item != null) {
+    //     const itemBuy = item?.['side'] === '1';
+    //
+    //     return itemBuy == isBuy ? 0 : Number(item?.currentPosition || 0);
+    //   }
+    // } else 
+    if (!isOpenPosition) {
       if (isBuy) {
         vol = Number(buyPosition?.availPosition || 0);
       } else {
@@ -245,20 +287,20 @@ export class TradeField {
       inputVolume <= 0
         ? 0
         : Calculate.commissionCost({
-            usdt: isUsdtType,
-            code: quoteId,
-            isBuy,
-            isLimitType: isLimitType,
-            lever,
-            flagPrice,
-            sell1Price: depthData.sell1Price,
-            buy1Price: depthData.buy1Price,
-            inputPrice: Number(price || 0),
-            inputVolume,
-            initMargins: riskDetail.initMargins,
-            maxVolume,
-            positionMode: positionMode,
-          });
+          usdt: isUsdtType,
+          code: quoteId,
+          isBuy,
+          isLimitType: isLimitType,
+          lever,
+          flagPrice,
+          sell1Price: depthData.sell1Price,
+          buy1Price: depthData.buy1Price,
+          inputPrice: Number(price || 0),
+          inputVolume,
+          initMargins: riskDetail.initMargins,
+          maxVolume,
+          positionMode: positionMode,
+        });
 
     if (fixed) {
       return margin?.toFixed(Number(fixed));
@@ -299,19 +341,31 @@ export class TradeField {
     const inputPrice = Number(this.store.price || 0);
     const inputVolume = !isExternalValue ? this.store.volume : Number(_inputVolume);
     const inputSellVolume = this.store.volume;
-    const percentVolume = 0;
+    const percentVolume = 0;//输入端已将比例转成数量，这里就不再用比例进行计算了
     // const percentVolume = this.store.percentVolume;
     const { isUsdtType, quoteId } = this.base;
+    const twoWayMode = this.twoWayMode;
+    const isOpenPositionMode = this.isOpenPositionMode;
+    const isClosePosMode = twoWayMode && !isOpenPositionMode;
+    const { buyPosition, sellPosition } = Order.getTwoWayPosition({
+      usdt: isUsdtType,
+      openPosition: false,
+      code: quoteId,
+    });
+    const position = isBuy ? buyPosition : sellPosition;
+    const openPosPrice = Number(position?.avgCostPrice || 0);
     const isVolUnit = Info.getIsVolUnit(isUsdtType);
     const max = this.getMaxVolume({ isBuy });
     let volume = Number((isBuy ? inputVolume : inputSellVolume) || 0);
     const isLimit = this.orderTradeType.isLimit;
     const depthData = Info.store.depth;
+    const shouldCeil = isClosePosMode;
     const calculateAmountToVolume = Calculate.amountToVolume({
       usdt: isUsdtType,
       value: volume,
       code: quoteId,
-      flagPrice,
+      flagPrice: isClosePosMode ? openPosPrice : flagPrice,
+      shouldCeil
     });
 
     const lever = Info.getLeverFindData(quoteId).leverageLevel;
@@ -326,9 +380,11 @@ export class TradeField {
         sell1Price: depthData.sell1Price,
         volume,
         lever: lever,
+        shouldCeil
       });
       // cost = Number(cost) > max ? max.toString() : cost;
-      return Number(`${cost}`.toFixed(0));
+      // return Number(`${cost}`.toFixed(0));
+      return cost;
     }
 
     if (!percentVolume || isExternalValue) {
@@ -338,7 +394,8 @@ export class TradeField {
       }
       return volume;
     } else {
-      return parseInt(max.mul(percentVolume / 100));
+      const vol = max.mul(percentVolume / 100);
+      return shouldCeil ? Math.ceil(Number(vol)) : parseInt(vol);
     }
   };
 
@@ -346,7 +403,7 @@ export class TradeField {
     return type === PRICE_TYPE.FLAG;
   }
 
-  setModal(next: { selectUnitVisible?: boolean; welcomeDemoVisible?: boolean; rechargeVisible?: boolean; marginTypeVisible?: boolean; walletFormVisible?: boolean; walletFormData?: any; leverVisible?: boolean; leverData?: any; effectiveTimeVisible?: boolean; calculatorVisible?: boolean; calculatorData?: any; spslVisible?: boolean; orderConfirmVisible?: boolean; orderConfirmData?: any; ruleVisible?: boolean; transferVisible?: boolean; transferData?: any; walletSelectVisible?: boolean; walletSelectData?: any; preferenceMenuVisible?: boolean; paintOrderVisible?: boolean; paintOrderData?: any; paintOrderOptionsVisible?: boolean; paintOrderOptionsData?: any }) {
+  setModal(next: { selectUnitVisible?: boolean; welcomeDemoVisible?: boolean; rechargeVisible?: boolean; marginTypeVisible?: boolean; walletFormVisible?: boolean; walletFormData?: any; leverVisible?: boolean; leverData?: any; effectiveTimeVisible?: boolean; calculatorVisible?: boolean; calculatorData?: any; spslVisible?: boolean; orderConfirmVisible?: boolean; orderConfirmData?: any; ruleVisible?: boolean; transferVisible?: boolean; transferData?: any; walletSelectVisible?: boolean; walletSelectData?: any; preferenceMenuVisible?: boolean; paintOrderVisible?: boolean; paintOrderData?: any; paintOrderOptionsVisible?: boolean; paintOrderOptionsData?: any; openContractVisible: boolean }) {
     this.store.modal = { ...this.store.modal, ...next };
   }
 
@@ -362,12 +419,26 @@ export class TradeField {
     this.store.percentVolume = 0;
   }
   onPercentVolumeChange(percent: any) {
-    const buyMaxVolume = this.getMaxVolume({ isBuy: true });
-    const sellMaxVolume = this.getMaxVolume({ isBuy: false });
-    const maxVolume = Math.max(buyMaxVolume, sellMaxVolume);
-    const inputVolume = this.formatPositionNumber(maxVolume * (percent / 100), Info.getVolumeDigit(this.store.quoteId));
-    this.store.volume = `${inputVolume || ''}`.toFixed();
+    const twoWayMode = this.twoWayMode;
+    const isOpenPositionMode = this.isOpenPositionMode;
+    const isClosePosMode = twoWayMode && !isOpenPositionMode;
+    const buyMaxVolume = this.buyMaxVolumeNumber;
+    const sellMaxVolume = this.sellMaxVolumeNumber;
+    const inputVolume = Math.max(Number(buyMaxVolume), Number(sellMaxVolume)) * (percent / 100);
+    if (isClosePosMode) {
+      this.store.volume = inputVolume.toFixed(Info.getVolumeDigit(this.store.quoteId), BN.ROUND_UP);
+    } else {
+      this.store.volume = inputVolume.toFixed(Info.getVolumeDigit(this.store.quoteId));
+    }
     this.store.percentVolume = Number(percent);
+
+    // const buyMaxVolume = this.getMaxVolume({ isBuy: true });
+    // const sellMaxVolume = this.getMaxVolume({ isBuy: false });
+    // const maxVolume = Math.max(buyMaxVolume, sellMaxVolume);
+    // const inputVolume = this.formatPositionNumber(maxVolume * (percent / 100), Info.getVolumeDigit(this.store.quoteId));
+    // this.store.volume = `${inputVolume || ''}`.toFixed();
+    // this.store.percentVolume = Number(percent);
+
   }
 
   onTriggerPriceChange(price: any) {
@@ -395,34 +466,45 @@ export class TradeField {
   };
 
   // 获取当前货币单位的值
-  formatPositionNumber = (num: number, fixed?: number, flagPrice?: number) => {
+  formatPositionNumber = (num: number, fixed?: number, flagPrice?: number, isRoundup?: boolean) => {
     const { isUsdtType, quoteId } = this.base;
     const { baseShowPrecision } = Info.getCryptoData(quoteId);
     return Calculate.formatPositionNumber({
       usdt: isUsdtType,
       value: num,
       code: quoteId,
-      fixed: fixed || baseShowPrecision,
+      fixed: fixed ?? baseShowPrecision,
       flagPrice,
+      isRoundup
     });
   };
 
   // 最小下单数量
   getMinOrderVolume = ({ isBuy, code, costMode }: { isBuy: boolean; code: string; costMode?: boolean }) => {
-    const inputPrice = Number(this.store.price || 0);
-    const isMarketType = !this.orderTradeType.limit;
-    const marketPrice = Info.getMarketPrice(isBuy);
     const cryptoData = Info.getCryptoData(code);
-    const orderPrice = (isMarketType ? marketPrice : inputPrice) || 0;
-    const usdt = Info.getIsUsdtType(code);
+    const isMarketType = !this.orderTradeType.limit;
+    const isUsdtType = Info.getIsUsdtType(code);
+    const twoWayMode = this.twoWayMode;
+    const isOpenPositionMode = this.isOpenPositionMode;
+    const isClosePosMode = twoWayMode && !isOpenPositionMode;
+    const { buyPosition, sellPosition } = Order.getTwoWayPosition({
+      usdt: isUsdtType,
+      openPosition: false,
+      code: code,
+    });
+    const position = isBuy ? buyPosition : sellPosition;
+    const openPosPrice = Number(position?.avgCostPrice || 0);
+    const inputPrice = Number(this.store.price || 0);
+    const marketPrice = Info.getMarketPrice(isBuy);
+    const orderPrice = isClosePosMode ? openPosPrice : (isMarketType ? marketPrice : inputPrice) || 0;
     const lever = Info.getLeverFindData(code).leverageLevel;
     const riskDetail = Info.getRiskDetailData(code, lever);
     const volumeDigit = Info.getVolumeDigit(code);
     let minOrderVol = '0';
-    if (Info.getIsMarginUnit(usdt) && costMode) {
+    if (Info.getIsMarginUnit(isUsdtType) && costMode) {
       // 保证金
       minOrderVol = `${Calculate.commissionCost({
-        usdt: usdt,
+        usdt: isUsdtType,
         code,
         inputVolume: isMarketType ? cryptoData.minMarketDelegateNum : cryptoData.minDelegateNum,
         initMargins: riskDetail.initMargins,
@@ -435,7 +517,8 @@ export class TradeField {
         // positionMode: true,
       })}`;
     } else {
-      minOrderVol = this.formatPositionNumber(isMarketType ? cryptoData.minMarketDelegateNum : cryptoData.minDelegateNum, volumeDigit, orderPrice);
+      const isRoundUp = !isClosePosMode;
+      minOrderVol = this.formatPositionNumber(isMarketType ? cryptoData.minMarketDelegateNum : cryptoData.minDelegateNum, volumeDigit, orderPrice, isRoundUp);
     }
     return formatNumber2Ceil(minOrderVol, volumeDigit, true);
   };

@@ -1,0 +1,6 @@
+export enum LITE_HISTORY_TAB_KEY {
+    CURRENT_COMMISSION = '0',
+    HISTORY_TRANSACTION = '1',
+    ASSET_FLOW = '2',
+  }
+  

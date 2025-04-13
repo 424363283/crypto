@@ -19,6 +19,7 @@ export const TransferModal = () => {
     <TransferModalComponent
       defaultSourceAccount={ACCOUNT_TYPE.SPOT}
       defaultTargetAccount={usdt ? ACCOUNT_TYPE.SWAP_U : ACCOUNT_TYPE.SWAP}
+
       open={visible}
       defaultCoin={(usdt ? 'BTC-USD' : quoteId) as DefaultCoin}
       defaultTargetWallet={walletId}

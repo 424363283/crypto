@@ -36,7 +36,7 @@ export const EtfNetVal = () => {
         }
         :global(.tooltip-wrapper) {
           :global(.ant-tooltip-inner) {
-            background: var(--theme-trade-bg-color-2);
+            background: var(--bg-1);
             color: var(--theme-trade-text-color-1);
             padding: 15px;
             width: 290px;

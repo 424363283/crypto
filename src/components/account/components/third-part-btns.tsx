@@ -97,6 +97,7 @@ export const ThirdPartBtns = () => {
       Loading.end();
     }
   };
+  return null;
   return (
     <>
       <div className={clsx('third-part-btns', isMobile && 'mobile')}>

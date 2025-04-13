@@ -4,7 +4,7 @@ export default function PartnerShipMenu() {
   const list = [
     { name: LANG('全球合伙人'), tips: LANG('将你的流量转换为加密货币佣金'), href: '/partnership/affiliate' },
 
-    { name: LANG('成为Y-MEX ARMY'), tips: LANG('推广Y-MEX并获得奖励'), href: '/partnership/army' },
+    { name: LANG('成为YMEX ARMY'), tips: LANG('推广YMEX并获得奖励'), href: '/partnership/army' },
   ];
   return (
     <>

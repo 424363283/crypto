@@ -5,8 +5,11 @@ export const CommonResponsiveStyle = () => {
     <style jsx global>
       {`
         .asset-count-container .main-content-wrapper .bottom-card {
-          .select-wrapper.select-coin-wrapper .react-dropdown-select {
-            border-radius: 8px;
+          .select-wrapper.select-coin-wrapper, .select-wrapper.select-coin-wrapper .react-dropdown-select {
+            border-radius: 16px;
+            @media ${MediaInfo.mobile} {
+              border-radius: 8px;
+            }
           }
           .select-wrapper.select-coin-wrapper .react-dropdown-select .react-dropdown-select-dropdown {
             top: 50px;

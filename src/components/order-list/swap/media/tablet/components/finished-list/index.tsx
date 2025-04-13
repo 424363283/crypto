@@ -17,14 +17,19 @@ export const FinishedList = ({ active }: { active: boolean }) => {
   }, [active]);
   return (
     <>
-      <div>
+      <div className='finished-wrapper'>
         <ListView data={data} loading={!data.length && loading}>
-          {(index) => {
+          {index => {
             const item = data[index];
 
             return <FinishedItem key={index} data={item} />;
           }}
         </ListView>
+        <style jsx>{`
+          .finished-wrapper {
+            padding: 8px 0;
+          }
+        `}</style>
       </div>
     </>
   );

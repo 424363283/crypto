@@ -1,5 +1,5 @@
 import { LANG } from '@/core/i18n';
-import { clsx, getDayjsDateRange } from '@/core/utils';
+import { clsx, getDayjsDateRange, MediaInfo } from '@/core/utils';
 import dynamic from 'next/dynamic';
 import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
@@ -25,7 +25,7 @@ export const ProfitAnalysisCard = ({ type }: { type: WalletType }) => {
     1: 30,
     2: 90,
   };
-  const { start = '', end = '' } = getDayjsDateRange(new Date(), intervalDay[currentDay.value], true);
+  const { start = '', end = '' } = getDayjsDateRange(new Date(), intervalDay[currentDay.value] - 1, true);
   // 永续盈亏汇总
   const { totalProfit, totalLoss } = useSwapPnlData({
     startDate: start.valueOf(),
@@ -54,18 +54,18 @@ export const ProfitAnalysisCard = ({ type }: { type: WalletType }) => {
     });
   };
   return (
-    <div className='profit-analysis-container'>
+    <div className='profit-analysis-container border-1 rounded-1'>
       <div className='header'>
         <p className='title'>{LANG('盈亏分析')}</p>
         <PnlNavButton type={type} />
       </div>
-      <div className='line'></div>
+      <div className='line hidden'></div>
       <div className='profit-container'>
         <div className='main-days-profit-card'>
           <DaysProfitAndLossSmallCard type={type} />
         </div>
         <div className='days-profit-detail-card'>
-          <div className='date-filter'>
+          <div className='date-filter border-1'>
             {DATES_OPTIONS.map((day, index) => {
               return (
                 <span
@@ -91,28 +91,41 @@ export const ProfitAnalysisCard = ({ type }: { type: WalletType }) => {
 };
 const styles = css`
   .profit-analysis-container {
-    width: 368px;
+    width: 396px;
     border-radius: 15px;
     height: 100%;
-    background-color: var(--theme-background-color-2);
+    background-color: var(--bg-1);
+    @media ${MediaInfo.mobile} {
+      padding: 0 12px;
+      margin-top: 12px;
+      width: calc(100% - 24px);
+    }
     .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 19px 15px 13px 13px;
+      padding: 16px 24px 0;
+      @media ${MediaInfo.mobile} {
+        padding: 16px 0 0;
+      }
       .title {
-        color: var(--theme-font-color-6);
+        color: var(--text-primary);
         font-size: 16px;
         font-weight: 500;
       }
     }
+   
     .line {
-      border: 1px solid var(--theme-border-color-2);
+      border: 1px solid var(--line-1);
       margin-right: 15px;
     }
     .profit-container {
-      padding: 18px 15px 20px;
-      width: 368px;
+      padding: 16px 24px;
+      width: 396px;
+      @media ${MediaInfo.mobile} {
+        width: 100%;
+        padding: 16px 0;
+      }
       .main-days-profit-card {
         width: 100%;
         display: flex;
@@ -122,14 +135,28 @@ const styles = css`
       }
       .days-profit-detail-card {
         margin-top: 14px;
+        .date-filter{
+          display: flex;
+          text-align: center;
+          padding: 3px;
+          border-radius: 3px;
+        }
         .date-opt {
+          flex:1;
           font-size: 12px;
-          color: var(--theme-font-color-3);
-          margin-right: 16px;
+          height: 30px;
+          line-height: 30px;
+          color: var(--text-secondary);
           cursor: pointer;
+          border-radius: 3px;
+          @media ${MediaInfo.mobile} {
+            height: 24px;
+            line-height: 24px;
+          }
         }
         .current-date {
-          color: var(--theme-font-color-1);
+          color: var(--text-primary);
+          background: var(--fill-3);
         }
         :global(.charts-container) {
           :global(.title) {

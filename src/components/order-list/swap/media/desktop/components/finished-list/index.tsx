@@ -5,7 +5,7 @@ import { Swap } from '@/core/shared';
 import { FilterBar } from '@/components/order-list/components/filter-bar';
 import { ColSelectTitle } from '@/components/order-list/components/record-list/components/col-select-title';
 import { store, useData } from '@/components/order-list/swap/stores/finished-list';
-import { SWAP_FINISHED_ORDER_TYPES } from '@/core/shared/src/constants/order';
+import { SWAP_FINISHED_ORDER_TYPES, SWAP_ORDER_DIRECTIONS, SWAP_POSITION_MANAGE } from '@/core/shared/src/constants/order';
 import { formatNumber2Ceil } from '@/core/utils';
 import dayjs from 'dayjs';
 import { useCallback, useEffect, useRef } from 'react';
@@ -33,7 +33,9 @@ export const FinishedList = ({ active }: { active: boolean }) => {
   return (
     <>
       <div className={clsx('finished-list')}>
-        <FilterBar onSubmit={onSubmit} defaultWallet={Swap.Info.getWalletId(isUsdtType)} />
+        {
+          // <FilterBar onSubmit={onSubmit} defaultWallet={Swap.Info.getWalletId(isUsdtType)} />
+        }
         <RecordList
           renderRowKey={(v) => v.orderId}
           data={data}
@@ -64,12 +66,7 @@ const useColumns = ({ isUsdtType }: any) => {
   const storeType = store.type;
 
   const columns: any = [
-    {
-      title: LANG('时间'),
-      dataIndex: 'time',
-      render: (time: any) => dayjs(time).format('YYYY-MM-DD HH:mm:ss'),
-      width: 190,
-    },
+
     {
       title: () => (
         <CodeSelectTitle value={storeCode} onChange={(code: any) => (store.code = code)}>
@@ -84,20 +81,22 @@ const useColumns = ({ isUsdtType }: any) => {
           <div className={clsx('code')}>
             <div className='multi-line-item'>
               <div className={clsx('code-text')}>
-                {Swap.Info.getCryptoData(item.symbol, { withHooks: false }).name}
-                {!!Number(leverageLevel) && <LeverItem lever={leverageLevel} />}
-              </div>
-              <div>
-                {item.marginType === 1 ? LANG('全仓') : LANG('逐仓')}{' '}
-                <WalletName>
-                  {item?.alias ||
-                    Swap.Assets.getWallet({ walletId: item.subWallet, usdt: isUsdtType, withHooks: false })?.alias}
-                </WalletName>
+                {Swap.Info.getCryptoData(item.symbol, { withHooks: false }).name} {LANG('永续')}
               </div>
             </div>
           </div>
         );
       },
+    },
+    {
+      title: LANG('方向'),
+      dataIndex: 'side',
+      render: (side: any, item: any) => {
+        const isBuy = side === '1';
+        return <span className={isBuy ? 'main-green' : 'main-red'}>
+          {SWAP_ORDER_DIRECTIONS[side] + (SWAP_POSITION_MANAGE[item.positionType]?.[item.type] || '')}
+        </span>;
+      }
     },
     {
       title: () => {
@@ -117,27 +116,21 @@ const useColumns = ({ isUsdtType }: any) => {
       },
       dataIndex: 'type',
       width: 150,
-      render: (type: any) => {
-        const keys = [];
-        if (type === '1' || type === '4') {
-          keys.push(SWAP_FINISHED_ORDER_TYPES()[1]);
-        } else {
-          keys.push(SWAP_FINISHED_ORDER_TYPES()[2]);
-        }
-        if (type === '3') {
-          keys.push(SWAP_FINISHED_ORDER_TYPES()[3]);
-        }
-        return keys.map((v) => v).join('/');
+      render: (type: string) => {
+        return SWAP_FINISHED_ORDER_TYPES()[type];
+        // const keys = [];
+        // if (type === '1' || type === '4') {
+        //   keys.push(SWAP_FINISHED_ORDER_TYPES()[1]);
+        // } else {
+        //   keys.push(SWAP_FINISHED_ORDER_TYPES()[2]);
+        // }
+        // if (type === '3') {
+        //   keys.push(SWAP_FINISHED_ORDER_TYPES()[3]);
+        // }
+        // return keys.map((v) => v).join('/');
       },
     },
-    {
-      title: LANG('方向'),
-      dataIndex: 'side',
-      render: (side: any) => {
-        const isBuy = side === '1';
-        return <span className={isBuy ? 'main-green' : 'main-red'}>{isBuy ? LANG('买入') : LANG('卖出')}</span>;
-      },
-    },
+
     {
       title: LANG('成交均价'),
       dataIndex: 'dealPrice',
@@ -149,17 +142,7 @@ const useColumns = ({ isUsdtType }: any) => {
       title: LANG('成交数量'),
       dataIndex: 'dealVolume',
       render: (v: any, item: any) => {
-        return `${formatItemVolume(v, item)} ${Swap.Info.getUnitText({ symbol: item.symbol, withHooks: false })}`;
-      },
-    },
-    {
-      title: LANG('手续费'),
-      dataIndex: 'fee',
-      render: (fee: any, item: any) => {
-        const scale = isUsdtType ? 2 : Number(item.basePrecision);
-        return `${formatNumber2Ceil(fee, scale).toFixed(scale)} ${
-          Swap.Info.getCryptoData(item.symbol, { withHooks: false }).settleCoin
-        }`;
+        return ` ${formatItemVolume(v, item)} ${Swap.Info.getUnitText({ symbol: item.symbol, withHooks: false })}`;
       },
     },
     {
@@ -167,11 +150,29 @@ const useColumns = ({ isUsdtType }: any) => {
       dataIndex: 'tradePnl',
       render: (tradePnl: any, item: any) => {
         const scale = isUsdtType ? 2 : Number(item.basePrecision);
-        return `${formatNumber2Ceil(tradePnl, scale, false).toFixed(scale)} ${
-          Swap.Info.getCryptoData(item.symbol, { withHooks: false }).settleCoin
-        }`;
+        const formatNum = formatNumber2Ceil(tradePnl, scale, false).toFixed(scale);
+        return <span style={{ color: Number(formatNum) >= 0 ? 'var(--color-green)' : 'var(--color-red)' }}>
+          {`${formatNum} ${Swap.Info.getCryptoData(item.symbol, { withHooks: false }).settleCoin}`}
+        </span>
       },
     },
+    {
+      title: LANG('手续费'),
+      dataIndex: 'fee',
+      render: (fee: any, item: any) => {
+        const scale = isUsdtType ? 2 : Number(item.basePrecision);
+        return `${formatNumber2Ceil(fee, scale).toFixed(scale)} ${Swap.Info.getCryptoData(item.symbol, { withHooks: false }).settleCoin
+          }`;
+      },
+    },
+
+    {
+      title: LANG('时间'),
+      dataIndex: 'time',
+      align: 'right',
+      render: (time: any) => dayjs(time).format('YYYY-MM-DD HH:mm:ss'),
+      width: 190,
+    }
   ];
   return columns;
 };

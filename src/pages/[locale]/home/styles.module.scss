@@ -34,7 +34,7 @@
         flex-direction: column;
         .play {
           margin: 10px 0 15px 0;
-          background-color: #782CE8;
+          background-color: #07828B;
           color: #000;
           font-size: 14px;
           text-align: center;
@@ -107,7 +107,7 @@
   }
   .itemActive {
     @extend .item;
-    background-color: #782CE8;
+    background-color: #07828B;
     color: #000;
   }
 }

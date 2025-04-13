@@ -46,6 +46,7 @@ export default function BindEmail() {
 const styles = css`
   .bind-email-container {
     width: 530px;
+    margin: auto;
     button {
       width: 100%;
     }

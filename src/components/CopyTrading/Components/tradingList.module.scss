@@ -1,0 +1,633 @@
+// @import '@/styles/size-variables.scss';
+$sm: 768px;
+.copyTradingTradingList {
+}
+.copyContainer {
+  margin-bottom: 120px;
+  background: var(--bg-1);
+}
+.filterContentBox {
+  background: var(--fill-pop) !important;
+  :global(.ant-drawer-body) {
+    @media (max-width: $sm) {
+      padding: 0;
+    }
+  }
+}
+.noLoginBox {
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  p {
+    font-family: HarmonyOS Sans SC;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 23.44px;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+  }
+  label {
+    font-family: HarmonyOS Sans SC;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16.41px;
+    color: var(--text-secondary);
+  }
+}
+.closeBox {
+  cursor: pointer;
+}
+.becomeTrade {
+  margin: 16px 24px 24px 24px;
+}
+
+.copyHeader {
+  height: 400px;
+  background: var(--label);
+  padding-top: 62px;
+  padding-bottom: 63px;
+  @media (max-width: $sm) {
+    padding: 0;
+    height: 354px;
+  }
+  .copyApply {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    color: var(--text-primary);
+    font-family: 'HarmonyOS Sans SC';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    gap: 16px;
+    margin-bottom: 16px;
+    margin-right: 80px;
+  }
+}
+
+.container {
+  width: 1200px;
+  margin: 0 auto;
+  @media (max-width: $sm) {
+    width: 100%;
+  }
+}
+.copyHeaderContainer {
+  .title {
+    color: var(---text-black);
+    font-family: 'HarmonyOS Sans SC';
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 52px;
+    color: var(--text-primary);
+    @media (max-width: $sm) {
+      font-size: 32px;
+      padding: 32px 24px 0 24px;
+      line-height: 40px;
+    }
+  }
+}
+.copyMine {
+  display: flex;
+  padding: 16px 24px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  align-self: stretch;
+  border-radius: 24px;
+  background: var(--bg-1);
+  color: var(--text-primary);
+}
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+}
+.copyInfo {
+  width: 100%;
+}
+.myIncome {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+  color: var(--text-secondary);
+  font-family: 'HarmonyOS Sans SC';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+@media (max-width: $sm) {
+  .copyMine {
+    border-radius: 0;
+  }
+}
+.textRight {
+  text-align: right;
+}
+.myInTitle {
+  color: var(--text-primary);
+  font-family: 'HarmonyOS Sans SC';
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-bottom: 8px;
+}
+.searchBox {
+  margin-top: 78px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .title {
+    color: var(--brand);
+    font-family: 'HarmonyOS Sans SC';
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+  @media (max-width: $sm) {
+    .title {
+      font-size: 18px;
+    }
+  }
+  .inputSearch {
+    width: 240px;
+    height: 40px;
+    border: none;
+    border-radius: 40px;
+    background: var(--fill-3);
+    input {
+      &::placeholder {
+        color: var(--text-secondary) !important;
+      }
+      &::-webkit-input-placeholder {
+        color: var(--text-secondary) !important;
+      }
+    }
+    &.ant-input-affix-wrapper > input.ant-input {
+      color: var(--text-primary);
+    }
+  }
+}
+@media (max-width: $sm) {
+  .searchBox {
+    margin-top: 24px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--line-1);
+    padding-bottom: 8px;
+  }
+}
+.tabsBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .tabList {
+    display: flex;
+    align-items: center;
+    margin: 40px 0;
+    overflow-y: auto;
+
+    .tabItem {
+      color: var(--text-tertiary);
+      font-family: 'HarmonyOS Sans SC';
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      margin-right: 24px;
+      word-break: keep-all;
+      cursor: pointer;
+      &.active {
+        color: var(--brand);
+      }
+    }
+  }
+  @media (max-width: $sm) {
+    .tabList {
+      padding: 0;
+      margin: 0;
+    }
+  }
+  .filterBox {
+    display: flex;
+    width: 80px;
+    height: 32px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 24px;
+    background: var(--text-brand);
+    color: var(--text-white);
+    font-family: 'HarmonyOS Sans SC';
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    cursor: pointer;
+    .filterIcon {
+      margin-right: 4px;
+    }
+  }
+  @media (max-width: $sm) {
+    .filterBox {
+      background: transparent;
+      width: auto;
+      border: none;
+    }
+  }
+}
+@media (max-width: $sm) {
+  .tabsBox {
+    margin: 0 16px;
+    margin-top: 24px;
+  }
+}
+.copyBox {
+  .copyTradingList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 24px;
+    grid-row-gap: 24px;
+  }
+  @media (max-width: $sm) {
+    margin: 24px 0;
+    .copyTradingList {
+      grid-template-columns: repeat(1, 1fr);
+      margin: 0 16px;
+    }
+  }
+}
+.copyItem {
+  cursor: pointer;
+  padding: 24px;
+  border-radius: 24px;
+  border: 1px solid var(--line-2);
+  color: var(--text-secondary);
+  font-family: 'HarmonyOS Sans SC';
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  height: 424px;
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    margin-right: 8px;
+  }
+  .copyName {
+    color: var(--text-primary);
+    font-family: 'HarmonyOS Sans SC';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-bottom: 4px;
+  }
+  .currentAmount {
+    color: var(--text-primary);
+  }
+  .copyIncome {
+    color: var(--text-true);
+    font-family: 'HarmonyOS Sans SC';
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-top: 8px;
+  }
+  .copyCount {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .copyLine {
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line-2);
+  }
+  .symbolBox {
+    gap: 4px;
+  }
+  .copySymbol {
+    width: 24px;
+    height: 24px;
+  }
+
+  .copyEarn {
+    width: 20px;
+    height: 20px;
+  }
+  .copyItemSubmit {
+    display: flex;
+    height: 48px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 40px;
+    color: var(--text-brand);
+    border: 1px solid var(--brand);
+    text-align: center;
+    font-family: 'HarmonyOS Sans SC';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    cursor: pointer;
+    &:hover {
+      background: var(--brand);
+      color: var(--text-white);
+    }
+  }
+}
+@media (max-width: $sm) {
+  .copyItem {
+    height: auto;
+  }
+}
+
+.gap4 {
+  gap: 4px;
+}
+.gap16 {
+  gap: 16px;
+}
+.flexCenter {
+  display: flex;
+  align-items: center;
+}
+.flexSpan {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.flexCol {
+  justify-content: flex-start;
+  flex-direction: column;
+}
+.flexAround {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.mt24 {
+  margin-top: 24px;
+}
+.mb24 {
+  margin-bottom: 24px;
+}
+.mb32 {
+  margin-bottom: 24px;
+}
+.my16 {
+  margin: 16px 0;
+}
+.mb16 {
+  margin-bottom: 16px;
+}
+
+.pl8 {
+  padding-left: 8px;
+}
+.amontItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.setBox {
+  color: var(--text-secondary);
+  font-family: 'HarmonyOS Sans SC';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  .setHeader {
+    margin-bottom: 40px;
+    @media (max-width: $sm) {
+      padding: 12px 24px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--line-1);
+    }
+  }
+  .setTitle {
+    color: var(--text-primary);
+    font-family: 'HarmonyOS Sans SC';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+  .filterSetContent {
+    @media (max-width: $sm) {
+      padding: 0 24px;
+    }
+  }
+}
+.setMutitle {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  .multipleItem {
+    font-family: 'HarmonyOS Sans SC';
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 0.5px solid var(--line-3);
+    height: 24px;
+    justify-content: center;
+    color: var(--text-primary);
+    &.itemSelect {
+      color: var(--text-brand);
+      border: 0.5px solid var(--text-brand);
+    }
+  }
+  .usertag {
+    height: 32px;
+  }
+}
+.contractSearch {
+  width: 132px;
+  height: 32px;
+  border: 1px solid var(--skin-primary-color);
+  border-radius: 40px;
+  background: var(--fill-3);
+  &.ant-input-outlined:focus {
+    border-color: var(--text-brand);
+  }
+  &:hover {
+    border-color: var(--text-brand);
+  }
+  &.w240 {
+    width: 240px;
+  }
+}
+.contractSelect {
+  margin-bottom: 16px;
+  .currencyOpt {
+    color: var(--text-primary);
+    margin-left: 16px;
+  }
+}
+.copySubmit {
+  margin-top: 16px;
+  margin-bottom: 51px;
+  gap: 16px;
+  .copyBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    text-align: center;
+    font-family: 'HarmonyOS Sans SC';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    border-radius: 24px;
+    border: 1px solid var(--brand);
+  }
+  .copyReset {
+    color: var(---text-brand);
+    width: 40%;
+  }
+  .copyConfirm {
+    color: var(--text-white);
+    background: var(--brand);
+    width: 50%;
+  }
+}
+
+.symbolList {
+  .symbolHeaderItem {
+    display: flex;
+    align-items: center;
+    .symbolLogoImg {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+    .symbolName {
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .symbolType {
+      color: var(--text-primary);
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+    .symbolTadingType {
+      display: flex;
+      padding: 4.5px 16px;
+      align-items: center;
+      border-radius: 4px;
+      background: var(--fill-3);
+      color: var(--text-secondary);
+      margin-left: 8px;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+    }
+    .symbolLeverage {
+      display: flex;
+      padding: 4.5px 16px;
+      align-items: center;
+      border-radius: 4px;
+      background: var(--green_light);
+      color: var(--color-green);
+      margin-left: 8px;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+    }
+    .symbolLeverageUp {
+      margin-right: 8px;
+    }
+    .symbolTadingTime {
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      color: var(--text-tertiary);
+      margin-left: 8px;
+    }
+  }
+  .symbolItemContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    margin-right: 40px;
+  }
+  .symbolListInfo {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .symbolListTitle {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    margin-bottom: 26px;
+    &:nth-of-type(2) {
+      margin-bottom: 0px;
+    }
+  }
+  .symbolListDesc {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    margin-bottom: 26px;
+    &:nth-of-type(2) {
+      margin-bottom: 0px;
+    }
+  }
+  .symbolListTitleInfo {
+    margin-right: 8px;
+    color: var(--text-tertiary);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+  }
+  .symbolListware {
+    display: flex;
+    align-items: flex-start;
+  }
+  .symbolTradingBtn {
+    padding: 10px 52px;
+    border-radius: 24px;
+    background: var(--brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-white);
+    cursor: pointer;
+  }
+  .symbolItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 24px;
+  }
+}
+
+.textPrimary {
+  color: var(--text-primary);
+  &:hover {
+    color: var(--text-primary);
+  }
+}

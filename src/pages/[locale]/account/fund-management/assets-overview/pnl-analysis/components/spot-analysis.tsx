@@ -121,7 +121,7 @@ export default function SpotAnalysis() {
       1: 30,
       2: 90,
     };
-    const { start = '', end = '' } = getDayjsDateRange(new Date(), intervalDay[index], true);
+    const { start = '', end = '' } = getDayjsDateRange(new Date(), intervalDay[index] - 1, true);
     setState((draft) => {
       draft.selectedDayRange = value[0].value;
       draft.startDate = String(start);
@@ -226,7 +226,6 @@ export default function SpotAnalysis() {
   };
   return (
     <div className='spot-analysis-container'>
-      <Nav title={LANG('盈亏分析详情')} />
       <SpotPnlDetailCard />
       <div className='spot-bottom-card'>
         <div className='left-column'>

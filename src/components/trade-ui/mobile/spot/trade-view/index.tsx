@@ -14,11 +14,13 @@ import { SUBSCRIBE_TYPES, useWs } from '@/core/network';
 import { LIST_TYPE, MarketsMap, SideType, Spot, SpotOrderType, TRADE_TAB } from '@/core/shared';
 import { LOCAL_KEY, SESSION_KEY, useAppContext } from '@/core/store';
 import { getActive, toMinNumber } from '@/core/utils';
-import { Tooltip, message } from 'antd';
+import { message } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useImmer } from 'use-immer';
 import { GridViewMobile } from './grid-view-mobile';
 import { InvestViewMobile } from './invest-view-mobile';
+import clsx from 'clsx';
+import Tooltip from '@/components/trade-ui/common/tooltip';
 
 const Trade = Spot.Trade;
 const Strategy = Spot.Strategy;
@@ -294,6 +296,7 @@ const TradeView = () => {
               grids={[0, 25, 50, 75, 100]}
               onChange={(val: number) => onSliderChanged(val, true)}
               renderText={() => `${sliderData.value}%`}
+              tooltip={{ formatter: (value) => `${value}%` }}
               {...sliderData}
             />
           </div>
@@ -435,6 +438,7 @@ const TradeView = () => {
               grids={[0, 25, 50, 75, 100]}
               onChange={(val: number) => onSliderChanged(val, true)}
               renderText={() => `${sliderData.value}%`}
+              tooltip={{ formatter: (value) => `${value}%` }}
               {...sliderData}
             />
           </div>
@@ -578,7 +582,6 @@ const TradeView = () => {
               )}
               <li>
                 <Tooltip
-                  color='#fff'
                   placement='topRight'
                   trigger={'click'}
                   arrow={false}
@@ -588,7 +591,9 @@ const TradeView = () => {
                       : LANG('市价委托是指按照目前市场价格进行快速买卖。')
                   }
                 >
-                  <Svg src={'/static/images/trade/tips.svg'} width='17' height='17' />
+                  <div className={clsx('info')}>
+                    <CommonIcon name='common-info-0' size={16} />
+                  </div>
                 </Tooltip>
               </li>
             </ul>
@@ -605,8 +610,8 @@ const TradeView = () => {
           </div>
         </BottomModal>
       </MobileModal>
-      {(selectType === null || selectType === LIST_TYPE.GRID) && <GridViewMobile />}
-      {selectType === LIST_TYPE.INVEST && <InvestViewMobile />}
+      {/* (selectType === null || selectType === LIST_TYPE.GRID) && <GridViewMobile /> */}
+      {/* selectType === LIST_TYPE.INVEST && <InvestViewMobile /> */}
       <BaseModalStyle />
       <style jsx>{`
         .container {

@@ -22,7 +22,7 @@ const LineChart = (props: PriceChartProps) => {
   const {
     reportPnls,
     chartId,
-    lineColor = '#782CE8',
+    lineColor = '#ffd30f',
     symbolUnit,
     splitLine = {
       show: true, // Hide horizontal grid lines
@@ -161,6 +161,6 @@ const LineChart = (props: PriceChartProps) => {
   }, [JSON.stringify(reportPnls), splitLine]);
 
   if (!data.prices?.length) return <EmptyComponent />;
-  return <div ref={chartRef} style={{ width: isMobile ? '100%' : '757px', height: '236px', margin: '0 auto' }}></div>;
+  return <div ref={chartRef} style={{ width: '100%', height: '252px', margin: '0 auto' }}></div>;
 };
 export default LineChart;

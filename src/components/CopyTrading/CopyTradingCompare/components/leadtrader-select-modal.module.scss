@@ -1,0 +1,24 @@
+.leadtraderSelectModal {
+  .selectFilterBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .leadtraderSelectModalContent {
+    width: 640px !important;
+    height: 700px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .leadtraderSelectModalContentComponent {
+      align-self: stretch;
+      padding: 0 !important;
+
+      .leadtraderSelectContent {
+        .leadtraderSelectList {}
+      }
+    }
+  }
+}

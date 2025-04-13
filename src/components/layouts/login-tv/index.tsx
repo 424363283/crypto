@@ -18,16 +18,15 @@ export default function LoginCommonLayout(props: IProps) {
     <>
       <UniversalLayout hideFooter className='login-common' bgColor='var(--theme-secondary-bg-color)'>
         <div className={clsx('login-bg', props.className)}>
-          {props.children ? (
-            props.children
-          ) : (
-            <div className='bonus-logo-wrapper'>
-               
-            </div>
-          )}
+          {
+            props.children ? (
+              props.children
+            ) : (
+              <div className='bonus-logo-wrapper'>
+              </div>
+            )
+          }
           <div className={clsx('login-box', props.loginBoxClassName)}>
-             
-             
             {<EntryPoint />}
           </div>
           <style jsx>{styles}</style>
@@ -85,15 +84,6 @@ const styles = css`
         @media (${MediaInfo.mobile}) {
           display: none;
         }
-      }
-      :global(.bonus-mobile) {
-        position: absolute;
-        right: 0;
-        top: 70px;
-        z-index: 10;
-        font-size: 0;
-        width: 142px;
-        height: auto;
       }
     }
     :global(.pc-bonus-img) {

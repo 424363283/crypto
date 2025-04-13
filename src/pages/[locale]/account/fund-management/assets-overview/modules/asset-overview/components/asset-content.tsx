@@ -1,3 +1,4 @@
+import { useCalcSwapAssets, useRouter } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Account } from '@/core/shared';
 import { MediaInfo } from '@/core/utils';
@@ -5,9 +6,10 @@ import dynamic from 'next/dynamic';
 import React from 'react';
 import css from 'styled-jsx/css';
 import { AssetsBottomTitle } from '../../../components/assets-bottom-title';
-import { useCalcSwapAssets } from '../../../hooks/use-swap-balance';
 import { AssetItem } from './asset-item';
 const PieChart = dynamic(() => import('@/components/chart/pie-chart'), { ssr: false });
+import { Desktop } from '@/components/responsive';
+
 
 interface AssetsProps {
   color?: string;
@@ -17,39 +19,62 @@ export const AssetContent: React.FC<AssetsProps> = React.memo(({ color }) => {
   const classNames = ['asset-card-list', `color-${color}`];
   const { liteAssetsStore, spotAssetsStore } = Account.assets;
   const enableLite = process.env.NEXT_PUBLIC_LITE_ENABLE === 'true';
+  const router = useRouter();
+  const enableP2p = false;//router.query.locale !== 'zh';
   const { spotTotalBalance } = spotAssetsStore;
+  const p2pTotalBalance = 0;
   const { assets, occupiedBalance, floatProfit } = liteAssetsStore;
   const swapUBalance = useCalcSwapAssets({ isSwapU: true }).total.totalMargin2;
   const swapBalance = useCalcSwapAssets({ isSwapU: false }).total.totalMargin2;
 
   const liteBalance = enableLite ? occupiedBalance.add(assets.money).add(floatProfit || 0) : '0';
   const _spotTotalBalance = Number(spotTotalBalance) < 0 ? 0 : +spotTotalBalance || 0;
-  const totalBalance = _spotTotalBalance.add(swapBalance).add(swapUBalance);
+  const totalBalance = enableP2p
+    ? _spotTotalBalance.add(swapBalance).add(swapUBalance).add(p2pTotalBalance)
+    : _spotTotalBalance.add(swapBalance).add(swapUBalance);
 
   return (
     <div className='assets-bottom-card'>
-      <AssetsBottomTitle />
+      <Desktop>
+        <AssetsBottomTitle />
+      </Desktop>
       <div className={classNames.join(' ')}>
-        <PieChart contractuBalance={+swapUBalance} spotBalance={_spotTotalBalance} />
+        <PieChart
+          contractuBalance={+swapUBalance}
+          contractBalance={+swapBalance}
+          spotBalance={_spotTotalBalance}
+          p2pBalance={+p2pTotalBalance}
+        />
         <div className='assets-list'>
           <AssetItem
             title={LANG('现货账户')}
             amount={_spotTotalBalance}
-            color='#FFD30F'
+            color='var(--brand)'
             percent={_spotTotalBalance.div(totalBalance)}
           />
+
           <AssetItem
             title={LANG('U本位账户')}
             amount={swapUBalance}
-            color='#43BC9C'
+            color='var(--yellow)'
             percent={swapUBalance.div(totalBalance)}
           />
-          {/* <AssetItem
-            title={LANG('币本位账户')}
-            amount={swapBalance}
-            color='#2C66D1'
-            percent={swapBalance.div(totalBalance)}
-          /> */}
+          { 
+          // <AssetItem
+          //   title={LANG('币本位账户')}
+          //   amount={swapBalance}
+          //   color='#2C66D1'
+          //   percent={swapBalance.div(totalBalance)}
+          // /> 
+          }
+          {enableP2p ? (
+            <AssetItem
+              title={LANG('P2P账户')}
+              amount={p2pTotalBalance}
+              color='#CC783C'
+              percent={p2pTotalBalance.div(totalBalance)}
+            />
+          ) : null}
         </div>
       </div>
       <style jsx>{styles}</style>
@@ -58,49 +83,56 @@ export const AssetContent: React.FC<AssetsProps> = React.memo(({ color }) => {
 });
 const styles = css`
   .assets-bottom-card {
-    background-color: var(--theme-background-color-2);
+    display: flex;
+    flex-direction: column;
+    flex: 1 auto;
+    overflow: hidden;
+    background-color: var(--bg-1);
+    border: 1px solid var(--line);
     @media ${MediaInfo.mobile} {
       margin-top: 10px;
       border-radius: 15px;
     }
     @media ${MediaInfo.tablet} {
       border-radius: 15px;
+      border:none;
     }
     .asset-card-list {
-      background: var(--theme-background-color-2);
+      overflow: hidden;
+      background: var(--bg-1);
       position: relative;
       width: 100%;
       display: flex;
-      margin-top: 30px;
+      flex: 1 auto;
       flex-direction: row;
       align-items: center;
       border-radius: 15px;
       justify-content: space-between;
+      padding: 0 0 0 48px;
+      gap: 64px;
       @media ${MediaInfo.tablet} {
         border-radius: 15px;
       }
       @media ${MediaInfo.mobile} {
-        flex-direction: column;
-        padding: 0px 11px 17px 9px;
         margin-top: 15px;
+        padding:0;
+        gap: 14px;
       }
       :global(.chart) {
-        margin-left: 45px;
-        margin-right: 65px;
         @media ${MediaInfo.mobile} {
           position: relative;
-          top: 0;
-          left: 0;
         }
       }
       .assets-list {
         display: flex;
+        flex: 1 auto;
         flex-direction: column;
-        width: 100%;
-        margin-left: 225px;
+        max-height: 146px;
+        overflow: auto;
+        justify-content: space-around;
+        gap: 16px;
         @media ${MediaInfo.mobile} {
-          margin-top: 150px;
-          margin-left: 0px;
+          width:200px;
         }
       }
     }

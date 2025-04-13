@@ -7,6 +7,7 @@ import { CURRENT_VIEW, store } from './../../store';
 import BottomOption from './components/bottom-option';
 import MiddleOption from './components/middle-option';
 import MarketTable from './table';
+import { useCascadeOptions } from '../hooks';
 
 const Feeds = dynamic(() => import('./link-feeds'), { ssr: false });
 const ItbWidget = dynamic(() => import('./itb-widget'), { ssr: false });
@@ -24,11 +25,17 @@ const MainContent = () => {
 };
 
 const MarketsView = () => {
+  const config = useCascadeOptions();
   return (
     <div className='market-container'>
       <div className='markets-view'>
-        <MiddleOption />
-        <BottomOption />
+        <div className='multi-options'>
+          <MiddleOption />
+          {config.thirdOptions?.length > 0 && (<>
+            <div className='line'></div>
+            <BottomOption />
+          </>)}
+        </div>
         <MainContent />
       </div>
       <style jsx>{styles}</style>
@@ -45,12 +52,22 @@ const styles = css`
     @media ${MediaInfo.mobile} {
       margin-top: 0;
     }
-    background: var(--theme-background-color-2);
+    .multi-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      gap: 16px;
+    }
+    .line {
+      width: 2px;
+      height: 32px;
+      background: var(--line-2);
+    }
     .markets-view {
       height: 100%;
       max-width: var(--const-max-page-width);
       margin: 0 auto;
-      background-color: var(--theme-background-color-2);
       .main-content {
         overflow-y: hidden;
       }

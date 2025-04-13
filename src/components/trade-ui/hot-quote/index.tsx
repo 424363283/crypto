@@ -2,46 +2,58 @@ import { ScrollXWrap } from '@/components/scroll-x-wrap';
 import { TradeLink } from '@/core/i18n';
 import { SUBSCRIBE_TYPES, useWs } from '@/core/network';
 import { Group, MarketItem, Markets } from '@/core/shared';
-import { MediaInfo, formatDefaultText, isSpot } from '@/core/utils';
+import { MediaInfo, formatDefaultText, isLite, isLiteTradePage, isSpot, isSpotTradePage, isSwap, isSwapTradePage } from '@/core/utils';
 import { useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
 
 export const HotQuote = () => {
-  const [spotHotList, setSpotHotList] = useState<MarketItem[]>([]);
-
-  const getSpotHotList = async () => {
+  const [tradeHotList, setTradeHotList] = useState<MarketItem[]>([]);
+  const _isSpotTradePage = isSpotTradePage();
+  const _isSwapTradePage = isSwapTradePage();
+  const _isLiteTradePage = isLiteTradePage();
+  const getTradeHotList = async () => {
     const group = await Group.getInstance();
     const hot_ids = group.getHotIds();
-    const list: string[] = [];
-
-    hot_ids.forEach((item) => {
-      if (isSpot(item)) {
-        list.push(item);
+    const hotList = hot_ids.reduce((list: string[], item: string) => {
+      if (_isSpotTradePage) {
+        if (isSpot(item)) {
+          list.push(item);
+        }
+      } else if (_isSwapTradePage) {
+        if (isSwap(item)) {
+          list.push(item);
+        }
+      } else if (_isLiteTradePage) {
+        if (isLite(item)) {
+          list.push(group.getLiteQuoteCode(item));
+        }
       }
-    });
-    return list;
+      return list;
+
+    }, []);
+    return hotList;
   };
 
   useWs(SUBSCRIBE_TYPES.ws3001, async (data) => {
-    const list = await getSpotHotList();
+    const list = await getTradeHotList();
     const _data = Markets.getMarketList(data, list);
-    setSpotHotList(_data);
+    setTradeHotList(_data);
   });
 
   useEffect(() => {
     const myEvent = new Event('resize');
     window.dispatchEvent(myEvent);
-  }, [spotHotList]);
+  }, [tradeHotList]);
 
   return (
     <>
       <div className='container isDesktopPro'>
         <ScrollXWrap wrapClassName='hot-quote-container'>
           <ul>
-            {spotHotList.map((item) => (
+            {tradeHotList.map((item) => (
               <li key={item.id}>
                 <TradeLink id={item.id}>
-                  {item.id.replace('_', '/')}
+                  {isLite(item?.id) ? <span>{item?.name}</span> : <span>{`${item?.coin}${item?.type === 'SPOT' ? '/' : ''}${item?.quoteCoin} `}</span>}
                   <span className='rate' style={{ color: `var(${item.isUp ? '--color-green' : '--color-red'})` }}>
                     {formatDefaultText(item.rate)}%
                   </span>
@@ -84,10 +96,10 @@ const styles = css`
         li {
           margin-right: 33px;
           :global(a) {
-            color: var(--theme-font-color-1);
+            color: var(--text-primary);
             font-size: 12px;
             .rate {
-              margin-left: 5px;
+              margin-left: 8px;
             }
           }
         }
@@ -96,15 +108,15 @@ const styles = css`
   }
   .isDesktopPro {
     :global(.prev) {
-      left: 18px !important;
+      left: 24px !important;
     }
     :global(.next) {
-      right: 18px !important;
+      right: 24px !important;
     }
     :global(.hot-quote-container) {
       display: flex;
       align-items: center;
-      margin: 0 47px;
+      margin: 0 24px;
     }
   }
 `;

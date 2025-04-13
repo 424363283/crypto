@@ -2,11 +2,11 @@ import Nav from '@/components/nav';
 import { MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
 
-export const TopCommonCard = ({ children, title }: { children: JSX.Element[]; title: string }) => {
+export const TopCommonCard = ({ children, title }: { children: JSX.Element[]; title?: string }) => {
   return (
     <div className='top-common-card'>
       <div className='main-content'>
-        <Nav title={title} />
+        { title && <Nav title={title} /> }
         {children}
       </div>
       <style jsx>{styles}</style>

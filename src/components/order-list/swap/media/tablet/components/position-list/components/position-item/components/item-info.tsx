@@ -1,11 +1,16 @@
 import CommonIcon from '@/components/common-icon';
+import { LANG } from '@/core/i18n';
+import { clsx } from '@/core/utils';
+import YIcon from '@/components/YIcons';
 
 export const ItemInfo = ({
+  buy,
   marginType,
   lever,
   onLeverClick,
-  assetsPage,
+  assetsPage
 }: {
+  buy: boolean;
   marginType: any;
   lever: any;
   onLeverClick: any;
@@ -13,46 +18,52 @@ export const ItemInfo = ({
 }) => {
   return (
     <>
-      <div className='item-info'>
-        <div className='actions'>
-          <div>
-            {marginType}
-            {' /'}
-          </div>
-          <div onClick={onLeverClick}>
-            {lever}X
-            {!assetsPage && (
-              <CommonIcon name='common-small-edit-0' width={12} height={13} enableSkin className='icon' />
-            )}
-          </div>
+      <div className="item-info">
+        <div className={clsx('position-type', buy ? 'buy' : 'sell')}>{LANG(buy ? '买多' : '卖空')}</div>
+        <div className="margin-type">{marginType}</div>
+        <div className="actions" onClick={onLeverClick}>
+          <span> {lever}X</span>
+          {!assetsPage && <YIcon.positionEdit className={clsx('editIcon')} />}
         </div>
       </div>
       <style jsx>{`
         .item-info {
-          margin-left: 8px;
           display: flex;
           align-items: center;
-          justify-content: space-between;
+          justify-content: flex-start;
+          gap: 4px;
+          .position-type,
+          .margin-type {
+            width: 3rem;
+            height: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 400;
+          }
+          .position-type {
+            color: var(--text-white);
+            &.buy {
+              background: var(--color-green);
+            }
+            &.sell {
+              background: var(--color-red);
+            }
+          }
+          .margin-type {
+            background: var(--fill-3);
+            color: var(--text-secondary);
+          }
           .actions {
             display: flex;
             align-items: center;
-            > div {
-              display: flex;
-              align-items: center;
-              padding: 2.5px 0;
-              border-radius: 4px;
-              font-size: 12px;
-              color: var(--theme-trade-text-color-3);
-              white-space: nowrap;
-              &:last-child {
-                color: var(--skin-main-font-color);
-                padding-left: 4px;
-                padding-right: 4px;
-              }
-              :global(.icon) {
-                margin-left: 4px;
-              }
-            }
+            font-size: 12px;
+            color: var(--text-primary);
+            white-space: nowrap;
+            gap: 4px;
           }
         }
       `}</style>

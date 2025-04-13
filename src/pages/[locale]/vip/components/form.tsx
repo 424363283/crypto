@@ -59,7 +59,7 @@ const Form = () => {
           <div className='l-title'>{LANG('他所VIP申请')}</div>
           <div className='l-text'>
             {LANG(
-              '其他交易所的VIP身份用户可以申请直接成为Y-MEX的VIP，提交申请表单并上传他所VIP等级页面和近30天交易量截图，符合申请条件的用户24小时内会有专属客户经理与您取得联系'
+              '其他交易所的VIP身份用户可以申请直接成为YMEX的VIP，提交申请表单并上传他所VIP等级页面和近30天交易量截图，符合申请条件的用户24小时内会有专属客户经理与您取得联系'
             )}
           </div>
           <div className='l-title-1'>{LANG('VIP专属福利')}</div>

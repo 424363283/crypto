@@ -7,11 +7,12 @@ import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
 import { SWAP_BOUNS_WALLET_KEY } from '@/core/shared/src/swap/modules/assets/constants';
 import { DEFAULT_QUOTE_ID } from '@/core/shared/src/swap/modules/trade/constants';
-import { clsx } from '@/core/utils';
+import { clsx, MediaInfo } from '@/core/utils';
 import { useState } from 'react';
 import { CalcSwapAsset } from '../../../../hooks/use-swap-balance';
 import { AssetListModal } from './components/asset-list-modal';
 import { TradeHref } from './components/trade-href';
+import { Size } from '@/components/constants';
 export const Tablet = ({
   data = [],
   isSwapU,
@@ -44,7 +45,7 @@ export const Tablet = ({
           return (
             <div key={i} className='item-wrapper'>
               <div className='item'>
-                <div className='header'>
+                {/* <div className='header'>
                   <div className='wallet' onClick={() => Swap.Assets.walletFormat(v).edit && onOpenWalletFormModal(v)}>
                     <WalletAvatar type={v.pic} size={26} walletData={Swap.Assets.walletFormat(v)} />
                     <div>
@@ -63,7 +64,7 @@ export const Tablet = ({
                       {LANG('未实现盈亏')}({unit})
                     </div>
                   </div>
-                </div>
+                </div> */}
                 <div className='infos'>
                   <div>
                     <div>
@@ -83,32 +84,30 @@ export const Tablet = ({
                     </div>
                     <div>{canWithdrawAmount}</div>
                   </div>
+                  <div>
+                    <div>
+                      {LANG('未实现盈亏')}({unit})
+                    </div>
+                    <div className={clsx('income', Number(v.unrealisedPNL) >= 0 ? 'main-raise' : 'main-fall')}>
+                      {v.unrealisedPNL}
+                    </div>
+                  </div>
                 </div>
                 <div className='item-content'>
                   <div className='swap-button-box'>
-                    <div
+                    {/* <div
                       onClick={() => {
                         setShows(true);
                         setListData(Object.values(v.cryptos));
                       }}
                     >
                       {LANG('资产详情')}
-                    </div>
-                    <div>
-                      <DesktopOrTablet>
-                        <Button
-                          type='light-sub-2'
-                          className='button'
-                          onClick={() => onOpenTransferModal(code, v.wallet)}
-                        >
-                          {LANG('划转')}
-                        </Button>
-                      </DesktopOrTablet>
-                      <Button type='primary'>
+                    </div> */}
+                    <div className='action-btns'>
+                      <Button type='primary' size={Size.SM} rounded width={110}>
                         <TradeHref href={`/swap/${code?.toLocaleLowerCase()}`}>
                           {(href) => (
                             <div
-                              className={clsx('trade-button')}
                               onClick={() => {
                                 Swap.Info.setWalletId(isSwapU, v.wallet || '');
                                 window.location.href = href;
@@ -118,6 +117,9 @@ export const Tablet = ({
                             </div>
                           )}
                         </TradeHref>
+                      </Button>
+                      <Button size={Size.SM} width={110} rounded onClick={() => onOpenTransferModal(code, v.wallet)} >
+                        {LANG('划转')}
                       </Button>
                     </div>
                   </div>
@@ -131,16 +133,17 @@ export const Tablet = ({
       <style jsx>{`
         .all-asset-swap-tablet {
           font-size: 12px;
-          color: var(--theme-trade-text-color-1);
+          color: var(--text-primary);
           padding: 10px;
-          background: var(--theme-background-color-2);
           .item-wrapper {
             margin-bottom: 10px;
+            &:not(:last-child) {
+              .item {
+                border-bottom: 1px solid var(--line-3);
+              }
+            }
           }
           .item {
-            border-radius: 8px;
-            border: 1px solid var(--theme-background-color-4);
-
             .wallet {
               display: flex;
               align-items: center;
@@ -179,7 +182,7 @@ export const Tablet = ({
               display: flex;
               align-items: center;
               justify-content: space-between;
-              background-color: var(--theme-background-color-4);
+              border-bottom: 1px solid var(--line-1);
 
               .income {
                 display: flex;
@@ -200,40 +203,43 @@ export const Tablet = ({
               }
             }
             .infos {
-              padding: 16px 16px 0;
+              padding: 16px 0 0;
               > div {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                margin-bottom: 12px;
+                margin-bottom: 16px;
+                font-size: 14px;
                 > div {
                   &:first-child {
-                    font-size: 12px;
-                    color: var(--theme-trade-text-color-3);
+                    color: var(--text-tertiary);
                   }
                   &:last-child {
-                    font-size: 14px;
+                    font-weight: 500;
                   }
                 }
               }
             }
             .item-content {
-              padding: 0 16px;
               .swap-button-box {
-                border-top: 1px solid var(--theme-border-color-2);
                 height: 60px;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
 
                 > div {
-                  display: flex;
-                  align-items: center;
                   &:first-child {
                     height: 40px;
                     cursor: pointer;
-                    color: var(--skin-main-font-color);
+                    color: var(--text-brand);
                   }
+                }
+                .action-btns {
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-end;
+                  flex: 1 auto;
+                  gap: 12px;
                 }
                 :global(.button) {
                   cursor: pointer;
@@ -255,9 +261,13 @@ export const Tablet = ({
                   padding: 6px 18px;
                   word-break: keep-all;
                   height: 28px;
-                  color: var(--skin-font-color);
+                  line-height: 28px;
+                  color: var(--white);
                   font-size: 12px;
                   border: none;
+                  @media ${MediaInfo.mobile} {
+                    padding: 0 18px;
+                  }
                 }
               }
             }

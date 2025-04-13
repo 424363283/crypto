@@ -21,7 +21,7 @@ const Input = ({ inputComponent, className, label, controller = false, ...props 
             </span>
           )
         : undefined,
-    []
+    [label]
   );
 
   return (
@@ -29,7 +29,7 @@ const Input = ({ inputComponent, className, label, controller = false, ...props 
       <Comp
         inputRef={inputRef}
         type='number'
-        className={clsx('trade-view-input', isDark ? 'dark' : 'light', label && 'with-label', className)}
+        className={clsx('trade-view-input', isDark ? 'dark' : 'light', className)}
         component={DecimalInput}
         controller={controller}
         renderAdd={renderAdd}

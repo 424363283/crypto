@@ -2,7 +2,7 @@ import { BasicModal as Modal } from '@/components/modal';
 import { Button } from '@/components/trade-ui/trade-view/components/button';
 import { useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
-
+import YIcon from '@/components/YIcons';
 import CommonIcon from '@/components/common-icon';
 import { Svg } from '@/components/svg';
 import { ModalProps } from 'antd';
@@ -103,14 +103,15 @@ export const ModalTitle = ({
       )}
     >
       <div className={clsx('modal-title-content')}>
-        <span onClick={() => titleInfo?.()}> {title}</span>
-        {titleInfo && (
-          // <Tooltip title={titleInfo} placement='topLeft'>
-          <div className={clsx('tooltip')} onClick={() => titleInfo?.()}>
-            <Svg className={clsx('icon')} src='/static/images/swap/tips_info.svg' height={12} width={12} />
-          </div>
-          // </Tooltip>
-        )}
+        <div className={clsx('modal-title-info')}>
+          <span onClick={() => titleInfo?.()}> {title}</span>
+          {titleInfo && (
+            <div className={clsx('tooltip')} onClick={() => titleInfo?.()}>
+              <Svg className={clsx('icon')} src='/static/images/swap/tips_info.svg' height={12} width={12} />
+            </div>
+          )}
+        </div>
+
         {closable && <ModalClose className={closeClassName} onClose={onClose} />}
       </div>
     </div>
@@ -158,7 +159,7 @@ export const ModalClose = ({ className, onClose, size = 24 }: { className?: stri
     <>
       <div className={clsx('close-wrapper', className)}>
         <div className={clsx('close', className)} onClick={onClose}>
-          <CommonIcon name='common-close-filled' size={size} enableSkin />
+          <YIcon.closeModal />
         </div>
       </div>
       {styles}
@@ -172,29 +173,36 @@ export const ModalFooter = ({
   disabledConfirm,
   cancel = false,
   confirmText,
+  children,
 }: {
   onConfirm?: any;
   onCancel?: any;
   disabledConfirm?: any;
   cancel?: boolean;
   confirmText?: string;
+  children?: any;
 }) => {
   const _onConfirm = useMemo(() => debounce(onConfirm, 200), [onConfirm]);
 
   return (
-    <div className={clsx('modal-footer', !cancel && 'single')}>
-      {cancel && (
-        <Button onClick={onCancel} className={clsx('cancel')}>
-          {LANG('取消')}
+    <>
+      <div className={clsx('modal-footer', !cancel && 'single')}>
+        {cancel && (
+          <Button onClick={onCancel} className={clsx('cancel')}>
+            {LANG('取消')}
+          </Button>
+        )}
+        <Button
+          onClick={disabledConfirm ? undefined : _onConfirm}
+          className={clsx('confirm', disabledConfirm ? 'disabled' : '')}
+        >
+          {confirmText || LANG('确定')}
         </Button>
-      )}
-      <Button
-        onClick={disabledConfirm ? undefined : _onConfirm}
-        className={clsx('confirm', disabledConfirm ? 'disabled' : '')}
-      >
-        {confirmText || LANG('确定')}
-      </Button>
-    </div>
+      </div>
+      {React.Children.map(children, (child, index) => {
+        return child;
+      })}
+    </>
   );
 };
 

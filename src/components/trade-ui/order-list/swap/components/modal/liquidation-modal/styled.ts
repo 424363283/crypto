@@ -1,18 +1,28 @@
-import { clsxWithScope } from '@/core/utils';
+import { clsxWithScope, MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
 
 const { className, styles } = css.resolve`
   .liquidation-modal {
     padding-top: 20px;
+    @media ${MediaInfo.mobile} {
+      padding-top: 0;
+      padding: 0 0.5rem;
+    }
     .input-label {
       margin-bottom: 12px;
       line-height: 14px;
       font-size: 14px;
       font-weight: 400;
       color: var(--theme-trade-text-color-3);
+      @media ${MediaInfo.mobile} {
+        color: var(--text-secondary);
+      }
     }
     .input {
       background-color: var(--theme-trade-modal-input-bg);
+      @media ${MediaInfo.mobile} {
+        background-color: var(--fill-3);
+      }
       padding: 0 12px;
       padding-right: 4px;
       border-radius: 6px;
@@ -74,11 +84,60 @@ const { className, styles } = css.resolve`
       font-size: 14px;
       font-weight: 400;
       color: var(--theme-trade-text-color-1);
+      @media ${MediaInfo.mobile} {
+        padding-top: 1.5rem;
+        margin: 0;
+        border-top: 0;
+      }
     }
     .price-line {
       width: 100%;
       margin: 21px 0 12px;
       border-top: 1px solid var(--theme-trade-border-color-2);
+    }
+  }
+  @media ${MediaInfo.mobile} {
+    .tabs {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      justify-content: flex-start;
+      margin-bottom: 1.5rem;
+      padding: 0 0.5rem;
+      .tab {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        &.active {
+          color: var(--brand);
+        }
+      }
+    }
+
+    :global(.slider) {
+      padding: 0 !important;
+      :global(.ant-slider-horizontal.ant-slider-with-marks) {
+        margin: 11px 5px;
+
+        margin: 0 4px;
+        :global(.ant-slider-handle) {
+          width: 8px;
+          height: 8px;
+          &::after {
+            box-shadow: 0 0 0 2px var(--text-brand) !important;
+          }
+          &::before {
+            width: 8px;
+            height: 8px;
+          }
+          &::after {
+            width: 8px;
+            height: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+        }
+      }
     }
   }
 `;

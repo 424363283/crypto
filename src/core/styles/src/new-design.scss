@@ -1,0 +1,56 @@
+.negative-text {
+  color: var( --color-red);
+}
+.positive-text {
+  color: var(--color-green);
+}
+.accent-text {
+  color: var(--yellow);
+}
+.px-1 {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.rounded-1 {
+  border-radius: 8px !important;
+}
+
+.rounded-t-1 {
+  border-top-left-radius: 8px !important;
+  border-top-right-radius: 8px !important;
+}
+
+.rounded-b-1 {
+  border-bottom-right-radius: 8px !important;
+  border-bottom-left-radius: 8px !important;
+}
+
+.border-none {
+  border-style: none !important;
+}
+
+.border-1 {
+  border: 1px solid var(--common-line-color);
+}
+.border-t {
+  border-top: 1px solid var(--common-line-color);
+}
+.border-b {
+  border-bottom: 1px solid var(--common-line-color);
+}
+
+.ant-checkbox-inner {
+  border-radius: 4px !important;
+  background-color: transparent !important;
+  border-color: var(--line-2) !important;
+
+  .ant-checkbox-checked & {
+    background-color: var(--text-primary) !important;
+    border-color: var(--text-primary) !important;
+  }
+}
+
+.hidden {
+  display: none !important;
+}

@@ -18,21 +18,21 @@ export const useOptions = ({
       value: ACCOUNT_TYPE.SPOT,
       icon: isDark ? getIconPath('spot.png') : getIconPath('spot_light.png'),
     },
-    {
-      label: LANG('币本位合约账户'),
-      value: ACCOUNT_TYPE.SWAP,
-      icon: isDark ? getIconPath('pp_crypto.png') : getIconPath('pp_crypto_light.png'),
-    },
+    // {
+    //   label: LANG('币本位合约账户'),
+    //   value: ACCOUNT_TYPE.SWAP,
+    //   icon: isDark ? getIconPath('pp_crypto.png') : getIconPath('pp_crypto_light.png'),
+    // },
     {
       label: LANG('U本位合约账户'),
       value: ACCOUNT_TYPE.SWAP_U,
       icon: isDark ? getIconPath('pp_usdt.png') : getIconPath('pp_usdt_light.png'),
     },
-    {
-      label: LANG('简易合约账户'),
-      value: ACCOUNT_TYPE.LITE,
-      icon: isDark ? getIconPath('lite.png') : getIconPath('lite_light.png'),
-    },
+    // {
+    //   label: LANG('简易合约账户'),
+    //   value: ACCOUNT_TYPE.LITE,
+    //   icon: isDark ? getIconPath('lite.png') : getIconPath('lite_light.png'),
+    // },
   ].filter((item) => {
     if (item.value === ACCOUNT_TYPE.LITE) {
       return enableLite;

@@ -1,102 +1,72 @@
-import { clsxWithScope } from '@/core/utils';
+import { clsxWithScope, MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
 
 const { className, styles: _styles } = css.resolve`
-  .margin-type-modal {
-    padding-top: 22px;
-    .buttons {
+  .margin-type-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+    align-self: stretch;
+    .margin-type-title {
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+    }
+    .margin-type-modal {
       display: flex;
-      flex-direction: row;
-      > div {
-        user-select: none;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+      align-self: stretch;
+      .item {
+        display: flex;
+        padding: 16px;
+        align-items: center;
+        gap: 16px;
+        align-self: stretch;
+        border-radius: 16px;
+        border: 1px solid var(--line-3);
         cursor: pointer;
-        position: relative;
-        flex: 1;
-        height: 38px;
-        background: var(--theme-trade-sub-button-bg);
-        border-radius: 6px;
-        font-size: 14px;
-        font-weight: 400;
-        color: var(--theme-trade-text-color-1);
-        line-height: 35px;
-        text-align: center;
-        border: 1px solid transparent;
-
-        &:first-child {
-          margin-right: 18px;
+        &:hover {
+          border: 1px solid var(--brand);
         }
-        &.active {
-          border-radius: 6px;
-          background: rgba(255, 211, 15, 0.1);
-          border-color: var(--theme-primary-color);
-          position: relative;
-          .tag {
-            position: absolute;
-            top: -1px;
-            right: -2px;
+        .left {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: flex-start;
+          gap: 8px;
+          flex: 1 0 0;
+          .header {
+            color: var(--text-secondary);
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+          }
+          .info {
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;
           }
         }
-      }
-    }
-    .tips {
-      padding-top: 25px;
-      padding-bottom: 16px;
-      font-size: 12px;
-      font-weight: 400;
-      color: var(--theme-trade-text-color-1);
-    }
-    .info-content-expand {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: 15px;
-      cursor: pointer;
-      div {
-        font-size: 12px;
-        color: var(--theme-trade-text-color-3);
-        margin-right: 10px;
-      }
-      .arrow {
-        &.expand {
-          transform: rotateX(180deg);
+        &.active {
+          border: 1px solid var(--brand);
+        }
+        &.active .left .header {
+          color: var(--text-primary);
         }
       }
     }
-    .info-content {
-      /* padding-bottom: 25px; */
-    }
-    .infos {
-      margin-bottom: 15px;
-      padding: 16px 12px;
-      background: var(--theme-trade-sub-button-bg);
-      border-radius: 6px;
-    }
-    .info1,
-    .info2 {
-      font-size: 12px;
-      font-weight: 400;
-      color: var(--theme-trade-text-color-1);
-      line-height: 18px;
-    }
-    .info1 {
-      padding-bottom: 20px;
-    }
-    .info2 {
-    }
   }
-  .level-content {
-    .line {
-      height: 1px;
-      width: 100%;
-      background-color: var(--theme-border-color-1);
+  @media ${MediaInfo.mobile} {
+    .margin-type-content {
+      gap: 2.5rem;
     }
-    .label {
-      padding: 12.5px 0 10px;
-
-      font-size: 12px;
-      color: var(--theme-trade-text-color-3);
-    }
+       .margin-type-title {}
   }
 `;
 

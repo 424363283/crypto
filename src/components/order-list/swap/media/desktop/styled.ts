@@ -5,44 +5,39 @@ const { className, styles } = css.resolve`
   .record-view {
     min-height: 380px;
     :global(.code-text) {
-      font-size: 14px;
-      margin-bottom: 4px;
-      color: var(--theme-trade-text-color-1);
+      font-size: 12px;
+      margin-bottom: 0px;
+      color: var(--text-primary);
     }
     .tab-bar {
-      padding: 0 11px 0 20px;
       display: flex;
-      flex-direction: row;
-      align-items: center;
+      padding: 0px 24px;
       justify-content: space-between;
-      border-bottom: 1px solid rgba(var(--theme-trade-border-color-1-rgb), 0.5);
+      align-items: center;
+      background: var(--fill-1, #121212);
+      border-bottom:1px solid var(--line-1);
       .left-part {
         display: flex;
-        flex-direction: row;
         height: 48px;
+        align-items: center;
+        gap: 24px;
         .tab {
           user-select: none;
           cursor: pointer;
           position: relative;
-          height: 100%;
-          line-height: 48px;
+          color: var(--text-secondary, #A5A8AC);
+          font-family: "HarmonyOS Sans SC";
           font-size: 14px;
+          font-style: normal;
           font-weight: 500;
-          white-space: nowrap;
-          color: var(--theme-trade-text-color-3);
-          margin-right: 25px;
+          line-height: normal;
+          &:hover{
+            color: var(--text-brand);
+          }
         }
         .tab[data-active='true'] {
-          color: var(--theme-trade-text-color-1);
-          &::before {
-            position: absolute;
-            bottom: 0;
-            content: '';
-            display: block;
-            width: 100%;
-            height: 2px;
-            background: var(--skin-primary-color);
-          }
+          color: var(--text-brand);
+          
         }
       }
     }

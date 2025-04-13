@@ -69,8 +69,9 @@ export const useFormatCryptoOptions = ({
         swapWalletsData.forEach((data) => {
           const assetsData = data.accounts;
           return Object.keys(assetsData).map((key) => {
+
             const item = assetsData[key];
-            const quoteId = key.toUpperCase();
+            const quoteId = key.toUpperCase(); 
             const walletId = data.wallet;
             const { allCrossIncomeLoss } = calcPositionData.wallets[walletId] || {};
             const calcItem = calcPositionData.wallets?.[walletId]?.data?.[quoteId];
@@ -83,7 +84,7 @@ export const useFormatCryptoOptions = ({
               twoWayMode,
             });
             options.push({
-              id: key.toUpperCase(),
+              id: quoteId,
               price: Number(price.toFixed(4)),
               crypto: isUsdtType ? usdtKey : key.toUpperCase().replace(/-usd$/i, ''),
               canWithdraw: item.canWithdrawAmount,
@@ -153,7 +154,7 @@ export const useCryptoOptions = (props: CryptoOptions) => {
     const fetchAssetsStore = async () => {
       await Promise.all([
         // Account.assets.getPerpetualAsset(true),
-        // Account.assets.getPerpetualUAsset(true),
+        Account.assets.getPerpetualUAsset(true),
         Account.assets.getAllSpotAssets(true),
         // Account.assets.getLiteAsset(true),
       ]);

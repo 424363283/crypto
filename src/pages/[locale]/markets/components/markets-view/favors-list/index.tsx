@@ -16,13 +16,16 @@ import css from 'styled-jsx/css';
 import { store } from '../../../store';
 import { FAVORITE_TYPE, FAVORITE_TYPE_NAME } from '../../../types';
 import { formatSpotCoinName } from '../table/helper';
+import { isLite } from '@/core/utils';
+import Radio from '@/components/Radio';
+import { Size } from '@/components/constants';
 
 export const Wait2AddFavorsList = memo(({ onAddAllCallback }: { onAddAllCallback: () => void }) => {
   const [favorsListIds, setFavorsListIds] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { miniChartData, setSymbols } = useMiniChartData();
+  const { miniChartData, setSymbols, isLoading } = useMiniChartData();
   const { secondItem, marketDetailList } = store;
   const [coinDetailList, setCoinDetailList] = useState<{ [key: string]: MarketItem }>({});
+  const [liteDetailList, setLiteDetailList] = useState<{ [key: string]: MarketItem }>({});
   const { id: secondId } = secondItem;
   const type = FAVORITE_TYPE[secondId];
   const label = FAVORITE_TYPE_NAME[secondId];
@@ -32,18 +35,24 @@ export const Wait2AddFavorsList = memo(({ onAddAllCallback }: { onAddAllCallback
   const colorHex = RootColor.getColorHex;
   useEffect(() => {
     setCoinDetailList(marketDetailList);
+    // let liteDetailList = {};
+    const liteDetailList: { [key: string]: MarketItem } = {};
+
+    for (var quoteCode in marketDetailList) {
+      if (isLite(marketDetailList[quoteCode].id)) {
+        liteDetailList[marketDetailList[quoteCode].id] = marketDetailList[quoteCode];
+      }
+    }
+    setLiteDetailList(liteDetailList);
   }, [marketDetailList]);
   useEffect(() => {
-    setIsLoading(true);
     const getList = async () => {
       const res = await getCommonSymbolsApi();
       if (res.code === 200) {
         const favList = res.data.favors;
         setFavorsData(favList);
-        setIsLoading(false);
       } else {
         message.error(res.message);
-        setIsLoading(false);
       }
     };
     getList();
@@ -59,8 +68,24 @@ export const Wait2AddFavorsList = memo(({ onAddAllCallback }: { onAddAllCallback
   }, [type, favorsData]);
   useEffect(() => {
     if (favorsListIds.length) {
-      setSymbols(favorsListIds);
-      const chartData = favorsListIds.map((item: string) => coinDetailList[item]).filter(Boolean);
+      // 请求mini chart数据
+      let chartSymbols: string[] = [];
+      if (type == 'lite') {
+        for (const item of favorsListIds) {
+          if (liteDetailList[item]) {
+            chartSymbols.push(liteDetailList[item].quoteCode);
+          }
+        }
+      } else {
+        chartSymbols = favorsListIds;
+      }
+      setSymbols(chartSymbols);
+      const chartData = chartSymbols
+        .map((item: string) => {
+          // 下方卡片筛选
+          return coinDetailList[item];
+        })
+        .filter(Boolean);
       setChartCardList(chartData);
     }
   }, [type, favorsListIds, coinDetailList]);
@@ -84,8 +109,8 @@ export const Wait2AddFavorsList = memo(({ onAddAllCallback }: { onAddAllCallback
   const chartSize = MediaInfo.isMobile
     ? { width: 146, height: 34 }
     : isTablet
-      ? { width: window.innerWidth / 2 - 80, height: 110 }
-      : { width: 245, height: 110 };
+    ? { width: window.innerWidth / 2 - 80, height: 110 }
+    : { width: 245, height: 110 };
   const renderFavorsCardList = () => {
     return chartCardList.map((item: MarketItem) => {
       const isSelected = selectedIds.includes(item.id);
@@ -95,58 +120,63 @@ export const Wait2AddFavorsList = memo(({ onAddAllCallback }: { onAddAllCallback
           key={item.id}
           onClick={() => onCardItemClick(item)}
         >
-          {isSelected && (
-            <Image
-              src='/static/images/markets/selected-icon.svg'
-              width={40}
-              height={40}
-              className='selected-icon'
-              enableSkin
-            />
-          )}
-          <div className='title-info'>
-            <CoinLogo coin={item.coin} alt='y-mex' width='24' height='24' />
-            <h2 className='coin-name'>{formatSpotCoinName(item)}</h2>
-            <DesktopOrTablet>
-              <span className='type'>{label}</span>
-            </DesktopOrTablet>
+          <div className="left">
+            <div className="title-info">
+              <CoinLogo coin={item.coin} alt="YMEX" width="32" height="32" />
+              <h2 className="coin-name">{formatSpotCoinName(item)}</h2>
+              {/* <DesktopOrTablet>
+                <span className='type'>{label}</span>
+              </DesktopOrTablet> */}
+            </div>
+            <div className="change-info">
+              <p className="price">{item.price}</p>
+              <p className={clsx('change-rate', item.isUp ? 'positive-text' : 'negative-text')}>{item.rate}%</p>
+            </div>
           </div>
-          <div className='middle-info'>
-            <p className='price'>{item.price}</p>
-            <p style={{ color: `var(${item.isUp ? '--color-green' : '--color-red'})` }} className='change-rate'>
-              {item.rate}%
-            </p>
+          <div className="right">
+            <Radio label={''} checked={isSelected} {...{ width: 24, height: 24 }} />
           </div>
-          <div className='charts'>
+          {/* <div className='charts'>
             <Chart
               id={'_favors_card'}
               showLine={false}
               style={chartSize}
-              data={miniChartData[item.id]}
+              data={miniChartData[item.quoteCode]}
               symbol={item.coin}
               lineWidth={1.5}
               areaColor={item?.isUp ? colorHex['up-color-hex'] : colorHex['down-color-hex']}
               lineColor={item?.isUp ? colorHex['up-color-hex'] : colorHex['down-color-hex']}
               areaColorOpacity={50}
             />
-          </div>
+          </div> */}
         </div>
       );
     });
   };
   return (
-    <Loading.wrap isLoading={isLoading} small top={120}>
-      <div className='favors-list-wrapper'>
-        <div className='title-area'>
-          <DesktopOrTablet>
-            <p className='left-title'>{LANG('添加心仪交易对')}</p>
-          </DesktopOrTablet>
-          <Button className='add-all-btn' onClick={onAddAllClick} type='primary' style={{ padding: '12px 90px' }}>
-            <CommonIcon name='common-add-all-round-0' size={16} enableSkin />
-            <span className='txt'> {LANG('Add all')}</span>
+    <Loading.wrap isLoading={isLoading} top={120}>
+      <div className="favors-list-wrapper">
+        {/* <div className='title-area'>
+            <DesktopOrTablet>
+              <p className='left-title'>{LANG('添加心仪交易对')}</p>
+            </DesktopOrTablet>
+          </div>
+          */}
+        <div className="wait2-add-favors-list">{renderFavorsCardList()}</div>
+        {chartCardList.length ? (
+          <Button
+            disabled={!selectedIds.length}
+            className="add-all-btn"
+            onClick={onAddAllClick}
+            type="primary"
+            size={Size.LG}
+            width={320}
+            rounded
+          >
+            <CommonIcon name={`common-add-all-round${!selectedIds.length ? '-disabled' : ''}-0`} size={24} enableSkin />
+            <span className="txt"> {LANG('添加自选')}</span>
           </Button>
-        </div>
-        <div className='wait2-add-favors-list'>{renderFavorsCardList()}</div>
+        ) : null}
         <style jsx>{styles}</style>
       </div>
     </Loading.wrap>
@@ -154,9 +184,15 @@ export const Wait2AddFavorsList = memo(({ onAddAllCallback }: { onAddAllCallback
 });
 const styles = css`
   .favors-list-wrapper {
-    padding: 36px 0;
+    display: flex;
+    width: 1200px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
     @media ${MediaInfo.mobile} {
-      padding: 0 0 30px;
+      width: 100%;
+      gap: 0;
     }
     .title-area {
       display: flex;
@@ -167,27 +203,13 @@ const styles = css`
         font-weight: 600;
         font-size: 24px;
       }
-      :global(.add-all-btn) {
-        :global(img) {
-          padding-right: 4px;
-        }
-        @media ${MediaInfo.mobile} {
-          position: absolute;
-          bottom: -15px;
-          width: 100%;
-        }
-        background-color: var(--skin-primary-color);
-        padding: 12px 90px;
-        color: var(--skin-font-color);
-        border-radius: 6px;
-        font-weight: 500;
-        font-size: 14px;
-        cursor: pointer;
-      }
     }
     .wait2-add-favors-list {
       margin-top: 40px;
-      display: grid;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      align-self: stretch;
       @media ${MediaInfo.desktop} {
         grid-template-columns: repeat(4, 1fr);
       }
@@ -196,21 +218,30 @@ const styles = css`
         grid-template-columns: repeat(2, 1fr);
       }
       @media ${MediaInfo.mobile} {
-        grid-gap: 10px;
+        grid: 16px;
         margin-top: 30px;
         margin-bottom: 30px;
       }
       :global(.card-item) {
         cursor: pointer;
-        position: relative;
-        padding: 30px 20px;
+        display: flex;
+        padding: 16px 24px;
+        align-items: flex-end;
+        gap: 10px;
+        flex: 1 0 0;
+        border-radius: 16px;
+        border: 0.5px solid var(--text-tertiary);
         @media ${MediaInfo.mobile} {
-          padding: 12px;
-          height: 142px;
+          padding: 16px;
         }
-        border-radius: 15px;
-        border: 1px solid var(--skin-border-color-1);
         @media ${MediaInfo.mobileOrTablet} {
+        }
+        :global(.left) {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 16px;
+          flex: 1 0 0;
         }
         :global(.selected-icon) {
           position: absolute;
@@ -220,11 +251,16 @@ const styles = css`
         :global(.title-info) {
           display: flex;
           align-items: center;
-          margin-bottom: 20px;
+          gap: 8px;
+          align-self: stretch;
           :global(.coin-name) {
-            margin: 0 5px;
-            color: var(--theme-font-color-1);
-            font-size: 20px;
+            color: var(--text-primary);
+            leading-trim: both;
+            text-edge: cap;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
             @media ${MediaInfo.mobile} {
               font-size: 12px;
             }
@@ -239,18 +275,27 @@ const styles = css`
             color: var(--theme-font-color-2);
           }
         }
-        :global(.middle-info) {
+        :global(.change-info) {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: flex-start;
+          gap: 8px;
           :global(.price) {
-            color: var(--theme-font-color-1);
-            font-size: 24px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-style: normal;
             font-weight: 500;
-            margin-bottom: 5px;
+            line-height: normal;
             @media ${MediaInfo.mobile} {
               font-size: 16px;
             }
           }
           :global(.change-rate) {
-            margin-bottom: 20px;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
             @media ${MediaInfo.mobile} {
               margin-bottom: 6px;
             }
@@ -258,7 +303,6 @@ const styles = css`
         }
       }
       :global(.selected-item) {
-        border: 1px solid var(--skin-color-active);
         :global(img) {
           @media ${MediaInfo.mobile} {
             width: 28px;
@@ -266,6 +310,22 @@ const styles = css`
           }
         }
       }
+    }
+    :global(.add-all-btn) {
+      display: flex;
+      width: 320px;
+      height: 48px;
+      padding: 16px 40px;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      @media ${MediaInfo.mobile} {
+      }
+      text-align: center;
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
     }
   }
 `;

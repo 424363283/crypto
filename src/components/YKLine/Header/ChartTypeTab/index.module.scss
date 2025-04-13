@@ -9,7 +9,7 @@
 
   :global {
     .selected {
-      color: #ff8f34 !important;
+      color: var(--brand) !important;
     }
 
     .ant-select-single {
@@ -21,7 +21,7 @@
     }
 
     .ant-select-selector {
-      background-color: #F4F5F6 !important;
+      background-color: var(--bg-1) !important;
       border-radius: 4px;
       border: none !important;
       padding: 0px !important;
@@ -52,12 +52,13 @@
   line-height: 18px;
   margin: 0 !important;
   background: transparent !important;
+  white-space: nowrap;
 
   &:not(:disabled) {
     cursor: pointer;
 
     &:hover {
-      color: #ff8f34 !important;
+      color: var(--brand) !important;
     }
   }
 

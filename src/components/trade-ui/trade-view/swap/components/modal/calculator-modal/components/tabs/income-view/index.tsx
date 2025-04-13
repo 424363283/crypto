@@ -10,6 +10,8 @@ import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
 import { formatNumber2Ceil } from '@/core/utils';
 import { useStore } from '../../../store';
+import css from 'styled-jsx/css';
+import clsx from 'clsx';
 
 export const IncomeView = () => {
   const { quoteId, isUsdtType, lever, cryptoData, initMargins, isBuy } = useStore();
@@ -36,7 +38,7 @@ export const IncomeView = () => {
         isVolUnit: false,
         value: Number(next),
         code,
-        flagPrice: Number(liquidationPrice),
+        flagPrice: Number(liquidationPrice)
       });
     }
     const bond = Swap.Calculate.IPM({
@@ -44,7 +46,7 @@ export const IncomeView = () => {
       volume: next,
       code,
       avgCostPrice: Number(openPrice),
-      initMargins,
+      initMargins
     });
     const income = Swap.Calculate.income({
       usdt: isUsdtType,
@@ -52,7 +54,7 @@ export const IncomeView = () => {
       isBuy,
       flagPrice: Number(liquidationPrice),
       avgCostPrice: Number(openPrice),
-      volume: next,
+      volume: next
     });
 
     const ROE = Swap.Calculate.ROE({ usdt: isUsdtType, income, ipm: bond });
@@ -61,7 +63,7 @@ export const IncomeView = () => {
     setResult({
       margin: formatNumber2Ceil(bond, fixed),
       income: formatNumber2Ceil(income, fixed, false),
-      rate: `${ROE * 100}`?.toRound(2),
+      rate: `${ROE * 100}`?.toRound(2)
     });
   };
 
@@ -72,28 +74,53 @@ export const IncomeView = () => {
       {
         info: LANG(
           '起始保证金有时会小于下单所需的保证金。下单所需保证金=起始保证金+开仓亏损，其中开仓亏损考虑了盘口最新情况于标记价格之前的差异'
-        ),
-      },
+        )
+      }
     ],
     [LANG('收益'), `${result.income} ${settleCoin}`],
-    [LANG('回报率'), `${result.rate}%`],
+    [LANG('回报率'), `${result.rate}%`]
   ];
 
   return (
-    <ResultLayout disabled={!openPrice || !liquidationPrice || !volume} onSubmit={_onSubmit}>
-      <div>
-        <QuoteSelect
-          onChange={() => {
-            _resetInputs();
-          }}
-        />
-        <TradeTypeBar />
-        <LeverSlider />
-        <PriceInput value={openPrice} onChange={setOpenPrice} />
-        <PriceInput value={liquidationPrice} onChange={setLiquidationPrice} label={LANG('平仓价格')} />
-        <VolumeInput value={volume} onChange={setVolume} />
-      </div>
-      <Result results={results} tips={LANG('在计算最大可开数量时将不考虑您的开仓损失。')} />
-    </ResultLayout>
+    <>
+      <ResultLayout disabled={!openPrice || !liquidationPrice || !volume} onSubmit={_onSubmit}>
+        <div className={'income-view'}>
+          <QuoteSelect
+            onChange={() => {
+              _resetInputs();
+            }}
+          />
+          <TradeTypeBar />
+          <LeverSlider />
+          <div className={'input-item'}>
+            <div className={'label'}>{LANG('开仓价格')}</div>
+            <PriceInput label={null} value={openPrice} onChange={setOpenPrice} />
+          </div>
+          <div className={'input-item'}>
+            <div className={'label'}>{LANG('平仓价格')}</div>
+            <PriceInput label={null} value={liquidationPrice} onChange={setLiquidationPrice} />
+          </div>
+          <div className={'input-item'}>
+            <div className={'label'}>{LANG('成交数量')}</div>
+            <VolumeInput label={null} value={volume} onChange={setVolume} />
+          </div>
+        </div>
+        <Result results={results} />
+      </ResultLayout>
+      <style jsx>{styles}</style>
+    </>
   );
 };
+
+const styles = css`
+  .income-view {
+    .input-item {
+      > .label {
+        color: var(--text-tertiary);
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 16px;
+      }
+    }
+  }
+`;

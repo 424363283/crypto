@@ -10,18 +10,50 @@ export const FundsItem = ({ data: item }: { data: any }) => {
   const type = (SWAP_FUNDS_RECORD_TYPE() as any)[item.type];
   const scale = Number(item.scale);
   const wallet = Swap.Assets.getWallet({ usdt: isUsdtType, walletId: item.subWallet });
+  console.log(item);
 
   return (
     <>
-      <div className='funds-item'>
-        <div className='title'>
-          <div className='code'>{name}</div>
-          <div className='time'>{dayjs(item.time).format('YYYY-MM-DD HH:mm:ss')}</div>
+      <div className="funds-item">
+        <div className="item-header">
+          <div className="code">
+            {name} {LANG('永续')}
+          </div>
+          <div className="type">
+            <span>{LANG('类型')}</span>
+            <span>{type}</span>
+          </div>
         </div>
-        <div className='info'>
+        <div className="item-info">
+          <div className="row">
+            <div className="item">
+              <div>{LANG('总额')}</div>
+              <div
+                className={
+                  ['taker_fee', 'maker_fee'].includes(item.type) ? '' : Number(item.amount) > 0 ? 'profit' : 'loss'
+                }
+              >
+                {isUsdtType ? item.amount : item.amount.toFixed(scale)}
+              </div>
+            </div>
+            <div className="item">
+              <div>{LANG('资产种类')}</div>
+              <div>{item.currency}</div>
+            </div>
+            <div className="item">
+              <div>{LANG('时间')}</div>
+              <div>{dayjs(item.time).format('YYYY-MM-DD HH:mm')}</div>
+            </div>
+          </div>
+        </div>
+        {/* <div className="title">
+          <div className="code">{name}</div>
+          <div className="time">{dayjs(item.time).format('YYYY-MM-DD HH:mm:ss')}</div>
+        </div>
+        <div className="info">
           <div>
             <div>{LANG('资金账户')}</div>
-            <div className='wallet'>
+            <div className="wallet">
               <ItemWallet wallet={wallet} />
             </div>
           </div>
@@ -37,19 +69,101 @@ export const FundsItem = ({ data: item }: { data: any }) => {
             <div>{LANG('总额')}</div>
             <div>{isUsdtType ? item.amount : item.amount.toFixed(scale)}</div>
           </div>
-        </div>
+        </div> */}
       </div>
       <style jsx>{`
         .funds-item {
           font-size: 12px;
-          padding: 0 var(--trade-spacing) var(--trade-spacing);
-          margin: 0 var(--trade-spacing);
+          border-bottom: 1px solid var(--line-1);
+          &:last-child {
+            border-bottom: 0;
+          }
+          // padding: 0 var(--trade-spacing) var(--trade-spacing);
+          // margin: 0 var(--trade-spacing);
 
-          background: var(--theme-trade-bg-color-3);
-          border-radius: 8px;
-          margin-bottom: 8px;
-          &:first-child {
-            margin-top: var(--trade-spacing);
+          // background: var(--theme-trade-bg-color-3);
+          // border-radius: 8px;
+          // margin-bottom: 8px;
+          // &:first-child {
+          //   margin-top: var(--trade-spacing);
+          // }
+          .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            color: var(--text-primary);
+            .code {
+              font-size: 1rem;
+              font-weight: 500;
+            }
+            .type {
+              display: flex;
+              flex-direction: column;
+              align-items: flex-end;
+              justify-content: flex-start;
+              gap: 4px;
+              > span {
+                &:first-child {
+                  color: var(--text-tertiary);
+                }
+                &:last-child {
+                  color: var(--text-primary);
+                }
+              }
+            }
+          }
+          .item-info {
+            padding: 12px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+            .row {
+              width: 100%;
+              display: flex;
+              .item {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                gap: 4px;
+                &:nth-child(1) {
+                  align-items: start;
+                }
+                &:nth-child(2) {
+                  align-items: start;
+                }
+                &:nth-child(3) {
+                  align-items: end;
+                  text-align: right;
+                }
+                > div {
+                  width: 100%;
+                  &,
+                  div {
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                  }
+                  &:first-child {
+                    color: var(--text-tertiary);
+                  }
+                  &:last-child {
+                    width: 100%;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    color: var(--text-primary);
+                    &.profit {
+                      color: var(--text-true);
+                    }
+                    &.loss {
+                      color: var(--text-error);
+                    }
+                  }
+                }
+              }
+            }
           }
           .title {
             display: flex;

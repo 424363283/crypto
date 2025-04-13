@@ -9,19 +9,19 @@ export const useNavMap = (verifiedDeveloped: boolean) => {
         type: 'overview',
       },
       title: LANG('资产总览'),
-      icon: 'sidebar-overview-nav-0',
-      activeIcon: 'sidebar-overview-nav-active-0',
+      icon: 'sidebar-overview-assets-nav-0',
+      activeIcon: 'sidebar-overview-assets-nav-active-0',
       href: '/account/fund-management/assets-overview',
     },
-    // {
-    //   query: {
-    //     type: 'spot',
-    //   },
-    //   title: LANG('现货账户'),
-    //   icon: 'sidebar-spot-nav-0',
-    //   activeIcon: 'sidebar-spot-nav-active-0',
-    //   href: '/account/fund-management/assets-overview',
-    // },
+    {
+      query: {
+        type: 'spot',
+      },
+      title: LANG('现货账户'),
+      icon: 'sidebar-spot-nav-0',
+      activeIcon: 'sidebar-spot-nav-active-0',
+      href: '/account/fund-management/assets-overview',
+    },
     // {
     //   query: {
     //     type: 'swap',
@@ -42,6 +42,16 @@ export const useNavMap = (verifiedDeveloped: boolean) => {
     },
     {
       query: {
+        type: 'records',
+        tab: 0
+      },
+      title: LANG('订单记录'),
+      icon: 'sidebar-ord-record-nav-0',
+      activeIcon: 'sidebar-ord-record-nav-active-0',
+      href: '/account/fund-management/order-history/swap-u-order',
+    },
+    {
+      query: {
         type: 'fund-history',
       },
       title: LANG('资金记录'),
@@ -49,15 +59,15 @@ export const useNavMap = (verifiedDeveloped: boolean) => {
       activeIcon: 'sidebar-fund-record-nav-active-0',
       href: '/account/fund-management/assets-overview',
     },
-    {
-      query: {
-        type: 'coupon',
-      },
-      title: LANG('合约卡券'),
-      icon: 'sidebar-coupon-nav-0',
-      activeIcon: 'sidebar-coupon-nav-active-0',
-      href: '/account/fund-management/assets-overview',
-    },
+    // {
+    //   query: {
+    //     type: 'coupon',
+    //   },
+    //   title: LANG('合约卡券'),
+    //   icon: 'sidebar-coupon-nav-0',
+    //   activeIcon: 'sidebar-coupon-nav-active-0',
+    //   href: '/account/fund-management/assets-overview',
+    // },
     {
       query: {
         type: 'tax',

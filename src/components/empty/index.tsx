@@ -16,7 +16,7 @@ type Props = {
 export const EmptyComponent = ({
                                  active,
                                  image,
-                                 text = LANG('无此资料'),
+                                 text = LANG('暂无数据'),
                                  className,
                                  size,
                                  prefixCls,
@@ -36,17 +36,17 @@ export const EmptyComponent = ({
   };
   const { isDark } = useTheme();
 
-  const _image = isDark ? '/static/images/common/empty-dark.svg' : '/static/images/common/empty.svg';
+  const _image = isDark ? '/static/images/common/empty-dark.svg' : '/static/icons/primary/common/empty.svg';
 
   return (
-      <Empty
-          className={clsx('empty-img-wrapper', size, className)}
-          {...props}
-          description={<span>{text}</span>}
-          image={image || _image}
-      >
-        <style jsx>{styles}</style>
-      </Empty>
+    <Empty
+      className={clsx('empty-img-wrapper', size, className)}
+      {...props}
+      description={<span>{text}</span>}
+      image={image || _image}
+    >
+      <style jsx>{styles}</style>
+    </Empty>
   );
 };
 const styles = css`
@@ -58,17 +58,17 @@ const styles = css`
     text-align: center;
     margin: 30px auto;
     :global(.ant-empty-image) {
-      height: 48px;
-      margin-bottom: 5px;
+      height: 80px;
+      margin-bottom: 8px;
       :global(img) {
-        width: 48px;
-        height: 48px;
+        width: 80px;
+        height: 80px;
       }
     }
     :global(.ant-empty-description) {
       font-size: 12px;
-      font-weight: 300;
-      color: #798296;
+      color: var(--text-tertiary);
+      font-weight: 400;
     }
     &.md {
       :global(.ant-empty-image) {
@@ -97,6 +97,21 @@ const styles = css`
         font-size: 16px;
         font-weight: 300;
       }
+    }
+  }
+  :global(.empty-img-wrapper.small) {
+    margin: 16px auto;
+    :global(.ant-empty-image) {
+      height: 50px;
+      margin-bottom: 16px;
+      :global(img) {
+        width: 50px;
+        height: 50px;
+      }
+    }
+    :global(.ant-empty-description) {
+      font-size: 14px;
+      font-weight: 300;
     }
   }
 `;

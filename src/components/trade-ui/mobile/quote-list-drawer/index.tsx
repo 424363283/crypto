@@ -18,17 +18,19 @@ import {
   isSwapCoin,
   isSwapSLCoin,
   isSwapSLUsdt,
-  isSwapUsdt,
+  isSwapUsdt
 } from '@/core/utils';
 import { Drawer } from 'antd';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import css from 'styled-jsx/css';
 import QuoteSearch from '../../quote-list/components/search';
+import Image from 'next/image';
+import { EmptyComponent } from '@/components/empty';
 
 enum SORT_TYPE {
   'NAME' = 'name',
   'PRICE' = 'price',
-  'CHANGE' = 'change',
+  'CHANGE' = 'change'
 }
 
 interface Props {
@@ -38,11 +40,7 @@ interface Props {
 }
 
 const CloseIcon = () => {
-  return (
-    <div>
-      <CommonIcon name='common-close-filled' size={24} enableSkin />
-    </div>
-  );
+  return <CommonIcon name="common-modal-close" size={16} enableSkin />;
 };
 const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
   const id = useRouter().query?.id as string;
@@ -50,6 +48,9 @@ const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
   const [search, setSearch] = useState('');
   const [zone, setZone] = useState('All');
   const [sort, setSort] = useState<{ [key: string]: 1 | -1 }>({});
+  const [liteHotIds, setLiteHotIds] = useState<string[]>([]);
+  const [hotIds, setHotIds] = useState<string[]>([]);
+  const [newIds, setNewIds] = useState<string[]>([]);
 
   // 一级标题
   const [activeIndex, setActiveIndex] = useState(1);
@@ -61,6 +62,7 @@ const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
   const [secondaryTabs, setSecondaryTabs] = useState<string[]>([]);
 
   useEffect(() => {
+    getIds();
     const isEtf = isSpotEtf(id);
     isEtf && setSecondaryActiveIndex(1);
   }, []);
@@ -73,6 +75,15 @@ const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
     },
     [sort]
   );
+
+  const getIds = async () => {
+    const group = await Group.getInstance();
+    const hot_ids = group.getHotIds();
+    const new_ids = group.getNewIds();
+    setHotIds(hot_ids);
+    setNewIds(new_ids);
+    setLiteHotIds(hot_ids.filter(key => !/-|_/.test(key)));
+  };
 
   useEffect(() => {
     setSecondaryActiveIndex(0);
@@ -87,13 +98,14 @@ const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
         tabsRef.current = [LANG('自选'), ...tabs];
         setSecondaryTabs(['All', ...secondaryTabs]);
       } else {
-        tabsRef.current = [LANG('自选'), LANG('U本位合约'), LANG('币本位合约')];
+        // tabsRef.current = [LANG('自选'), LANG('U本位合约'), LANG('币本位合约')];
+        tabsRef.current = [LANG('自选'), LANG('U本位合约')];
       }
       setTabs(tabsRef.current);
     })();
   }, [id, isSpotPage]);
 
-  useWs(SUBSCRIBE_TYPES.ws3001, async (data) => {
+  useWs(SUBSCRIBE_TYPES.ws3001, async data => {
     const favors = await Favors.getInstance();
     const _data: { [key: number | string]: MarketItem[] } = {};
     if (isSpotPage) {
@@ -142,22 +154,22 @@ const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
   const TitleMemo = useMemo(() => {
     return (
       <>
-        <div className='title'>
-          <div className='title-item' onClick={clickSort.bind(this, SORT_TYPE.NAME)}>
+        <div className="title">
+          <div className="title-item" onClick={clickSort.bind(this, SORT_TYPE.NAME)}>
             {LANG('名称')}
             <span>
               <i className={clsx('up', sort[SORT_TYPE.NAME] == 1 && 'active')} />
               <i className={clsx('down', sort[SORT_TYPE.NAME] == -1 && 'active')} />
             </span>
           </div>
-          <div className='title-item' onClick={clickSort.bind(this, SORT_TYPE.PRICE)}>
+          <div className="title-item" onClick={clickSort.bind(this, SORT_TYPE.PRICE)}>
             <span>
               <i className={clsx('up', sort[SORT_TYPE.PRICE] == 1 && 'active')} />
               <i className={clsx('down', sort[SORT_TYPE.PRICE] == -1 && 'active')} />
             </span>
             {LANG('最新价')}
           </div>
-          <div className='title-item' onClick={clickSort.bind(this, SORT_TYPE.CHANGE)}>
+          <div className="title-item" onClick={clickSort.bind(this, SORT_TYPE.CHANGE)}>
             <span>
               <i className={clsx('up', sort[SORT_TYPE.CHANGE] == 1 && 'active')} />
               <i className={clsx('down', sort[SORT_TYPE.CHANGE] == -1 && 'active')} />
@@ -221,6 +233,43 @@ const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
               flex: 2;
             }
           }
+          @media ${MediaInfo.mobile} {
+            .title {
+              height: auto;
+              margin-top: 1rem;
+              margin-bottom: 8px;
+              padding: 0 1.5rem;
+              > div {
+                display: flex;
+                gap: 2px;
+                align-items: center;
+                flex-shrink: 0;
+                span {
+                  margin: 0;
+                  font-size: 12px;
+                  font-weight: 400;
+                  color: var(--text-secondary);
+                }
+              }
+              > div:nth-child(1) {
+                width: 7.5rem;
+                padding: 0;
+                flex: none;
+              }
+              > div:nth-child(2) {
+                width: auto;
+                padding: 0;
+                flex: 1;
+                justify-content: flex-end;
+              }
+              > div:nth-child(3) {
+                flex: 1;
+                width: 5rem;
+                padding: 0;
+                justify-content: flex-start;
+              }
+            }
+          }
         `}</style>
       </>
     );
@@ -229,19 +278,19 @@ const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
   const sortData = useCallback(
     (data: MarketItem[]) => {
       if (zone && zone !== 'All') {
-        data = data?.filter((item) => item.zone?.includes(zone));
+        data = data?.filter(item => item.zone?.includes(zone));
         let lvtsList: MarketItem[] = [];
         // LVTs固定排序
         if (zone === 'LVTs') {
-          DEFAULT_ORDER.forEach((key) => {
-            const findRes = data.find((item) => item?.coin === key);
+          DEFAULT_ORDER.forEach(key => {
+            const findRes = data.find(item => item?.coin === key);
             findRes && lvtsList.push(findRes);
           });
           data = [...new Set(lvtsList.concat(data))];
         }
       }
       if (search) {
-        data = data.filter((item) => (isSpotPage ? item.coin : item.name)?.includes(search));
+        data = data.filter(item => (isSpotPage ? item.coin : item.name)?.includes(search));
       }
       if (sort[SORT_TYPE.NAME]) {
         data.sort((a, b) => {
@@ -277,32 +326,32 @@ const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
 
   const PrevIcon = () => {
     return (
-      <div className='mobile-arrow'>
-        <Svg src='/static/images/header/media/arrow-left.svg' width={14} height={14} />
+      <div className="mobile-arrow">
+        <Svg src="/static/images/header/media/arrow-left.svg" width={14} height={14} />
       </div>
     );
   };
   const NextIcon = () => {
     return (
-      <div className='mobile-arrow'>
-        <Svg src='/static/images/header/media/arrow-right.svg' width={14} height={14} />
+      <div className="mobile-arrow">
+        <Svg src="/static/images/header/media/arrow-right.svg" width={14} height={14} />
       </div>
     );
   };
 
   return (
     <Drawer
-      placement='right'
+      placement="right"
       onClose={onClose}
       open={open}
       closeIcon={<CloseIcon />}
       keyboard
       style={{ position: 'relative' }}
-      rootClassName='quote-list-drawer-container'
+      rootClassName="quote-list-drawer-container"
     >
-      <div className='title'>{LANG('选择')}</div>
+      <div className="title">{LANG('选择')}</div>
       <QuoteSearch onChange={onSearchInputChange} />
-      <div className='tab-wrapper'>
+      <div className="tab-wrapper">
         <ul>
           {tabs.map((tab, index) => (
             <li key={tab} className={getActive(index === activeIndex)} onClick={() => setActiveIndex(index)}>
@@ -312,9 +361,9 @@ const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
         </ul>
       </div>
       {isSpotPage && (
-        <div className='type-wrapper'>
-          <ScrollXWrap prevIcon={<PrevIcon />} wrapClassName='mobile-list' nextIcon={<NextIcon />}>
-            <div className='type-container'>
+        <div className="type-wrapper">
+          <ScrollXWrap prevIcon={<PrevIcon />} wrapClassName="mobile-list" nextIcon={<NextIcon />}>
+            <div className="type-container">
               {secondaryTabs.map((item, index) => (
                 <button
                   key={item}
@@ -332,38 +381,65 @@ const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
           </ScrollXWrap>
         </div>
       )}
-      {TitleMemo}
-      <div className='list-wrapper'>
-        <ul>
-          {sortData(list[activeIndex])?.map((item) => (
-            <li key={item.id}>
-              <TradeLink id={item.id}>
-                <div className={`item ${getActive(item.id === id)}`} onClick={onClose}>
-                  <div className='name'>
-                    <div className='star-wrapper'>
-                      <Star code={item.id} type={getStarType(item.id)} inQuoteList />
-                    </div>
-                    {isSpot(item.id) ? (
-                      <>
-                        <span>{item.coin}</span>
-                        <span className='quoteCoin'>/{item.quoteCoin}</span>
-                      </>
-                    ) : (
-                      item.name
-                    )}
-                  </div>
-                  <div className='price' style={{ color: `var(${item.isUp ? '--color-green' : '--color-red'})` }}>
-                    {formatDefaultText(item.price.toFormat(item.digit))}
-                  </div>
-                  <div className='rate'>
-                    <span style={{ color: `var(${item.isUp ? '--color-green' : '--color-red'})` }}>{item.rate}%</span>
-                  </div>
-                </div>
-              </TradeLink>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {sortData(list[activeIndex])?.length > 0 ? (
+        <>
+          {TitleMemo}
+          <div className="list-wrapper">
+            <ul>
+              {sortData(list[activeIndex])?.map(item => {
+                const isHot = hotIds.includes(item.id);
+                const isNew = newIds.includes(item.id);
+                return (
+                  <li key={item.id}>
+                    <TradeLink id={item.id}>
+                      <div className={`item ${getActive(item.id === id)}`} onClick={onClose}>
+                        <div className="name">
+                          <div className="star-wrapper">
+                            <Star code={item.id} type={getStarType(item.id)} inQuoteList />
+                          </div>
+                          {isSpot(item.id) ? (
+                            <>
+                              <span>{item.coin}</span>
+                              <span className="quoteCoin">/{item.quoteCoin}</span>
+                            </>
+                          ) : (
+                            item.name
+                          )}
+                          {isHot && (
+                            <Image
+                              src="/static/images/common/hot.svg"
+                              width="14"
+                              height="14"
+                              alt="hot"
+                              className="hot"
+                            />
+                          )}
+                          {/* {isNew && <span className="new">NEW</span>} */}
+                        </div>
+                        <div className="price" style={{ color: `var(${item.isUp ? '--color-green' : '--color-red'})` }}>
+                          {formatDefaultText(item.price.toFormat(item.digit))}
+                        </div>
+                        <div className="rate">
+                          <span style={{ color: `var(${item.isUp ? '--color-green' : '--color-red'})` }}>
+                            {item.rate}%
+                          </span>
+                        </div>
+                      </div>
+                    </TradeLink>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </>
+      ) : (
+        <div className="empty-wrapper">
+          <EmptyComponent text={LANG('暂无数据')} active />
+          <div className="add-favor" onClick={() => setActiveIndex(1)}>
+            {LANG('添加自选')}
+          </div>
+        </div>
+      )}
       <style jsx>{styles}</style>
     </Drawer>
   );
@@ -519,7 +595,111 @@ const styles = css`
         padding: 0;
       }
       :global(.ant-drawer-content) {
-        background-color: var(--theme-background-color-2);
+        background-color: var(--fill-1);
+      }
+    }
+    @media ${MediaInfo.mobile} {
+      :global(.ant-drawer-content-wrapper) {
+        :global(.ant-drawer-body) {
+          // padding: 0 1.5rem;
+        }
+      }
+      :global(.search-wrap) {
+        margin: 0;
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+        padding: 0 1.5rem;
+      }
+      .tab-wrapper {
+        padding: 0 1.5rem;
+        ul {
+          padding: 0;
+          padding-bottom: 8px;
+          gap: 1.5rem;
+          color: var(--text-secondary);
+          li {
+            padding: 0;
+            height: 1rem;
+            margin: 0;
+            &.active {
+              border: 0;
+              color: var(--brand);
+            }
+          }
+        }
+      }
+      .list-wrapper {
+        ul {
+          margin: 0;
+          padding: 0;
+          li {
+            height: auto;
+          }
+          .item {
+            padding: 12px 1.5rem;
+            line-height: normal;
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--text-primary);
+            .name,
+            .price,
+            .rate {
+            }
+            .name {
+              width: 7.5rem;
+              flex: none;
+              gap: 4px;
+              .star-wrapper {
+                margin-right: 0;
+              }
+            }
+            .price {
+              justify-content: flex-end;
+              flex: 1;
+            }
+            .rate {
+              justify-content: flex-start;
+              flex: 1 !important;
+            }
+            .new {
+              color: #f04e3f;
+              background: rgba(240, 78, 63, 0.2);
+              border-radius: 2px;
+              height: normal;
+              line-height: 14px;
+              font-size: 12px;
+              text-align: center;
+              transform: scale(0.83333);
+            }
+          }
+        }
+      }
+      .empty-wrapper {
+        margin-top: 1.5rem;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        :global(.empty-img-wrapper) {
+          margin-bottom: 1.5rem;
+        }
+        .add-favor {
+          width: 10rem;
+          height: 2.5rem;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
+          flex-shrink: 0;
+          border-radius: 2.5rem;
+          background: var(--brand);
+          color: var(--text-white);
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+        }
       }
     }
   }

@@ -9,7 +9,7 @@ const Index = ({
   onClick,
   onSubmit,
   disabled,
-  type,
+  type
 }: {
   children: any;
   type?: string;
@@ -52,23 +52,24 @@ const Index = ({
 
 const styles = css`
   .button {
-    height: 40px;
+    height: 2.5rem;
     width: 100%;
-    border-radius: 8px;
+    border-radius: 2.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
     background: var(--skin-primary-color);
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 500;
-    color: var(--skin-font-color);
+    color: var(--text-white);
     &.type-1 {
       background: rgba(254, 214, 11, 0.2);
       color: var(--theme-font-color-3);
     }
     &.disabled {
       cursor: not-allowed;
-      opacity: 0.5;
+      color: var(--text-tertiary);
+      background: var(--fill-3);
     }
   }
 `;

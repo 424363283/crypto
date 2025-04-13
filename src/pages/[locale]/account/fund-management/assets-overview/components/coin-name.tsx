@@ -30,16 +30,20 @@ const styles = css`
   .name-box {
     display: flex;
     align-items: center;
+    gap: 8px;
     .currency-name {
       display: flex;
       flex-direction: column;
       font-size: 14px;
       font-weight: 500;
       color: var(--theme-font-color-1);
-      margin-left: 10px;
       text-align: left;
+      line-height: 14px;
+      gap: 8px;
       .fullname {
         font-size: 12px;
+        font-weight: 400;
+        line-height: 12px;
         color: var(--theme-font-color-3);
       }
     }

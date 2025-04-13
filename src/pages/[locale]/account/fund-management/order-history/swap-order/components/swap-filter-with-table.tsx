@@ -20,7 +20,11 @@ import { useImmer } from 'use-immer';
 import { checkIsUsdtType } from '../../../assets-overview/helper';
 import { SWAP_HISTORY_COMMISSION_TYPES } from '../constants';
 import { SWAP_HISTORY_ORDER_TYPE } from '../types';
+import { Button } from '@/components/button';
+import { useResponsive } from '@/core/hooks';
 const CommonFundHistoryTable = dynamic(() => import('./swap-common-table'));
+
+const PAGE_SIZE = 13;
 
 type SwapFilterBarProps = {
   isSwapU: boolean;
@@ -50,11 +54,15 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
   const { isSwapU } = props;
   const tabKey = (getUrlQueryParams('tab') as SWAP_HISTORY_ORDER_TYPE) || SWAP_HISTORY_ORDER_TYPE.CURRENT_COMMISSIONS;
   const { start = '', end = '' } = getFormatDateRange(new Date(), 14, true);
+  const { isMobile } = useResponsive(false);
 
+  const defaultCodeOption = { label: LANG(isMobile ? '全部合约' : '全部'), value: '' };
+  const defaultTypeOption = { label: LANG(isMobile ? '全部类型' : '全部'), value: '' };
   const [state, setState] = useImmer({
     codeOptions: [{ label: '', value: '' }],
-    type: { label: LANG('全部'), value: '' }, // "全部" 不传参，value为空
-    code: { label: LANG('全部'), value: '' },
+    type: defaultTypeOption, // "全部" 不传参，value为空
+    code: defaultCodeOption,
+
     coin: { label: LANG('全部'), value: '' },
     subWallet: { label: LANG('全部'), value: '' },
     subWalletOptions: [{ label: '', value: '' }],
@@ -63,8 +71,13 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
     page: 1,
     endDate: end,
     loading: false,
-    data: { pageData: [], totalCount: 0, currentPage: 1, pageSize: 13 },
+    data: { pageData: [], totalCount: 0, currentPage: 1, pageSize: PAGE_SIZE },
     totalAmount: 0,
+    // 状态
+    status: {
+      label: '全部',
+      value: '',
+    },
   });
   const {
     type,
@@ -79,6 +92,7 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
     subWallet,
     subWalletOptions,
     totalAmount,
+    status
   } = state;
 
   const wallets = Swap.Assets.getWallets({ usdt: checkIsUsdtType() });
@@ -112,9 +126,18 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
       Object.keys(SWAP_FUNDS_RECORD_TYPE()).map((v) => ({
         label: SWAP_FUNDS_RECORD_TYPE()[v],
         value: v,
-      })).filter(item => item.value != 'transferLiteOutPerpetualIn')
+      }))
       : handleTypeOptionsByRouteId();
   const newTypeOptions = filterAndConcatOptions(typeOptions);
+  useEffect(() => {
+    if (!code.value) {
+      setState(draft => {
+        draft.code = defaultCodeOption;
+        draft.type = defaultTypeOption;
+      });
+    }
+
+  }, [isMobile]);
   const onChangeContract = (v: { label: string; value: string }) => {
     setState((draft) => {
       draft.code = v;
@@ -125,11 +148,19 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
       draft.type = v;
     });
   };
+
+  const onChangeStatus = (v: { label: string; value: string }) => {
+    setState((draft) => {
+      draft.status = v;
+    });
+  };
+
   const onChangeSubwallet = (v: { label: string; value: string }) => {
     setState((draft) => {
       draft.subWallet = v;
     });
   };
+
   useEffect(() => {
     const isUsdtType = checkIsUsdtType();
     const getSwapCoinIds = async () => {
@@ -144,6 +175,7 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
     };
     getSwapCoinIds();
   }, []);
+
   const handleAssetsFlowSearch = async (page: number = 1) => {
     setState((draft) => {
       draft.loading = true;
@@ -172,31 +204,31 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
       draft.loading = false;
       if (res.code == 200) {
         draft.data = res.data;
+        draft.page = page;
       }
     });
   };
+
   const handleCurrentCommissionSearch = async (page: number = 1) => {
     setState((draft) => {
       draft.loading = true;
     });
-    const params: { [key: string]: string | number } = {
-      page,
-    };
+    const params: { [key: string]: string | number } = { page };
     if (code.value) {
       params.symbol = code.value.toLowerCase();
     }
-    if (type.value) {
-      params.type = type.value;
-    }
+    if (type.value) params.type = type.value;
     if (subWallet.value) {
       params.subWallet = subWallet.value;
     }
+    params.size = PAGE_SIZE;
     const res = await getSwapGetPendingApi(isSwapU, params);
     if (res.code === 200) {
       setState((draft) => {
         draft.data = res.data;
-        draft.type = type;
-        draft.code = code;
+        draft.page = page;
+        // draft.type = type;
+        // draft.code = code;
       });
     } else {
       message.error(res.message);
@@ -205,10 +237,12 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
       draft.loading = false;
     });
   };
+
   const handleHistoryCommissionSearch = async (page: number = 1) => {
     setState((draft) => {
       draft.loading = true;
     });
+
     const params: any = {
       beginDate: dayjs(startDate).toDate().getTime(),
       endDate: dayjs(endDate).toDate().getTime(),
@@ -224,11 +258,17 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
     if (subWallet.value) {
       params.subWallet = subWallet.value;
     }
+    if (status.value) {
+      params.status = status.value;
+    }
+    params.size = PAGE_SIZE;
     const res = await getSwapHistoryOrderApi(params, isSwapU);
     if (res.code == 200) {
+
       setState((draft) => {
         draft.loading = false;
         draft.data = res.data;
+        draft.page = page;
       });
     } else {
       setState((draft) => {
@@ -237,6 +277,7 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
       message.error(res.message);
     }
   };
+
   const handleHistoryTransactionSearch = async (page: number = 1) => {
     setState((draft) => {
       draft.loading = true;
@@ -250,35 +291,36 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
     if (code.value) {
       params.symbol = code.value.toLowerCase();
     }
-    if (type.value) {
-      params.type = type.value;
-    }
-    if (subWallet.value) {
-      params.subWallet = subWallet.value;
-    }
+    if (type.value) params.type = type.value;
+    if (subWallet.value)  params.subWallet = subWallet.value;
     const res = await getSwapHistoryDealApi(params, isSwapU);
     if (res.code == 200) {
       setState((draft) => {
         draft.loading = false;
-        draft.data = res.data.page;
+        draft.data = res.data;
+        draft.page = page;
         draft.totalAmount = res.data.totalAmount || 0;
       });
     } else {
       message.error(res.message);
     }
   };
+
   const onTabletDataSearch: any = {
     [SWAP_HISTORY_ORDER_TYPE.ASSET_FLOW]: handleAssetsFlowSearch,
     [SWAP_HISTORY_ORDER_TYPE.CURRENT_COMMISSIONS]: handleCurrentCommissionSearch,
     [SWAP_HISTORY_ORDER_TYPE.HISTORY_COMMISSIONS]: handleHistoryCommissionSearch,
     [SWAP_HISTORY_ORDER_TYPE.HISTORY_TRANSACTION]: handleHistoryTransactionSearch,
   };
+
   const handleSearchTableData = async (page: number = 1) => {
     await onTabletDataSearch[tabKey](page);
   };
+
   useEffect(() => {
     handleSearchTableData();
   }, [tabKey]);
+
   const onChangeDate = ([start, end]: any) => {
     if (!start || !end) {
       return;
@@ -288,40 +330,57 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
       draft.endDate = end.endOf('day').format('YYYY-MM-DD H:m:s');
     });
   };
+
   const onSearchTableData = async (page: number) => {
     await handleSearchTableData(page);
   };
+
   return (
     <div className='swap-common-record'>
+      <Desktop>
       <div className='swap-filter-bar'>
         <div className='box'>
           {tabKey !== SWAP_HISTORY_ORDER_TYPE.ASSET_FLOW ? (
             <Select
-              width={125}
+              width={isMobile ? 110 : 180}
+              height={isMobile ? 30 : 40}
               vertical
-              label={LANG('合约')}
+              label={isMobile ? '' : LANG('合约')}
               wrapperClassName='contract-select'
-              options={[{ label: LANG('全部'), value: '' }, ...codeOptions]}
+              options={[defaultCodeOption, ...codeOptions]}
               values={[code]}
               onChange={([v]) => onChangeContract(v)}
             />
           ) : null}
-          <Select
+         <Select
             vertical
-            width={140}
-            label={LANG('类型')}
-            options={[{ label: LANG('全部'), value: '' }, ...newTypeOptions]}
+            width={isMobile ? 110 : 180}
+            height={isMobile ? 30 : 40}
+            label={isMobile ? '' : LANG('类型')}
+            options={[defaultTypeOption, ...newTypeOptions]}
             values={[type]}
             onChange={([v]) => onChangeType(v)}
           />
-          <Select
+          {/* tabKey === SWAP_HISTORY_ORDER_TYPE.HISTORY_COMMISSIONS && (
+            <Select
+              vertical
+              label={LANG('状态')}
+              width={isMobile ? 110 : 138}
+              height={isMobile ? 30 : 40}
+              options={[{ label: LANG('全部'), value: '' }, ...SWAP_HISTORY_COMMISSION_STATUS]}
+              values={[status]}
+              wrapperClassName='spot-history-select-dic'
+              onChange={([v]) => onChangeStatus(v)}
+            />
+          ) */}
+          {/* <Select
             vertical
             width={140}
             label={LANG('子钱包')}
             options={[{ label: LANG('全部'), value: '' }, ...subWalletOptions]}
             values={[subWallet]}
             onChange={([v]) => onChangeSubwallet(v)}
-          />
+          /> */}
           <Desktop>
             {tabKey !== SWAP_HISTORY_ORDER_TYPE.CURRENT_COMMISSIONS && (
               <DateRangePicker
@@ -332,30 +391,26 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
               />
             )}
           </Desktop>
-          <div className={clsx('search-button')} onClick={() => onSearchTableData(1)}>
-            {LANG('查询')}
-          </div>
+          <Button rounded className={clsx('search-button')} onClick={() => onSearchTableData(1)}>{LANG('查询')}</Button>
         </div>
         {tabKey == SWAP_HISTORY_ORDER_TYPE.HISTORY_TRANSACTION && (
           <Tooltip
             placement='bottomLeft'
             title={LANG('所选时间周期内的交易币本位产生的交易量汇总,其中不包含体验金钱包所产生交易量。')}
           >
-            <div className='all-trade-vol'>
-              <span>{LANG('总交易量')}</span>: {` ${totalAmount} `}
-              {Swap.Info.getPriceUnitText(checkIsUsdtType())}
-            </div>
           </Tooltip>
         )}
       </div>
+      </Desktop>
       <style jsx>{styles}</style>
       <CommonFundHistoryTable
         tabKey={tabKey}
         page={page}
+        pageSize={data.pageSize}
         loading={loading}
-        tableData={data.pageData}
+        tableData={data?.pageData}
         onPaginationChange={onSearchTableData}
-        total={data.totalCount}
+        total={data?.totalCount}
       />
     </div>
   );
@@ -363,8 +418,7 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
 export default memo(SwapFilterWithTable);
 const styles = css`
   .swap-filter-bar {
-    height: 55px;
-    background-color: var(--theme-background-color-2);
+    background-color: var(--bg-1);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -396,42 +450,30 @@ const styles = css`
     }
     .box {
       display: flex;
-      margin-top: 13px;
+      margin-top: 24px;
       padding: 0 20px;
       flex-direction: row;
       align-items: center;
+      gap: 24px;
       @media ${MediaInfo.mobile} {
-        height: 440px;
+        height: 340px;
         position: absolute;
         align-items: flex-start;
         right: 10px;
         left: 0px;
         padding: 0 10px;
         overflow: auto;
+        gap: 12px;
       }
     }
-    :global(.select-wrapper) {
-      &:nth-child(2),
-      &:nth-child(3) {
-        margin-left: 10px;
+    :global(.search-button) {
+      width: 80px;
+      color: var(--text-brand);
+      @media ${MediaInfo.mobile} {
+        height: 32px;
+        min-height: 32px;
+        line-height: 32px;
       }
-    }
-    :global(.picker-content) {
-      margin-left: 10px;
-    }
-    .search-button {
-      background-color: var(--theme-background-color-14);
-      cursor: pointer;
-      height: 32px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      margin-left: 10px;
-      padding: 6px 10px;
-      color: var(--skin-color-active);
-      vertical-align: middle;
-      text-align: center;
-      min-width: 50px;
     }
   }
 `;

@@ -19,14 +19,15 @@ export const ErrorTips = (props: ErrorProps) => {
     [INPUT_TYPE.NORMAL_TEXT]: '',
     [INPUT_TYPE.RESET_PASSWORD]: LANG('6-16位由字母、数字和符号组成的密码，不能为纯数字或字母'),
     [INPUT_TYPE.ANTI_PHISHING_CODE]: LANG('请输入 4-20 个字符，不包括特殊符号。'),
+    [INPUT_TYPE.USER_ID]: LANG('UID错误'),
   };
   const isErrorTipsTooLong =
     (customErrorTips && customErrorTips.length > 20) ||
     type === INPUT_TYPE.PASSWORD ||
     type === INPUT_TYPE.RESET_PASSWORD;
   return (
-    <p className={clsx('error-input-tips')} style={{ minHeight: isErrorTipsTooLong ? '50px' : '25px' }}>
-      {showErrors ? customErrorTips || ERROR_TIPS_MAP[type] : null}
-    </p>
+    <div className={clsx('error-input-tips')} style={{ minHeight: isErrorTipsTooLong ? '24px' : '24px' }}>
+      {showErrors && <p className='error-info'>{customErrorTips || ERROR_TIPS_MAP[type]}</p>}
+    </div>
   );
 };

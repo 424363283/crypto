@@ -7,12 +7,12 @@ export const useTabConfig = () => {
       name: LANG('自选'),
       id: CURRENT_TAB.FAVORITE,
     },
-    // {
-    //   name: LANG('现货'),
-    //   id: CURRENT_TAB.SPOT_GOODS,
-    // },
     {
-      name: LANG('永续合约'),
+      name: LANG('币币'),
+      id: CURRENT_TAB.SPOT_GOODS,
+    },
+    {
+      name: LANG('合约'),
       id: CURRENT_TAB.PERPETUAL,
     },
     {

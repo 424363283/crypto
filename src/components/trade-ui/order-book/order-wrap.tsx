@@ -1,12 +1,13 @@
 import { DesktopOrTablet } from '@/components/responsive';
 import { OrderSwitch } from './order-switch';
+import { MediaInfo } from '@/core/utils';
 
 export const OrderWrap = ({
   children,
   activeIndex,
   OrderBookGroupBtn,
   setActiveIndex,
-  isSwap,
+  isSwap
 }: {
   children: React.ReactNode;
   OrderBookGroupBtn?: React.ReactNode;
@@ -16,26 +17,24 @@ export const OrderWrap = ({
 }) => {
   return (
     <>
-      <div className='order-book-wrap'>
-        <DesktopOrTablet>
-          <div className='order-book-active'>
-            <div className='order-book-active-list'>
-              <OrderSwitch value={activeIndex} onChange={setActiveIndex} />
-              {OrderBookGroupBtn}
-            </div>
+      <div className="order-book-wrap">
+        <div className="order-book-active">
+          <div className="order-book-active-list">
+            <OrderSwitch value={activeIndex} onChange={setActiveIndex} />
+            {OrderBookGroupBtn}
           </div>
-        </DesktopOrTablet>
+        </div>
         {children}
       </div>
       <style jsx>
         {`
           .order-book-wrap {
             flex: 1;
-            display: flex;
-            flex-direction: column;
+            // display: flex;
+            // flex-direction: column;
             > .order-book-title {
-              height: 35px;
-              padding: 0 12px;
+              height: 24px;
+              padding: 0 16px;
               display: flex;
               align-items: center;
               flex-shrink: 0;
@@ -50,13 +49,16 @@ export const OrderWrap = ({
               display: flex;
               align-items: center;
               flex-shrink: 0;
-              padding: 0 12px;
+              padding: 0 16px;
+              @media ${MediaInfo.mobile} {
+                padding: 0 1rem;
+                margin-top: 8px;
+              }
               .order-book-active-list {
                 flex: 1;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                margin-bottom: 1px;
               }
             }
           }

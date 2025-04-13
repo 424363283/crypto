@@ -24,6 +24,7 @@ export const AlertV2Modal = (props: AlertModalProps) => {
     cancelText = LANG('取消'),
     theme = 'light',
     hideHeaderIcon = false,
+    closable = false,
     ...rest
   } = props;
 
@@ -43,7 +44,7 @@ export const AlertV2Modal = (props: AlertModalProps) => {
       okText={okText}
       cancelText={cancelText}
       centered
-      closable={false}
+      closable={closable}
       destroyOnClose
       {...rest}
     >
@@ -59,7 +60,7 @@ export const AlertV2Modal = (props: AlertModalProps) => {
 };
 const { className: cssClassName, styles } = css.resolve`
   .alert-modal {
-    width: 380px !important;
+    width: 480px !important;
     :global(.alert-icon) {
       text-align: center;
       padding: 16px 0 4px;
@@ -68,6 +69,7 @@ const { className: cssClassName, styles } = css.resolve`
       padding-bottom: 2px;
       text-align: center;
       height: 100%;
+      margin-top:16px;
       :global(.alert-title) {
         font-size: 16px;
         font-weight: 500;
@@ -93,7 +95,7 @@ const { className: cssClassName, styles } = css.resolve`
       }
     }
     :global(.ant-modal-header) {
-      background: var(--theme-background-color-2);
+      background: var(--fill-pop);
     }
     :global(.ant-modal-body) {
       display: flex;
@@ -104,8 +106,9 @@ const { className: cssClassName, styles } = css.resolve`
       padding: 0px;
       display: flex;
       justify-content: center;
+      margin-top:48px;
       :global(.ant-btn) {
-        height: 40px;
+        height: 48px;
         flex: 1 1;
         border: none;
         font-weight: 600;
@@ -120,8 +123,8 @@ const { className: cssClassName, styles } = css.resolve`
       :global(.ant-btn:nth-child(2)) {
         margin-inline-start: 0;
         margin-right: 0px;
-        background: var(--theme-primary-color);
-        color: var(--theme-light-text-1);
+        background: var(--text-brand);
+        color:#fff;
       }
       :global(.ant-btn-primary:disabled) {
         cursor: not-allowed;
@@ -137,11 +140,11 @@ const { className: cssClassName, styles } = css.resolve`
     }
     :global(.ant-modal-content),
     :global(.ant-modal-body) {
-      background: var(--theme-background-color-2);
+    background: var(--fill-pop);
       color: var(--theme-font-color-1);
     }
     :global(.ant-modal-footer) {
-      background: var(--theme-background-color-2);
+    background: var(--fill-pop);
     }
   }
 `;

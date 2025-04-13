@@ -7,7 +7,7 @@ const list = [
   { name: LANG('提币'), href: '/account/fund-management/asset-account/withdraw' },
   // { name: LANG('法币充值'), href: '/fiat-crypto' },
   { name: LANG('内部转账'), href: '/account/fund-management/asset-account/transfer' },
-  { name: LANG('合约卡券'), href: '/account/fund-management/assets-overview', query: { type: 'coupon' } },
+  // { name: LANG('合约卡券'), href: '/account/fund-management/assets-overview', query: { type: 'coupon' } },
 ];
 const HeaderAssets = () => {
   return (
@@ -31,6 +31,22 @@ const styles = css`
     margin: 0;
     padding: 10px 12px;
     text-align: left;
+    li {
+      :global(> a) {
+        color: var(--text-secondary)!important;
+        :global(>*:nth-last-child(2)) {
+          color: var(--text-primary);
+        }
+        :global(>*:nth-child(2)) {
+          color: var(--text-tertiary);
+        }
+      }
+      &:hover {
+        .name {
+          color: var(--brand);
+        }
+      }
+    }
     .name {
       display: flex;
       justify-content: center;
@@ -43,11 +59,6 @@ const styles = css`
       border-radius: 5px;
       white-space: nowrap;
       word-break: keep-all;
-      color: var(--theme-font-color-1);
-      &:hover {
-        background-color: var(--theme-background-color-3);
-        color: var(--skin-hover-font-color);
-      }
     }
   }
 `;

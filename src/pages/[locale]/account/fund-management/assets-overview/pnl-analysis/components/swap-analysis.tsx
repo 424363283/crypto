@@ -65,7 +65,7 @@ const CommonTabBar = () => {
     <TabBar
       options={[
         { label: LANG('U本位合约'), value: WalletType.ASSET_SWAP_U },
-        { label: LANG('币本位合约'), value: WalletType.ASSET_SWAP },
+        // { label: LANG('币本位合约'), value: WalletType.ASSET_SWAP },
       ]}
       value={curTab}
       onChange={onTabChange}
@@ -172,7 +172,8 @@ export default function SwapAnalysis() {
   const BASIC_PNL_DATA = [
     {
       name: LANG('总盈利'),
-      value: totalProfit > 0 ? `+${totalProfit.toFixed(2)} ${symbolUnit}` : totalProfit?.toFixed(2) + symbolUnit,
+      // value: totalProfit > 0 ? `+${totalProfit.toFixed(2)} ${symbolUnit}` : totalProfit?.toFixed(2) + symbolUnit,
+      value: `${totalProfit > 0 ? '+' + totalProfit.toFixed(2) : totalProfit?.toFixed(2)} ${symbolUnit}`,
       tips: LANG('期间所有已实现获利加总'),
     },
     {
@@ -182,7 +183,8 @@ export default function SwapAnalysis() {
     },
     {
       name: LANG('净盈利/亏损'),
-      value: +totalValue > 0 ? `+${totalValue} ${symbolUnit}` : totalValue + symbolUnit,
+      // value: +totalValue > 0 ? `+${totalValue} ${symbolUnit}` : totalValue + symbolUnit,
+      value: `${Number(totalValue) > 0 ? '+' + totalValue : totalValue} ${symbolUnit}`,
       tips: LANG('总盈利') + '-' + LANG('总亏损'),
     },
     {
@@ -213,14 +215,14 @@ export default function SwapAnalysis() {
 
   return (
     <div className='swap-analysis'>
-      <Nav title={LANG('盈亏分析详情')} />
-      <CommonTabBar />
+      {/* <CommonTabBar /> */}
       <SwapPnlDetailCard eyeOpen={eyeOpen} setEyeOpen={setEyeOpen} symbolUnit={symbolUnit} swapProfits={swapProfits} />
       <div className='swap-bottom-card'>
+        <SwapPnlRightColumn symbolUnit={symbolUnit} reportPnls={reportPnls} />
         <div className='left-column'>
           <div className='top-area'>
             <div className='filter-bar'>
-              <DateRangeSelector dayOptionWidth={105} onDateRangeChange={onDateRangeChange} />
+              <DateRangeSelector dayOptionWidth={86} onDateRangeChange={onDateRangeChange} />
               <SearchButton onSearchClick={onSearchClick} />
             </div>
             <div className='basic-pnl-container'>
@@ -241,7 +243,6 @@ export default function SwapAnalysis() {
             })}
           </div>
         </div>
-        <SwapPnlRightColumn symbolUnit={symbolUnit} reportPnls={reportPnls} />
       </div>
       <style jsx>{styles}</style>
     </div>
@@ -249,6 +250,9 @@ export default function SwapAnalysis() {
 }
 const styles = css`
   .swap-analysis {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     :global(.tab-bar) {
       border-bottom: none;
       padding: 0;
@@ -259,66 +263,74 @@ const styles = css`
       }
     }
     .swap-bottom-card {
-      margin-top: 27px;
       display: flex;
+      gap: 8px;
       @media ${MediaInfo.mobileOrTablet} {
         flex-direction: column;
+        width: 100%;
+        background: var(--fill-1);
       }
       .left-column {
-        @media ${MediaInfo.tablet} {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-end;
-        }
+        display: flex;
+        flex: 1 auto;
+        height: 956px;
+        padding: 24px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+        flex-shrink: 0;
+        border-radius: 8px;
+        border: 1px solid var(--line-1);
         @media ${MediaInfo.mobile} {
-          margin-bottom: 42px;
+          height: auto;
         }
         .top-area {
-          @media ${MediaInfo.mobileOrTablet} {
-            margin-right: 44px;
-          }
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          gap: 24px;
         }
-        .top-area,
         .bottom-area {
-          @media ${MediaInfo.mobileOrTablet} {
-            flex: 1;
-          }
+          width: 100%; 
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
         }
         .filter-bar {
           display: flex;
           align-items: center;
-          :global(.select-wrapper) {
-            margin-right: 5px;
-          }
-          :global(.search-button) {
-            margin-left: 5px;
-          }
+          justify-content: space-between;
+          gap: 8px;
         }
         :global(.basic-pnl-container) {
           display: grid;
           grid-template-columns: repeat(2, 2fr);
-          grid-gap: 16px 8px;
-          margin-top: 20px;
-          margin-bottom: 20px;
+          grid-gap: 8px 8px;
           :global(.basic-pnl-card) {
-            border: 1px solid var(--theme-border-color-2);
-            width: 178px;
-            height: 81px;
             display: flex;
+            padding: 24px;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex: 1 0 0;
             border-radius: 8px;
+            background: var(--fill-2);
             :global(.title) {
-              color: var(--theme-font-color-3);
-              font-size: 12px;
-              border-bottom: 1px solid var(--theme-font-color-placeholder);
+              color: var(--text-secondary);
+              text-align: center;
+              font-size: 14px;
+              font-weight: 400;
+              line-height: 14px;
+              padding-bottom: 4px;
+              border-bottom: 1px dashed var(--text-secondary);
             }
             :global(.value) {
-              color: var(--theme-font-color-1);
-              font-size: 16px;
+              color: var(--text-primary);
+              text-align: center;
+              font-size: 18px;
               font-weight: 500;
-              margin-top: 5px;
+              line-height: 18px; /* 100% */
             }
             :global(.value.green) {
               color: var(--color-green);
@@ -330,33 +342,47 @@ const styles = css`
         }
       }
       .right-column {
-        width: 100%;
-        @media ${MediaInfo.desktop} {
-          margin-left: 80px;
+        display: flex;
+        width: 720px;
+        padding: 24px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+        border-radius: 8px;
+        border: 1px solid var(--line-1);
+        @media ${MediaInfo.mobile}{
+          width:auto;
+          padding: 12px;
         }
         .tab {
-          border-radius: 5px;
           display: flex;
+          padding: 8px;
           align-items: center;
-          min-width: 160px;
-          margin-bottom: 25px;
+          gap: 8px;
+          align-self: stretch;
+          border-radius: 30px;
+          background: var(--fill-3);
           .tab-item {
-            background-color: var(--theme-background-color-3);
-            cursor: pointer;
-            height: 26px;
             display: flex;
-            align-items: center;
+            padding: 12px 16px;
             justify-content: center;
-            padding: 2px 10px;
-            min-width: 80px;
-            font-size: 14px;
-            color: var(--theme-font-color-3);
-            border-radius: 5px;
+            align-items: center;
+            gap: 10px;
+            flex: 1 0 0;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
           }
           .tab-item.active {
-            height: 26px;
-            background-color: var(--skin-primary-color);
-            color: var(--skin-font-color);
+            display: flex;
+            padding: 12px 16px;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex: 1 0 0;
+            border-radius: 30px;
+            background: var(--brand);
+            color: var(--text-white);
           }
         }
         :global(.bottom-pagination) {

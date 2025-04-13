@@ -8,6 +8,7 @@ import { Tabs } from 'antd';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { GlobalConfigDrawer } from '../drawer/';
+import { Svg } from '@/components/svg';
 const LangContent = dynamic(() => import('../lang-content')); 
 const FiatList = dynamic(() => import('../fiat-list'));
 
@@ -22,25 +23,23 @@ const GlobalIcon = ({ className }: { className?: string }) => {
   const items: TabsProps['items'] = [
     {
       key: '1',
-      label: LANG('Languages and regions'),
+      label: LANG('语言'),
       children: <LangContent onLanguageItemClick={() => setShowModal(false)} />,
     },
-    {
-      key: '2',
-      label: LANG('Exchange rate'),
-      children: <FiatList onClick={() => setShowModal(false)} />,
-    },
+    // {
+    //   key: '2',
+    //   label: LANG('Exchange rate'),
+    //   children: <FiatList onClick={() => setShowModal(false)} />,
+    // },
   ];
   return (
     <>
-      <CommonIcon
-        name={url}
-        size={24}
-        className={className}
+      <Svg
+        src='/static/icons/primary/header/language.svg'
+        width={24}
+        height={24}
         onClick={showLanguageModal}
-        enableSkin={hover}
-        onMouseEnter={() => setIsHover(true)}
-        onMouseLeave={() => setIsHover(false)}
+        className={className}
       />
       <DesktopOrTablet forceInitRender={false}>
         {showModal && (
@@ -54,6 +53,8 @@ const GlobalIcon = ({ className }: { className?: string }) => {
             destroyOnClose
             cancelButtonProps={{ style: { display: 'none' } }}
             width={800}
+            height={500}
+            footer={false}
           >
             <Tabs items={items} />
           </BasicModal>
@@ -71,7 +72,7 @@ const GlobalIcon = ({ className }: { className?: string }) => {
             padding-bottom: 22px;
           }
           :global(.ant-modal-content) {
-            max-height: 450px;
+            max-height: 550px;
 
             @media ${MediaInfo.tablet} {
               max-width: 800px;
@@ -94,13 +95,19 @@ const GlobalIcon = ({ className }: { className?: string }) => {
           }
           :global(.ant-tabs-nav-list) {
             overflow: hidden;
-            :global(.ant-tabs-tab-active) :global(.ant-tabs-tab-btn) {
-              color: var(--theme-font-color-1);
-            }
+            
             :global(.ant-tabs-tab-btn) {
-              color: var(--theme-font-color-2);
+              color: var(--text-secondary);
               font-size: 18px;
               font-weight: 500;
+              &:focus:not(:focus-visible) {
+                color: var(--text-brand);
+              }
+            }
+            :global(.ant-tabs-tab-active) {
+              :global(.ant-tabs-tab-btn) {
+                color: var(--text-brand);
+              }
             }
           }
           :global(.ant-tabs-nav-wrap) {

@@ -1,3 +1,4 @@
+import { MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
 
 interface DescriptionProps {
@@ -27,7 +28,11 @@ const styles = css`
     .title {
       font-size: 16px;
       font-weight: 500;
-      color: var(--theme-font-color-1);
+      color: var(--text-primary);
+      @media ${MediaInfo.mobile}{
+        font-size: 14px;
+        font-weight: 500;
+      }
     }
     :global(.recharge-content) {
       width: 100%;
@@ -35,6 +40,9 @@ const styles = css`
       padding: 15px 0px;
       flex-direction: column;
       align-items: flex-start;
+      @media ${MediaInfo.mobile}{
+        padding: 8px 0;
+      }
       :global(.row) {
         position: relative;
         padding-left: 18px;
@@ -44,6 +52,14 @@ const styles = css`
         line-height: 18px;
         &:last-child {
           margin-bottom: 0;
+        }
+        @media ${MediaInfo.mobileOrTablet} {
+          font-size: 12px;
+          margin-bottom: 8px;
+          font-weight:400;
+          &:last-child {
+            margin-bottom: 0;
+          }
         }
         &::before {
           left: 0;

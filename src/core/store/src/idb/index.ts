@@ -22,6 +22,8 @@ export class IDB_STORE_KEYS {
   public static MARKETS_DATA_SWAP_FEATURE_LIST = 'MARKETS_DATA_SWAP_FEATURE_LIST'; // 永续U本位
   public static MARKETS_DATA_SWAP_COIN_LIST = 'MARKETS_DATA_SWAP_COIN_LIST'; // 永续币本位
   public static MARKETS_DATA_ETF_LIST = 'MARKETS_DATA_ETF_LIST'; // 杠杆代币交易对
+  public static MARKETS_DATA_LITE_LIST = 'MARKETS_DATA_LITE_LIST'; // lite
+
 }
 
 export class IDB {

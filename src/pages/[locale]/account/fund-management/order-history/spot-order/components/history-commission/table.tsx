@@ -44,6 +44,7 @@ export const SpotHistoryCommissionTable = () => {
     symbol,
     side,
     type,
+    status,
     startDate = '',
     commodity,
     endDate = '',
@@ -51,6 +52,7 @@ export const SpotHistoryCommissionTable = () => {
     symbol: string;
     side: number;
     type: string;
+    status?: number,
     commodity: string;
     startDate?: string;
     endDate?: string;
@@ -79,6 +81,9 @@ export const SpotHistoryCommissionTable = () => {
       // OCO 特殊处理
       params['type'] = type === '4' ? '0' : type;
     }
+    if(status) {
+      params['state'] = status;
+    }
     const res = await getSpotHistoryCommissionApi(params);
     if (res.code === 200) {
       setState((draft) => {
@@ -86,7 +91,7 @@ export const SpotHistoryCommissionTable = () => {
         draft.data = formatDatalist(resultList);
         draft.loading = false;
         draft.page = 1;
-        draft.total = res?.data?.count || '0';
+        draft.total = res?.data?.total || '0';
         draft.filters = params;
       });
     } else {
@@ -131,7 +136,7 @@ export const SpotHistoryCommissionTable = () => {
 
   return (
     <>
-      {spotMap && <SpotFilterBar onSearch={fetchSpotPosition} />}
+      <SpotFilterBar onSearch={fetchSpotPosition} />
       <HistoricalTable
         dataSource={filterList}
         loading={loading}
@@ -146,6 +151,33 @@ export const SpotHistoryCommissionTable = () => {
         }}
       />
       <TableStyle />
+      <style jsx>{`
+        :global(.spot_entrustError) {
+          color: #ef454a;
+          font-size: 12px;
+          font-style: normal;
+          font-weight: 500;
+        }
+        :global(.spot_Cancelallorders) {
+          color: #717171;
+          font-size: 12px;
+          font-style: normal;
+          font-weight: 500;
+        }
+        :global(.spot_ordercancellation) {
+          color: #f0ba30;
+          font-size: 12px;
+          font-style: normal;
+          font-weight: 500;
+        }
+        :global(.spot_success) {
+          color: #07828b;
+          font-size: 12px;
+          font-style: normal;
+          font-weight: 500;
+        }
+      `} 
+      </style>
     </>
   );
 };

@@ -37,12 +37,16 @@ const styles = css`
     :global(.common-table) {
       :global(tr) {
         border: none !important;
+      
+      }
+      :global(th) {
+        color: var(--text-tertiary) !important;
       }
       :global(tr),
       :global(th),
       :global(td) {
         background: var(--theme-background-color-3-2) !important;
-        color: var(--theme-font-color-1) !important;
+      
         border-color: var(--theme-border-color-1) !important;
         &::before {
           display: none !important;

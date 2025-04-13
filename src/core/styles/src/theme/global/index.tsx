@@ -30,11 +30,19 @@ export const GlobalThemeStyle = ({ children }: any) => {
             ${getThemeColors(colorMap, 'dark')}
             ${getThemeColors(specColorMap, 'dark')}
             ${getThemeColors(specColorRgbMap, 'dark')}
+            --common-modal-bg: ${colorMap['--fill-pop'].dark};
+            --common-line-color: ${colorMap['--line-3'].dark};
+            --dropdown-select-bg-color: ${colorMap['--fill-pop'].dark};
+            --dropdown-select-shadow-color: ${colorMap['--fill-projection'].dark};
           }
           :root[theme='light'] {
             ${getThemeColors(colorMap, 'light')}
             ${getThemeColors(specColorMap, 'light')}
             ${getThemeColors(specColorRgbMap, 'light')}
+            --common-modal-bg: ${colorMap['--fill-pop'].light};
+            --common-line-color: ${colorMap['--line-1'].light};
+            --dropdown-select-bg-color: ${colorMap['--fill-pop'].light};
+            --dropdown-select-shadow-color: ${colorMap['--fill-projection'].light};
           }
           .main-fall {
             color: var(--color-red);
@@ -53,9 +61,11 @@ export const GlobalThemeStyle = ({ children }: any) => {
           }
           .main-red {
             color: var(--color-red) !important;
+              font-weight: 500 !important;
           }
           .main-green {
             color: var(--color-green) !important;
+              font-weight: 500 !important;
           }
           .main-yellow {
             color: var(--color-red) !important;

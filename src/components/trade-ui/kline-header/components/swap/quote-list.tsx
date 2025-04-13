@@ -70,6 +70,7 @@ export const QuoteList = ({
           renderSearchBottom={() =>
             isUsdtType ? (
               <SecondaryTitle
+                className='secondary-title'
                 activeIndex={secondaryActiveIndex}
                 onTabsChange={(v) => {
                   const key = secondaryTabs[v];
@@ -90,11 +91,19 @@ export const QuoteList = ({
       </div>
       <style jsx>{`
         .quote-list {
-          width: 348px;
-          height: 497px;
+          width: 340px;
+          height: 374px;
           overflow: hidden;
           display: flex;
           flex-direction: column;
+        }
+        :global(.quote-wrapper) {
+          padding: 0 16px;
+          margin: 16px 0;
+        }
+        :global(.secondary-title) {
+          margin: 0 16px;
+          margin-bottom: 16px;
         }
       `}</style>
     </>

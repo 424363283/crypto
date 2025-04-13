@@ -13,6 +13,7 @@ import { InfoItem } from './components/info-item';
 import { MySwitch } from './components/my-switch';
 import { NotificationsSettings } from './components/notifications-settings';
 import { clsx, styles } from './styled';
+import { DesktopOrTablet, Mobile } from '@/components/responsive';
 
 export const PreferenceMenu = ({
   onlyContent,
@@ -28,7 +29,7 @@ export const PreferenceMenu = ({
       }),
     []
   );
-  const { isMobile } = useResponsive();
+  // const { isMobile } = useResponsive();
   const { positionVisible } = store;
   const isUsdtType = Swap.Trade.base.isUsdtType;
   const twoWayMode = Swap.Trade.twoWayMode;
@@ -71,13 +72,15 @@ export const PreferenceMenu = ({
       <div className={clsx('content')}>
         <div>
           {isUsdtType && (
+            <div className={clsx('position-mode')}>
             <InfoItem
               label={LANG('仓位模式')}
-              value={marketOrderConfirm}
+              value={twoWayMode}
               valueInfo={isBounsWallet ? LANG('体验金子钱包仅支持单向持仓') : null}
               onClick={_handlePositionVisible}
               valueLabel={twoWayMode ? LANG('双向持仓') : LANG('单向持仓')}
             />
+            </div>
           )}
 
           {/* <InfoItem
@@ -124,12 +127,13 @@ export const PreferenceMenu = ({
             value={tradeNoticeSound}
             onChange={(v: any) => Swap.Info.setTradePreference(isUsdtType, { tradeNoticeSound: v })}
           />
-          <InfoItem
+          {/* <InfoItem
             label={LANG('闪电下单')}
             value={lightningOrder}
             onChange={(v: any) => Swap.Info.setTradePreference(isUsdtType, { lightningOrder: v })}
-          />
+          /> */}
           {/* <NotificationsSettings /> */}
+          <DesktopOrTablet>
           <div className={clsx('section-title')}>
             {LANG('下单确认')}
             <MySwitch
@@ -139,6 +143,14 @@ export const PreferenceMenu = ({
               }}
             />
           </div>
+          </DesktopOrTablet>
+          <Mobile>
+          <InfoItem
+            label={LANG('下单确认')}
+            value={marketOrderConfirm}
+            onChange={(v: any) =>  _setPreference({ market: v, limit: v, limitSpsl: v, marketSpsl: v, track: v, reverse: v })}
+          />
+          </Mobile>
           <InfoItem
             label={LANG('市价订单')}
             value={marketOrderConfirm}
@@ -167,6 +179,7 @@ export const PreferenceMenu = ({
           /> */}
           {/* <InfoItem label={LANG('反向开仓')} value={reverse} onChange={(v: any) => _setPreference({ reverse: v })} /> */}
         </div>
+        <div className={clsx('line')}> <div /></div>
       </div>
       {styles}
       <SwapPositionModeModal visible={positionVisible} onClose={_handlePositionVisible} zIndex={100000} />

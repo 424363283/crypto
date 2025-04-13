@@ -12,7 +12,7 @@ const AssetsOverviewContainer = dynamic(() => import('./container'), {
 function AssetOverview() {
   return (
     <TradeThemeProvider>
-      <UniversalLayout hideFooter bgColor='var(--theme-secondary-bg-color)'>
+      <UniversalLayout bgColor='var(--theme-secondary-bg-color)'>
         <AssetsOverviewContainer />
       </UniversalLayout>
     </TradeThemeProvider>

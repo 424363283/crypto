@@ -14,6 +14,7 @@ import QuotePopover from './quote-popover';
 const _CoinDes = ({ id, name }: { id: string; name?: string }) => {
   const [data, setData] = useState<any>({});
   const isLitePage = window.location?.pathname.indexOf('lite') > -1;
+  const [openQuoteList, setOpenQuoteList] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -37,9 +38,8 @@ const _CoinDes = ({ id, name }: { id: string; name?: string }) => {
         if (isSpotEtf(id)) {
           const resultEtfCommodityInfo = await getCommonEtfCommodityApi(id);
           const { lever, isBuy } = getEtfCryptoInfo(id);
-          const etfTitle = `${formatDefaultText(resultEtfCommodityInfo?.data?.currency)} ${formatDefaultText(lever)}X ${
-            isBuy ? LANG('多') : LANG('空')
-          }`;
+          const etfTitle = `${formatDefaultText(resultEtfCommodityInfo?.data?.currency)} ${formatDefaultText(lever)}X ${isBuy ? LANG('多') : LANG('空')
+            }`;
 
           setData({ ...resultCommodityInfo.data, ...resultEtfCommodityInfo.data, ...item, isEtf: true, etfTitle });
         } else {
@@ -52,18 +52,28 @@ const _CoinDes = ({ id, name }: { id: string; name?: string }) => {
   return (
     <>
       <div className='coin-des'>
-        {isLitePage && <CoinLogo coin={data?.code} width='24' height='24' alt={data?.code} />}
+        {/* isLitePage && <CoinLogo coin={data?.code} width='24' height='24' alt={data?.code} /> */}
         <div className='content'>
           <div className='name-wrapper'>
-            <h1 className='name'>{name ? name?.replace('_', '/') : id?.replace('_', '/')}</h1>
-            {storeTradeCollapse.lite && <QuotePopover content={<QuoteList.Lite inHeader />} />}
+            {storeTradeCollapse.lite && <QuotePopover
+              id={id}
+              open={openQuoteList}
+              onOpenChange={setOpenQuoteList}
+              content={<QuoteList.Lite inHeader onClickItem={() => setOpenQuoteList(false)} />}
+            />}
           </div>
           <Popover
             trigger={['click']}
             overlayInnerStyle={{
-              backgroundColor: 'var(--theme-trade-bg-color-2)',
-              padding: 0,
-              border: '1px solid var(--theme-trade-border-color-1)',
+              backgroundColor: 'var(--dropdown-select-bg-color)',
+              boxShadow: '0px 4px 16px 0px var(--dropdown-select-shadow-color)',
+              borderRadius: 8,
+              marginTop: 8,
+              marginLeft: 70,
+              width: '842px',
+              height: 'auto',
+              padding: '16px',
+              // border: '1px solid var(--theme-trade-border-color-1)',
             }}
             align={{
               offset: [-48, 15],
@@ -71,10 +81,11 @@ const _CoinDes = ({ id, name }: { id: string; name?: string }) => {
             overlayClassName='overview-container'
             placement='bottomLeft'
             arrow={false}
+
             content={<Overview data={data} />}
           >
             <div className='title'>
-              <Svg src='/static/images/trade/header/book.svg' width={6} height={9} />
+              <Svg src='/static/images/trade/header/book.svg' width={14} height={14} />
               {data?.etfTitle ? (
                 <span className='subtitle'>{data?.etfTitle}</span>
               ) : (
@@ -93,7 +104,6 @@ const _CoinDes = ({ id, name }: { id: string; name?: string }) => {
           .content {
             display: flex;
             flex-direction: column;
-            margin-left: 13px;
           }
           .name-wrapper {
             display: flex;
@@ -105,14 +115,17 @@ const _CoinDes = ({ id, name }: { id: string; name?: string }) => {
             }
           }
           .title {
-            font-size: 12px;
-            margin-top: 2px;
             display: flex;
+            justify-content: flex-end;
             align-items: center;
+            gap: 8px;
             cursor: pointer;
             .subtitle {
-              margin-left: 5px;
-              color: var(--theme-font-color-2);
+              color: var(--text-secondary);
+              font-size: 14px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
             }
           }
         }

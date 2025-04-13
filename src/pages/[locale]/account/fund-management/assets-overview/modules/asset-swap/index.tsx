@@ -1,7 +1,7 @@
 import { ACCOUNT_TYPE, DefaultCoin, TransferModal } from '@/components/modal';
 import { WalletFormModal } from '@/components/modal/wallet-form-modal';
-import { Desktop } from '@/components/responsive';
-import TabBar from '@/components/tab-bar';
+import { Desktop, Mobile } from '@/components/responsive';
+import TabBar, { TAB_TYPE } from '@/components/tab-bar';
 import { useResponsive } from '@/core/hooks';
 import { LANG, TrLink } from '@/core/i18n';
 import { Swap } from '@/core/shared';
@@ -19,6 +19,8 @@ import { AssetContent } from './components/asset-content';
 import { HistoricalCommission } from './components/historical-commission';
 import { HoldPosition } from './components/hold-position';
 import { OpenContractView } from './components/open-contract';
+import { DaysProfitAndLossSmallCard, INTERVAL_DAY } from '../../components/profit-analysis-card/days-pnl-card';
+import { Size } from '@/components/constants';
 
 enum TAB_KEY {
   ALL_ASSETS = 'all-assets',
@@ -74,8 +76,9 @@ function AssetSwapPage() {
             type={isSwapU ? WalletType.ASSET_SWAP_U : WalletType.ASSET_SWAP}
             onWalletCreateClick={onOpenWalletFormModal}
           />
+          <DaysProfitAndLossSmallCard type={isSwapU ? WalletType.ASSET_SWAP_U : WalletType.ASSET_SWAP} dayType={INTERVAL_DAY.TODAY} />
           <AssetContent
-            margin={Number(calcTotal.totalMargin)}
+            margin={Number(calcTotal.totalMargin2)}
             unrealisedPNL={Number(calcTotal.unrealisedPNL)}
             bonusAmount={Number(calcTotal.bonusAmount)}
             deductionAmount={Number(calcTotal.voucherAmount)}
@@ -85,8 +88,13 @@ function AssetSwapPage() {
           <ProfitAnalysisCard type={isSwapU ? WalletType.ASSET_SWAP_U : WalletType.ASSET_SWAP} />
         </Desktop>
       </div>
-      <div className='swap-table-card'>
+      <Mobile>
+        <ProfitAnalysisCard type={isSwapU ? WalletType.ASSET_SWAP_U : WalletType.ASSET_SWAP} />
+      </Mobile>
+      <div className='swap-table-card rounded-1 border-1'>
         <TabBar
+          type={isMobile ? TAB_TYPE.CARD : TAB_TYPE.LINE}
+          size={isMobile ? Size.LG : Size.LG}
           options={[
             { label: LANG('全部资产'), value: TAB_KEY.ALL_ASSETS },
             { label: LANG('持有仓位'), value: TAB_KEY.HOLD_POSITION },
@@ -95,13 +103,13 @@ function AssetSwapPage() {
           value={curTab}
           onChange={onChange}
         >
-          <TrLink
+          {/* <TrLink
             className='assets-link'
             href={`/account/fund-management/order-history/${isSwapU ? 'swap-u-order' : 'swap-order'}`}
-            query={{ tab: 0 }}
+            query={{ tab: 3 }}
           >
             {LANG('资金流水')}
-          </TrLink>
+          </TrLink> */}
         </TabBar>
         <OpenContractView>{renderTabContent()}</OpenContractView>
       </div>
@@ -143,17 +151,18 @@ const styles = css`
     .swap-header-card {
       display: flex;
       align-items: center;
-      height: 305px;
+      height: 362px;
       @media ${MediaInfo.mobile} {
         height: 100%;
       }
     }
     .swap-table-card {
-      background-color: var(--theme-background-color-2);
+      background-color: var(--bg-1);
       border-top-left-radius: 15px;
       border-top-right-radius: 15px;
-      min-height: calc(100vh - 410px);
-      margin-top: 20px;
+      min-height: calc(100vh - 362px);
+      margin-top: 8px;
+      padding-top: 10px;
       @media ${MediaInfo.mobile} {
         margin-top: 10px;
       }
@@ -175,20 +184,20 @@ const styles = css`
         }
       }
       :global(.ant-table-thead tr th) {
-        background-color: var(--theme-background-color-2) !important;
+        background-color: var(--fill-1) !important;
       }
       :global(.ant-table-tbody .ant-table-row) {
         :global(td.ant-table-cell-row-hover) {
-          background: var(--theme-background-color-4) !important;
+          background: var(--fill-2) !important;
         }
       }
     }
     :global(.assets-link) {
       font-size: 14px;
       font-weight: 400;
-      color: var(--skin-color-active);
+      color: var(--text-brand);
       line-height: 18px;
-      border-bottom: 1px solid var(--skin-color-active);
+      border-bottom: 1px solid var(--text-brand);
     }
   }
 `;

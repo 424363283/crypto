@@ -6,6 +6,7 @@ import { AlertModal } from './';
 import { AlertModalProps } from './alert';
 import { AlertV2Modal } from './alert_v2';
 import { AlertV3Modal } from './alert_v3';
+import { AlertV4Modal } from './alert_v4';
 
 type AlertFuncProps = {
   title?: string;
@@ -21,6 +22,7 @@ type AlertFuncProps = {
   subDescription?: string | React.ReactNode;
   v2?: boolean;
   v3?: boolean;
+  v4?: boolean;
 } & AlertModalProps;
 
 export const AlertFunction = (props: AlertFuncProps) => {
@@ -36,6 +38,7 @@ export const AlertFunction = (props: AlertFuncProps) => {
     subDescription,
     v2,
     v3,
+    v4,
     ...rest
   } = props;
   const div = document.createElement('div');
@@ -58,7 +61,7 @@ export const AlertFunction = (props: AlertFuncProps) => {
   };
   root.render(
     <>
-      {!v2 && !v3 && (
+      {!v2 && !v3 && !v4 && (
         <AlertModal
           title={title}
           width={width}
@@ -92,6 +95,22 @@ export const AlertFunction = (props: AlertFuncProps) => {
       )}
       {v3 && (
         <AlertV3Modal
+          title={title}
+          width={width}
+          okText={okText}
+          cancelText={cancelText}
+          className={className}
+          open={true}
+          description={content}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          subDescription={subDescription}
+          destroyOnClose
+          {...rest}
+        />
+      )}
+      {v4 && (
+        <AlertV4Modal
           title={title}
           width={width}
           okText={okText}

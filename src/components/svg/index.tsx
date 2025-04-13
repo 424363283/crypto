@@ -18,7 +18,6 @@ export const Svg = ({
       .svg {
         width: ${width}px;
         height: ${height}px;
-
         :global(div),
         :global(svg) {
           width: inherit;
@@ -30,7 +29,7 @@ export const Svg = ({
           align-items: center;
         }
         :global(svg) {
-          ${color ? `fill: ${color};` : ''}
+          ${color ? `fill: ${color}!important;` : ''}
           ${currentColor ? `color: ${currentColor};` : ''}
         }
       }

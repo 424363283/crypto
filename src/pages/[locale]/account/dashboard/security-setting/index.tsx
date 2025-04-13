@@ -1,4 +1,4 @@
-import { getUrlQueryParams } from '@/core/utils';
+import { getUrlQueryParams, MediaInfo } from '@/core/utils';
 import dynamic from 'next/dynamic';
 import css from 'styled-jsx/css';
 import BindEmail from '../../bind-email';
@@ -62,7 +62,10 @@ function SecuritySettingContainer() {
 }
 const styles = css`
   .security-setting-container {
-    height: calc(100vh - 82px);
+    padding-bottom:20px;
+    @media ${MediaInfo.mobile} {
+      margin: 0 12px 12px;
+    }
   }
 `;
 export default SecuritySettingContainer;

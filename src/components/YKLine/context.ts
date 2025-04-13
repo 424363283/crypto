@@ -21,7 +21,12 @@ interface ExchangeChartContextValue {
   // 强平线
   showLiquidationLine: boolean;
   setShowLiquidationLine: (show: boolean) => void;
-
+  // 当前委托线
+  showCurrentEntrustLine:boolean;
+  setShowCurrentEntrustLine: (show: boolean) => void;
+  // 倒计时
+  showCountdown:boolean;
+  setShowCountdown: (show: boolean) => void;
 };
 
 const ExchangeChartContext = createContext<ExchangeChartContextValue>(
@@ -42,6 +47,10 @@ const ExchangeChartContext = createContext<ExchangeChartContextValue>(
     setShowHistoryOrderMark: () => {},
     showLiquidationLine: false,
     setShowLiquidationLine: () => {},
+    showCurrentEntrustLine: false,
+    setShowCurrentEntrustLine: () => {},
+    showCountdown: false,
+    setShowCountdown: () => {},
   }
 );
 

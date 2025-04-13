@@ -1,9 +1,10 @@
 /// <reference path="./prototype.d.ts" />
+import BigNumber from 'bignumber.js';
 import { BN } from './bn.conf';
 
 declare global {
   interface String {
-    toFixed(digit?: number): string;
+    toFixed(digit?: number, roundingMode?: BigNumber.RoundingMode): string;
     toRound(digit?: number): string;
     toFormat(digit?: number): string;
     add(arg: number | string): string;
@@ -16,13 +17,13 @@ declare global {
 }
 
 // 正确获取小数位数
-String.prototype.toFixed = function (digit?: number): string {
+String.prototype.toFixed = function (digit?: number, roundingMode?: BigNumber.RoundingMode): string {
   if (isNaN(+this)) return '--';
   try {
     if (digit === undefined) {
       return new BN(+this).toFixed();
     } else {
-      return new BN(+this).toFixed(digit, 1);
+      return new BN(+this).toFixed(digit, roundingMode ?? BN.ROUND_DOWN);
     }
   } catch {
     return this + '';

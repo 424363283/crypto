@@ -133,6 +133,12 @@ export function deleteAddressApi(addressId: number) {
 export function getWithdrawAvailableApi() {
   return http.get<{ amount: number; currency: string; total: number }>(paths['transfer_avaiable']);
 }
+
+/* 获取kyc配置 */
+export function getKycConfigApi() {
+  return http.get(paths['kyc_config']);
+}
+
 /** 提币申请 */
 export function transferWithdrawApi(data: { currency: string; amount: number; chain: string; address: string; addressTag?: string; vToken?: string; version: string; token?: string }) {
   return http.post(paths['transfer_withdraw'], data);
@@ -297,6 +303,8 @@ export function geAccountWithdrawExportApi(data: { createTimeGe: string; createT
     responseType: 'blob',
   });
 }
+ 
+
 /** 提币免验证 */
 export function toggleAccountWithdrawFastApi(data: { enable: boolean; token?: string }) {
   return http.post(paths['toggle_withdraw_fast'], data);
@@ -314,6 +322,12 @@ export function postAccountVerifyPasswordApi(data: { password: string }) {
 export function getAccountDepositAddressListApi(data: { currency: string; network: string }) {
   return http.get(paths['deposit_address_list'], { params: data });
 }
+
+/** 充值到目标钱包 */
+export function postDepositTargetWalletApi(data: { currency: string; wallet: string }) {
+  return http.post(paths['deposit_target_wallet'], data);
+}
+
 /** 创建充币地址 */
 export function depositAddressCreateApi(data: { currency: string; network: string }) {
   return http.post(paths['deposit_address_create'], data);
@@ -354,7 +368,11 @@ export function getKycSupportCountryApi(countryId: string) {
 
 /** Onfido请求 */
 export function postAccountOnfidoCreationApi(data: { countryId: string; device: string; firstName: string; lastName: string }) {
-  return http.post<{ sdk_token: string; workflow_id: string; id: string }>(paths['onfido_initiate_creation'], _(data));
+  return http.post<{ sdk_token: string; workflow_id: string; id: string }>(paths['onfido_initiate_creation'], data, {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+    },
+  });
 }
 
 /** Onfido请求回执 */
@@ -362,11 +380,15 @@ export function postAccountOnfidoCreationReceiptApi(runId: string) {
   return http.post<'WAIT' | 'PASS' | 'REJECT'>(`${paths['onfido_check']}/${runId}`);
 }
 /** 账号验证 */
-export function postAccountVerifyApi(data: { account: string }) {
+export function postAccountVerifyApi(data: { account: string; token?: string }) {
   return http.post<{
     account: string;
     verify_ga: boolean;
     verify_email: boolean;
     verify_phone: boolean;
   }>(paths['forgot_v2_account_verify'], data);
+}
+/** 韩国kyc验证 */
+export function getAccountKoreaKycStatus() {
+  return http.get(`${paths['account_suspect']}`);
 }

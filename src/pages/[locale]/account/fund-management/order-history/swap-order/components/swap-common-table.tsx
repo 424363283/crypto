@@ -10,8 +10,8 @@ import { useCurrentCommissionColumns } from '../hooks/useCurrentCommissionColumn
 import { useHistoryCommissionColumns } from '../hooks/useHistoryCommissionColumns';
 import { useHistoryTransactionColumns } from '../hooks/useHistoryTransactionColumns';
 import { SWAP_HISTORY_ORDER_TYPE } from '../types';
+import { HistoricalTableStyle } from '../../components/historical-table-style';
 
-const PAGE_ROWS = 13;
 type TableProps = {
   tableData: any[];
   tabKey: SWAP_HISTORY_ORDER_TYPE;
@@ -19,10 +19,11 @@ type TableProps = {
   loading: boolean;
 
   page: number;
+  pageSize: number;
   onPaginationChange: (page: number) => void;
 };
 export default function CommonFundHistoryTable(props: TableProps) {
-  const { tabKey, tableData, total, page, loading, onPaginationChange } = props;
+  const { tabKey, tableData, total, page, pageSize, loading, onPaginationChange } = props;
   const [state, setState] = useImmer({
     subPage: Number(tabKey),
     listPage: page,
@@ -50,27 +51,29 @@ export default function CommonFundHistoryTable(props: TableProps) {
     });
     onPaginationChange(page);
   };
-
   return (
     <>
-      <Table
-        className='swap-common-table'
-        showTabletTable
-        showMobileTable
-        loading={loading}
-        columns={TABLE_COLUMN_MAP[subPage]}
-        dataSource={tableData}
-        rowKey={(record: any) => record?.id}
-        scroll={{ x: true }}
-        pagination={{
-          current: listPage,
-          total: total,
-          pageSize: PAGE_ROWS,
-          onChange: handleSearchFundHistory,
-        }}
-      />
-      <TableStyle />
-      <style jsx>{styles}</style>
+       <Table
+          className='swap-common-table'
+          showTabletTable
+          showMobileTable
+          loading={loading}
+          columns={TABLE_COLUMN_MAP[subPage]}
+          dataSource={tableData}
+          rowKey={(record: any) => record?.id}
+          scroll={{ x: true }}
+          pagination={{
+            current: page,
+            total: total,
+            pageSize: pageSize,
+            onChange: handleSearchFundHistory,
+          }}
+          isHistoryList
+          historyType = {subPage}
+        />
+        <TableStyle />
+        <style jsx>{styles}</style>
+        <HistoricalTableStyle />
     </>
   );
 }

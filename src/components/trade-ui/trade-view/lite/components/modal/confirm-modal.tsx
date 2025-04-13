@@ -2,8 +2,11 @@ import { useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Lite } from '@/core/shared';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { Modal, Tooltip } from 'antd';
+import { Modal as AntModal, Tooltip } from 'antd';
+import Modal, { ModalFooter, ModalTitle } from '@/components/trade-ui/common/modal';
 import css from 'styled-jsx/css';
+import { InfoHover } from '@/components/trade-ui/common/info-hover';
+import Tooltip2 from '@/components/trade-ui/common/tooltip';
 
 interface Props {
   open: boolean;
@@ -15,11 +18,56 @@ interface Props {
 const Trade = Lite.Trade;
 
 const ConfirmModal = ({ open, title, onOk, onClose }: Props) => {
-  const { margin, tradeFee, deductionAmount, totalMargin, liteLuckyRate } = Trade.state;
+  const { margin, tradeFee, deductionAmount, totalMargin, liteLuckyRate, USDTScale } = Trade.state;
   const { isDark, theme } = useTheme();
+  const content = (
+    <div className="order-confirm">
+      <div className="overview">
+        <div className="row">
+          <span>{LANG('保证金')}</span>
+          <span>{margin.toFixed(USDTScale)} USDT</span>
+        </div>
+        <div className="row">
+          <span>{LANG('手续费')}</span>
+          <span>{tradeFee.toFixed(USDTScale)} USDT</span>
+        </div>
+        {/* <div className='row'>
+          <span>
+            <Tooltip2 placement='topLeft' title={LANG(
+              '挂单成功后，将会从礼金钱包扣除最多{val}%的保证金（如果可用），手续费将在开仓成功时从红包钱包扣除（如果可用）',
+              { val: liteLuckyRate.mul(100) }
+            )}>
+              <InfoHover hoverColor={false}>{LANG('抵扣金额')}</InfoHover>
+            </Tooltip2>
+          </span>
+          <span>{deductionAmount.toFixed(3)} USDT</span>
+        </div> */}
+      </div>
+      <div className="divider" />
+      <div className="total row">
+        <span>{LANG('合计')}:</span>
+        <span>{totalMargin.toFixed(USDTScale)} USDT</span>
+      </div>
+      <style jsx>{styles}</style>
+    </div>
+  );
   return (
     <>
       <Modal
+        visible={open}
+        contentClassName={'common-modal-content'}
+        modalContentClassName={'common-modal-content-component'}
+        onClose={onClose}
+      >
+        <ModalTitle title={title} onClose={onClose} />
+        {content}
+        <ModalFooter onConfirm={onOk} onCancel={onClose} />
+      </Modal>
+    </>
+  );
+  return (
+    <>
+      <AntModal
         open={open}
         title={title}
         closable={false}
@@ -29,19 +77,19 @@ const ConfirmModal = ({ open, title, onOk, onClose }: Props) => {
         okText={LANG('确认')}
         className={`${theme} confirmModal`}
       >
-        <div className='row'>
+        <div className="row">
           <span>{LANG('保证金')}</span>
           <span>{margin} USDT</span>
         </div>
-        <div className='row'>
+        <div className="row">
           <span>{LANG('手续费')}</span>
           <span>{tradeFee.toFixed(3)} USDT</span>
         </div>
-        <div className='row'>
+        <div className="row">
           <span>
             {LANG('抵扣金额')}
             <Tooltip
-              placement='right'
+              placement="right"
               title={LANG(
                 '挂单成功后，将会从礼金钱包扣除最多{val}%的保证金（如果可用），手续费将在开仓成功时从红包钱包扣除（如果可用）',
                 { val: liteLuckyRate.mul(100) }
@@ -55,12 +103,12 @@ const ConfirmModal = ({ open, title, onOk, onClose }: Props) => {
           </span>
           <span>{deductionAmount.toFixed(3)} USDT</span>
         </div>
-        <div className='divider' />
-        <div className='row'>
+        <div className="divider" />
+        <div className="total row">
           <span>{LANG('合计')}:</span>
           <span>{totalMargin.toFixed(3)} USDT</span>
         </div>
-      </Modal>
+      </AntModal>
       <style jsx>{styles}</style>
     </>
   );
@@ -68,6 +116,54 @@ const ConfirmModal = ({ open, title, onOk, onClose }: Props) => {
 
 export default ConfirmModal;
 const styles = css`
+  .order-confirm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    .overview {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      align-self: stretch;
+      gap: 16px;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      align-self: stretch;
+      > * {
+        &:first-child {
+          color: var(--text-secondary);
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+        }
+        &:last-child {
+          color: var(--text-primary);
+          text-align: right;
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 150%; /* 21px */
+          flex: 1 0 0;
+        }
+      }
+    }
+    .total.row {
+      > * :first-child {
+        color: var(--text-primary);
+      }
+    }
+    .divider {
+      width: 420px;
+      height: 1px;
+      background: var(--line-3);
+    }
+  }
   :global(.confirmModal) {
     width: 500px !important;
     :global(.ant-modal-content) {
@@ -85,31 +181,7 @@ const styles = css`
           text-align: center;
         }
       }
-      :global(.ant-modal-body) {
-        padding: 24px;
-        background: #ffffff;
-        color: #333333;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        font-size: 16px;
-        min-height: 120px;
-        text-align: center;
-        .row {
-          display: flex;
-          justify-content: space-between;
-          width: 420px;
-          margin-bottom: 10px;
-          font-size: 14px;
-        }
-        .divider {
-          margin-bottom: 10px;
-          width: 420px;
-          height: 1px;
-          background: #4d5f69;
-        }
-      }
+
       :global(.ant-modal-footer) {
         padding: 10px 16px;
         text-align: right;

@@ -59,7 +59,7 @@ export const WalletAvatar = ({
           height: ${size}px;
           width: ${size}px;
           border-radius: ${size}px;
-          background: ${transparent ? 'transparent' : `#${locale === 'ko' ? '1772F8' : color}`};
+          background: ${transparent ? 'transparent' : `#07828B`};
           display: flex;
           align-items: center;
           justify-content: center;

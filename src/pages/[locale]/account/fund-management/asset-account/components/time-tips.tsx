@@ -2,7 +2,7 @@ import CommonIcon from '@/components/common-icon';
 import { LANG } from '@/core/i18n';
 import css from 'styled-jsx/css';
 
-const TimeTips = ({ isShowTimeTips, isTransfer }: { isShowTimeTips: boolean; isTransfer?: boolean }) => {
+const TimeTips = ({ isShowTimeTips, isTransfer, countDownTime }: { isShowTimeTips: boolean; isTransfer?: boolean; countDownTime?: React.ReactNode }) => {
   let title = LANG('提币功能暂不可用');
   let description = LANG('您的账户目前在受保护状态中，提币功能暂未恢复。');
 
@@ -21,6 +21,7 @@ const TimeTips = ({ isShowTimeTips, isTransfer }: { isShowTimeTips: boolean; isT
         <p className='title'>{title}</p>
         <p className='description'>{description}</p>
       </div>
+      {countDownTime && <div className='time'>{countDownTime}</div>}
       <style jsx>{styles}</style>
     </div>
   );
@@ -28,34 +29,35 @@ const TimeTips = ({ isShowTimeTips, isTransfer }: { isShowTimeTips: boolean; isT
 export default TimeTips;
 const styles = css`
   .withdraw-tips-container {
-    padding: 43px 0 62px;
-    background: var(--theme-background-color-3);
-    border-radius: 8px;
+    padding: 16px 0;
+    background: var(--fill-3);
+    border-radius: 16px;
     display: flex;
     margin: 0 auto;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     margin-bottom: 20px;
+    gap: 13px;
     .tips-content {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 8px;
       .title {
+        color: var(--text-primary);
+        text-align: center;
         font-size: 14px;
         font-weight: 500;
-        color: var(--theme-font-color-1);
-        margin-bottom: 3px;
-        margin-top: 20px;
+        line-height: 14px;
       }
       .description {
+        color: var(--text-tertiary);
+        text-align: center;
         font-size: 12px;
         font-weight: 400;
-        color: var(--theme-font-color-3);
-        margin-bottom: 17px;
-        max-width: 700px;
-        margin-top: 10px;
+        line-height: 18px;
       }
     }
   }

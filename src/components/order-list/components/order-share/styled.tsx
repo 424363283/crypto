@@ -10,32 +10,38 @@ const { className, styles } = css.resolve`
     padding: 0px !important;
   }
   .desktop-modal-content2 {
-    width: 430px !important;
+    width: 560px !important;
+    :global(.modal-title){
+      &:before{
+        display:none !important;
+      }
+    }
   }
   .share-modal-content2 {
     .wrapper {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px 0px;
     }
 
     :global(.share-items) {
       display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      align-self: stretch;
+      border-top: 1px solid var(--line-3);
+      padding:24px 0 0;
       :global(.share-item) {
-        display: flex;
-        width: 25%;
-        margin-bottom: 15px;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
         cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
         :global(.name) {
-          color: var(--theme-font-color-3);
-          font-size: 12px;
-          margin-top: 4px;
+          color: var(--text-secondary);
+          font-size: 14px;
+          font-weight: 400;
         }
         &:hover {
           opacity: 0.8;
@@ -46,7 +52,7 @@ const { className, styles } = css.resolve`
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 20px 20px;
+      padding:20px 0;
       :global(.left-item) {
         display: flex;
         flex-direction: column;
@@ -179,53 +185,69 @@ const { className, styles } = css.resolve`
     :global(.bg) {
       position: absolute;
     }
-    &.horizontal {
-      .content {
-        padding: 20px 20px 15px;
+    .share-wrap{
+      min-height:370px;
+      background: url('/static/images/trade/share_bg.png') top / 100% auto no-repeat ;
+      &:before{
+        content:"";
+        display:block;
+        position:absolute;
+        z-index:1;
+        height:370px;
+        top:0;
+        right:0;
+        left:-1px;
+        background: url('/static/images/trade/share_bg_mask.png') top / 100% auto no-repeat ;
       }
     }
     .content {
-      background: linear-gradient(329deg, #171614 18.75%, #333029 85.02%);
-      padding: 20px 20px 37.5px;
-      position: relative;
-      z-index: 1;
+      padding:40px;
+      display: flex;
+      box-sizing:border-box;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      .logo {
-        position: absolute;
-      }
-      .top {
-        position: relative;
+      align-items: flex-start;
+      gap: 60px;
+      position:relative;
+      z-index:2;
+      
+      .top{
+        height:120px;
       }
       .code {
-        color: var(--theme-trade-dark-text-1);
-        font-size: 14px;
-        font-weight: 600;
-        line-height: 30px;
-        margin-bottom: 5px;
+        color: #fff;
+        font-size: 24px;
+        font-weight: 500;
+        line-height: normal;
       }
-      .income-row {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-end;
-        margin-bottom: 5px;
-        .large {
-          font-size: 24px;
-          font-weight: 600;
-          line-height: 28px;
-        }
-        .small {
-          font-size: 16px;
-          font-weight: 500;
-          line-height: 19px;
-          margin-left: 3px;
-          margin-bottom: 2px;
-        }
+      .share-income{
+        font-size: 16px;
+        font-weight: 500;
+      }
+      .share-rate{
+        font-size: 40px;
+        font-weight: 700;
+      }
+      .new-green{
+        color: var(--color-green);
+      }
+      .new-red{
+        color: var(--color-red);
       }
       .subtext {
         color: var(--theme-trade-text-color-2);
         font-size: 12px;
+      }
+      .bottom{
+        display:flex;
+        flex-direction:column;
+        &-info{
+          display:flex;
+          flex-direction:row;
+          color: var(--text-white);
+          font-size: 12px;
+          font-weight: 400;
+        }
       }
     }
     .sections {
@@ -256,35 +278,34 @@ const { className, styles } = css.resolve`
         }
       }
     }
-    .bottom {
-      height: 78.5px;
-      background-color: #fff;
-      border-radius: 0px 0px 6px 6px;
+    .share-info {
       display: flex;
-      flex-direction: row;
-      align-items: center;
+      width: 100%;
+      padding: 16px 24px;
       justify-content: space-between;
-      padding-left: 14px;
-      padding-right: 12px;
+      align-items: center;
+      border-radius: 0px 0px 24px 24px;
+      background: var(--fill-3);
+      position:relative;
+      z-index:3;
       .left {
         :global(div) {
           &:first-child {
-            color: var(--theme-trade-light-text-1);
-            font-size: 14px;
-            line-height: 20px;
+            color: var(--text-primary);
+            font-size: 24px;
             font-weight: 500;
-            /* transform: scale(0.8333333333333);
-          transform-origin: 0 50% 0; */
           }
           &:last-child {
-            margin-top: 5px;
-            color: var(--theme-trade-text-color-2);
-            font-size: 12px;
-            line-height: 15px;
+            color: var(--text-tertiary);
+            font-size: 14px;
+            font-weight: 400;
           }
         }
       }
       .qrcode {
+        padding:4px;
+        background:#fff;
+        display:flex;
       }
     }
   }

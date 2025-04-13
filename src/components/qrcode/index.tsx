@@ -1,6 +1,7 @@
 import QRCode from 'qrcode.react';
 import css from 'styled-jsx/css';
 import QrcodeInput from './qrcode-input';
+import { MediaInfo } from '@/core/utils';
 const Qrcode = ({ text = '', size = 148 }) => {
   return (
     <div>
@@ -16,10 +17,19 @@ const Qrcode = ({ text = '', size = 148 }) => {
 const styles = css`
   .qrcode-wrapper {
     display: inline-block;
-    border: 1px solid #d8d8d8;
-    padding: 10px;
-    margin: 15px 39px;
+    margin: 0;
+    border: 0;
+    width: 122px;
+    height: 122px;
+    padding: 4px;
     border-radius: 3px;
+    background-color: var(--text-white);
+    @media ${MediaInfo.mobile}{
+      margin: 0;
+      width: auto;
+      height: auto;
+      padding: 5px;
+    }
   }
 `;
 

@@ -8,7 +8,7 @@ import { TradeMap } from '../../../trade/trade-map';
 import { POSITION_MODE, UNIT_MODE } from './constants';
 import { InfoField } from './field';
 export class Info extends InfoField {
-  _fetchContractDetailDebounce = new Debounce(() => {}, 200);
+  _fetchContractDetailDebounce = new Debounce(() => { }, 200);
 
   init({ resso }: any) {
     this.store = resso(
@@ -169,7 +169,15 @@ export class Info extends InfoField {
     try {
       const result = await getSwapGetRiskDetailApi(id, lever);
       if (result['code'] == 200) {
-        this.store.riskDetailData = { ...this.store.leverFindData, [key]: result['data'] };
+        const regex = /(.*)(_\d+)$/;
+        const riskDetailData = { ...this.store.riskDetailData };
+        for (let name in riskDetailData) {
+          const match = name.match(regex);
+          if (match && match[1] === id) {
+            delete riskDetailData[name];
+          }
+        }
+        this.store.riskDetailData = { ...riskDetailData, ...this.store.leverFindData, [key]: result['data'] };
       }
     } catch (e) {
       console.error('fetchRiskDetail', e);
@@ -181,7 +189,8 @@ export class Info extends InfoField {
       const result: any = await swapGetPositionTypeApi(usdt);
       if (result['code'] == 200) {
         const data = result['data'];
-        const unit = [UNIT_MODE.VOL, UNIT_MODE.COIN, UNIT_MODE.MARGIN][data['unitModel'] - 1] || UNIT_MODE.VOL;
+        // const unit = [UNIT_MODE.VOL, UNIT_MODE.COIN, UNIT_MODE.MARGIN][data['unitModel'] - 1] || UNIT_MODE.VOL;
+        const unit = [UNIT_MODE.VOL, UNIT_MODE.COIN][data['unitModel'] - 1] || UNIT_MODE.VOL;
         const mode = data['positionType'] == 2;
         const priceProtection = data['priceProtection'] == 1;
         this.store.totalWallet = { ...this.store.totalWallet, [usdt ? 'u' : 'c']: data['totalWallet'] || 0 };
@@ -252,7 +261,7 @@ export class Info extends InfoField {
   /// 更新杠杆
   async updateLever(usdt: boolean, { id: _id, lever, wallet }: { id: string; lever: number; wallet?: string }) {
     const symbol = _id.toUpperCase();
-   
+
     const result = await postSwapUpdateLeverApi(usdt, { symbol, userLeverage: lever, subWallet: wallet });
     if (result['code'] == 200) {
       this.store.leverFindData = { ...this.store.leverFindData, [symbol]: { ...this.getLeverFindData(symbol), leverageLevel: Number(lever) } };

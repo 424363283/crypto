@@ -21,5 +21,5 @@ export const getZendeskLink = (href?: any, opts?: { isEn?: any; enOnly?: any; la
   if (opts?.isEn || (opts?.enOnly && _lang !== 'zh-cn')) {
     language = 'en-us';
   }
-  return `https://support.y-mex.com/hc/${language}${href}`;
+  return `https://ymex.zendesk.com/hc/${language}${href}`;
 };

@@ -1,13 +1,14 @@
 import { RecentTradeItem } from '@/core/shared';
 import { memo } from 'react';
 import { RecentItemVol } from './recent-item-vol';
+import { MediaInfo } from '@/core/utils';
 
 const _recentItem = ({ item }: { item: RecentTradeItem }) => {
   return (
     <>
-      <div className='recent-item'>
-        <div className='recent-item-left'>{item.time}</div>
-        <div className='recent-item-center' style={{ color: `var(${item.isBuy ? '--color-green' : '--color-red'})` }}>
+      <div className="recent-item">
+        <div className="recent-item-left">{item.time}</div>
+        <div className="recent-item-center" style={{ color: `var(${item.isBuy ? '--color-green' : '--color-red'})` }}>
           {item.price}
         </div>
         <RecentItemVol item={item} />
@@ -31,12 +32,18 @@ const _recentItem = ({ item }: { item: RecentTradeItem }) => {
             color: var(--theme-trade-text-color-1);
             flex: 1;
             text-align: left;
+            @media ${MediaInfo.mobile} {
+              padding-left: 1rem;
+            }
           }
           .recent-item-center {
             padding-right: 12px;
             color: var(--color-green);
             flex: 1;
             flex-direction: row-reverse;
+            @media ${MediaInfo.mobile} {
+              padding-right: 1rem;
+            }
           }
         }
       `}</style>

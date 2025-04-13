@@ -65,7 +65,7 @@ export const useCurrentCommissionColumns = ({ onRefresh }: { onRefresh: any }) =
         const leverageLevel = item.leverageLevel;
         return (
           <div className='multi-line-item'>
-            <div style={{ display: 'flex', alignItems: 'center' }} className='contract'>
+            <div style={{ alignItems: 'center' }} className='contract'>
               {Swap.Info.getCryptoData(item.symbol, { withHooks: false }).name}
               {!!Number(leverageLevel) && <LeverItem lever={leverageLevel} />}
             </div>
@@ -75,19 +75,19 @@ export const useCurrentCommissionColumns = ({ onRefresh }: { onRefresh: any }) =
         );
       },
     },
-    {
-      title: LANG('子钱包账户'),
-      dataIndex: 'subWallet',
-      render: (v: string, item: any) => {
-        return (
-          <span>
-            {_isSwapDemo
-              ? LANG('模拟交易账户')
-              : item?.alias || Swap.Assets.getWallet({ walletId: v, usdt: isUsdtType, withHooks: false })?.alias}
-          </span>
-        );
-      },
-    },
+    // {
+    //   title: LANG('子钱包账户'),
+    //   dataIndex: 'subWallet',
+    //   render: (v: string, item: any) => {
+    //     return (
+    //       <span>
+    //         {_isSwapDemo
+    //           ? LANG('模拟交易账户')
+    //           : item?.alias || Swap.Assets.getWallet({ walletId: v, usdt: isUsdtType, withHooks: false })?.alias}
+    //       </span>
+    //     );
+    //   },
+    // },
     {
       title: LANG('类型'),
       dataIndex: 'type',

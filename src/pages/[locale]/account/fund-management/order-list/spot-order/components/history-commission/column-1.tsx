@@ -24,7 +24,7 @@ type SpotHistoryCommissionItem = {
 };
 const SPOT_STATUS_MAP: { [key: string]: string } = {
   1: LANG('等待委托'),
-  2: LANG('委托识别'),
+  2: LANG('委托失败'),
   3: LANG('已委托'),
   4: LANG('等待撤单'),
   5: LANG('正在撤单'),
@@ -118,7 +118,7 @@ export const columns1 = [
       if (o.dealVolume > 0 && o.dealVolume < o.volume) {
         value = 7;
       }
-      return <div className={'fw-300'}>{SPOT_STATUS_MAP[spotStatus[value]]}</div>;
+      return <div className={'fw-300'}>{SPOT_STATUS_MAP[value]}</div>;
     },
   },
 ];

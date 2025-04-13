@@ -10,6 +10,7 @@ import css from 'styled-jsx/css';
 import { checkIsUsdtType } from '../../../assets-overview/helper';
 
 import { isSwapDemo } from '@/core/utils/src/is';
+import ClipboardItem from '@/components/clipboard-item';
 const _isSwapDemo = isSwapDemo();
 export const useCurrentCommissionColumns = ({ onRefresh }: { onRefresh: any }) => {
   const isUsdtType = checkIsUsdtType();
@@ -36,13 +37,23 @@ export const useCurrentCommissionColumns = ({ onRefresh }: { onRefresh: any }) =
     }
   };
   const formatItemVolume = (v: any, item: any) => {
+    const isSpslType = ['2', '1'].includes(`${item['strategyType']}`);
+    const isLimit = ['1', '4'].includes(item['type']);
     const digit = Swap.Info.getVolumeDigit(item.symbol, { withHooks: false });
+
+    // /* 
+    //   当前委托-止盈止损这里委托数据显示0；如果接口返回closePostion=true，
+    //   委托数量取positionVolume的值，如果closePostion=false，委托数量取volume的值。 
+    // */
+    // if (item.closePosition) {
+    //   return item.positionVolume
+    // }
     return Swap.Calculate.formatPositionNumber({
       usdt: isUsdtType,
       code: item.symbol,
       value: v || 0,
       fixed: isUsdtType ? digit : Number(item.basePrecision),
-      flagPrice: item.price,
+      flagPrice: isSpslType && !isLimit ? item.triggerPrice : item.price,
     });
   };
 
@@ -75,19 +86,19 @@ export const useCurrentCommissionColumns = ({ onRefresh }: { onRefresh: any }) =
         );
       },
     },
-    {
-      title: LANG('子钱包账户'),
-      dataIndex: 'subWallet',
-      render: (v: string, item: any) => {
-        return (
-          <span>
-            {_isSwapDemo
-              ? LANG('模拟交易账户')
-              : item?.alias || Swap.Assets.getWallet({ walletId: v, usdt: isUsdtType, withHooks: false })?.alias}
-          </span>
-        );
-      },
-    },
+    // {
+    //   title: LANG('子钱包账户'),
+    //   dataIndex: 'subWallet',
+    //   render: (v: string, item: any) => {
+    //     return (
+    //       <span>
+    //         {_isSwapDemo
+    //           ? LANG('模拟交易账户')
+    //           : item?.alias || Swap.Assets.getWallet({ walletId: v, usdt: isUsdtType, withHooks: false })?.alias}
+    //       </span>
+    //     );
+    //   },
+    // },
     {
       title: LANG('类型'),
       dataIndex: 'type',
@@ -159,8 +170,16 @@ export const useCurrentCommissionColumns = ({ onRefresh }: { onRefresh: any }) =
     },
     {
       title: LANG('只减仓'),
-      dataIndex: 'reduceOnly',
+      dataIndex: 'ordFlag',
       render: (v: any, item: any) => (v ? LANG('是') : LANG('否')),
+    },
+    {
+      minWidth: 100,
+      title: LANG('订单编号'),
+      dataIndex: 'orderId',
+      render: (orderId: any, item: any) => {
+        return <ClipboardItem text={orderId} />
+      }
     },
     {
       title: LANG('操作'),

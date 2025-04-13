@@ -15,6 +15,7 @@ import { useBtnStatus } from '../hooks/useBtnStatus';
 import { store } from '../store';
 import { TAB_TYPE } from '../types';
 import { ACCOUNT_TAB_KEY } from '../constants';
+import { Size } from '@/components/constants';
 enum RESET_PW_STEP {
   STEP1 = 1,
   STEP2 = 2,
@@ -100,6 +101,7 @@ const ResetPwd = () => {
           </p>
           {showGaVerify ? (
             <BasicInput
+              size = {Size.XL}
               label={LANG('谷歌验证码')}
               placeholder={LANG('请输入Google验证码')}
               type={INPUT_TYPE.CAPTCHA}
@@ -131,10 +133,11 @@ const ResetPwd = () => {
             withBorder
           />
           <p className='step2-tips'>
-            {LANG('请输入{account}收到的验证码', { account: hidePartialOfPhoneOrEmail(phone) })}
+            {LANG('请输入{account}收到的验证码', { account: hidePartialOfPhoneOrEmail(account) })}
           </p>
           {showGaVerify ? (
             <BasicInput
+              size = {Size.XL}
               label={LANG('谷歌验证码')}
               placeholder={LANG('请输入Google验证码')}
               type={INPUT_TYPE.CAPTCHA}
@@ -286,11 +289,13 @@ const styles = css`
         font-size: 12px;
       }
     }
+      
     :global(.step3-error-notice) {
       font-size: 12px;
       color: #ff6960;
       margin-top: 10px;
     }
+
     :global(.confirm-btn) {
       width: 100%;
       padding: 14px 0;

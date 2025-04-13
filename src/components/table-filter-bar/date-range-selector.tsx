@@ -20,8 +20,8 @@ interface DateRangeSelectorProps {
   dayOptionWidth?: number;
 }
 export const DateRangeSelector = (props: DateRangeSelectorProps) => {
-  const { onDateRangeChange, onSelectChange, dayOptionWidth = 100 } = props;
-  const { start = '', end = '' } = getFormatDateRange(new Date(), 7, false);
+  const { onDateRangeChange, onSelectChange, dayOptionWidth = 200 } = props;
+  const { start = '', end = '' } = getFormatDateRange(new Date(), 7, true);
   const [state, setState] = useImmer({
     startDate: start,
     endDate: end,
@@ -37,7 +37,7 @@ export const DateRangeSelector = (props: DateRangeSelectorProps) => {
     const duration = value[0].value;
     if (duration !== 5) {
       //实际持续天数设置
-      const { start = '', end = '' } = getFormatDateRange(new Date(), duration, false);
+      const { start = '', end = '' } = getFormatDateRange(new Date(), duration, true);
       setState((draft) => {
         draft.startDate = start;
         draft.endDate = end;

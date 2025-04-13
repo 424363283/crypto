@@ -35,7 +35,7 @@ function Register() {
   return (
     <>
       <LoginCommonLayout
-        loginBoxClassName='refer-login-box refer-login-box-reverse'
+        loginBoxClassName='refer-login-box'
         className={show ? 'refer-layout' : ''}
         logoJumpId='refer-box'
       >
@@ -68,11 +68,6 @@ function Register() {
           :global(.refer-layout) {
             flex-direction: column-reverse;
             align-items: center;
-          }
-        }
-        @media ${MediaInfo.mobile} {
-          :global(.login-bg) {
-            padding-top: 32px;
           }
         }
       `}</style>

@@ -1,9 +1,8 @@
 import { AmountInput } from '@/components/basic-input';
-import CommonIcon from '@/components/common-icon';
 import { Loading } from '@/components/loading';
-import { BottomModal, MobileModal } from '@/components/mobile-modal';
+import { BottomModal, MobileBottomSheet, MobileModal } from '@/components/mobile-modal';
 import { walletTransferApi } from '@/core/api';
-import { useCurrencyScale, useRouter, useTheme } from '@/core/hooks';
+import { useCurrencyScale, useResponsive, useRouter, useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Account, Swap } from '@/core/shared';
 import { SWAP_BOUNS_WALLET_KEY } from '@/core/shared/src/swap/modules/assets/constants';
@@ -31,6 +30,7 @@ export type DefaultCoin =
   | 'XRP-USDT'
   | 'DOGE-USDT'
   | 'DOT-USDT';
+  
 type TransferProps = {
   onTransferDone?: (args: { accounts: ACCOUNT_TYPE[] }) => void; // 划转成功后的回调
   defaultSourceAccount?: ACCOUNT_TYPE; // from
@@ -44,7 +44,7 @@ type TransferProps = {
 export { ACCOUNT_TYPE };
 const enableLite = process.env.NEXT_PUBLIC_LITE_ENABLE === 'true';
 const TransferModal = (props: TransferProps) => {
-  const { isDark } = useTheme();
+  const { isMobile } = useResponsive();
   const {
     open = false,
     onTransferDone,
@@ -195,7 +195,9 @@ const TransferModal = (props: TransferProps) => {
       draft.accounts = draft.accounts.reverse();
       draft.wallets = draft.wallets.reverse();
     });
+    console.log(state, 'draft.wallets');
   };
+
   const onAmountInput = (value: string) => {
     setState((draft) => {
       draft.transferAmount = value;
@@ -213,28 +215,33 @@ const TransferModal = (props: TransferProps) => {
       v.crypto === crypto &&
       ([ACCOUNT_TYPE.SWAP_U, ACCOUNT_TYPE.SWAP].includes(accounts[0]) ? v.wallet === state.wallets[0] : true)
   );
+
   const balance = Number((option?.price || 0).toFixed(scale)) < 0 ? '0' : (option?.price || 0).toFixed(scale);
+
   const onClickFillAllAmount = () => {
     setState((draft) => {
       draft.transferAmount = balance;
     });
   };
+  
   const handleTransfer = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const isLogin = Account.isLogin;
+    if (!transferAmount) {
+      message.warning(LANG('请输入划转数量'));
+      return
+    }
     if (!isLogin) {
       router.push('/login');
       return;
     }
-    if (disabledConfirm) {
-      return;
-    }
+    if (disabledConfirm)  return;
     const { allow: isAgreeAgreement } = Swap.Info.store.agreement;
 
     if (isOneOfSwap && !isAgreeAgreement) {
       if (targetAccount === ACCOUNT_TYPE.SWAP_U) {
         router.push('/swap/btc-usdt');
       }
-      router.push('/swap/btc-usd');
+      router.push('/swap/btc-usdt');
       return;
     }
     let source = sourceAccount;
@@ -292,15 +299,16 @@ const TransferModal = (props: TransferProps) => {
     }
   };
 
+
   const renderContent = () => {
     return (
-      <div className='transfer-modal-wrapper'>
+      <div className='transfer-content-wrapper'>
         <TypeBar
-          values={accounts}
-          onChange={onAccountChange}
-          onTransferDirectionChange={onTransferDirectionChange}
+          values={state.accounts}
           wallets={state.wallets}
           crypto={crypto}
+          onChange={onAccountChange}
+          onTransferDirectionChange={onTransferDirectionChange}
         />
         <div className='coin-label'>{LANG('币种')}</div>
         <CryptoSelect
@@ -339,83 +347,65 @@ const TransferModal = (props: TransferProps) => {
     );
   };
 
-  if (props.inMobile) {
-    return (
-      <>
-        <MobileModal visible={open} onClose={() => props.onCancel?.('' as any)} type='bottom'>
-          <BottomModal title={LANG('资金划转')} confirmText={LANG('确定')} onConfirm={() => handleTransfer('' as any)}>
-            {renderContent()}
-          </BottomModal>
-        </MobileModal>
-        <style jsx>{styles}</style>
-      </>
-    );
-  }
+  // if (isMobile) {
+  //   return <MobileBottomSheet
+  //     title={LANG('资金划转')}
+  //     visible={open}
+  //     close={() => props.onCancel?.('' as any)}
+  //     content={renderContent()}
+  //     confirmText={LANG('确定')}
+  //     onConfirm={() => handleTransfer('' as any)}
+  //   />
+  // }
 
   return (
-    <BasicModal
-      {...props}
-      title={LANG('资金划转')}
-      open={open}
-      destroyOnClose
-      width={400}
-      okText={LANG('确定')}
-      cancelText={LANG('取消')}
-      cancelButtonProps={{ style: { display: 'none' } }}
-      className='transfer-modal-wrapper'
-      onOk={handleTransfer}
-      okButtonProps={{
-        disabled: !Number(transferAmount) || +transferAmount < 0,
-      }}
-      closeIcon={<CommonIcon name='common-close-filled' size={24} enableSkin />}
-    >
-      {renderContent()}
-    </BasicModal>
+    <>
+       <BasicModal
+          {...props}
+          title={LANG('资金划转')}
+          open={open}
+          destroyOnClose
+          width={480}
+          okText={LANG('确定')}
+          cancelText={LANG('取消')}
+          hasCancel={false}
+          className='transfer-modal-wrapper'
+          onOk={handleTransfer}
+          okButtonProps={{
+            disabled: !Number(transferAmount) || +transferAmount < 0,
+          }}
+        >
+          {renderContent()}
+        </BasicModal>
+    </>
   );
 };
 const styles = css`
-  :global(.transfer-modal-wrapper) {
+  :global(.transfer-content-wrapper) {
     :global(.coin-label) {
-      margin: 15px 0 8px;
+      margin: 24px 0 8px;
       line-height: 14px;
       font-size: 14px;
       font-weight: 500;
       color: var(--theme-font-color-1);
     }
     :global(.crypto-selected-content) {
-      background: var(--theme-background-color-8) !important;
-      border-radius: 6px;
+      background: var(--fill-3) !important;
+      border-radius: 8px;
     }
-    :global(.ant-modal-content) {
-      :global(.ant-modal-header) {
-        padding: 0 20px;
-        border-bottom: 1px solid var(--skin-border-color-1);
-        :global(.ant-modal-title) {
-          color: var(--theme-font-color-1);
-          font-size: 16px;
-          font-weight: 500;
-          text-align: left;
-          padding-left: 0;
-          border: none;
-        }
-      }
-    }
-    :global(.ant-modal-close) {
-      &:hover {
-        background-color: rgba(0, 0, 0, 0) !important;
-      }
-    }
+    
     :global(.available-assets-container) {
       margin-top: 20px;
       :global(.amount-input-wrapper) {
         margin-top: 8px;
-        border-radius: 6px !important;
+        border-radius: 8px !important;
         :global(.basic-input-bordered) {
-          border-radius: 6px !important;
-          background: var(--theme-background-color-8) !important;
+          border-radius: 8px !important;
+          background: var(--fill-3) !important;
           :global(input) {
-            background: var(--theme-background-color-8) !important;
-            border-radius: 6px !important;
+            color: var(--theme-font-color-1);
+            background: var(--fill-3) !important;
+            border-radius: 8px !important;
             height: 40px;
           }
         }
@@ -424,6 +414,7 @@ const styles = css`
         display: flex;
         justify-content: space-between;
         align-items: center;
+        color: var(--theme-font-color-1);
         :global(.right-label) {
           color: #232e34;
           font-size: 14px;
@@ -437,49 +428,43 @@ const styles = css`
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 8px;
-        color: var(--theme-font-color-1);
-        margin-bottom: 20px;
+        margin: 24px 0;
+        color: var(--text-primary);
         > span {
-          color: var(--theme-font-color-3);
+          color: var(--text-secondary);
         }
       }
     }
   }
   :global(.transfer-modal-wrapper) {
     :global(.ant-modal-content) {
-      background-color: var(--theme-background-color-2);
       :global(.ant-modal-footer) {
         :global(.ant-btn-default) {
-          background: #2d3546 !important;
         }
         :global(.ant-btn-primary) {
-          background: var(--skin-primary-color) !important;
-          color: var(--skin-font-color) !important;
-          margin-left: 0;
-          margin-inline-start: 0 !important;
+
         }
       }
     }
     :global(.ant-modal-content) {
       :global(.ant-modal-header) {
-        background: var(--theme-background-color-2);
+        margin-bottom: 0px;
+        :global(.ant-modal-title) {
+          padding: 0 24px 20px;
+        }
+      }
+      :global(.ant-modal-body) {
+        :global(.basic-content) {
+          padding: 0px 24px;
+        }
+
       }
     }
-    :global(.available-assets-container) {
-      :global(.label) {
-        color: var(--theme-font-color-1);
-      }
-      :global(.amount-input-wrapper) {
-        :global(.basic-input-bordered) {
-          background: #2d3546;
-          :global(input) {
-            color: var(--theme-font-color-1);
-            background: #2d3546;
-          }
-        }
+    :global(.ant-modal-close) {
+      &:hover {
       }
     }
   }
 `;
 export default TransferModal;
+

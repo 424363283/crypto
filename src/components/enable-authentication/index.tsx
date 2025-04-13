@@ -4,6 +4,9 @@ import { Account, UserInfo } from '@/core/shared';
 import { FC, useCallback, useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
 import CommonIcon from '../common-icon';
+import { Button } from '../button';
+import { Size } from '../constants';
+
 interface Props {
   className?: string;
   description?: string;
@@ -16,6 +19,7 @@ const EnableAuthentication: FC<Props> = ({ className, description, onVerifyState
   const [user, setUser] = useState<UserInfo | null>(null);
   const onClose = useCallback(() => setVisible(false), []);
   const onOpen = useCallback(() => setVisible(true), []);
+
   const getUserInfo = async () => {
     await Account.refreshUserInfo();
     const user = await Account.getUserInfo();
@@ -28,78 +32,73 @@ const EnableAuthentication: FC<Props> = ({ className, description, onVerifyState
       onVerifyStateChange(false);
     }
   };
+
   useEffect(() => {
     getUserInfo();
   }, []);
+
   if (!isRender) return null;
+
   return (
     <div className={`enable-authentication ${className}`}>
-      <CommonIcon name='common-warning-ring-tips-0' size={58} enableSkin />
+      <CommonIcon name='common-warning-ring-tips-0' size={32} enableSkin />
       <div className='content'>
         <div className='title'>
           {LANG('启用双重身份验证')} {'(2FA)'}
         </div>
         <div className='description'>
-          {description || '为提升您账户安全等级请至少再多绑定一项2FA。至少开启两项2FA验证项才能提币。'}
-        </div>
-        <div className='button' onClick={onOpen}>
-          {LANG('立即设置')}
+          {description || LANG('为提升您账户安全等级请至少再多绑定一项2FA。至少开启两项2FA验证项才能提现和转账。')}
         </div>
       </div>
+      <Button type='primary' rounded size={Size.SM} width={100} onClick={onOpen}>
+        {LANG('立即设置')}
+      </Button>
       <EnableAuthenticationModal visible={visible} onClose={onClose} user={user} />
       <style jsx>{styles}</style>
     </div>
   );
 };
+
 const styles = css`
   .enable-authentication {
-    padding: 43px 0 62px;
-    background: var(--theme-background-color-3);
-    border-radius: 8px;
     display: flex;
-    margin: 0 auto;
+    flex-shrink: 0;
+    padding: 16px;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    just-content: center;
+    border-radius: 16px;
+    background: var(--fill-3);
+    gap: 13px;
     :global(.icon) {
-      flex: none;
-      width: 58px;
-      height: 58px;
-      margin-right: 20px;
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
     }
     .content {
-      flex: 1;
       display: flex;
+      width: 261px;
+      flex-shrink: 0;
       flex-direction: column;
-      align-items: center;
-      cursor: pointer;
+      gap: 8px;
       .title {
+        color: var(--text-primary);
+        text-align: center;
         font-size: 14px;
+        font-style: normal;
         font-weight: 500;
-        color: var(--theme-font-color-1);
-        margin-bottom: 3px;
-        margin-top: 20px;
+        line-height: 14px; /* 100% */
       }
       .description {
-        font-size: 12px;
-        font-weight: 400;
-        color: var(--theme-font-color-3);
-        margin-bottom: 17px;
-        max-width: 700px;
-        margin-top: 10px;
-      }
-      .button {
-        min-width: 100px;
-        height: 36px;
-        line-height: 36px;
-        padding: 0 22px;
-        background: var(--skin-primary-color);
-        color: var(--skin-font-color);
-        border-radius: 8px;
-        font-size: 15px;
+        color: var(--text-tertiary);
         text-align: center;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 18px; /* 150% */
       }
     }
   }
 `;
+
 export default EnableAuthentication;

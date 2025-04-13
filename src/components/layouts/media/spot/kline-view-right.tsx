@@ -82,7 +82,7 @@ const styles = css`
   .kline-view-right {
     border-radius: var(--theme-trade-layout-radius);
     display: flex;
-    background-color: var(--theme-trade-bg-color-2);
+    background-color: var(--bg-1);
     flex-direction: column;
     overflow: hidden;
     height: 100%;

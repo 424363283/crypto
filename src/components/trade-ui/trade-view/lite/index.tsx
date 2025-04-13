@@ -2,12 +2,11 @@ import { Loading } from '@/components/loading';
 import { Svg } from '@/components/svg';
 import { useCurrencyScale, useRouter, useSettingGlobal, useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
-import { AccountType, Lite, OrderType, PositionSide, StopType } from '@/core/shared';
+import { AccountType, Lite, LiteTradeItem, OrderType, PositionSide, StopType, TradeMap } from '@/core/shared';
 import { formatDefaultText, getActive, message, toMinNumber } from '@/core/utils';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Tooltip } from 'antd';
 import Image from 'next/image';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
 import { withLayoutWrap } from '../components/layout-wrap';
@@ -21,6 +20,15 @@ import CouponModal from './components/modal/coupon-modal';
 import TransactionSettingModal from './components/modal/transaction-setting-modal';
 import PositionButton from './components/position-button';
 import { TradeWrap } from './trade-wrap';
+import { Button } from '@/components/button';
+import CommonIcon from '@/components/common-icon';
+import Radio from '@/components/Radio';
+import Tooltip from '@/components/trade-ui/common/tooltip';
+import CheckboxItem from '../swap/components/checkbox-item';
+import { InfoHover } from '../../common/info-hover';
+import DeferCheckbox from './components/defer-checkbox';
+import { FORMULAS } from '@/core/formulas';
+
 const Trade = Lite.Trade;
 
 type UIStateTypes = {
@@ -29,6 +37,8 @@ type UIStateTypes = {
   couponModalVisible: boolean;
   confirmModalVisible: boolean;
   showSetting: null | StopType;
+  showStopProfitSetting: boolean;
+  showStopLossSetting: boolean;
   settingType: SettingType;
   isFocus: boolean;
   inputIsEmpty: boolean;
@@ -37,12 +47,269 @@ type UIStateTypes = {
 
 enum SettingType {
   PERCENT,
-  PRICE,
+  PRICE
 }
 
 const swapIcon1 = '/static/images/lite/type_1.png';
 const swapIcon2 = '/static/images/lite/type_2.png';
 
+const SPSLSetting = ({
+  type,
+  onSettingTypeClicked,
+  onPriceChange,
+  onRateChange
+}: {
+  type: StopType;
+  onSettingTypeClicked: (type: SettingType) => void;
+  onPriceChange: (num: number, type: StopType) => void;
+  onRateChange: (num: number, type: StopType) => void;
+}) => {
+  const isStopProfit = type === StopType.STOP_PROFIT;
+  const {
+    stopProfitPrice,
+    stopLossPrice,
+    stopProfitRange,
+    stopLossRange,
+    stopProfit,
+    stopLoss,
+    LMargin,
+    FMargin,
+    FPriceRange,
+    LPriceRange,
+    currentCommodityDigit
+  } = Trade.state;
+  const [data, setData] = useImmer<{
+    [key: string]: any;
+  }>({
+    stopProfitRate: 3,
+    stopLossRate: -1,
+    stopProfitPrice: 0,
+    stopLossPrice: 0
+  });
+  const [UIState, setUIState] = useImmer({
+    isFocus: false,
+    inputIsEmpty: false,
+    settingType: SettingType.PERCENT
+  });
+  useEffect(() => {
+    setData(draft => {
+      draft.stopProfitRate = Number(stopProfit);
+      draft.stopLossRate = Number(stopLoss);
+    });
+  }, [stopProfit, stopLoss, setData]);
+  useEffect(() => {
+    setData(draft => {
+      if (!UIState.isFocus) {
+        draft.stopProfitPrice = stopProfitPrice;
+        draft.stopLossPrice = stopLossPrice;
+      }
+    });
+  }, [UIState.isFocus, stopProfitPrice, stopLossPrice, setData]);
+  const isPrice = UIState.settingType === SettingType.PRICE;
+
+  const _onSettingTypeClicked = (type: SettingType) => {
+    setUIState(draft => {
+      draft.settingType = type === SettingType.PRICE ? SettingType.PERCENT : SettingType.PRICE;
+    });
+    if (onSettingTypeClicked) {
+      onSettingTypeClicked(type);
+    }
+  };
+
+  const _onRateChange = (num: number, type: StopType) => {
+    if (type === StopType.STOP_PROFIT) {
+      num >= stopProfitRange[0] && Trade.changeStopRate(num, type);
+    } else {
+      num <= stopLossRange[0] && Trade.changeStopRate(num, type);
+    }
+    setData(draft => {
+      if (type === StopType.STOP_PROFIT) {
+        draft.stopProfitRate = num;
+      } else {
+        draft.stopLossRate = num;
+      }
+    });
+    // if (onRateChange) {
+    //   onRateChange(num, type);
+    // }
+  };
+
+  const _onPriceChange = (num: number, type: StopType) => {
+    Trade.changeStopPrice(num, type);
+    setData(draft => {
+      if (isStopProfit) {
+        num !== undefined && (draft.stopProfitPrice = num);
+      } else {
+        num !== undefined && (draft.stopLossPrice = num);
+      }
+    });
+    // if (onPriceChange) {
+    //   onPriceChange(num, type);
+    // }
+  };
+
+  return (
+    <div className="tpsl-setting">
+      <div className="top">
+        <div className="price-wrapper">
+          <span>{isStopProfit ? LANG('止盈价') : LANG('强平价')}：</span>
+          <span className={isStopProfit ? 'main-green' : 'main-red'}>
+            {isStopProfit
+              ? UIState.isFocus && !UIState.inputIsEmpty
+                ? data.stopProfitPrice
+                : stopProfitPrice
+              : UIState.isFocus && !UIState.inputIsEmpty
+                ? data.stopLossPrice
+                : stopLossPrice}
+          </span>
+        </div>
+        <div
+          className="setting-wrapper"
+          onClick={() => {
+            _onSettingTypeClicked(UIState.settingType);
+          }}
+        >
+          <CommonIcon name="common-exchange-0" size={16} />
+          <span>{isPrice ? LANG('按价格设置') : LANG('按比例设置')}</span>
+        </div>
+      </div>
+      <div className="bottom">
+        {isPrice ? (
+          <>
+            <RatioInput
+              value={isStopProfit ? data.stopProfitPrice : data.stopLossPrice}
+              min={isStopProfit ? Number(FPriceRange[0]) : Number(LPriceRange[1])}
+              max={isStopProfit ? Number(FPriceRange[1]) : Number(LPriceRange[0])}
+              // addStep={0.1}
+              // minusStep={0.1}
+              decimal={currentCommodityDigit}
+              placeholder={LANG('请输入')}
+              onFocus={() => {
+                setUIState(draft => {
+                  draft.isFocus = true;
+                });
+              }}
+              onBlur={() => {
+                _onPriceChange(
+                  isStopProfit ? data.stopProfitPrice : data.stopLossPrice,
+                  isStopProfit ? StopType.STOP_PROFIT : StopType.STOP_LOSS
+                );
+                setUIState(draft => {
+                  draft.isFocus = false;
+                });
+
+              }}
+              onChange={val => {
+                _onPriceChange(Number(val), isStopProfit ? StopType.STOP_PROFIT : StopType.STOP_LOSS);
+              }}
+              onOriginValueChange={val => {
+                setUIState(draft => {
+                  draft.inputIsEmpty = val === '';
+                });
+              }}
+            />
+            <div className="price-wrapper">
+              <span>{isStopProfit ? LANG('预估收益') : LANG('预估亏损')}：</span>
+              <span className={isStopProfit ? 'main-green' : 'main-red'} style={{ fontSize: '12px' }} >
+                {isStopProfit ? Math.abs(Number(FMargin)) : Math.abs(Number(LMargin))} USDT (
+                {(isStopProfit ? data.stopProfitRate : data.stopLossRate).mul(100).toFixed(0)}%)
+              </span>
+            </div>
+          </>
+        ) : (
+          <>
+            <RatioInput
+              value={isStopProfit ? data.stopProfitRate.mul(100) : data.stopLossRate.mul(100)}
+              min={Number((isStopProfit ? stopProfitRange[0] : stopLossRange[stopLossRange.length - 1])?.mul(100))}
+              max={Number((isStopProfit ? stopProfitRange[stopProfitRange.length - 1] : stopLossRange[0])?.mul(100))}
+              // addStep={5}
+              // minusStep={5}
+              isPercent
+              isNegative={isStopProfit}
+              least={isStopProfit ? 1 : 0}
+              onBlur={() => {
+                if (data.stopLossRate < 0 && data.stopLossRate > stopLossRange[0]) {
+                  _onRateChange(stopLossRange[0], type);
+                }
+              }}
+              onChange={val => {
+                _onRateChange(Number(val.div(100)), type);
+              }}
+              placeholder={LANG('请输入')}
+            />
+            <div className="group">
+              {(isStopProfit ? stopProfitRange : stopLossRange).map((num, index) => (
+                <div
+                  key={index}
+                  className={getActive((isStopProfit ? data.stopProfitRate : data.stopLossRate) === num)}
+                  onClick={() => {
+                    _onRateChange(num, type);
+                  }}
+                >
+                  {num * 100}%
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+      <style jsx>{`
+        .tpsl-setting {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          .top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            .setting-wrapper {
+              color: var(--text-secondary);
+              display: flex;
+              align-items: center;
+              cursor: pointer;
+              :global(img) {
+                margin-right: 4px;
+              }
+              span {
+                font-size: 12px;
+                font-weight: 500;
+              }
+            }
+          }
+          .bottom {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+          }
+          .price-wrapper {
+            > span {
+              &:first-child {
+                font-size: 12px;
+                font-weight: 500;
+                color: var(--text-secondary) !important;
+                padding-right: 4px;
+              }
+              &:last-child {
+                font-size: 14px;
+                font-weight: 500;
+                color: var(--theme-font-color-1);
+              }
+              &.green {
+                color: var(--const-raise-color) !important;
+              }
+              &.red {
+                color: var(--const-fall-color) !important;
+              }
+            }
+          }
+        }
+      `}</style>
+      <style jsx>{groupStyles}</style>
+    </div>
+  );
+};
 function LiteTradeUI() {
   const { isDark, theme } = useTheme();
   const routerId = useRouter().query.id as string;
@@ -81,6 +348,15 @@ function LiteTradeUI() {
     orderType,
     currentCommodityDigit,
     bonusList,
+    defer,
+    deferFee,
+    deferOrderChecked,
+    volumeDigit,
+    isPriceRangeLimited,
+    isMarginRangeLimited,
+    amountRange,
+    leverageRange,
+    leverage
   } = Trade.state;
   const { scale } = useCurrencyScale(positionCurrency);
   const { scale: USDTScale } = useCurrencyScale('USDT');
@@ -91,7 +367,7 @@ function LiteTradeUI() {
     stopProfitRate: 3,
     stopLossRate: -1,
     stopProfitPrice: 0,
-    stopLossPrice: 0,
+    stopLossPrice: 0
   });
 
   const [UIState, setUIState] = useImmer<UIStateTypes>({
@@ -99,6 +375,8 @@ function LiteTradeUI() {
     settingModalVisible: false,
     couponModalVisible: false,
     showSetting: null,
+    showStopProfitSetting: false,
+    showStopLossSetting: false,
     settingType: SettingType.PERCENT,
     isFocus: false,
     inputIsEmpty: false,
@@ -107,7 +385,7 @@ function LiteTradeUI() {
   });
 
   useEffect(() => {
-    setData((draft) => {
+    setData(draft => {
       draft.stopProfitRate = Number(stopProfit);
       draft.stopLossRate = Number(stopLoss);
     });
@@ -115,7 +393,13 @@ function LiteTradeUI() {
 
   useEffect(() => {
     Trade.changeMargin('');
+    Trade.changePrice1('');
     Trade.changePrice2('');
+    Trade.changeFee('');
+    Trade.state.position = 0;
+    Trade.state.totalMargin = 0;
+    Trade.state.marketBuyPrice = 0;
+    Trade.state.marketSellPrice = 0;
   }, [routerId]);
 
   useEffect(() => {
@@ -126,13 +410,13 @@ function LiteTradeUI() {
 
   useEffect(() => {
     if (cid) {
-      const selectCoupon = bonusList.find((item) => item.id === cid);
+      const selectCoupon = bonusList.find(item => item.id === cid);
       selectCoupon && Trade.changeSelectCard(selectCoupon?.id);
     }
   }, [cid, bonusList]);
 
   useEffect(() => {
-    setData((draft) => {
+    setData(draft => {
       if (!UIState.isFocus) {
         draft.stopProfitPrice = stopProfitPrice;
         draft.stopLossPrice = stopLossPrice;
@@ -144,7 +428,7 @@ function LiteTradeUI() {
     (tab: OrderType) => {
       Trade.changeOrderType(tab);
       Trade.changePrice2('');
-      setUIState((draft) => {
+      setUIState(draft => {
         draft.showDealPrice = false;
       });
     },
@@ -161,35 +445,35 @@ function LiteTradeUI() {
 
   const isBuy = positionSide === PositionSide.LONG;
 
-  const isStopProfit = UIState.showSetting === StopType.STOP_PROFIT;
+  const isStopProfitInvalid = UIState.showSetting === StopType.STOP_PROFIT;
 
-  const onSettingTypeClicked = () => {
-    setUIState((draft) => {
-      draft.settingType = draft.settingType === SettingType.PRICE ? SettingType.PERCENT : SettingType.PRICE;
+  const onSettingTypeClicked = (type: SettingType) => {
+    setUIState(draft => {
+      draft.settingType = type === SettingType.PRICE ? SettingType.PERCENT : SettingType.PRICE;
     });
   };
 
-  const onRateChange = (num: number) => {
-    if (isStopProfit) {
-      num >= stopProfitRange[0] && Trade.changeStopRate(num, StopType.STOP_PROFIT);
+  const onRateChange = (num: number, type: StopType) => {
+    if (type === StopType.STOP_PROFIT) {
+      num >= stopProfitRange[0] && Trade.changeStopRate(num, type);
     } else {
-      num <= stopLossRange[0] && Trade.changeStopRate(num, StopType.STOP_LOSS);
+      num <= stopLossRange[0] && Trade.changeStopRate(num, type);
     }
-    setData((draft) => {
-      if (isStopProfit) {
+    setData(draft => {
+      if (type === StopType.STOP_PROFIT) {
         draft.stopProfitRate = num;
       } else {
         draft.stopLossRate = num;
       }
     });
   };
-
   const btnText = isBuy ? LANG('买涨') : LANG('买跌');
 
-  const onPriceChange = (num: number) => {
-    Trade.changeStopPrice(num, isStopProfit ? StopType.STOP_PROFIT : StopType.STOP_LOSS);
-    setData((draft) => {
-      if (isStopProfit) {
+  const onPriceChange = (num: number, type: StopType) => {
+    Trade.changeStopPrice(num, type);
+    setData(draft => {
+      // if (isStopProfitInvalid) {
+      if (type === StopType.STOP_PROFIT) {
         num !== undefined && (draft.stopProfitPrice = num);
       } else {
         num !== undefined && (draft.stopLossPrice = num);
@@ -199,7 +483,7 @@ function LiteTradeUI() {
 
   const onSubmitClicked = async () => {
     if (orderConfirm) {
-      setUIState((draft) => {
+      setUIState(draft => {
         draft.confirmModalVisible = true;
       });
     } else {
@@ -212,7 +496,7 @@ function LiteTradeUI() {
     const data = await Trade.openOrder();
     if (data.code == 200) {
       message.success(LANG('下单成功'));
-      setUIState((draft) => {
+      setUIState(draft => {
         draft.confirmModalVisible = false;
       });
     } else {
@@ -222,9 +506,11 @@ function LiteTradeUI() {
   };
 
   const renderTab = useCallback(() => {
+    const max = FORMULAS.LITE.maxLevelMargin(amountRange, leverageRange, leverage);
+    const marginRangePlaceholder = [Trade.state.marginRange[0], max];
     return (
-      <div className='tab-container'>
-        <div className='header'>
+      <div className="tab-container">
+        <div className="header">
           <ul>
             {isReal && (
               <li className={getActive(isLimit)} onClick={() => onTabClicked(OrderType.LIMIT)}>
@@ -238,24 +524,24 @@ function LiteTradeUI() {
               {LANG('市价')}
             </li>
           </ul>
-          <div className='sub'>
-            <span className='sub-title'>{LANG('仓位')}: </span>
-            <span className='volume'>
-              {formatDefaultText(position.toFixed(scale))} {positionCurrency}
+          <div className="sub">
+            <span className="sub-title">{LANG('仓位')}: </span>
+            <span className="volume">
+              {formatDefaultText(position.toFixed(volumeDigit))} {positionCurrency}
             </span>
           </div>
         </div>
-        <div className='content'>
+        <div className="content">
           {isLimit && (
-            <div>
+            <div className="price-input-group">
               <PriceInput
                 value={limitPrice}
                 decimal={currentCommodityDigit}
                 label={`${LANG('委托价')}：`}
-                placeholder={`${limitPriceRange[0]} ~ ${limitPriceRange[1]}`}
-                onChange={(val) => Trade.changePrice1(val)}
-                min={Number(limitPriceRange[0])}
-                max={Number(limitPriceRange[1])}
+                placeholder={isPriceRangeLimited ? `${limitPriceRange[0]} ~ ${limitPriceRange[1]}` : LANG('请输入价格')}
+                onChange={val => Trade.changePrice1(val)}
+                min={isPriceRangeLimited ? Number(limitPriceRange[0]) : 0}
+                max={isPriceRangeLimited ? Number(limitPriceRange[1]) : Number.MAX_SAFE_INTEGER}
                 addStep={toMinNumber(currentCommodityDigit)}
                 minusStep={toMinNumber(currentCommodityDigit)}
                 onBlur={() => Trade.changeBlurPrice1()}
@@ -265,22 +551,22 @@ function LiteTradeUI() {
                   value={limitFinalPrice}
                   decimal={currentCommodityDigit}
                   placeholder={limitPriceDeal as string}
-                  onChange={(val) => Trade.changePrice2(val)}
+                  onChange={val => Trade.changePrice2(val)}
                   max={isBuy ? 0 : Number(limitPriceDeal)}
                   min={isBuy ? Number(limitPriceDeal) : 0}
                   addStep={toMinNumber(currentCommodityDigit)}
                   minusStep={toMinNumber(currentCommodityDigit)}
                   isNegative
                   labelRender={() => (
-                    <span className='labelRender'>
+                    <span className="labelRender">
                       {LANG('委托成交价')}:<span>{isBuy ? '≤' : '≥'}</span>
                     </span>
                   )}
                   canEmpty
                 />
               ) : (
-                <div className='deal-price-wrapper'>
-                  <div>
+                <div className="deal-price-wrapper">
+                  {/* <div>
                     {LANG('成交价')}：{LANG('不限')}
                   </div>
                   <div
@@ -291,7 +577,7 @@ function LiteTradeUI() {
                     }
                   >
                     {LANG('设置')}
-                  </div>
+                  </div> */}
                 </div>
               )}
             </div>
@@ -300,26 +586,30 @@ function LiteTradeUI() {
             value={margin}
             decimal={USDTScale}
             label={`${LANG('保证金')}：`}
-            placeholder={`${marginRange[0]} ~ ${marginRange[1]}`}
-            onChange={(val) => Trade.changeMargin(val)}
-            min={marginRange[0]}
+            placeholder={`${marginRangePlaceholder[0]} ~ ${marginRangePlaceholder[1]}`}
+            onChange={val => Trade.changeMargin(val)}
+            min={isMarginRangeLimited ? marginRange[0] : 0}
             max={marginRange[1]}
             addStep={2}
             minusStep={2}
             isCoupon={isTrial}
             bonusId={bonusId}
             onCouponClick={() =>
-              setUIState((draft) => {
+              setUIState(draft => {
                 draft.couponModalVisible = true;
               })
             }
-            labelClass='marginInput'
-            onBlur={() => Trade.changeMarginBlur()}
+            labelClass="marginInput"
+            onBlur={() => {
+              if (isMarginRangeLimited) {
+                Trade.changeMarginBlur()
+              }
+            }}
           />
           {/* 体验金账户不显示追加保证金按钮 */}
           {!isTrial && (
-            <div className='group'>
-              {marginAddList.map((item) => (
+            <div className="group">
+              {marginAddList.map(item => (
                 <div key={item} onClick={() => Trade.changeAddMargin(item)}>
                   {item}
                 </div>
@@ -353,38 +643,44 @@ function LiteTradeUI() {
     theme,
     scale,
     USDTScale,
-    currentCommodityDigit,
+    currentCommodityDigit
   ]);
 
   const FeexIconMemo = useMemo(() => {
-    return <Svg src='/static/images/lite/wallet.svg' width={16} height={18} />;
+    return <Svg src="/static/images/lite/wallet.svg" width={14} height={14} />;
   }, []);
 
   const SettingIconMemo = useMemo(() => {
     return (
-      <>
-        <Svg
-          src='/static/images/lite/calculator.svg'
-          width={16}
-          height={14}
-          style={{ marginRight: '10px' }}
+      <div className="settings">
+        <CommonIcon
+          style={{ cursor: 'pointer' }}
+          name="swap-calculator-0"
+          size={16}
           onClick={() =>
-            setUIState((draft) => {
+            setUIState(draft => {
               draft.calculatorModalVisible = true;
             })
           }
         />
-        <Svg
-          src='/static/images/lite/trade_setting.svg'
-          width={16}
-          height={18}
+        <CommonIcon
+          style={{ cursor: 'pointer' }}
+          name="trade-config-0"
+          size={16}
           onClick={() =>
-            setUIState((draft) => {
+            setUIState(draft => {
               draft.settingModalVisible = true;
             })
           }
         />
-      </>
+        <style jsx>{`
+          .settings {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+          }
+        `}</style>
+      </div>
     );
   }, []);
 
@@ -394,22 +690,21 @@ function LiteTradeUI() {
         positionSide={positionSide}
         greenText={LANG('买涨')}
         redText={LANG('买跌')}
-        onChange={(positionSide) => Trade.changePositionSide(positionSide)}
+        onChange={positionSide => Trade.changePositionSide(positionSide)}
       />
     );
   }, [positionSide]);
 
   const ArrowIconMemo = useMemo(() => {
-    return <Image src='/static/images/lite/arrow.svg' width={13} height={12} alt='' />;
+    return <Image src="/static/images/lite/arrow.svg" width={13} height={12} alt="" />;
   }, []);
 
   const TooltipContentMemo = useMemo(() => {
     return (
       <>
         <Tooltip
-          placement='left'
-          arrow={false}
-          overlayClassName={`${theme} total-wrapper`}
+          className="order-total-tips"
+          placement="bottomLeft"
           title={
             <div className={'tooltips-order'}>
               <div className={'row'}>
@@ -420,20 +715,18 @@ function LiteTradeUI() {
                 <span>{LANG('手续费')}:</span>
                 <span>{tradeFee.toFixed(USDTScale)} USDT</span>
               </div>
-              {(isReal || isTrial) && (
+              {/* {(isReal || isTrial) && (
                 <div className={'row'}>
                   <span>{LANG('抵扣金额')}:</span>
                   <span>{deductionAmount.toFixed(USDTScale)} USDT</span>
                 </div>
-              )}
+              )} */}
             </div>
           }
         >
-          <div className='tooltip-label'>
-            <ExclamationCircleOutlined
-              style={{ fontSize: '13px', marginRight: '3px', height: '13px', color: isDark ? '#757e91' : '#333' }}
-            />
-            <span>{LANG('合计')}：</span>
+          <div className="tooltip-label">
+            <CommonIcon name="common-info-0" size={14} />
+            <span className="total">{LANG('合计')}：</span>
             <span className={'mix'}>
               <span>{totalMargin.toFixed(USDTScale)}</span>
               <span>&nbsp;USDT&nbsp;</span>
@@ -441,24 +734,41 @@ function LiteTradeUI() {
           </div>
         </Tooltip>
         <style jsx>{`
+          :global(.order-total-tips.tooltip .ant-tooltip-inner) {
+            padding: 16px !important;
+            width: auto;
+          }
           .tooltip-label {
             display: flex;
-            align-items: center;
-            font-size: 12px;
-            color: #333;
-            font-weight: 500;
-            width: max-content;
+            align-items: flex-start;
+            cursor: pointer;
+            gap: 4px;
+            .total {
+              color: var(--text-secondary);
+              font-size: 12px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
+            }
             .mix {
-              display: flex;
-              justify-content: space-between;
+              color: var(--text-primary);
+              font-size: 12px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
             }
           }
-          :global(.dark) {
-            .tooltip-label {
-              color: #757e91 !important;
-              .mix {
-                color: #fff;
-              }
+          .tooltips-order {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+            .row {
+              display: flex;
+              align-items: flex-start;
+              color: var(--text-secondary);
+              line-height: 8px;
+              gap: 8px;
             }
           }
         `}</style>
@@ -472,16 +782,67 @@ function LiteTradeUI() {
         <div className={'title-section'}>
           <div className={'left'}>
             {FeexIconMemo}
-            <span>{LANG('手续费费率')}:</span>&nbsp;
+            <span>{LANG('手续费费率')}:</span>
             <span className={'rate'}>{feex?.mul(100)}%</span>
           </div>
-          <div className='right'>{SettingIconMemo}</div>
+          <div className="right">{SettingIconMemo}</div>
         </div>
-        <div className='main-section'>
+        <div className="main-section">
           <LeverView />
           {PositionButtonMemo}
           {renderTab()}
-          <div className='drawer'>
+          <div className='trade-setting-group'>
+            <Radio
+              size={14}
+              label={
+                <span style={{ fontSize: 12, color: 'var(--text-primary)' }}>
+                  {LANG('默认止盈比例')}
+                </span>
+              }
+              checked={!UIState.showStopProfitSetting}
+              onChange={(val?: boolean) => {
+                setUIState(draft => {
+                  draft.showStopProfitSetting = !val;
+                });
+              }}
+            />
+            {UIState.showStopProfitSetting && (
+              <SPSLSetting
+                type={StopType.STOP_PROFIT}
+                onSettingTypeClicked={onSettingTypeClicked}
+                onPriceChange={onPriceChange}
+                onRateChange={onRateChange}
+              />
+            )}
+            {UIState.showStopProfitSetting && <div className="line" />}
+            <Radio
+              size={14}
+              label={
+                <span style={{ fontSize: 12, color: 'var(--text-primary)' }}>
+                  {LANG('默认止损比例')}
+                </span>
+              }
+              checked={!UIState.showStopLossSetting}
+              onChange={(val?: boolean) => {
+                setUIState(draft => {
+                  draft.showStopLossSetting = !val;
+                });
+              }}
+            />
+            {UIState.showStopLossSetting && <SPSLSetting
+              type={StopType.STOP_LOSS}
+              onSettingTypeClicked={onSettingTypeClicked}
+              onPriceChange={onPriceChange}
+              onRateChange={onRateChange}
+            />}
+
+            {(defer && deferFee > 0) && <DeferCheckbox
+              checked={deferOrderChecked}
+              onChange={Trade.changeDeferOrderSetting}
+            />}
+          </div>
+
+          {/* <div className='drawer'>
             <div className='drawer-tab'>
               <div
                 className={getActive(isStopProfit)}
@@ -517,16 +878,16 @@ function LiteTradeUI() {
                           ? data.stopProfitPrice
                           : stopProfitPrice
                         : UIState.isFocus && !UIState.inputIsEmpty
-                        ? data.stopLossPrice
-                        : stopLossPrice}
+                          ? data.stopLossPrice
+                          : stopLossPrice}
                     </span>
                   </div>
-                  <div className='setting-wrapper' onClick={onSettingTypeClicked}>
+                  <div className='setting-wrapper' onClick={() => onSettingTypeClicked(UIState.settingType)}>
                     <Image src={isPrice ? swapIcon1 : swapIcon2} width={12} height={11} alt='' />
                     <span>{isPrice ? LANG('按价格设置') : LANG('按比例设置')}</span>
                   </div>
                 </div>
-                <div>
+                <div className='bottom'>
                   {isPrice ? (
                     <>
                       <RatioInput
@@ -543,12 +904,12 @@ function LiteTradeUI() {
                           });
                         }}
                         onBlur={() => {
-                          onPriceChange(isStopProfit ? data.stopProfitPrice : data.stopLossPrice);
+                          onPriceChange(isStopProfit ? data.stopProfitPrice : data.stopLossPrice, isStopProfit ? StopType.STOP_PROFIT : StopType.STOP_LOSS);
                           setUIState((draft) => {
                             draft.isFocus = false;
                           });
                         }}
-                        onChange={(val) => onPriceChange(Number(val))}
+                        onChange={(val) => onPriceChange(Number(val), isStopProfit ? StopType.STOP_PROFIT : StopType.STOP_LOSS)}
                         onOriginValueChange={(val) => {
                           setUIState((draft) => {
                             draft.inputIsEmpty = val === '';
@@ -568,10 +929,10 @@ function LiteTradeUI() {
                       <RatioInput
                         value={isStopProfit ? data.stopProfitRate.mul(100) : data.stopLossRate.mul(100)}
                         min={Number(
-                          (isStopProfit ? stopProfitRange[0] : stopLossRange[stopLossRange.length - 1]).mul(100)
+                          (isStopProfit ? stopProfitRange[0] : stopLossRange[stopLossRange.length - 1])?.mul(100)
                         )}
                         max={Number(
-                          (isStopProfit ? stopProfitRange[stopProfitRange.length - 1] : stopLossRange[0]).mul(100)
+                          (isStopProfit ? stopProfitRange[stopProfitRange.length - 1] : stopLossRange[0])?.mul(100)
                         )}
                         addStep={5}
                         minusStep={5}
@@ -580,10 +941,10 @@ function LiteTradeUI() {
                         least={isStopProfit ? 1 : 0}
                         onBlur={() => {
                           if (data.stopLossRate < 0 && data.stopLossRate > stopLossRange[0]) {
-                            onRateChange(stopLossRange[0]);
+                            onRateChange(stopLossRange[0], isStopProfit ? StopType.STOP_PROFIT : StopType.STOP_LOSS);
                           }
                         }}
-                        onChange={(val) => onRateChange(Number(val.div(100)))}
+                        onChange={(val) => onRateChange(Number(val.div(100)), isStopProfit ? StopType.STOP_PROFIT : StopType.STOP_LOSS)}
                         placeholder={LANG('请输入')}
                       />
                       <div className='group'>
@@ -591,7 +952,7 @@ function LiteTradeUI() {
                           <div
                             key={num}
                             className={getActive((isStopProfit ? data.stopProfitRate : data.stopLossRate) === num)}
-                            onClick={() => onRateChange(num)}
+                            onClick={() => onRateChange(num, isStopProfit ? StopType.STOP_PROFIT : StopType.STOP_LOSS)}
                           >
                             {num * 100}%
                           </div>
@@ -602,30 +963,32 @@ function LiteTradeUI() {
                 </div>
               </div>
             )}
-            {liteTradeEnable ? (
-              <div className={`operation-btn ${isBuy ? 'btn-green' : 'btn-red'}`} onClick={onSubmitClicked}>
-                {isLimit ? (
+          </div> */}
+          {liteTradeEnable ? (
+            <Button rounded className={`operation-btn ${isBuy ? 'btn-green' : 'btn-red'}`} onClick={onSubmitClicked}>
+              {isLimit ? (
+                <>
                   <span>{btnText}</span>
-                ) : (
-                  <>
-                    <span>{btnText}:</span>
-                    <b>{isBuy ? marketBuyPrice : marketSellPrice}</b>
-                  </>
-                )}
-              </div>
-            ) : (
-              <button disabled className='maintain-btn'>
-                {LANG('维护中')}
-              </button>
-            )}
-
-            <div className={'stat-section'}>{TooltipContentMemo}</div>
-          </div>
+                  <b>{isBuy ? marketBuyPrice : marketSellPrice}</b>
+                </>
+              ) : (
+                <>
+                  <span>{btnText}:</span>
+                  <b>{isBuy ? marketBuyPrice : marketSellPrice}</b>
+                </>
+              )}
+            </Button>
+          ) : (
+            <Button disabled className="maintain-btn">
+              {LANG('维护中')}
+            </Button>
+          )}
+          <div className={'stat-section'}>{TooltipContentMemo}</div>
         </div>
         <CalculatorModal
           open={UIState.calculatorModalVisible}
           onClose={() =>
-            setUIState((draft) => {
+            setUIState(draft => {
               draft.calculatorModalVisible = false;
             })
           }
@@ -633,7 +996,7 @@ function LiteTradeUI() {
         <TransactionSettingModal
           open={UIState.settingModalVisible}
           onClose={() =>
-            setUIState((draft) => {
+            setUIState(draft => {
               draft.settingModalVisible = false;
             })
           }
@@ -641,17 +1004,17 @@ function LiteTradeUI() {
         <CouponModal
           open={UIState.couponModalVisible}
           onClose={() =>
-            setUIState((draft) => {
+            setUIState(draft => {
               draft.couponModalVisible = false;
             })
           }
         />
         <ConfirmModal
           open={UIState.confirmModalVisible}
-          title={LANG('确认下单')}
+          title={LANG('下单确认')}
           onOk={openOrder}
           onClose={() =>
-            setUIState((draft) => {
+            setUIState(draft => {
               draft.confirmModalVisible = false;
             })
           }
@@ -667,45 +1030,50 @@ export default withLayoutWrap(LoginWrap, TradeWrap(LiteTradeUI));
 const styles = css`
   .element-order {
     position: relative;
-    background: var(--theme-background-color-2-1);
-    padding: 15px 10px;
-    border-radius: var(--theme-trade-layout-radius);
+    border-radius: 0;
     .title-section {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--skin-border-color-1);
-      padding-bottom: 15px;
+      background: var(--bg-1);
+      height: 48px;
+      padding: 16px;
       > .left {
         display: flex;
         align-items: center;
+        gap: 4px;
         > span {
-          font-size: clamp(14px, 16px, 16px);
+          color: var(--text-secondary);
+          leading-trim: both;
+          text-edge: cap;
           font-size: 14px;
-          text-wrap: nowrap;
-          margin-left: 4px;
-          color: var(--theme-font-color-2);
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
           &.rate {
-            color: var(--theme-font-color-1);
+            color: var(--text-primary);
           }
         }
       }
-      > .right {
-        display: flex;
-        align-items: center;
-      }
     }
     .main-section {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-1);
+      margin-top: var(--theme-trade-layout-spacing);
+      padding: 16px;
+      gap: 8px;
       .drawer {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
         .drawer-tab {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin-top: 22px;
-          margin-bottom: 5px;
           > div {
             cursor: pointer;
-            color: var(--theme-font-color-2);
+            color: var(--text-secondary);
             border-bottom: 2px dashed transparent;
             span {
               margin-right: 10px;
@@ -718,7 +1086,7 @@ const styles = css`
               transition: all 0.3s;
             }
             &.active {
-              border-bottom-color: var(--skin-color-active);
+              border-bottom-color: var(--skin-primary-color);
               :global(img) {
                 transform: rotate(0);
               }
@@ -728,16 +1096,16 @@ const styles = css`
       }
       .drawer-content {
         position: relative;
-        padding: 15px;
-        margin: 0 -15px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
         .top {
           display: flex;
           align-items: center;
           justify-content: space-between;
           width: 100%;
-          padding-bottom: 18px;
           .setting-wrapper {
-            color: var(--theme-font-color-2);
+            color: var(--text-secondary);
             display: flex;
             align-items: center;
             cursor: pointer;
@@ -750,12 +1118,17 @@ const styles = css`
             }
           }
         }
+        .bottom {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
         .price-wrapper {
           > span {
             &:first-child {
               font-size: 12px;
               font-weight: 500;
-              color: var(--theme-font-color-2) !important;
+              color: var(--text-secondary) !important;
               padding-right: 4px;
             }
             &:last-child {
@@ -772,52 +1145,40 @@ const styles = css`
           }
         }
       }
-      .operation-btn {
+      .trade-setting-group {
         display: flex;
-        justify-content: center;
-        margin: 15px 0;
-        color: white;
-        height: 38px;
-        line-height: 38px;
-        border-radius: 6px;
-        span {
-          font-size: 14px;
-          margin-right: 4.5px;
-          font-weight: 500;
-        }
-        b {
-          font-size: 18px;
-          font-weight: 600;
-          letter-spacing: -1.5px;
-        }
-        &.btn-green {
-          background: var(--color-green);
-        }
-        &.btn-red {
-          background: var(--color-red);
+        flex-direction: column;
+        padding: 8px 0;
+        gap: 16px;
+        .line {
+          height: 1px;
+          background: var(--line-1);
         }
       }
-      .maintain-btn {
-        display: block;
-        text-align: center;
-        user-select: none;
-        text-decoration: none;
-        outline: none;
-        border: none;
+      :global(.operation-btn) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         width: 100%;
-        margin-top: 10px;
-        margin-bottom: 16px;
-        height: 38px;
-        line-height: 38px;
-        border-radius: 5px;
-        &:disabled {
-          color: var(--theme-trade-text-2) !important;
-          cursor: not-allowed !important;
-          background-color: var(--theme-trade-bg-color-4);
-          &:hover {
-            background-color: var(--theme-trade-bg-color-4);
-          }
+        margin-top: 8px;
+        gap: 8px;
+        span,
+        b {
+          color: var(--text-white);
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: normal;
         }
+      }
+      :global(.operation-btn.btn-green) {
+        background: var(--color-green);
+      }
+      :global(.operation-btn.btn-red) {
+        background: var(--color-red);
+      }
+      :global(.maintain-btn) {
+        width: 100%;
       }
     }
   }
@@ -854,28 +1215,32 @@ const styles = css`
 
 const tabStyles = css`
   .tab-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     .header {
-      margin-top: 10px;
-      margin-bottom: 15px;
-      color: var(--theme-font-color-2);
+      display: flex;
+      height: 40px;
       font-size: 14px;
       line-height: 14px;
       font-weight: 400;
-      display: flex;
+      color: var(--text-secondary);
       justify-content: space-between;
       ul {
         padding: 0;
         margin: 0;
         display: flex;
         align-items: center;
+        gap: 24px;
         li {
           cursor: pointer;
-          padding: 9px 0;
-          margin-right: 26px;
-          text-wrap: nowrap;
+          color: var(--text-secondary);
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: normal;
           &.active {
-            font-weight: 500;
-            color: var(--skin-color-active);
+            color: var(--text-brand);
           }
           &.not-pointer {
             cursor: default;
@@ -885,37 +1250,53 @@ const tabStyles = css`
       }
       .sub {
         display: flex;
-        font-size: 12px;
         align-items: center;
-        justify-content: flex-end;
-        flex-wrap: wrap;
+        color: var(--text-primary);
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        gap: 8px;
         .sub-title {
-          color: var(--theme-font-color-2);
-          margin-right: 6px;
+          color: var(--text-tertiary);
         }
         .volume {
-          color: var(--theme-font-color-1);
+          color: var(--text-primary);
         }
       }
     }
-    .deal-price-wrapper {
-      margin-top: -18px;
-      height: 40px;
+    .content {
       display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      > div {
-        &:first-child {
-          font-size: 12px;
-          font-weight: 400;
-          color: var(--theme-font-color-2);
+      flex-direction: column;
+      gap: 8px;
+      .price-input-group {
+        display: flex;
+        flex-direction: column;
+        :global(.trade-input) {
+          margin-bottom: 8px;
         }
-        &:last-child {
-          cursor: pointer;
-          font-size: 12px;
-          font-weight: 400;
-          color: var(--skin-color-active);
+        :global(.trade-input:not(:first-child)) {
+          margin-top: 8px;
+        }
+        .deal-price-wrapper {
+          display: none;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 8px;
+          > div {
+            &:first-child {
+              font-size: 12px;
+              font-weight: 400;
+              color: var(--text-secondary);
+            }
+            &:last-child {
+              cursor: pointer;
+              font-size: 12px;
+              font-weight: 400;
+              color: var(--skin-primary-color);
+            }
+          }
         }
       }
     }
@@ -941,11 +1322,10 @@ const groupStyles = css`
     justify-content: space-between;
     overflow: hidden;
     width: 100%;
-    color: var(--theme-font-color-2);
-    margin-top: -8px;
+    color: var(--text-secondary);
     > div {
-      background: var(--theme-trade-tips-color);
-      color: var(--theme-font-color-2);
+      background: var(--fill-3);
+      color: var(--text-secondary);
       cursor: pointer;
       width: 52px;
       height: 24px;
@@ -956,6 +1336,7 @@ const groupStyles = css`
       text-align: center;
       border-radius: 6px;
       margin: 0 3px;
+      flex: 1 auto;
       &:first-child {
         margin-left: 0;
       }
@@ -964,8 +1345,7 @@ const groupStyles = css`
       }
       &:hover,
       &.active {
-        background: rgba(235, 179, 14, 0.1);
-        color: var(--skin-color-active);
+        color: var(--text-brand);
       }
     }
   }

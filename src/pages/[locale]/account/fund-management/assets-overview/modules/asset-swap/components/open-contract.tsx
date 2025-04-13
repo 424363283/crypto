@@ -37,7 +37,7 @@ const OpenContractView = (props: OpenContractProps): JSX.Element => {
     <div className='open-contract-view'>
       <Image
         className='logo'
-        src='/static/images/account/fund/contract_agreement.png'
+        src='/static/images/account/fund/contract_agreement.svg'
         width='86'
         height='80'
         enableSkin
@@ -62,7 +62,7 @@ export { OpenContractView };
 const styles = css`
   .open-contract-view {
     height: 822px;
-    background: var(--theme-background-color-2);
+    background: var(--bg-1);
     margin-top: 110px;
     display: flex;
     flex-direction: column;

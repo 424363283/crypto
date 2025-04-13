@@ -33,35 +33,40 @@ const CalculatorResult = ({ results, tips }: Props) => {
 export default CalculatorResult;
 const styles = css`
   .result {
-    flex: 1;
-    padding: 20px;
-    background: var(--theme-trade-tips-color);
     display: flex;
+    padding: 24px;
     flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    background: var(--fill-3);
+    border-radius: 16px;
+    flex: 1 0 0;
     .result-content {
-      flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
+      align-items: flex-start;
+      align-self: stretch;
+      flex: 1 0 0;
+      gap: 24px;
       .title {
-        line-height: 14px;
-        font-size: 14px;
-        font-weight: 400;
-        color: #ffffff;
-        margin-bottom: 34px;
+        color: var(--text-primary);
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
       }
       .row {
         display: flex;
-        flex-direction: row;
         justify-content: space-between;
-        margin-bottom: 17px;
+        align-items: flex-start;
+        align-self: stretch;
         > div {
           font-size: 14px;
           line-height: 14px;
           font-weight: 400;
-          color: var(--theme-font-color-2);
+          color: var(--text-secondary);
           &:nth-child(2) {
-            color: var(--theme-font-color-1);
+            color: var(--text-primary);
           }
         }
       }

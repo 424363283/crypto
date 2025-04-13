@@ -1,5 +1,15 @@
-import { getCommonCountryListApi, kycUploadApi, loginApi, postAccountUploadAvatarApi, postCommonRegisterApi, resetPasswordApi, settingFundPasswordApi, updateLoginPasswordApi, updateUsernameApi } from '@/core/api';
-import { appContextSetState , localStorageApi , LOCAL_KEY} from '@/core/store';
+import {
+  getCommonCountryListApi,
+  kycUploadApi,
+  loginApi,
+  postAccountUploadAvatarApi,
+  postCommonRegisterApi,
+  resetPasswordApi,
+  settingFundPasswordApi,
+  updateLoginPasswordApi,
+  updateUsernameApi
+} from '@/core/api';
+import { appContextSetState, localStorageApi, LOCAL_KEY } from '@/core/store';
 import { getCookie, mergeMultiFileFields, removeCookie, serializeObject } from '@/core/utils';
 import { Assets } from './assets';
 import { Convert } from './convert';
@@ -66,12 +76,12 @@ class Account {
 
   // 获取国家列表
   static async getCountryList() {
-    const list = localStorageApi.getItem(LOCAL_KEY.COUNTRY_CODE);
-    if (list) return list as [];
-    const { data } = await getCommonCountryListApi();
-    localStorageApi.setItem(LOCAL_KEY.COUNTRY_CODE, data.list);
+    const data = localStorageApi.getItem(LOCAL_KEY.COUNTRY_CODES);
+    if (data) return data;
+    const res = await getCommonCountryListApi();
+    localStorageApi.setItem(LOCAL_KEY.COUNTRY_CODES, res.data);
 
-    return data.list;
+    return res.data;
   }
 
   // 获取用户信息
@@ -87,12 +97,22 @@ class Account {
     if (Account.isLogin) {
       return await UserInfo.refresh();
     } else {
-      // console.log('refreshUserInfo 未登录');
+      console.log('refreshUserInfo 未登录');
       return null;
     }
   }
 
-  static async registerUser(data: { password: string; countryCode?: string; countryId?: string; sign: string; email?: string; phone?: string; ru?: string; terminal?: string; code?: string }) {
+  static async registerUser(data: {
+    password: string;
+    countryCode?: string;
+    countryId?: string;
+    sign: string;
+    email?: string;
+    phone?: string;
+    ru?: string;
+    terminal?: string;
+    code?: string;
+  }) {
     return await postCommonRegisterApi(data);
   }
   static async login(data: LoginParam): Promise<{ code: number; message: string; data: any }> {
@@ -109,12 +129,18 @@ class Account {
     return Account.setLoginStatus(false);
   }
   // reset pwd
-  static async resetPassword(data: { password: string; token: string; account: string }): Promise<{ code: number; message: string }> {
+  static async resetPassword(data: {
+    password: string;
+    token: string;
+    account: string;
+  }): Promise<{ code: number; message: string }> {
     return await resetPasswordApi(data);
   }
 
   // 上传头像
-  static async uploadAvatar(data: { image: File }): Promise<{ code: number; message: string; data: { avatar: string } }> {
+  static async uploadAvatar(data: {
+    image: File;
+  }): Promise<{ code: number; message: string; data: { avatar: string } }> {
     return await postAccountUploadAvatarApi(data);
   }
   // updateUsername
@@ -125,19 +151,37 @@ class Account {
   static async getKycStatus(): Promise<KycStatus> {
     return await UserInfo.getUserKycInfo();
   }
+
+  // 更新kyc状态
+  static async refreshKycStatus(): Promise<KycStatus> {
+    return await UserInfo.refreshKycInfo();
+  }
   // 资金密码
-  static settingFundPassword(data: { password: string; withdrawPw: string }): Promise<{ code: number; message: string }> {
+  static settingFundPassword(data: {
+    password: string;
+    withdrawPw: string;
+  }): Promise<{ code: number; message: string }> {
     return settingFundPasswordApi(data);
   }
   //kycUpload
-  static kycUpload(data: { images: any; countryId: string; identityName: string; identityType: number; identityNumber: string }): Promise<{ code: number; message: string }> {
+  static kycUpload(data: {
+    images: any;
+    countryId: string;
+    identityName: string;
+    identityType: number;
+    identityNumber: string;
+  }): Promise<{ code: number; message: string }> {
     const formData = mergeMultiFileFields({ ...data, front: true }) as any;
     return kycUploadApi(formData);
   }
   //updateLoginPassword
-  static updateLoginPassword(data: { oldPassword: string; newPassword: string; token: string }): Promise<{ code: number; message: string }> {
+  static updateLoginPassword(data: {
+    oldPassword: string;
+    newPassword: string;
+    token: string;
+  }): Promise<{ code: number; message: string }> {
     return updateLoginPasswordApi(data);
   }
 }
 
-export { Account, SENCE, UserInfo,VerifyCode };
+export { Account, SENCE, UserInfo, VerifyCode };

@@ -37,7 +37,7 @@ const { className, styles: _styles } = css.resolve`
       -webkit-box-pack: start;
       justify-content: flex-start;
       z-index: 1;
-      background: linear-gradient(to right, var(--theme-trade-bg-color-2) 42.24%, transparent 95.69%);
+      background: linear-gradient(to right, var(--bg-1) 42.24%, transparent 95.69%);
       :global(> *) {
         transform: rotate(180deg);
       }
@@ -53,7 +53,7 @@ const { className, styles: _styles } = css.resolve`
       -webkit-box-pack: end;
       justify-content: flex-end;
       z-index: 1;
-      background: linear-gradient(to left, var(--theme-trade-bg-color-2) 42.24%, transparent 95.69%);
+      background: linear-gradient(to left, var(--bg-1) 42.24%, transparent 95.69%);
       :global(> *) {
         transform: rotate(0deg);
       }

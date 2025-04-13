@@ -32,12 +32,28 @@ const styles = css`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-right: 35px;
-    height: 60px;
     cursor: pointer;
-    color: var(--theme-font-color-3);
-    font-size: 16px;
+    color: var(--text-secondary);
+    height: 40px;
+    font-size: 14px;
+    &.xs {
+      height: 30px;
+      font-size: 12px;
+    }
+    &.sm {
+      height: 30px;
+      font-size: 14px;
+    }
+    &.lg {
+      height: 48px;
+      font-size: 14px;
+    }
+    &.xl {
+      height: 58px;
+      font-size: 16px;
+    }
     @media ${MediaInfo.mobile} {
+      height: 34px;
       font-size: 14px;
     }
     > div {
@@ -46,24 +62,52 @@ const styles = css`
       justify-content: center;
       align-items: center;
       height: 100%;
+      @media ${MediaInfo.mobile} {
+        height: auto;
+      }
     }
-
     &.active {
       > div {
-        color: var(--theme-font-color-1);
-        font-size: 16px;
-        font-weight: 500;
-        @media ${MediaInfo.mobile} {
-          font-size: 14px;
-        }
+        color: var(--text-brand);
+      }
+    }
+    &.line.active {
+      > div {
         &::after {
           content: '';
           display: block;
           position: absolute;
           bottom: 0;
-          width: 100%;
+          width: 37.5%;
           height: 3px;
-          background: var(--skin-primary-color);
+          background: var(--text-brand);
+          @media ${MediaInfo.mobile} {
+            bottom: -5px;
+          }
+        }
+      }
+    }
+    &.card {
+      > div{
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: 1px solid var(--line-3);
+        @media ${MediaInfo.mobile} {
+           padding: 5px 8px;
+           border: none;
+           background: var(--fill-3);
+        }
+      }
+    }
+    &.card.active {
+      > div {
+        color: var(--text-primary);
+        background: var(--fill-3);
+        border: 1px solid var(--fill-3);
+        @media ${MediaInfo.mobile} {
+          color: var(--brand);
+          background: var(--fill-3);
+          border: 1px solid var(--brand);
         }
       }
     }

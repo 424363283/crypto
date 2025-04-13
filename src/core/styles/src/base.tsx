@@ -4,18 +4,47 @@ export const BaseStyle = () => {
   return (
     <style jsx global>
       {`
-        html * {
-         font-family: PingFang SC, Source Sans Pro, sans-serif !important;
+          @font-face {
+          font-family: 'HarmonyOS_Sans_SC';
+          src: url('/fonts/HarmonyOS_Sans_SC_Regular.ttf') format('truetype');
+          font-weight: normal;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'HarmonyOS_Sans_SC';
+          src: url('/fonts/HarmonyOS_Sans_SC_Medium.ttf') format('truetype');
+          font-weight: 500;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'HarmonyOS_Sans_SC';
+          src: url('/fonts/HarmonyOS_Sans_SC_Bold.ttf') format('truetype');
+          font-weight: bold;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'HarmonyOS_Sans_SC';
+          src: url('/fonts/HarmonyOS_Sans_SC_Black.ttf') format('truetype');
+          font-weight: 900;
+          font-style: normal;
+        }
+    html * {
+          font-family: 'HarmonyOS_Sans_SC', PingFang SC, Source Sans Pro, sans-serif !important;
           box-sizing: border-box;
+          @media ${MediaInfo.mobile} {
+            box-sizing: content-box;
+          }
         }
         html[lang='vi'] * {
-          font-family: PingFang SC, Source Sans Pro, sans-serif !important;
+          font-family: 'HarmonyOS_Sans_SC', PingFang SC, Source Sans Pro, sans-serif !important;
         }
         body {
           margin: 0;
           font-size: 14px;
           color: rgba(0, 0, 0, 0.65);
-          background: var(--theme-background-color-1);
+          background: var(--bg-1);
+  font-family: 'HarmonyOS_Sans_SC' !important;
+
           overflow: overlay; /*滚动条会覆盖在页面之上*/
         }
         a {
@@ -59,7 +88,7 @@ export const BaseStyle = () => {
         .ant-input {
           &:focus {
             border: 1px solid var(--skin-primary-color);
-            box-shadow: 0 0 0 2px rgb(248 187 55 / 20%);
+            box-shadow: 0 0 0 2px rgb(7 130 139 / 20%);
           }
         }
         .ant-input:hover {
@@ -100,7 +129,7 @@ export const BaseStyle = () => {
           background-color: var(--theme-sub-button-bg-2);
         }
         :global(.ant-switch.ant-switch-checked .ant-switch-inner) {
-          background-color: var(--skin-primary-color);
+          background-color: var(--brand);
         }
         :global(.ant-switch.ant-switch-checked:hover:not(.ant-switch-disabled)) {
           background-color: var(--skin-primary-color);
@@ -112,17 +141,17 @@ export const BaseStyle = () => {
         }
         /** dropdown button */
         :global(.ant-dropdown .ant-dropdown-menu-vertical) {
-          background-color: var(--theme-background-color-2-3);
+          background-color: var(--dropdown-select-bg-color);
         }
         :global(.ant-dropdown .ant-dropdown-menu-vertical .ant-dropdown-menu-item) {
-          color: var(--theme-font-color-1);
+          color: var(--text-secondary);
+          background: transparent !important;
         }
         :global(.ant-dropdown .ant-dropdown-menu-vertical .ant-dropdown-menu-item.ant-dropdown-menu-item-active) {
-          background-color: var(--skin-primary-bg-color-opacity-1);
-          color: var(--skin-main-font-color);
+          color: var(--brand);
         }
         :global(.ant-spin-dot-item) {
-          background: var(--skin-table-loading-color) !important;
+          background: var(--brand) !important;
         }
         :root[theme='light'] {
           .ant-radio-wrapper-checked .ant-radio-checked .ant-radio-inner {

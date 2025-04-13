@@ -1,9 +1,12 @@
 import { AccountBox } from '@/components/account/components/account-box';
 import { VerifyForm } from '@/components/account/verify';
 import CommonIcon from '@/components/common-icon';
+import { Svg } from '@/components/svg';
+import TabBar from '@/components/tab-bar';
 import { useRouter } from '@/core/hooks/src/use-router';
 import { LANG } from '@/core/i18n';
 import { SENCE } from '@/core/shared';
+import { MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
 
 export default function VerifyPage() {
@@ -14,7 +17,7 @@ export default function VerifyPage() {
     [SENCE.LOGIN]: LANG('登录验证'),
     [SENCE.UNBIND_PHONE]: LANG('关闭手机验证'),
     [SENCE.UNBIND_EMAIL]: LANG('关闭邮箱验证'),
-    [SENCE.UNBIND_GA]: LANG('关闭谷歌验证'),
+    [SENCE.UNBIND_GA]: LANG('关闭身份验证器应用'),
     [SENCE.UNBIND_WITHDRAW]: LANG('关闭资金密码'),
   };
   const VERIFY_PROMPT_MAP: { [key: string]: string } = {
@@ -31,10 +34,11 @@ export default function VerifyPage() {
   return (
     <AccountBox title={VERIFY_TITLE_MAP[sence] || LANG('安全验证')}>
       <div className='verify-prompt'>
-        <CommonIcon size={12} name='common-warning-tips-0' />
-        {VERIFY_PROMPT_MAP[sence] || LANG('为了您的资产安全，请完成一下验证操作')}
+        <div className='prompt-box'>
+          <div className='prompt'><Svg src='/static/icons/primary/common/tips.svg' width={14} height={14} color='var(--yellow)' /> <span> {VERIFY_PROMPT_MAP[sence] || LANG('为了您的资产安全，请完成一下验证操作')}</span></div>
+        </div>
       </div>
-      <VerifyForm />
+      <VerifyForm title={LANG('认证您的身份')} />
       <style jsx>{styles}</style>
     </AccountBox>
   );
@@ -42,15 +46,30 @@ export default function VerifyPage() {
 
 const styles = css`
   .verify-prompt {
-    border-radius: 5px;
-    padding: 12px 20px;
-    background: rgba(240, 78, 63, 0.08);
-    font-size: 12px;
-    font-weight: 400;
-    color: var(--theme-font-color-1);
-    margin-bottom: 30px;
-    :global(img) {
-      margin-right: 10px;
-    }
+   .prompt-box {
+          padding: 8px 12px;
+          font-weight: 400;
+          color: var(--yellow);
+          border-radius: 5px;
+          margin-bottom: 30px;
+          background: var(--tips);
+          @media ${MediaInfo.mobile} {
+           margin-bottom: 15px;
+          }
+          .prompt{ 
+            display:flex;
+            flex-direction: row;
+            align-items: center;
+            width: 1400px;
+            margin: auto;
+            font-size: 12px;
+            span{
+              padding-left: 6px;
+            }
+            @media ${MediaInfo.mobile} {
+              width: auto;
+            }
+          }
+      }
   }
 `;

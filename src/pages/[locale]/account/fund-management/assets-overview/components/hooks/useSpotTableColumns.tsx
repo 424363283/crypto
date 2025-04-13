@@ -8,6 +8,8 @@ import { Dropdown, Menu } from 'antd';
 import { memo, useState } from 'react';
 import { CustomCodeNameMemo } from '../coin-name';
 import { useCoinOperateOptions } from './useCoinOperateOptions';
+import { Button } from '@/components/button';
+import { Size } from '@/components/constants';
 
 type UseSpotTableColumnsProps = {
   data: any;
@@ -24,10 +26,10 @@ const CustomTotalAssetsColumn = ({
   total: string;
   maxScale: number;
 }) => {
-  if (code === 'Y-MEX' && !id) {
+  if (code === 'XK' && !id) {
     return (
       <div className={'money-box'}>
-        <div className='current'>{total} Y-MEX</div>
+        <div className='current'>{total} YMEX</div>
       </div>
     );
   } else {
@@ -62,7 +64,7 @@ const OPERATE_BUTTONS: { [key: string]: any } = {
   },
   transfer: {
     key: 'transfer',
-    label: LANG('转账'),
+    label: LANG('内部转账'),
     link: '/account/fund-management/asset-account/transfer/',
   },
   convert: {
@@ -92,9 +94,13 @@ export const useSpotTableColumns = ({ data }: UseSpotTableColumnsProps) => {
     const result = Object.keys(operateOptions).filter((key: string) => (operateOptions as any)[key].includes(code));
     // 闪兑和交易需要排除USDT
     if (result.includes('convert') && code === 'USDT') result.splice(result.indexOf('convert'), 1);
-    if (trade && code !== 'USDT') result.unshift('trade');
+    //临时拿掉所有闪兑
+    if (result.includes('convert')) result.splice(result.indexOf('convert'), 1);
+    if (false && trade && code !== 'USDT') result.unshift('trade');
     const sortedOptions = [...result].sort((a, b) => {
       const targetOrder = ['trade', 'recharge', 'withdraw', 'transfer', 'convert'];
+      // const targetOrder = ['trade', 'recharge', 'withdraw'];
+
       return targetOrder.indexOf(a) - targetOrder.indexOf(b);
     });
     // 如果大于三个按钮，使用dropdown显示最后一个按钮
@@ -126,24 +132,28 @@ export const useSpotTableColumns = ({ data }: UseSpotTableColumnsProps) => {
           {sortedOptions.slice(0, buttonCounts).map((item: string) => {
             const { key, label, link } = OPERATE_BUTTONS[item];
             return key === 'trade' ? (
-              <TradeLink id={`${code}_usdt`} native className='operate-button'>
-                {label}
-              </TradeLink>
+              <Button key={key} type={'primary'} rounded size={Size.SM} style={{ minWidth: 72 }}>
+                <TradeLink style={{ color: 'var(--text-white)' }} id={`${code}_usdt`} native className='operate-button'>
+                  {label}
+                </TradeLink>
+              </Button>
             ) : (
-              <TrLink
-                key={key}
-                className='operate-button'
-                native
-                href={`${link}`}
-                query={{ code }}
-                onClick={(evt: React.MouseEvent) => onBtnClick(evt, key, code)}
-              >
-                {label}
-              </TrLink>
+              <Button key={key} rounded size={Size.SM} style={{ minWidth: 72 }}>
+                <TrLink style={{ color: 'var(--text-primary)' }}
+                  key={key}
+                  className='operate-button'
+                  native
+                  href={link}
+                  query={{ code }}
+                  onClick={(evt: React.MouseEvent) => onBtnClick(evt, key, code)}
+                >
+                  {label}
+                </TrLink>
+              </Button>
             );
           })}
           <Dropdown overlay={menu} trigger={['hover']}>
-            <CommonIcon name='common-more-option-0' size={16} style={{ cursor: 'pointer' }} />
+            <CommonIcon name='common-more-option' size={20} style={{ cursor: 'pointer' }} />
           </Dropdown>
         </>
       );
@@ -151,13 +161,17 @@ export const useSpotTableColumns = ({ data }: UseSpotTableColumnsProps) => {
     return sortedOptions.map((item: string) => {
       const { key, label, link } = OPERATE_BUTTONS[item];
       return key === 'trade' ? (
-        <TradeLink id={`${code}_usdt`} className='operate-button' native>
-          {label}
-        </TradeLink>
+        <Button key={key} type={'primary'} rounded size={Size.SM} style={{ minWidth: 72 }}>
+          <TradeLink id={`${code}_usdt`} style={{ color: 'var(--text-white)' }} native>
+            {label}
+          </TradeLink>
+        </Button>
       ) : (
-        <TrLink key={key} className='operate-button' href={`${link}`} query={{ code: code }}>
-          {label}
-        </TrLink>
+        <Button key={key} rounded size={Size.SM} style={{ minWidth: 72 }}>
+          <TrLink style={{ color: 'var(--text-primary)' }} href={`${link}`} query={{ code: code }}>
+            {label}
+          </TrLink>
+        </Button>
       );
     });
   };
@@ -168,12 +182,11 @@ export const useSpotTableColumns = ({ data }: UseSpotTableColumnsProps) => {
       dataIndex: 'code',
       key: 'code',
       hideTitle: true,
-      width: '20%',
       sorter:
         data.length > 0
           ? {
-              compare: (a: SpotItem, b: SpotItem) => String(a.code).localeCompare(String(b.code)),
-            }
+            compare: (a: SpotItem, b: SpotItem) => String(a.code).localeCompare(String(b.code)),
+          }
           : false,
       render: (code: string, item: SpotItem) => {
         let iconCode = code?.replace(/\d+(L|S)$/i, '');
@@ -193,16 +206,16 @@ export const useSpotTableColumns = ({ data }: UseSpotTableColumnsProps) => {
       title: LANG('全部资产'),
       dataIndex: 'total',
       key: 'total',
-      width: '20%',
       sorter:
         data.length > 0
           ? {
-              compare: (a: SpotItem, b: SpotItem) => Number(a.targetU) - Number(b.targetU),
-            }
+            compare: (a: SpotItem, b: SpotItem) => Number(a.targetU) - Number(b.targetU),
+          }
           : false,
       render: (total: string, item: SpotItem) => {
+        const allAsets = total.add(item?.lite?.planMargin || 0).add(item?.lite?.positionMargin || 0);
         return (
-          <CustomTotalAssetsColumnMemo code={item.code} id={item.id || ''} maxScale={item?.scale || 2} total={total} />
+          <CustomTotalAssetsColumnMemo code={item.code} id={item.id || ''} maxScale={item?.scale || 2} total={allAsets} />
         );
       },
     },
@@ -210,15 +223,14 @@ export const useSpotTableColumns = ({ data }: UseSpotTableColumnsProps) => {
       title: LANG('可用资产'),
       dataIndex: 'balance',
       key: 'balance',
-      width: '20%',
       sorter:
         data.length > 0
           ? {
-              compare: (a: SpotItem, b: SpotItem) => Number(a.targetU) - Number(b.targetU),
-            }
+            compare: (a: SpotItem, b: SpotItem) => Number(a.targetU) - Number(b.targetU),
+          }
           : false,
       render: (money: number, item: SpotItem) => {
-        if (item.code === 'Y-MEX' && !item.id) {
+        if (item.code === 'XK' && !item.id) {
           return <div />;
         }
         return (
@@ -232,20 +244,20 @@ export const useSpotTableColumns = ({ data }: UseSpotTableColumnsProps) => {
       title: LANG('冻结余额'),
       dataIndex: 'frozen',
       key: 'frozen',
-      width: '20%',
       sorter:
         data.length > 0
           ? {
-              compare: (a: SpotItem, b: SpotItem) => Number(a.frozen) - Number(b.frozen),
-            }
+            compare: (a: SpotItem, b: SpotItem) => Number(a.frozen) - Number(b.frozen),
+          }
           : false,
       render: (freeze: number, item: SpotItem) => {
-        if (item.code === 'Y-MEX' && !item.id) {
+        if (item.code === 'XK' && !item.id) {
           return <div />;
         }
+        const freezeAll = freeze.add(item?.lite?.planMargin || 0).add(item?.lite?.positionMargin || 0);
         return (
           <div className='money-box'>
-            <div className='current'>{`${freeze?.toFormat(item?.scale || 2)}`} </div>
+            <div className='current'>{`${freezeAll?.toFormat(item?.scale || 2)}`} </div>
           </div>
         );
       },
@@ -253,8 +265,8 @@ export const useSpotTableColumns = ({ data }: UseSpotTableColumnsProps) => {
     {
       title: LANG('操作'),
       key: 'operation',
-      align: 'left',
-      width: '20%',
+      align: 'right',
+      width: 300,
       hideColumn: true,
       render: (value: SpotItem, item: SpotItem) => {
         return <div className='right-box'>{renderOperateButtons(item)}</div>;

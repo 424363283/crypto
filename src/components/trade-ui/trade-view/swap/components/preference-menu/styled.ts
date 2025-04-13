@@ -1,4 +1,4 @@
-import { clsxWithScope } from '@/core/utils';
+import { clsxWithScope, MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
 
 const { className, styles: _styles } = css.resolve`
@@ -42,6 +42,20 @@ const { className, styles: _styles } = css.resolve`
   }
   .content {
     padding: 11px 0 13px;
+    @media ${MediaInfo.mobile} {
+      padding-: 1rem 0;
+      .position-mode {
+        margin-bottom: 1.5rem;
+      }
+      .line {
+        padding: 1rem 1.5rem;
+        :global(> div) {
+          width: auto;
+          height: 1px;
+          background: var(--line-1);
+        }
+      }
+    }
     .tips {
       font-size: 12px;
       font-weight: 400;
@@ -87,8 +101,8 @@ const { className, styles: _styles } = css.resolve`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    color: var(--theme-trade-text-color-1);
-    padding: var(--const-spacing) var(--const-spacing) 0;
+    color: var(--text-secondary);
+    padding: 0 24px;
   }
   .drawer-content {
     padding: 0 !important;

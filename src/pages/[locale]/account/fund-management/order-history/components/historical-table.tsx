@@ -1,11 +1,13 @@
 import Table from '@/components/table';
 import { MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
+import { HistoricalTableStyle } from './historical-table-style';
 export default function HistoricalTable(props: any) {
   return (
     <>
       <Table className='historical-table' {...props} />
       <style jsx>{styles}</style>
+      <HistoricalTableStyle />
     </>
   );
 }

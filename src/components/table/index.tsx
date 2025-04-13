@@ -4,9 +4,11 @@ import { clsx } from '@/core/utils';
 import { Table as AntdTable } from 'antd';
 import css from 'styled-jsx/css';
 import CommonIcon from '../common-icon';
-import { Desktop, Mobile, Tablet } from '../responsive';
+import { Desktop, DesktopOrTablet, Mobile, Tablet } from '../responsive';
 import { MobileTable } from './mobile-table';
 import { Pagination } from './pagination';
+import MobileFundHistoryList from './mobile-fund-history-list';
+import MobileOrderHistoryList from './mobile-order-history-list';
 
 export const Table = (props: any): JSX.Element => {
   const {
@@ -16,19 +18,22 @@ export const Table = (props: any): JSX.Element => {
     className,
     showMobileTable = false,
     showTabletTable = false,
+    isHistoryList = false,
+    historyType,
     ...rest
   } = props;
+
   const columnWithCustomSortIcon = columns?.map((item: any) => {
     return {
       ...item,
       sortIcon: ({ sortOrder }: { sortOrder: 'ascend' | 'descend' }) => {
         if (sortOrder === 'ascend') {
-          return <CommonIcon name='common-sort-up-active-icon-0' size={14} enableSkin />;
+          return <CommonIcon name='common-sort-up-active-icon-0' size={10} enableSkin />;
         }
         if (sortOrder === 'descend') {
-          return <CommonIcon name='common-sort-down-active-icon-0' size={14} enableSkin />;
+          return <CommonIcon name='common-sort-down-active-icon-0' size={10} enableSkin />;
         }
-        return <CommonIcon name='common-sort-icon-0' size={14} />;
+        return <CommonIcon name='common-sort-icon-0' size={10} />;
       },
     };
   });
@@ -55,11 +60,14 @@ export const Table = (props: any): JSX.Element => {
       <>
         <Desktop forceInitRender={false}>{renderAntdWithoutPaginationTable()}</Desktop>
         <Mobile forceInitRender={false}>
-          {showMobileTable ? (
-            <MobileTable className={className} columns={columns} dataSource={dataSource} pagination={pagination} />
-          ) : (
-            renderAntdWithoutPaginationTable()
-          )}
+          {
+            isHistoryList ?
+              (historyType !== undefined ?
+                <MobileOrderHistoryList dataSource={dataSource} type={historyType} /> :
+                <MobileTable className={className} columns={columns} dataSource={dataSource} pagination={pagination} />
+              ) :
+              <MobileFundHistoryList dataSource={dataSource} />
+          }
         </Mobile>
         <Tablet forceInitRender={false}>
           {showTabletTable ? (
@@ -68,6 +76,7 @@ export const Table = (props: any): JSX.Element => {
             renderAntdWithoutPaginationTable()
           )}
         </Tablet>
+        <style jsx>{mobileListStyles}</style>
       </>
     );
   }
@@ -104,27 +113,59 @@ export const Table = (props: any): JSX.Element => {
   };
   return (
     <>
-      <Desktop>{renderWithPaginationTable()}</Desktop>
+      <DesktopOrTablet>{renderWithPaginationTable()}</DesktopOrTablet>
       <Mobile>
-        {showMobileTable ? (
-          <MobileTable className={className} columns={columns} dataSource={dataSource} pagination={pagination} />
-        ) : (
-          renderWithPaginationTable()
-        )}
+        {
+          isHistoryList ?
+            historyType !== undefined ?
+              <MobileOrderHistoryList dataSource={dataSource} type={historyType} /> :
+              <MobileTable className={className} columns={columns} dataSource={dataSource} pagination={pagination} />
+            :
+            <MobileFundHistoryList dataSource={dataSource} />
+        }
       </Mobile>
-      <Tablet>
-        {showTabletTable ? (
-          <MobileTable className={className} columns={columns} dataSource={dataSource} pagination={pagination} />
-        ) : (
-          renderWithPaginationTable()
-        )}
-      </Tablet>
       <Pagination {...pagination} showSizeChanger={false} dataSource={dataSource} total={_total} />
       <style jsx>{tableStyles}</style>
     </>
   );
 };
 export { Pagination };
+
+const mobileListStyles = css`
+  .mobile-cloumns-list{
+    margin: 10px 0 15px;
+    padding:0 12px 10px;
+    border-bottom: 1px solid var(--fill-3);
+    .cloumns{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      font-size: 15px;
+      .logo{
+         display: flex;
+         align-items: center;
+         span{
+          padding-left: 5px;
+         }
+      }
+      .type{
+        display: flex;
+        align-items: center;
+      }
+      .price{
+        color: var(--green);
+      }
+      &:first-child{
+        margin-bottom: 10px;
+      }
+      &:last-child{
+        font-size: 14px;
+        color: var(--text-tertiary)
+      }
+    }
+  }
+`;
+
 const tableStyles = css`
   :global(.common-table) {
     :global(.ant-spin-container::after) {
@@ -136,22 +177,23 @@ const tableStyles = css`
         :global(th),
         :global(td) {
           color: var(--theme-font-color-1);
-          border-color: var(--theme-border-color-1);
+          border-color: var(--line-2) !important;
         }
         :global(.ant-table-cell-row-hover) {
-          background: var(--theme-background-color-2-5) !important;
+          /* background: var(--theme-background-color-2-5) !important; */
         }
         :global(.ant-table-row-expand-icon-cell) {
           background-color: unset;
           border-bottom: none;
+          color: var(--text-tertiary);
           :global(.expand-btn) {
             display: flex;
             align-items: center;
             cursor: pointer;
-            color: var(--skin-main-font-color);
+            color: var(--text-tertiary);
             font-size: 14px;
             min-width: 50px;
-            max-width: 100px;
+            max-width: 400;
             :global(span) {
               margin-right: 7px;
             }

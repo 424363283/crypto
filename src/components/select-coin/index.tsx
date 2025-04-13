@@ -6,6 +6,7 @@ import { useMemo, useState } from 'react';
 import { SelectProps } from 'react-dropdown-select';
 import css from 'styled-jsx/css';
 import SearchInput from './components/search-input';
+import { EmptyComponent } from '@/components/empty';
 /**
  * @prop {string} value         币种
  * @prop {array} options        币种数据
@@ -18,6 +19,7 @@ export interface SelectCoinProps
   options: { code: string; title?: string }[];
   label?: string;
   bgColor?: string;
+  borderColor?: string;
   vertical?: boolean;
   icon?: string;
   width?: number;
@@ -36,7 +38,7 @@ const DropdownContent = ({ options, methods, hideSearch }: { options: any[]; met
           <SearchInput value={keyword?.toUpperCase()} onChange={setKeyword} />
         </div>
       )}
-      {opts.map((item) => {
+      {opts.length ? opts.map((item) => {
         const index = item.___index___;
         return (
           <div className='dropdown-content' onClick={() => methods.addItem(index, item)} key={index}>
@@ -48,7 +50,8 @@ const DropdownContent = ({ options, methods, hideSearch }: { options: any[]; met
             <div className={clsx('label', item.code === LANG('全部') && 'all-text')}>{item.title || item.code}</div>
           </div>
         );
-      })}
+      }) : <EmptyComponent size='small' text={LANG('暂无数据')} />
+      }
     </>
   );
 };
@@ -58,6 +61,7 @@ const SelectCoin = ({
   hideSearch,
   height,
   bgColor,
+  borderColor,
   options,
   icon,
   ...others
@@ -71,9 +75,9 @@ const SelectCoin = ({
         height={height}
         placeholder={LANG('选择币种')}
         bgColor={bgColor}
+        borderColor={borderColor}
         wrapperClassName='select-coin-wrapper'
         icon={icon}
-        className={clsx('select', 'pc-v2-select')}
         dropdownRenderer={dropdownRenderer}
         values={values as []}
         options={options}
@@ -85,10 +89,9 @@ const SelectCoin = ({
 };
 
 const styles = css`
-  :global(.select-wrapper.select-coin-wrapper) {
+  :global(.select-coin-wrapper.select-wrapper) {
     :global(.react-dropdown-select) {
       border: none;
-      /* background-color: var(--theme-background-color-disabled-dark); */
       width: 100%;
       &::after {
         top: 21px;
@@ -97,11 +100,15 @@ const styles = css`
       :global(.react-dropdown-select-dropdown) {
         overflow-x: hidden;
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
-        top: 34px;
+        top: 44px;
+        padding: 0 12px 0!important;
       }
     }
     :global(.search-wrapper) {
-      padding: 0px 0px 12.5px;
+      position: sticky;
+      top: 0;
+      padding: 16px 12px;
+      background: var(--dropdown-select-bg-color);
     }
   }
   :global(.dropdown-content),
@@ -134,14 +141,11 @@ const styles = css`
     align-items: center;
     height: 40px;
     padding: 0px 6px;
-    :global(.all-text) {
-      margin: 0 auto;
-    }
     &:hover {
-      background-color: rgba(var(--skin-primary-color-rgb), 0.15);
+      background-color: var(--fill-3);
       border-radius: 5px;
       :global(.label) {
-        color: var(--skin-main-font-color);
+        color: var(--text-primary);
       }
     }
   }

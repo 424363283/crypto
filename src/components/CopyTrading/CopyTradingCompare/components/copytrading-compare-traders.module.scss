@@ -1,0 +1,17 @@
+.copyTradingCompareBox {
+  display: flex;
+  border: 1px solid var(--line-2);
+  border-bottom: none;
+
+  .compareBoxItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    height: 195px;
+
+    &:not(:last-child) {
+      border-right: 1px solid var(--line-2);
+    }
+  }
+}

@@ -52,18 +52,18 @@ export const SpotMobileLayout = ({
           .spot-body {
             height: 415px;
             border-radius: var(--theme-trade-layout-radius);
-            background: var(--theme-trade-bg-color-2);
+            background: var(--bg-1);
             margin-top: var(--theme-trade-layout-gap);
           }
           .bg {
-            background-color: var(--theme-trade-bg-color-2);
+            background-color: var(--bg-1);
             overflow: hidden;
           }
           .spot-footer {
             min-height: 375px;
             overflow: auto;
             border-radius: var(--theme-trade-layout-radius);
-            background: var(--theme-trade-bg-color-2);
+            background: var(--bg-1);
             margin-top: var(--theme-trade-layout-gap);
             padding-bottom: 70px;
           }

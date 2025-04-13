@@ -1,10 +1,11 @@
+import clsx from 'clsx';
 import css from 'styled-jsx/css';
 
-const AssetTableCard = (props: { children?: JSX.Element | React.ReactNode }) => {
-  const { children } = props;
+const AssetTableCard = (props: { children?: JSX.Element | React.ReactNode; border?: boolean; rounded?: boolean }) => {
+  const { children, border = true, rounded = true } = props;
   return (
     <>
-      <div className='asset-table-card'>{children}</div>
+      <div className={clsx('asset-table-card', border && 'border-1', rounded && 'rounded-1')}>{children}</div>
       <style jsx>{styles}</style>
     </>
   );
@@ -20,7 +21,7 @@ const styles = css`
     position: relative;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
-    background-color: var(--theme-background-color-2);
+    background-color: var(--bg-1);
     :global(.bottom-pagination) {
       padding: 15px 10px;
     }

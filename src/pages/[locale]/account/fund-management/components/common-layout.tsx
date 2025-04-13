@@ -1,164 +1,121 @@
 import CommonIcon from '@/components/common-icon';
-import { Desktop, MobileOrTablet } from '@/components/responsive';
-import { ScrollXWrap } from '@/components/scroll-x-wrap';
+import { Desktop } from '@/components/responsive';
 import { useRouter } from '@/core/hooks';
-import { LANG, Lang, TrLink } from '@/core/i18n';
+import { TrLink } from '@/core/i18n';
 import { MediaInfo, clsx, getUrlQueryParams } from '@/core/utils';
-import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
-import AvatarCard from '../../dashboard/components/avatar-card';
+
+type NavItemProps = {
+  query: any;
+  title: string;
+  href: string;
+  icon: string;
+  activeIcon?: string;
+  click?: () => void;
+}
 
 type NavProps = {
-  navItems: {
-    query: any;
-    icon: string;
-    title: string;
-    href: string;
-  }[];
+  navItems: NavItemProps[];
+  close?: () => void;
 };
-
-const NavItems = (props: any) => {
-  const { navItems } = props;
+ 
+const NavListItem = (props: NavItemProps) => {
   const router = useRouter();
+  const item = props;
   const isActive = (param: string | undefined, url?: string) => {
     const type = getUrlQueryParams('type');
     const lastPathname = router.query.id;
     if (!type && param === 'overview') return true;
     if (url?.includes(lastPathname?.toLowerCase())) return true;
     return param === type;
-  };
-  return navItems.map((item: any) => {
-    const active = isActive(item.query?.type || item.query?.id, item.href);
-    const currentIcon = active ? item.activeIcon : item.icon;
-    return (
-      <TrLink
-        key={item.title}
-        className={clsx('nav-item', isActive(item.query?.type, item.href) && 'nav-active')}
-        query={{ ...item.query }}
-        href={item.href}
+  }
+  const active = isActive(item.query?.type || item.query?.id, item.href);
+  const currentIcon = active ? (item.activeIcon || item.icon) : item.icon;
+  return (
+    <>
+      <li
+        className={clsx('nav-list-item', isActive(item.query?.type, item.href) && 'nav-list-item-active')}
+        onClick={()=> item.click?.()}
       >
-        <CommonIcon key={item.query} name={currentIcon} size={24} enableSkin={active} />
-        <span className='title'>{item.title}</span>
-      </TrLink>
-    );
-  });
-};
-
-const MobileNavCard = (props: any) => {
-  const { navItems } = props;
-  return (
-    <MobileOrTablet>
-      <ScrollXWrap prevIcon={<></>} nextIcon={<></>}>
-        <div className='mobile-nav-card'>
-          <NavItems navItems={navItems} />
-        </div>
-      </ScrollXWrap>
-      <style jsx>{mobileStyles}</style>
-    </MobileOrTablet>
-  );
-};
-const mobileStyles = css`
-  :global(.common-layout .scroll-wrap) {
-    :global(.prev) {
-      display: none !important;
-    }
-    :global(.next) {
-      display: none !important;
-    }
+        <TrLink
+          className='nav-list-item-content'
+          query={{ ...item.query }}
+          href={item.href}
+        >
+          <CommonIcon key={item.query} name={currentIcon} size={20} enableSkin={active} />
+          <span className='title'>{item.title}</span>
+        </TrLink>
+      </li>
+      <style jsx>{navListItemStyles}</style>
+    </>
+  )
+}
+const navListItemStyles = css`
+.nav-list-item {
+  line-height: 68px;
+  padding: 0 8px;
+  .title {
+    margin-left: 8px;
   }
-  .mobile-nav-card {
+  :global(.nav-list-item-content) {
     display: flex;
+    color: var(--text-secondary);
     align-items: center;
-    padding: 20px 18px 0;
-    position: relative;
-    z-index: 99;
-    @media ${MediaInfo.mobile} {
-      padding: 10px;
-    }
-    :global(.nav-item) {
-      padding: 10px 15px;
-      min-width: 174px;
-      background-color: var(--theme-background-color-2);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      color: var(--theme-font-color-3);
-      font-size: 14px;
-      margin-right: 10px;
-      :global(.title) {
-        margin-left: 5px;
-      }
+    width: 100%;
+    font-size: 16px;
+    font-weight: 500;
+    margin-right: 10px;
+  }
+  &.nav-list-item-active {
+    .title {
+      color: var(--text-brand);
     }
   }
+}
 `;
-const NavCard = (props: NavProps) => {
-  const { navItems } = props;
-  const [currentYear, setCurrentYear] = useState('');
-  const router = useRouter();
-  const { locale: lang } = router.query;
-  const language = Lang.getLanguageHelp(lang);
-
-  useEffect(() => {
-    setCurrentYear(dayjs().format('YYYY'));
-  }, []);
-
-  const TERMS_URL = `https://support.y-mex.com/hc/${language}/articles/5691838199183-Terms-of-Use`;
-  const PRIVACY_URL = `https://support.y-mex.com/hc/${language}/articles/5691793917839-Privacy-Terms`;
+export const NavList = (props: NavProps) => {
+  const { navItems, close } = props;
   return (
-    <div className='nav-card-container'>
-      <div className='top-nav'>
-        <NavItems navItems={navItems} />
-      </div>
-      <div className='border-bottom'>
-        <p className='line'></p>
-      </div>
-      <div className='nav-footer'>
-        <div className='left-area'>{`© 2020-${currentYear} y-mex.com. All rights reserved.`}</div>
-        <div className='advocate'>
-          <a href={TERMS_URL} target='_blank' className='link'>
-            {LANG('Terms of Service')}
-          </a>
-          &nbsp;|&nbsp;&nbsp;
-          <a href={PRIVACY_URL} target='_blank' className='link'>
-            {LANG('Privacy Terms')}
-          </a>
-        </div>
-      </div>
-      <style jsx>{navCardStyles}</style>
+    <div className='nav-list-container'>
+      <ul className='nav-list'>
+        {navItems.map((item: NavItemProps) => {
+          return (
+            <NavListItem
+              key={item.title}
+              query={item.query}
+              icon={item.icon}
+              activeIcon={item.activeIcon}
+              title={item.title}
+              href={item.href}
+              click={()=> close?.()}
+            />
+          )
+        })}
+      </ul>
+      <style jsx>{navListStyles}</style>
     </div>
   );
-};
-const navCardStyles = css`
-  .nav-card-container {
-    width: 260px;
-    height: calc(100vh - 310px);
-    .top-nav {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-gap: 10px;
-      padding: 20px 30px 16px 22px;
-      :global(.nav-item) {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        width: 100px;
-        height: 94px;
-        justify-content: center;
-        cursor: pointer;
-        :global(.title) {
-          margin-top: 10px;
-          font-size: 12px;
-          font-weight: 400;
-          color: var(--theme-font-color-3);
+}
+
+const navListStyles = css`
+  .nav-list-container {
+    width: 308px;
+    @media ${MediaInfo.mobileOrTablet} {
+      width:auto;
+    }
+    .nav-list {
+      margin: 0;
+      @media ${MediaInfo.mobileOrTablet} {
+        padding: 0;
+      }
+      :global(.nav-list-item) {
+        &:hover {
+          color: var(--text-brand);
         }
       }
       :global(.nav-active) {
         color: var(--theme-font-color-1);
-        border-radius: 15px;
-        background: var(--theme-background-color-2-3);
-        box-shadow: rgba(0, 0, 0, 0.08) 1px 0px 10px 0px;
         :global(.title) {
           color: var(--theme-font-color-1);
           font-size: 14px;
@@ -167,56 +124,32 @@ const navCardStyles = css`
         }
       }
     }
-    .border-bottom {
-      padding: 0 20px;
-      .line {
-        border: 1px solid var(--skin-border-color-1);
-      }
-    }
-    .nav-footer {
-      text-align: center;
-      margin-top: 13px;
-      .left-area {
-        color: var(--theme-font-color-3);
-        font-size: 12px;
-      }
-      .advocate {
-        margin-top: 10px;
-        color: var(--theme-font-color-3);
-        .link {
-          font-size: 12px;
-          font-weight: 400;
-          color: var(--theme-font-color-3);
-          &:hover {
-            color: var(--theme-font-color-1);
-          }
-        }
-      }
-    }
   }
 `;
 type CommonLayoutProps = {
   children: JSX.Element;
-  navItems: NavProps['navItems'];
+  navItems?: NavProps['navItems'];
 };
+
+ 
+
 export const CommonLayout = (props: CommonLayoutProps) => {
   const { children, navItems } = props;
+  const [type, setType] = useState('overview');
+
+  useEffect(() => {
+    setType(getUrlQueryParams('type'));
+  }, [getUrlQueryParams('type')]);
+  
   return (
     <div className='common-layout'>
-      <MobileOrTablet>
-        <AvatarCard hideEdit />
-      </MobileOrTablet>
-      <Desktop>
-        <div className='left-column'>
-          <div className='top-banner'>
-            <AvatarCard hideEdit />
+      {
+        navItems && <Desktop>
+          <div className='left-column'>
+            <NavList navItems={navItems} />
           </div>
-          <div className='bottom'>
-            <NavCard navItems={navItems} />
-          </div>
-        </div>
-      </Desktop>
-      <MobileNavCard navItems={navItems} />
+        </Desktop>
+      }
       <div className='common-content'>{children}</div>
       <style jsx>{styles}</style>
     </div>
@@ -224,20 +157,25 @@ export const CommonLayout = (props: CommonLayoutProps) => {
 };
 const styles = css`
   .common-layout {
-    overflow-y: scroll;
     position: relative;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    min-height: calc(100vh - 64px);
+    background-color: var(--bg-1);
+    @media ${MediaInfo.mobileOrTablet} {
+      background:var(--fill-3);
+    }
     @media ${MediaInfo.desktop} {
       display: flex;
       flex-direction: row;
+      background-color: unset;
     }
-    height: 100%;
-    min-height: calc(100vh - 64px);
-    background-color: var(--theme-background-color-5);
     .left-column {
       height: 100%;
-      width: 258px;
+      width: 308px;
+      position:sticky;
+      top: 56px;
       .top-banner {
         padding: 20px;
         height: 246px;
@@ -252,19 +190,32 @@ const styles = css`
     .common-content {
       width: 100%;
       height: 100%;
-      margin-top: 20px;
+      padding: 8px;
       overflow-x: hidden;
-      @media ${MediaInfo.desktop} {
-        padding-right: 20px;
-      }
+      overflow-y: auto;
       @media ${MediaInfo.tablet} {
         padding: 0 20px;
       }
       @media ${MediaInfo.mobile} {
         padding: 0 10px 20px;
-        margin-top: 0px;
+        margin-left: 0;
+        width: auto;
       }
-      overflow-y: auto;
+      :global(.asset-account-header) {
+        background-color: var(--fill-2);
+        :global(.nav-title) {
+          max-width: 1224px;
+          line-height: 20px;
+          padding: 36px 0;
+          margin: 0 auto;
+          @media ${MediaInfo.tablet} {
+            padding: 36px 20px;
+          }
+          @media ${MediaInfo.mobile} {
+            padding: 36px 0;
+          }
+        }
+      }
     }
   }
 `;

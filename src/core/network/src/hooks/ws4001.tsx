@@ -1,15 +1,30 @@
 import { useRouter } from '@/core/hooks';
-import { getUUID } from '@/core/utils';
+import { getUUID, isLite } from '@/core/utils';
 import React, { useEffect } from 'react';
 import { WS } from '../websocket';
+import { Group } from '@/core/shared';
 
 export const WS4001 = (PageComponent: React.ComponentType) => {
   const Page = (...props: any) => {
     const { query } = useRouter();
 
+    // useEffect(() => {
+    //   if (query.id) {
+    //     WS.subscribe4001([query.id as string]);
+    //   }
+    // }, [query.id]);
+
     useEffect(() => {
       if (query.id) {
-        WS.subscribe4001([query.id as string]);
+        (async () => {
+          if (isLite(query.id)) {
+            const group = await Group.getInstance();
+            const id = group.getLiteQuoteCode(query.id);
+            WS.subscribe4001([id as string]);
+          } else {
+            WS.subscribe4001([query.id as string]);
+          }
+        })();
       }
     }, [query.id]);
 

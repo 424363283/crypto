@@ -13,10 +13,28 @@ export class SpotTradeItem implements Public {
   public market: boolean; // 是否启用市价交易
   public makerRate: number; // 现货手续费
   public takerRate: number; // 现货手续费
-  public limitAskPriceRate: number; // 限价交易价格最大比例
-  public limitBidPriceRate: number; // 限价交易价格最小比例
-  public depthConfig: number[]; // 限价交易价格最小比例
-  public fullname: string; // 限价交易价格最小比例
+  public limitAskPriceRate: number; // 限价卖价格最大比例
+  public limitBidPriceRate: number; // 限价买价格最小比例
+  public depthConfig: number[]; // 深度分组
+  public fullname: string; // 交易名全称
+  // add latest
+  public icon: string;
+  public type: number;
+  public tags: string;
+  public visible: boolean;
+  public canBuy: boolean;
+  public canSell: boolean;
+  public canGrid: boolean;
+  public volumeMin: number;
+  public amountMin: number;
+  public marketVolumeMax: number;
+  public marketAmountMax: number;
+  // public limitPlan: boolean;
+  // public marketPlan: boolean;
+  // public oco: boolean;
+  public triggerPriceMax: number;
+  public triggerPriceMin: number;
+  public zones: string[];
 
   constructor(data: any) {
     this.id = data.symbol;
@@ -35,5 +53,24 @@ export class SpotTradeItem implements Public {
     this.limitAskPriceRate = data.limitAskPriceRate;
     this.limitBidPriceRate = data.limitBidPriceRate;
     this.depthConfig = data.depth?.split(',').map(Number) || [];
+
+    // add latest
+    this.icon = data.icon;
+    this.type = data.type;
+    this.tags = data.tags;
+    this.visible = data.visible;
+    this.canBuy = data.canBuy;
+    this.canSell = data.canSell;
+    this.canGrid = data.canGrid;
+    this.volumeMin = data.volumeMin;
+    this.amountMin = data.amountMin;
+    this.marketVolumeMax = data.marketVolumeMax;
+    this.marketAmountMax = data.marketAmountMax;
+    // this.limitPlan = data.limitPlan;
+    // this.marketPlan = data.marketPlan;
+    // this.oco = data.oco;
+    this.triggerPriceMax = data.triggerPriceMax;
+    this.triggerPriceMin = data.triggerPriceMin;
+    this.zones = data.zones;
   }
 }

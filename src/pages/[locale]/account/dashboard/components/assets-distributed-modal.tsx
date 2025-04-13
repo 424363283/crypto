@@ -4,43 +4,51 @@ import { RateText } from '@/components/rate-text';
 import { LANG } from '@/core/i18n';
 import { Account } from '@/core/shared';
 import { memo } from 'react';
-import { useSwapBalance } from '../../../fund-management/assets-overview/hooks/use-swap-balance';
+import { useCalcSwapAssets, useSwapBalance } from '../../../fund-management/assets-overview/hooks/use-swap-balance';
 import dynamic from 'next/dynamic';
 const PieChart = dynamic(() => import('@/components/chart/pie-chart'), { ssr: false });
+import { Desktop, Mobile } from '@/components/responsive';
+import { MobileBottomSheet } from '@/components/mobile-modal';
 
 type ModalProps = {
   open: boolean;
   onCancel: () => void;
 };
+
+type AssetDetailType = {
+  title: string,
+  color: string,
+  percentage: number,
+  amount: number | string,
+}
+
+
 function AssetsDistributedModal(props: ModalProps) {
   const { open, onCancel } = props;
-  const { swapBalance, swapUBalance } = useSwapBalance();
-  const { spotAssetsStore } = Account.assets;
-  const { spotTotalBalance } = spotAssetsStore;
-  const totalAssetsBalance = spotTotalBalance.add(swapBalance).add(swapUBalance);
+  const { swapBalance: swapCBalance, swapUBalance } = useSwapBalance();
+  const swapUTotalMargin = useCalcSwapAssets({ isSwapU: true }).total.totalMargin2;
+  const swapCTotalMargin = useCalcSwapAssets({ isSwapU: false }).total.totalMargin2;
+  const swapUTotalBalance = swapUTotalMargin || swapUBalance;
+  const swapCTotalBalance = swapCTotalMargin || swapCBalance;
+  const { spotTotalBalance } = Account.assets.spotAssetsStore;
+  const totalAssetsBalance = +spotTotalBalance.add(swapCTotalBalance).add(swapUTotalBalance);
 
   const renderAssetsList = () => {
-    const ASSETS_LIST = [
+    const ASSETS_LIST:[AssetDetailType] = [
       {
         title: LANG('现货账户'),
-        amount: spotTotalBalance,
-        percentage: spotTotalBalance.div(totalAssetsBalance).mul(100).toFixed(2),
-        color: '#FFD30F',
+        amount: +spotTotalBalance,
+        percentage: +spotTotalBalance.div(totalAssetsBalance).mul(100).toFixed(2),
+        color: 'var(--brand)',
       },
       {
-        title: LANG('合约账户(U本位)'),
-        amount: swapUBalance,
-        percentage: swapUBalance.div(totalAssetsBalance).mul(100).toFixed(2),
-        color: '#43BC9C',
-      },
-      {
-        title: LANG('合约账户(币本位)'),
-        amount: swapBalance,
-        percentage: swapBalance.div(totalAssetsBalance).mul(100).toFixed(2),
-        color: '#4A96EE',
+        title: LANG('U本位账户'),
+        amount: swapUTotalBalance,
+        percentage: swapUTotalBalance.div(totalAssetsBalance).mul(100).toFixed(2),
+        color: 'var(--yellow)',
       },
     ];
-    return ASSETS_LIST.map((item) => {
+    return ASSETS_LIST.map((item:AssetDetailType) => {
       return (
         <li className='list-item' key={item.title}>
           <div className='left-title'>
@@ -57,21 +65,44 @@ function AssetsDistributedModal(props: ModalProps) {
       );
     });
   };
+
+  const chartMain = () => {
+    return  <div className='assets-distributed'>
+    <PieChart
+      contractuBalance={+swapUTotalBalance}
+      contractBalance={+swapCTotalBalance}
+      spotBalance={+spotTotalBalance}
+    />
+    <ul className='assets-lis'>{renderAssetsList()}</ul>
+  </div>
+  }
+
   return (
-    <BasicModal
-      width={460}
-      title={LANG('资产分布')}
-      className='assets-distributed-modal'
-      open={open}
-      onCancel={onCancel}
-      okButtonProps={{ hidden: true }}
-      cancelButtonProps={{ hidden: true }}
-    >
-      <div className='assets-distributed'>
-        <PieChart contractuBalance={swapUBalance} contractBalance={+swapBalance} spotBalance={+spotTotalBalance} />
-        <ul className='assets-lis'>{renderAssetsList()}</ul>
-      </div>
-    </BasicModal>
+    <>
+      <Desktop>
+        <BasicModal
+          width={480}
+          title={LANG('资产分布')}
+          className='assets-distributed-modal'
+          open={open}
+          onCancel={onCancel}
+          hasFooter={false}
+          okButtonProps={{ hidden: true }}
+          cancelButtonProps={{ hidden: true }}
+        >
+          { chartMain() }
+        </BasicModal>
+      </Desktop>
+      <Mobile>
+        <MobileBottomSheet
+            title={LANG('资产分布')}
+            visible={open}
+            close={onCancel}
+            content={chartMain()}
+            hasBtn={false}
+        />
+      </Mobile>
+    </>
   );
 }
 export default memo(AssetsDistributedModal);

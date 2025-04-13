@@ -14,7 +14,7 @@ const Exponent = () => {
   const [page, setPage] = useState(1);
   const [tab, setTab] = useState(query.type === 'usdt' ? 0 : 1);
   const [tab1, setTab1] = useState(0);
-  const [symbol, setSymbol] = useState('');
+  const [symbol, setSymbol] = useState(query?.symbol || '');
   const [type, setType] = useState(0);
   const [formData, setFormData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -126,9 +126,9 @@ const Exponent = () => {
         <div className={clsx('tab', tab === 0 && 'active')} onClick={() => setTab(0)}>
           {LANG('U本位合约')}
         </div>
-        <div className={clsx('tab', tab === 1 && 'active')} onClick={() => setTab(1)}>
+        {/* <div className={clsx('tab', tab === 1 && 'active')} onClick={() => setTab(1)}>
           {LANG('币本位合约')}
-        </div>
+        </div> */}
       </div>
       <div className={'chart-card'}>
         <Charts isUsdtType={tab === 0} setSymbol={setSymbol} setType={setType} id={symbol} switchId={switchId} />
@@ -140,7 +140,7 @@ const Exponent = () => {
               <span onClick={() => setTab1(0)}>{LANG('价格')}</span>
             </div>
             <div className={clsx('tab1', tab1 === 1 && 'active')}>
-              <span onClick={() => setTab1(1)}>{LANG('成分')}</span>
+              <span onClick={() => setTab1(1)}>{LANG('参考')}</span>
             </div>
           </div>
           <Table
@@ -160,7 +160,7 @@ const Exponent = () => {
                   'Cross Rate (交叉汇率): 对于一些没有直接报价的指数，计算交叉汇率作为综合价格指数。例如：综合LINK/BTC and BTC/USD来计算 LINK/USD。'
                 )}
               </div>
-              <div>2. {LANG('YMEX 将不时更新价格指数成分。')}</div>
+              <div>2. {LANG('YMEX 将不时更新价格指数参考。')}</div>
             </div>
           )}
         </div>
@@ -199,21 +199,22 @@ const styles = css`
     gap: 15px;
     .tab {
       height: 36px;
-      background: var(--theme-background-color-3-2);
+      /* background: var(--theme-background-color-3-2); */
       font-size: 14px;
       font-weight: 500;
-      color: var(--theme-font-color-3);
+      color: var(--text-secondary);
       display: flex;
       align-items: center;
       padding: 0 15px;
       min-width: 96px;
       cursor: pointer;
-      border-radius: 4px;
+      border-radius: 8px;
+border: 1px solid var(--line-3, #34343B);
 
       &.active {
+        color: var(--text-primary);
         background: var(--skin-primary-color);
         border: none;
-        color: #333;
       }
     }
   }
@@ -227,6 +228,7 @@ const styles = css`
     flex: 1;
     padding: 20px 0;
     background: var(--theme-background-color-3-2);
+
     .box {
       margin: 0 auto;
       max-width: var(--const-max-page-width);

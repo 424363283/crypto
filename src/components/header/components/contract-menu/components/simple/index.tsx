@@ -10,14 +10,18 @@ import SubMenu from '../../../sub-menu';
 // 简易合约
 const Simple = ({ active }: { active: boolean }) => {
   const [menuIndex, setMenuIndex] = useState(0);
-  const [{ allList, mainstreamList, innovateList, orderList }, setContractList] = useState({
+  
+
+  const [{ allList, cryptoList, derivList, ustockList,hkstockList, orderList }, setContractList] = useState({
     allList: [],
-    mainstreamList: [],
-    innovateList: [],
-    orderList: [],
+    cryptoList: [],
+    derivList: [],
+    ustockList: [],
+    hkstockList: [],
+    orderList: []
   });
 
-  const data = [allList, mainstreamList, innovateList, orderList];
+  const data = [allList, cryptoList, derivList, ustockList,hkstockList, orderList];
   useEffect(() => {
     active && setMenuIndex(0);
   }, [active]);
@@ -40,18 +44,32 @@ const Simple = ({ active }: { active: boolean }) => {
       const list = group.getLiteList;
       return sortByHotIds(hotIds, list);
     };
-    //主流区
-    const getLiteMainContractList = async () => {
+    // //加密货币
+    const getLiteCryptoContractList = async () => {
       const group = await Group.getInstance();
       const hotIds = group.getHotIds();
-      const list = group.getLiteMainList;
+      const list = group.getLiteCryptoList;
       return sortByHotIds(hotIds, list);
     };
-    // 创新区
-    const getLiteInnovationContractList = async () => {
+    
+    const getLiteDerivContractList = async () => {
       const group = await Group.getInstance();
       const hotIds = group.getHotIds();
-      const list = group.getLiteInnovateList;
+      const list = group.getLiteDerivList;
+      return sortByHotIds(hotIds, list);
+    };
+
+    const getLiteUStockContractList = async () => {
+      const group = await Group.getInstance();
+      const hotIds = group.getHotIds();
+      const list = group.getLiteUStockList;
+      return sortByHotIds(hotIds, list);
+    };
+
+    const getLiteHKStockContractList = async () => {
+      const group = await Group.getInstance();
+      const hotIds = group.getHotIds();
+      const list = group.getLiteHKStockList;
       return sortByHotIds(hotIds, list);
     };
     //带单区
@@ -63,23 +81,27 @@ const Simple = ({ active }: { active: boolean }) => {
     };
     Promise.all([
       getLiteContractList(),
-      getLiteMainContractList(),
-      getLiteInnovationContractList(),
+      getLiteCryptoContractList(),
+      getLiteDerivContractList(),
+      getLiteUStockContractList(),
+      getLiteHKStockContractList(),
       getLiteOrderContractList(),
     ]).then((res: any) => {
       setContractList({
         allList: res[0],
-        mainstreamList: res[1],
-        innovateList: res[2],
-        orderList: res[3],
+        cryptoList:  res[1],
+        derivList:  res[2],
+        ustockList:  res[3],
+        hkstockList:  res[4],
+        orderList: res[5],
       });
     });
   }, []);
 
-  const headerMenus = [LANG('全部'), LANG('主流区'), LANG('创新区')];
+  // const headerMenus = [LANG('全部'), LANG('加密货币')];
   return (
     <div className='simple-contract-wrapper'>
-      <div className='simple-header'>
+      {/* <div className='simple-header'>
         {headerMenus.map((v, index) => {
           const active = index === menuIndex;
           return (
@@ -88,8 +110,8 @@ const Simple = ({ active }: { active: boolean }) => {
             </HeaderItem>
           );
         })}
-      </div>
-      <div className='menu-content'>
+      </div> */}
+      <div className='menu-content' >
         {data.map((item: any, key) => {
           return (
             <div
@@ -98,7 +120,7 @@ const Simple = ({ active }: { active: boolean }) => {
                 display: key === menuIndex ? 'block' : 'none',
               }}
             >
-              {item.map((item: any, index: any) => {
+              {item && item.map((item: any, index: any) => {
                 return (
                   <SubMenu key={key + index} className='simple-item'>
                     <TradeLink native id={item.id} className='simple-link-wrapper' onClick={resetZeroHeight}>
@@ -144,13 +166,14 @@ const HeaderItem = ({
   return hoverable;
 };
 
+
 export default Simple;
 
 const styles = css`
   .simple-contract-wrapper {
     width: 285px;
     height: 479px;
-    background: var(--theme-background-color-2);
+    background: var(--dropdown-select-bg-color);
     display: flex;
     flex-direction: column;
     box-sizing: content-box;
@@ -186,6 +209,7 @@ const styles = css`
       :global(.simple-item) {
         height: 64px;
         margin-bottom: 10px;
+        
         :global(.simple-link-wrapper) {
           display: flex;
           flex-direction: row;
@@ -193,6 +217,15 @@ const styles = css`
           height: 100%;
           flex: 1;
           padding-left: 12px;
+          color: var(--text-secondary)!important;
+          .content-wrapper {
+            :global(>*:nth-last-child(2)) {
+              color: var(--text-primary);
+            }
+            :global(>*:nth-child(2)) {
+              color: var(--text-tertiary);
+            }
+          }
           :global(.icon-logo) {
             height: 28px;
             width: 28px;
@@ -206,7 +239,6 @@ const styles = css`
             line-height: 12px;
             font-size: 14px;
             font-weight: 500;
-            color: var(--theme-font-color-1);
             margin-bottom: 7px;
             :global(.hot) {
               margin-left: 5px;
@@ -218,7 +250,11 @@ const styles = css`
             line-height: 12px;
             font-size: 12px;
             font-weight: 400;
-            color: var(--theme-font-color-3);
+          }
+        }
+        &:hover {
+          :global(.simple-link-wrapper .content-wrapper .name) {
+            color: var(--text-brand);
           }
         }
       }

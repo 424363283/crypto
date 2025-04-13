@@ -8,12 +8,23 @@ import { Swap } from '@/core/shared';
 import { useEffect, useState } from 'react';
 import { handleStore, store } from './store';
 import { clsx, styles } from './styled';
+import { SliderSingleProps } from 'antd';
+import Slider from '@/components/Slider';
+import { DesktopOrTablet, Mobile } from '@/components/responsive';
+
+const marks: SliderSingleProps['marks'] = {
+  0: '0%',
+  25: '25%',
+  50: '50%',
+  75: '75%',
+  100: '100%'
+};
 
 const LiquidationModal = ({
   visible,
   onClose,
   data,
-  isLimit: _isLimit,
+  isLimit: _isLimit
 }: {
   visible?: boolean;
   onClose?: any;
@@ -24,6 +35,7 @@ const LiquidationModal = ({
   const { priceUnitText, isUsdtType } = Swap.Trade.base;
   const { pricePrecision, minChangePrice, settleCoin } = Swap.Info.getCryptoData(data?.symbol);
   const [tabIndex, setTabIndex] = useState(0);
+  const [sliderVol, setSliderVol] = useState(0);
   const isLimit = tabIndex === 1;
   const {
     onChangePrice,
@@ -34,12 +46,12 @@ const LiquidationModal = ({
     getMinOrderVolume,
     isVolUnit,
     onConfirm,
-    getMarketPrice,
+    getMarketPrice
   } = handleStore({
     isUsdtType,
     data,
     isLimit,
-    onClose,
+    onClose
   });
   const volumeUnit = Swap.Info.getUnitText({ symbol: data?.symbol });
   const maxEntrustNum = Swap.Info.getMaxEntrustNum(data?.symbol, isLimit);
@@ -72,6 +84,16 @@ const LiquidationModal = ({
 
   const content = (
     <>
+      <Mobile>
+        <div className={clsx('tabs')}>
+          <div className={clsx('tab', tabIndex === 0 ? 'active' : '')} onClick={() => setTabIndex(0)}>
+            {LANG('市价平仓')}
+          </div>
+          <div className={clsx('tab', tabIndex === 1 ? 'active' : '')} onClick={() => setTabIndex(1)}>
+            {LANG('限价平仓')}
+          </div>
+        </div>
+      </Mobile>
       <div className={clsx('liquidation-modal')}>
         {isLimit && (
           <>
@@ -88,7 +110,7 @@ const LiquidationModal = ({
               minChangePrice={Number(minChangePrice || 0)}
               step={Number(minChangePrice || 1)}
               max={999999999}
-              clearable
+              clearable={isMobile ? false : true}
               // controller
             />
             <div className={clsx('price-line')}></div>
@@ -106,29 +128,59 @@ const LiquidationModal = ({
           digit={volumeDigit}
           min={0}
           max={maxVolume}
-          clearable
+          clearable={isMobile ? false : true}
           // controller
         />
-        <div className={clsx('rates')}>
-          {Array(4)
-            .fill('')
-            .map((v, index) => {
-              const rate = (index + 1) * 25;
-              const value = optionFormat((rate / 100) * data.availPosition);
-              const active = (optionIndex || 0) >= index;
-              return (
-                <div
-                  key={index}
-                  className={clsx(active && 'active')}
-                  onClick={() => {
-                    onChangeVolume(value, index);
-                  }}
-                >
-                  {rate}%
-                </div>
-              );
-            })}
-        </div>
+        <DesktopOrTablet>
+          <div className={clsx('rates')}>
+            {Array(4)
+              .fill('')
+              .map((v, index) => {
+                const rate = (index + 1) * 25;
+                const value = optionFormat((rate / 100) * data.availPosition);
+                const active = (optionIndex || 0) >= index;
+                return (
+                  <div
+                    key={index}
+                    className={clsx(active && 'active')}
+                    onClick={() => {
+                      onChangeVolume(value, index);
+                    }}
+                  >
+                    {rate}%
+                  </div>
+                );
+              })}
+          </div>
+        </DesktopOrTablet>
+        <Mobile>
+          <Slider
+            disabled={false}
+            marks={marks}
+            step={5}
+            value={sliderVol}
+            min={0}
+            max={100}
+            onChange={(val: any) => {
+              setSliderVol(val);
+              const value = optionFormat((val / 100) * data.availPosition);
+              let index = 0;
+              if (val >= 25 && val < 50) {
+                index = 1;
+              } else if (val >= 50 && val < 75) {
+                index = 2;
+              } else if (val >= 75 && val < 100) {
+                index = 3;
+              } else if (val === 100) {
+                index = 4;
+              } else {
+                index = 0;
+              }
+              onChangeVolume(value, index);
+              // Swap.Trade.onPercentVolumeChange(value);
+            }}
+          />
+        </Mobile>
         {maxEntrustNumError && (
           <div className={clsx('error-text')}>
             {LANG('已超出单笔最大委托数量{value} {symbol}', { value: maxEntrustNum, symbol: volumeUnit })}
@@ -149,11 +201,12 @@ const LiquidationModal = ({
 
   if (isMobile) {
     return (
-      <MobileModal visible={visible} onClose={onClose} type='bottom'>
+      <MobileModal visible={visible} onClose={onClose} type="bottom">
         <BottomModal
-          titles={[LANG('市价平仓'), LANG('限价平仓')]}
-          tabIndex={tabIndex}
-          onChangeIndex={setTabIndex}
+          title={LANG('平仓')}
+          // titles={[LANG('市价平仓'), LANG('限价平仓')]}
+          // tabIndex={tabIndex}
+          // onChangeIndex={setTabIndex}
           onConfirm={onConfirm}
           disabledConfirm={disabledConfirm}
         >

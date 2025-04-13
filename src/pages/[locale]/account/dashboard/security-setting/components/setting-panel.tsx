@@ -1,4 +1,3 @@
-import Image from '@/components/image';
 import { Loading } from '@/components/loading';
 import { BasicModal, EnableAuthenticationModal } from '@/components/modal';
 import { AlertFunction } from '@/components/modal/alert-function';
@@ -9,14 +8,17 @@ import { LANG, TrLink } from '@/core/i18n';
 import { Account, SENCE, UserInfo } from '@/core/shared';
 import { MediaInfo, clsx, message } from '@/core/utils';
 import { useEffect } from 'react';
-import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
 import Item from './item';
+import css from 'styled-jsx/css';
+import CommonIcon from '@/components/common-icon/common-icon';
+import { Svg } from '@/components/svg';
+import { Utils } from '@/core/shared/src/swap/modules/utils';
+import { emailMask, mobileMask } from '@/core/utils/src/get';
 
 export default function SettingPanel() {
   const router = useRouter();
   const { isDark } = useTheme();
-  const levelArr = [LANG('低'), LANG('中'), LANG('高')];
   const [state, setState] = useImmer({
     levelIndex: 0,
     lv: 1,
@@ -27,51 +29,25 @@ export default function SettingPanel() {
     withdrawFast: false,
     withdrawWhiteModalVisible: false,
   });
-  const { levelIndex, user, safetyVisible, withdrawFast, withdrawWhiteModalVisible, lv, pw_w, pw_l } = state;
-  const { bindPhone, bindEmail, bindGoogle, bindPassword, withdrawWhite, antiPhishing, phone, email } = user || {};
-  // 计算安全等级
-  const countLevelIndex = (user: UserInfo) => {
-    let lv = 1;
-    const { bindPhone, bindEmail, bindGoogle, bindPassword } = user || {};
-    const sumLevel = (array: boolean[]) => {
-      array.forEach((element) => {
-        element && (lv += 1);
-      });
-    };
-    sumLevel([bindPhone, bindEmail, bindGoogle, bindPassword]);
-    switch (lv) {
-      case 1:
-        return 0;
-      case 5:
-        return 2;
-      default:
-        return 1;
-    }
-  };
+  const { levelIndex, user, safetyVisible, withdrawFast,  pw_w, pw_l } = state;
+  const { bindPhone, bindEmail, bindGoogle, bindPassword, antiPhishing, phone, email } = user || {};
+  const phoneEnable = process.env.NEXT_PUBLIC_PHONE_ENABLE === 'true';
+
   // 计算安全等级
   const calculateSecurityLevel = () => {
     let lv = 1;
-    if (phone && email) {
-      lv += 1;
-    }
-    if (pw_w > 0) {
-      lv += 1;
-    }
-    if (pw_w === 3) {
-      lv += 1;
-    }
-    if (pw_l === 3) {
-      lv += 1;
-    }
-    setState((draft) => {
-      draft.lv = lv;
-    });
+    if (phone && email) lv += 1;
+    if (pw_w > 0) lv += 1;
+    if (pw_w === 3) lv += 1;
+    if (pw_l === 3) lv += 1;
+    return lv;
   };
+
   const getUserInfo = async () => {
     Loading.start();
     await Account.refreshUserInfo();
     const user = (await Account.getUserInfo()) as UserInfo;
-    const level = countLevelIndex(user);
+    const level = calculateSecurityLevel();
     if (user) {
       setState((draft) => {
         draft.levelIndex = level;
@@ -102,11 +78,13 @@ export default function SettingPanel() {
       },
     });
   };
-  // 跳转手机绑定/关闭页面
+
+  // 跳转手机绑定/修改/关闭页面
   const goToPhone = () => {
     const { bindPhone, bindEmail } = state.user;
     if (bindPhone) {
       if (!bindEmail) return message.warning(LANG('若您需要关闭手机验证，需先开启邮箱验证。'));
+      //关闭手机认证
       router.push({
         pathname: '/account/dashboard',
         query: {
@@ -117,6 +95,13 @@ export default function SettingPanel() {
           sence: SENCE.UNBIND_PHONE,
         },
       });
+      // router.push({
+      //   pathname: '/account/dashboard',
+      //   query: {
+      //     type: 'security-setting',
+      //     option: 'reset-phone',
+      //   },
+      // });
     } else {
       router.push({
         pathname: '/account/dashboard',
@@ -127,15 +112,39 @@ export default function SettingPanel() {
       });
     }
   };
+
+  // 跳转邮箱绑定/修改页面
   const goToEmail = () => {
-    router.push({
-      pathname: '/account/dashboard',
-      query: {
-        type: 'security-setting',
-        option: 'bind-email',
-      },
-    });
+    const { bindEmail } = state.user;
+    if (bindEmail) {
+      // router.push({
+      //   pathname: '/account/dashboard',
+      //   query: {
+      //     type: 'security-setting',
+      //     option:'reset-email',
+      //   },
+      // });
+      router.push({
+        pathname: '/account/dashboard',
+        query: {
+          type: 'security-setting',
+          option:'verify',
+        },
+        state: {
+          sence: SENCE.UNBIND_EMAIL,
+        },
+      });
+    } else {
+      router.push({
+        pathname: '/account/dashboard',
+        query: {
+          type: 'security-setting',
+          option: 'bind-email',
+        },
+      });
+    }
   };
+
   const goToAntiPhishing = () => {
     router.push({
       pathname: '/account/dashboard',
@@ -149,6 +158,7 @@ export default function SettingPanel() {
       },
     });
   };
+
   const goToPassword = () => {
     if (!bindPassword) {
       router.push({
@@ -159,6 +169,7 @@ export default function SettingPanel() {
         },
       });
     } else {
+      //关闭资金密码
       router.push({
         pathname: '/account/dashboard',
         query: {
@@ -169,6 +180,13 @@ export default function SettingPanel() {
           sence: SENCE.UNBIND_WITHDRAW,
         },
       });
+      // router.push({
+      //   pathname: '/account/dashboard',
+      //   query: {
+      //     type: 'security-setting',
+      //     option: 'update-funds-password',
+      //   },
+      // });
     }
   };
   const goToGa = () => {
@@ -196,17 +214,7 @@ export default function SettingPanel() {
       },
     });
   };
-  // 跳转修改资金密码
-  const goToModifyPassword = () => {
-    if (bindPassword)
-      router.push({
-        pathname: '/account/dashboard',
-        query: {
-          type: 'security-setting',
-          option: 'update-funds-password',
-        },
-      });
-  };
+
   const checkUserAuth = (customAction: () => void) => {
     if (user.email === '') {
       AlertFunction({
@@ -258,6 +266,7 @@ export default function SettingPanel() {
       });
     }
   };
+
   //仅地址薄提币
   const setWithdrawWhite = () => {
     checkUserAuth(() => {
@@ -281,21 +290,21 @@ export default function SettingPanel() {
       }
     });
   };
-  // 打开仅地址簿提币
-  const openWithdrawWhite = () => {
-    router.push({
-      pathname: '/account/dashboard',
-      query: {
-        type: 'security-setting',
-        option: 'verify',
-      },
-      state: {
-        title: LANG('仅地址簿提币'),
-        sence: SENCE.WITHDRAW_WHITE,
-        enable: true,
-      },
-    });
-  };
+  // // 打开仅地址簿提币
+  // const openWithdrawWhite = () => {
+  //   router.push({
+  //     pathname: '/account/dashboard',
+  //     query: {
+  //       type: 'security-setting',
+  //       option: 'verify',
+  //     },
+  //     state: {
+  //       title: LANG('仅地址簿提币'),
+  //       sence: SENCE.WITHDRAW_WHITE,
+  //       enable: true,
+  //     },
+  //   });
+  // };
   const onCloseAuthModal = () => {
     setState((draft) => {
       draft.safetyVisible = false;
@@ -307,190 +316,149 @@ export default function SettingPanel() {
     });
   };
   const switchColor = () => {
-    switch (lv) {
-      case 1:
-        return 'bg-red';
-      case 4:
-        return 'bg-green';
-      default:
-        return 'bg-yellow';
-    }
+    const levelBgColor = ['','bg-low','bg-middle', 'bg-high', 'bg-higher'];
+    return levelBgColor[levelIndex]
   };
+
+  const switchLevelColor = () => {
+    const levelColor = ['', 'text-low', 'text-middle', 'text-high', 'text-higher'];
+    return levelColor[levelIndex]
+  }
+  const levelArr = ['', LANG('低'), LANG('中'), LANG('高')];
   return (
     <div
       className='security-setting-wrapper'
-      style={{ backgroundColor: isDark ? 'var(--theme-background-color-2)' : '#fff' }}
+      style={{ backgroundColor: 'var(--bg-1)' }}
     >
       <div className='prompt-wrapper'>
         <div className='left-box'>
-          <p className='title'>{LANG('账户安全')}</p>
-          {!bindGoogle && <p className='tips'>{LANG('为保障您的资产安全，建议开启谷歌验证。')}</p>}
-          <p className='description'>
-            <span className='tips'>{LANG('当前账号风险等级')}:</span>
-            <span className='level'>{levelArr[levelIndex]}</span>
-            <span className={clsx('level-link', lv > 0 && switchColor())}></span>
-            <span className={clsx('level-link', lv > 1 && switchColor())}></span>
-            <span className={clsx('level-link', lv > 2 && switchColor())}></span>
-            <span className={clsx('level-link', lv > 3 && switchColor())}></span>
-          </p>
-        </div>
-        <DesktopOrTablet>
-          <div className='right-box'>
-            <Image src='/static/images/account/dashboard/security-check.svg' width={80} height={80} enableSkin />
+          <div className='scurity-title'>
+            <p className='title'>{LANG('安全中心')}</p>
+            <p className='description'>
+              <span className='tips'>{LANG('当前账号风险等级')}:</span>
+              <span className={`level ${switchLevelColor()}`}>{levelArr[levelIndex]}</span>
+            </p>
           </div>
-        </DesktopOrTablet>
+          <div className='level-box'>
+            <div className={`${switchColor()}`}></div>
+          </div>
+        </div>
       </div>
       <ul className='setting-lists'>
         <DesktopOrTablet>
           <p className='title'>{LANG('安全中心')}</p>
         </DesktopOrTablet>
-        <Item
+        {phoneEnable && <Item
           logo='phone'
           title={LANG('手机号')}
           prompt={LANG('用于登录、提币、找回密码、修改安全设置、管理API时进行安全验证')}
-          account={phone}
-          showSwitch
-          checked={bindPhone}
-          onCheckChange={goToPhone}
-        />
+          account={mobileMask(phone)}
+          status={bindPhone}
+          click={goToPhone}
+          onCheckChange={null}
+        />}
         <Item
           logo='email'
           title={LANG('邮箱验证')}
           prompt={LANG('您可以绑定一个常用邮箱，用于登录、找回密码、提币时的确认')}
-          account={email}
-          showSwitch={!bindEmail}
-          checked={bindEmail}
-          onCheckChange={goToEmail}
+          account={emailMask(email)}
+          status={bindEmail}
+          click={goToEmail}
         />
-
         <Item
           logo='pwd'
           title={LANG('登录密码')}
           prompt={LANG('通过设置登录密码，您将可以使用账号和登录密码直接登录')}
-          modifyClick={goToLoginPwd}
+          status={true}
+          click={goToLoginPwd}
         />
-        <Item
+        {/* <Item
           logo='funds'
           title={LANG('资金密码')}
-          modifyClick={bindPassword ? goToModifyPassword : undefined}
           prompt={LANG('用于您出入资金的安全密码')}
-          showSwitch
-          checked={bindPassword}
-          onCheckChange={goToPassword}
-        />
+          status={bindPassword}
+          click={goToPassword}
+        /> */}
         <div className='advance-setting'>
           <p className='title'>{LANG('高级安全设置')}</p>
-          <Item
+          {/* <Item
             logo='phishing'
             title={LANG('防钓鱼码')}
-            modifyClick={antiPhishing ? goToAntiPhishing : undefined}
+            click={goToAntiPhishing}
             prompt={LANG('通过设置防钓鱼码，您能够辨别您收到的邮件是否来自于 YMEX')}
-            checked={antiPhishing}
-            showSwitch={!antiPhishing}
-            onCheckChange={goToAntiPhishing}
-          />
+            status={antiPhishing}
+            onCheckChange={null}
+          /> */}
         </div>
         <div className='withdraw-setting'>
-          <p className='title'>
-            <Image
-              src={
-                isDark
-                  ? '/static/images/account/security-setting/address-dark.svg'
-                  : '/static/images/account/security-setting/address.svg'
-              }
-              width='30'
-              height='30'
-              alt='icon'
-            />
+          <p>
+            <Svg src={`/static/icons/primary/common/address.svg`} width={20} height={20} color={'var(--text-primary)'} style={{marginRight:'14px'}}/>
             {LANG('提币设置')}
           </p>
           <Item
             title={LANG('提币地址管理')}
             prompt={LANG('去管理')}
-            modifyClick={() => router.push({ pathname: '/account/dashboard', query: { type: 'address' } })}
-            isManage
-          />
+            click={() => router.push({ pathname: '/account/dashboard', query: { type: 'address' } })}
+            btnText={ LANG('管理')} />
           <Item
             title={LANG('提币免验证')}
             prompt={LANG('开放本功能后，当您向免验证地址进行提币时，可以免除安全验证。')}
+            click={setWithdrawFast}
+            status={withdrawFast}
+            showSwitch={withdrawFast}
             onCheckChange={setWithdrawFast}
-            checked={withdrawFast}
-            showSwitch
-          />
-
-          <Item
-            title={LANG('仅地址薄提币')}
-            prompt={
-              <>
-                <p> {LANG('开放此功能后，您只能提币到您的地址中。')}</p>
-                <TrLink className='yellow' href='/account/dashboard' query={{ type: 'address' }}>
-                  {LANG('提币地址管理')}
-                </TrLink>
-              </>
-            }
-            onCheckChange={setWithdrawWhite}
-            showSwitch
-            checked={withdrawWhite}
+            btnText={LANG('验证')}
           />
         </div>
         <Item
           logo='ga'
           title={LANG('谷歌验证')}
           prompt={LANG('用于登录、提币、找回密码、修改安全设置、管理API时进行安全验证')}
-          showSwitch
-          checked={bindGoogle}
-          onCheckChange={goToGa}
+          status={bindGoogle}
+          click={goToGa}
         />
       </ul>
       <EnableAuthenticationModal visible={safetyVisible} user={user} onClose={onCloseAuthModal} />
-      <BasicModal
-        title={LANG('开放地址薄提币')}
-        open={withdrawWhiteModalVisible}
-        okButtonProps={{ style: { display: 'none' } }}
-        cancelButtonProps={{ style: { display: 'none' } }}
-        className='withdraw-white-modal'
-        onCancel={onCloseOpenAddressBook}
-      >
-        <div className='withdraw-white'>
-          <div className='tips'>{LANG('开放此功能后，您将只能提币到您的地址薄地址中。')}</div>
-          <div className={clsx('pc-v2-btn', 'btn')} onClick={openWithdrawWhite}>
-            {LANG('开放')}
-          </div>
-        </div>
-      </BasicModal>
+     
       <style jsx>{styles}</style>
     </div>
   );
 }
 const styles = css`
   :global(.security-setting-wrapper) {
-    height: 100%;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+    border-radius: 15px;
+    border:1px solid var(--line-1);
+    padding: 20px 0;
+    @media ${MediaInfo.mobile} {
+      padding: 0;
+    }
     :global(.content) {
       padding: 0 !important;
     }
     :global(.setting-lists) {
-      background: var(--theme-background-color-2);
+      background: var(--bg-1);
       border-radius: 4px;
-      padding: 20px;
+      padding:0 20px;
       @media ${MediaInfo.mobile} {
-        padding: 10px;
+        padding: 0 10px;
+
       }
       margin: 0;
       .title {
         font-weight: 500;
         font-size: 16px;
-        color: var(--theme-font-color-1);
+        color: var(--brand);
+        border-left: 2px solid var(--brand);
+        padding-left: 10px;
       }
       .advance-setting {
         padding-top: 30px;
-        border-bottom: 1px solid var(--theme-border-color-2);
+         border-top: 1px solid var(--theme-border-color-2);
       }
       .withdraw-setting {
         margin-top: 30px;
         :global(.list-item) {
-          border-bottom: 1px solid var(--theme-border-color-2);
+          // border-bottom: 1px solid var(--theme-border-color-2);
           &:not(:last-child) {
             padding-bottom: 0;
             border-bottom: none !important;
@@ -503,10 +471,11 @@ const styles = css`
             border-bottom: none !important;
           }
         }
-
-        .title {
+        p {
           display: flex;
           align-items: center;
+          color: var(--text-primary);
+          font-weight: 500;
           :global(img) {
             margin-right: 15px;
           }
@@ -514,66 +483,111 @@ const styles = css`
       }
     }
     :global(.prompt-wrapper) {
-      background: var(--skin-primary-bg-linear-1);
-      padding: 25px 30px;
+      padding: 0 20px;
       display: flex;
+      margin-bottom:35px;
       align-items: center;
       justify-content: space-between;
       border-top-left-radius: 15px;
       border-top-right-radius: 15px;
       @media ${MediaInfo.mobile} {
         padding: 16px 9px;
+        margin: 0;
       }
       :global(.left-box) {
-        .title {
-          font-size: 20px;
-          font-weight: 500;
-          color: var(--theme-font-color-6);
-          margin-bottom: 15px;
+        width: 100%;  
+        .scurity-title{
           @media ${MediaInfo.mobile} {
-            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+          }
+          .title {
+            font-size: 32px;
+            color: var(--text-primary);
+            font-weight: 500;
+            @media ${MediaInfo.mobile} {
+              font-size: 16px;
+            }
+          }
+          .tips {
+            font-weight: 400;
+            font-size: 12px;
+            color: var(--const-color-grey);
           }
         }
-        .tips {
-          font-weight: 400;
-          font-size: 12px;
-          color: var(--const-color-grey);
-        }
+        
         .description {
           margin-top: 5px;
           display: flex;
           align-items: center;
           .tips {
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 500;
-            color: var(--const-color-grey);
+            color: var(--text-tertiary);
           }
           .level {
-            color: var(--skin-color-active);
-            margin-right: 2px;
-            font-size: 12px;
-            font-weight: 500;
-          }
-          .level-link {
-            display: inline-block;
-            width: 24px;
-            height: 4px;
-            background: var(--theme-sub-button-bg-4);
-            margin-left: 4px;
-            &.active {
-              background: #fd374b;
+            margin-left: 5px;
+            font-size: 14px;
+            font-weight: 800;
+            &.text-low{
+              color:var(--const-color-error);
+            }
+            &.text-middle{
+              color:#F9DE5E;
+            }
+            &.text-high{
+              color: #5AB8DB;
+            }
+            &.text-higher{
+              color:var(--brand);
             }
           }
-          .level-link.bg-yellow {
-            background: var(--skin-primary-color);
+          
+        }
+        .level-box{
+          margin-top: 15px;
+          height: 8px;
+          background: var(--fill-2);
+          width: 600px;
+          position: relative;
+          @media ${MediaInfo.mobile} {
+            width: 100%;
+            height: 4px;
           }
-
-          .level-link.bg-green {
-            background: #43bc9c;
-          }
-
-          .level-link.bg-red {
-            background: var(--const-color-error);
+          div{
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            border-radius: 5px;
+            &.bg-low{
+              background: var(--const-color-error);
+              width: calc(600px - 450px);
+              @media ${MediaInfo.mobile} {
+                width: 25%;
+              }
+            }
+            &.bg-middle{
+              background:linear-gradient(to right, #F04E3F, #F9DE5E);
+              width:  calc(600px - 300px);
+              @media ${MediaInfo.mobile} {
+                width: 50%;
+              }
+            }
+            &.bg-high{
+              background:linear-gradient(to right, var(--brand),  #5AB8DB);
+              width:  calc(600px - 150px);
+               @media ${MediaInfo.mobile} {
+                width: 75%;
+              }
+            }
+            &.bg-higher{
+              background: var(--brand);
+              width: 600px;
+              @media ${MediaInfo.mobile} {
+                width: 100%;
+              }
+            }
           }
         }
       }

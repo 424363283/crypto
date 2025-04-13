@@ -13,10 +13,15 @@ export const SWAP_PENDING_ORDER_STATUS = () => ({
 export const SWAP_FINISHED_ORDER_TYPES = () => ({
   '1': LANG('限价'),
   '2': LANG('市价'),
-  '4': LANG('市价止盈'),
-  '5': LANG('市价止损'),
   '3': LANG('强平'),
-  '6': LANG('追踪委托'),
+  '4': LANG('限价'),
+  '5': LANG('市价'),
+  // '1': LANG('限价'),
+  // '2': LANG('市价'),
+  // '4': LANG('市价止盈'),
+  // '5': LANG('市价止损'),
+  // '3': LANG('强平'),
+  // '6': LANG('追踪委托'),
 });
 
 // 永续历史委托 类型
@@ -39,7 +44,17 @@ export const SWAP_HISTORY_ORDER_STATUS = () => ({
   6: LANG('已过期'),
   7: LANG('部分完成 部分取消'),
 });
-
+// 永续历史计划委托、止盈止损委托状态
+export const SWAP_HISTORY_TRIGGER_ORDER_STATUS = () => ({
+  0: LANG('下单中'),
+  1: LANG('未触发'),
+  2: LANG('已完成'),
+  3: LANG('部分完成'),
+  4: LANG('已取消'),
+  5: LANG('委托取消'),
+  6: LANG('已过期'),
+  7: LANG('部分完成 部分取消'),
+});
 // 永续资金流水类型
 export const SWAP_FUNDS_RECORD_TYPE: () => { [key: string]: string } = () => ({
   taker_fee: LANG('手续费'),
@@ -75,3 +90,19 @@ export const SWAP_FUNDS_RECORD_FUNDS_TYPE = () => ({
   1: LANG('体验金'),
   2: LANG('抵扣金'),
 });
+
+export const SWAP_ORDER_DIRECTIONS: { [key: string]: string } = {
+  1: LANG('买入'),
+  2: LANG('卖出'),
+};
+
+export const SWAP_POSITION_MANAGE: { [key: string]: { [key: string]: string } } = {
+  1: {},//单向仓位
+  2: {
+    1: LANG('开仓'),
+    2: LANG('开仓'),
+    3: LANG('平仓'),
+    4: LANG('平仓'),
+    5: LANG('平仓')
+  }//双向仓位
+};

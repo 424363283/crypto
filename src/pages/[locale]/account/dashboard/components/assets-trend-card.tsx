@@ -35,17 +35,31 @@ export const AssetsTrendCard = (props: AssetsTrendProps) => {
     }
     return res;
   };
+
   useEffect(() => {
     fetchAccountProfitHistory(dateRange);
+    console.log(dateRange);
+    handleXInter(dateRange);
   }, [dateRange]);
+  
+  const handleXInter=(day:number)=>{
+    if (isMobile) {
+     return xAxisDate.length > 20 ? 5 : 1;
+    } else {
+      if (day == 7) return 5;
+      if (day == 30) return 5;
+      if (day == 90) return 10;
+    }
+  }
+
   return (
     <LineChart
       data={{ dates: xAxisDate, prices: yAxisProfits }}
       width='100%'
-      height='236px'
-      xInterval={isMobile && xAxisDate.length > 20 ? 5 : isMobile ? 1 : undefined}
+      height='206px'
+      xInterval={ handleXInter(dateRange)}
       splitLine={{
-        show: false,
+        show: false
       }}
     />
   );

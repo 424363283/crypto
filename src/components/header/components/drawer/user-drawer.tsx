@@ -21,8 +21,8 @@ const enableLite = process.env.NEXT_PUBLIC_LITE_ENABLE === 'true';
 const _isSwapDemo = isSwapDemo();
 const menuItems = [
   {
-    label: LANG('Dashboard'),
-    icon: 'sidebar-dashboard-user-nav-0',
+    label: LANG('账户总览'),
+    icon: 'sidebar-overview-nav-0',
     children: [
       {
         label: LANG('账号与安全'),
@@ -43,7 +43,7 @@ const menuItems = [
         label: LANG('我的资产'),
         href: '/account/fund-management/assets-overview',
       },
-      { label: LANG('我的费率'), href: '/vip?showRate=true' },
+      // { label: LANG('我的费率'), href: '/vip?showRate=true' },
       {
         label: LANG('充币'),
         href: '/account/fund-management/asset-account/recharge',
@@ -60,10 +60,10 @@ const menuItems = [
         label: LANG('内部转账'),
         href: '/account/fund-management/asset-account/transfer',
       },
-      {
-        label: LANG('合约卡券'),
-        href: '/account/fund-management/assets-overview?type=coupon',
-      },
+      // {
+      //   label: LANG('合约卡券'),
+      //   href: '/account/fund-management/assets-overview?type=coupon',
+      // },
     ],
   },
 
@@ -90,16 +90,18 @@ if (!_isSwapDemo)
 
 const UserDrawer = (props: UserDrawerProps) => {
   const _isSwapDemo = isSwapDemo(useLocation().pathname);
-
   const router = useRouter();
   const { isKyc } = useKycState();
   const [user, setUser] = useState<UserInfo | null>(null);
   const { onClose, open } = props;
-  const handleLogout = () => {
+  
+  const handleLogout =  async () => {
     const pathname = router.asPath;
     sessionStorage.setItem(SESSION_KEY.LOGIN_REDIRECT, pathname);
-    Account.logout();
+    await Account.logout();
+    router.push('/');
   };
+
   const getUser = async () => {
     const users = await Account.getUserInfo();
     setUser(users);
@@ -108,6 +110,7 @@ const UserDrawer = (props: UserDrawerProps) => {
   useEffect(() => {
     getUser();
   }, []);
+  
   return (
     <MobileDrawer className='user-drawer' open={open} onClose={onClose}>
       <div className='top-info'>
@@ -127,7 +130,7 @@ const UserDrawer = (props: UserDrawerProps) => {
               >
                 <span className='uid'>
                   UID:{user?.uid}
-                  <CommonIcon width={12} height={14} className='copy-icon' name='common-copy-2-yellow-0' enableSkin />
+                  <CommonIcon className='copy-icon'  size={10} name='common-copy'  enableSkin />
                 </span>
               </CopyToClipboard>
             ) : null}
@@ -143,10 +146,10 @@ const UserDrawer = (props: UserDrawerProps) => {
         <Menu
           data={menuItems.filter((v) => (!_isSwapDemo ? true : v.label !== LANG('资产')))}
           className='user-nav'
-        ></Menu>
+        />
       </div>
-      <div className='logout-btn'>
-        <span onClick={handleLogout}>{LANG('退出登录')}</span>
+      <div className='logout-btn'  onClick={handleLogout}>
+        <span>{LANG('退出登录')}</span>
         <Image src='/static/images/header/media/logout.svg' width={20} height={20} alt='logout' />
       </div>
       <style jsx>{styles}</style>

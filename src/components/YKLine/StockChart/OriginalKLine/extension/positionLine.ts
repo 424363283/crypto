@@ -1,6 +1,6 @@
 // import { OverlayFigure, OverlayTemplate, utils, Coordinate } from 'klinecharts';
 import { OverlayFigure, OverlayTemplate, utils, Coordinate } from '@/components/YKLine/StockChart/OriginalKLine/index.esm';
-
+import { getKineState, setPositionLineTpSl,setPositionTpSLInfoFun, setPositionTpSlFun } from '@/store/kline';
 
 export const PositionLineFigureKey = {
   Close: 'close',
@@ -58,6 +58,7 @@ const positionLine: OverlayTemplate = {
     const directionColor = overlay.styles?.directionColor;
     const profitLossColor = overlay.styles?.profitLossColor;
     const tooltipColor = overlay.styles?.tooltipColor;
+    const openDirectionBg = overlay.styles?.openDirectionBg;
     const offsetLeft = overlay.styles?.offsetLeft ?? 2;
     const { y } = coordinates[0];
     const profitLossText = `${overlay.extendData.profitLoss}`;
@@ -69,10 +70,25 @@ const positionLine: OverlayTemplate = {
     const reverseTooltip = overlay.extendData.reverseTooltip;
     const closeTooltip = overlay.extendData.closeTooltip;
 
+    let positionId=overlay.extendData.positionId
+    const { isHoverTPSL,positionTpSLInfo } = getKineState();
+
+ 
+   let getfliterId=positionTpSLInfo.length>0&& positionTpSLInfo?.find((item)=>item?.positionId===positionId)?.orders
+
+   let getPositionIdBuy=getfliterId&& getfliterId?.some((item)=>item?.direction==1)
+   let getPositionIdSell=getfliterId&&getfliterId?.some((item)=>item?.direction==2)
+
+
+    // console.log("getPositionIdBuy",isHoverTPSL)
+    // console.log("getPositionIdSell",getPositionIdSell)
+
+
+
     let figures: OverlayFigure[] = [
       {
         type: 'text',
-        ignoreEvent: true,
+        // ignoreEvent: true,
         attrs: {
           x: offsetLeft + PADDING,
           y: y,
@@ -85,7 +101,7 @@ const positionLine: OverlayTemplate = {
         styles: {
           style: 'stroke_fill',
           borderStyle: 'solid',
-          borderColor: profitLossColor,
+          borderColor: backgroundColor,
           color: profitLossColor,
           backgroundColor,
           borderRadius: 0,
@@ -109,8 +125,9 @@ const positionLine: OverlayTemplate = {
         },
         styles: {
           style: 'stroke_fill',
-          borderColor: directionColor,
-          backgroundColor: directionColor,
+          borderColor: 'none',
+          backgroundColor: profitLossColor,
+          // backgroundColor: openDirectionBg,
           color: '#fff',
           borderRadius: 0,
           paddingTop: 5,
@@ -131,7 +148,7 @@ const positionLine: OverlayTemplate = {
         },
         styles: {
           style: 'stroke_fill',
-          borderColor: directionColor,
+          borderColor: profitLossColor,
           color: backgroundColor
         }
       },
@@ -145,7 +162,7 @@ const positionLine: OverlayTemplate = {
           ]
         },
         styles: {
-          color: directionColor
+          color: profitLossColor
         }
       },
       {
@@ -160,7 +177,7 @@ const positionLine: OverlayTemplate = {
         },
         styles: {
           style: 'fill',
-          color: directionColor
+          color: profitLossColor
         }
       },
       {
@@ -173,7 +190,7 @@ const positionLine: OverlayTemplate = {
           ]
         },
         styles: {
-          color: directionColor
+          color: profitLossColor
         }
       },
       {
@@ -188,7 +205,7 @@ const positionLine: OverlayTemplate = {
         },
         styles: {
           style: 'fill',
-          color: directionColor
+          color: profitLossColor
         }
       },
       // 关闭按钮
@@ -207,9 +224,9 @@ const positionLine: OverlayTemplate = {
         },
         styles: {
           style: 'stroke_fill',
-          color: directionColor,
+          color: profitLossColor,
           size: 10,
-          borderColor: directionColor,
+          borderColor: profitLossColor,
           backgroundColor,
           paddingTop: 7,
           paddingLeft: 7,
@@ -247,6 +264,107 @@ const positionLine: OverlayTemplate = {
         )
       );
     }
+    let left =  offsetLeft + profitLossTextWidth + volumeTextRectWidth + PADDING + 40
+
+  if(!getPositionIdBuy&&isHoverTPSL?.id==positionId){
+    figures.push({
+      type: 'rect',
+      attrs: {
+        x: left,
+        y: y - HEIGHT / 2,
+        width: 20,
+        height: HEIGHT
+      },
+      styles: {
+        style: 'stroke_fill',
+        borderColor: 'transparent',
+        color: 'transparent'
+      }
+    })
+
+    left += 20
+    const profitText = 'TP'
+    const profitTextWidth = utils.calcTextWidth(profitText) + PADDING * 2
+    figures.push({
+      type: 'text',
+      attrs: {
+        x: left,
+        y: y,
+        width: profitTextWidth,
+        height: HEIGHT,
+        align: 'left',
+        baseline: 'middle',
+        text: profitText,
+        id:1
+      },
+      styles: {
+        cursor: 'pointer',
+        style: 'stroke_fill',
+        borderColor: 'rgb(34, 195, 170)',
+        backgroundColor: 'rgb(34, 195, 170)',
+        color: '#fff',
+        borderRadius: 2,
+        paddingTop: 5,
+        paddingLeft: PADDING
+      }
+    })
+
+    left += profitTextWidth
+  }
+
+
+  if(!getPositionIdSell&&isHoverTPSL?.id==positionId){
+    if(getPositionIdBuy){
+      left + 20
+      const profitText = '  '
+      const profitTextWidth = utils.calcTextWidth(profitText) + PADDING * 2
+      left += profitTextWidth
+    }
+ 
+
+    figures.push({
+      type: 'rect',
+      attrs: {
+        x: left,
+        y: y - HEIGHT / 2,
+        width: 10,
+        height: HEIGHT
+      },
+      styles: {
+        style: 'stroke_fill',
+        borderColor: 'transparent',
+        color: 'transparent'
+      }
+    })
+
+    left += 10
+    const lossText = 'SL'
+    const lossTextWidth = utils.calcTextWidth(lossText) + PADDING * 2
+    figures.push({
+      type: 'text',
+      attrs: {
+        x: left,
+        y: y,
+        width: lossTextWidth,
+        height: HEIGHT,
+        align: 'left',
+        baseline: 'middle',
+        text: lossText,
+        id:2
+      },
+      styles: {
+        cursor: 'pointer',
+        style: 'stroke_fill',
+        borderColor: 'rgb(245, 141, 178)',
+        backgroundColor: 'rgb(245, 141, 178)',
+        color: '#fff',
+        borderRadius: 2,
+        paddingTop: 5,
+        paddingLeft: PADDING
+      }
+    })
+    left += lossTextWidth
+  }
 
     return figures;
   },
@@ -260,7 +378,7 @@ const positionLine: OverlayTemplate = {
           x: 0,
           y: coordinates[0].y,
           baseline: 'middle',
-          text: `${utils.formatThousands(overlay.points[0].value!.toFixed(precision.price), thousandsSeparator)}`
+          text: `${utils.formatThousands(overlay.points[0].value, 1)}`
         },
         styles: {
           style: 'fill',
@@ -275,6 +393,56 @@ const positionLine: OverlayTemplate = {
       },
     ];
   },
+  onpressedmove:({ chart, overlay })=>{
+
+    console.log("pros1",chart)
+  },
+  onPressedMoveStart: (event: object) =>{//按住开始移动事件。
+    console.log("pros",event)
+  },
+  onPressedMoveEnd: (event: object) =>{//按住结束移动事件。
+    // console.log("prosend",event?.figure?.attrs?.id)
+    let tpslTypeId=event?.figure?.attrs?.id //当前选择的类型
+    let tpslPrice=event?.overlay?.points[0]?.value//当前拖动的价格
+    // console.log("prosend",tpslPrice)
+    //1是止盈。2是止损
+    setPositionTpSLInfoFun({
+        id:tpslTypeId,
+        price:tpslPrice
+    })
+  },
+  onMouseEnter: ({ chart, overlay }) => {
+    // setPositionLineTpSl({
+    //   id:overlay?.extendData?.positionId,
+    //   visble:true
+    // })
+    chart.overrideOverlay({
+      id: overlay.id,
+      extendData: {
+        showStopProfitLoss: true
+      }
+    })
+
+
+    return false
+  },
+  onMouseLeave: ({ chart, overlay }) => {
+    // setPositionLineTpSl(false)
+    setPositionLineTpSl({
+      id:'',
+      visble:false
+    })
+    // console.log("overlay",overlay?.extendData?.positionId)
+    // console.log("onMouseLeave",overlay?.points[0]?.value)
+    chart.overrideOverlay({
+      id: overlay.id,
+      extendData: {
+        showStopProfitLoss: false
+      }
+    })
+    return false
+  },
+  // onClickL
 };
 
 

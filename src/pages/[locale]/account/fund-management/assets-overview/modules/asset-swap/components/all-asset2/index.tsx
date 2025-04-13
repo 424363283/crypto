@@ -30,28 +30,30 @@ export const AllAsset2 = ({
     setTransferModalVisible(true);
     setModalData({ code, wallet });
   };
-  const { isDesktop } = useResponsive(false);
+  const { isDesktop, isMobileOrTablet } = useResponsive(false);
   return (
     <>
-      {isDesktop ? (
+      {isDesktop && !isMobileOrTablet ? (
         <Desktop
           data={wallets}
           isSwapU={isSwapU}
           onOpenTransferModal={onOpenTransferModal}
           onOpenWalletFormModal={onOpenWalletFormModal}
         />
-      ) : (
+      ) : ''}
+      {!isDesktop && isMobileOrTablet ? (
         <Tablet
           data={wallets}
           isSwapU={isSwapU}
           onOpenTransferModal={onOpenTransferModal}
           onOpenWalletFormModal={onOpenWalletFormModal}
         />
-      )}
+      ) : ''}
       {transferModalVisible && (
         <TransferModal
           open={transferModalVisible}
           defaultTargetAccount={isSwapU ? ACCOUNT_TYPE.SWAP_U : ACCOUNT_TYPE.SWAP}
+
           onCancel={onCloseTransferModal}
           defaultCoin={code}
           defaultTargetWallet={wallet}

@@ -1,7 +1,10 @@
+import { Button } from '@/components/button';
 import CoinLogo from '@/components/coin-logo';
+import { Size } from '@/components/constants';
 import { useLocalStorage } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { LOCAL_KEY } from '@/core/store';
+import { MediaInfo } from '@/core/utils';
 import { useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
 
@@ -14,7 +17,7 @@ type HistoryCoinProps = {
 };
 
 export const HistoryCoins = (props: HistoryCoinProps) => {
-  const { coins, name, sliceNumber = 5, onClick = () => {}, options = [] } = props;
+  const { coins, name, sliceNumber = 5, onClick = () => { }, options = [] } = props;
   const [localValue, setLocalValue] = useLocalStorage<any>(LOCAL_KEY.HISTORY_COIN, {}, true);
   const [isShow, setIsShow] = useState(false);
   const [list, setList] = useState([]);
@@ -51,15 +54,12 @@ export const HistoryCoins = (props: HistoryCoinProps) => {
 
   return isShow ? (
     <div className='history-coin-container'>
-      <div className='title'>{LANG('最近搜索')}</div>
       <div className='list'>
         {list?.map?.((item) => {
-          return (
-            <div onClick={() => onClick(item)} key={item} className='coin-item'>
-              <CoinLogo coin={item} width={18} height={18} />
-              <span className='name'>{item}</span>
-            </div>
-          );
+          return <Button size={Size.SM} rounded className='coin-item' onClick={() => onClick(item)} key={item} >
+            <CoinLogo coin={item} width={14} height={14} />
+            <span className='name'>{item}</span>
+          </Button>
         })}
       </div>
       <style jsx>{styles}</style>
@@ -72,6 +72,9 @@ const styles = css`
     display: flex;
     align-items: center;
     overflow-x: auto;
+    @media ${MediaInfo.mobile}{
+      padding: 0;
+    }
     .title {
       font-size: 12px;
       font-weight: 400;
@@ -85,20 +88,30 @@ const styles = css`
     .list {
       display: flex;
       flex: none;
-      .coin-item {
+      gap: 16px;
+      margin-top: 16px;
+      @media ${MediaInfo.mobile}{
+        margin-top: 8px;
+      }
+      :global(.coin-item) {
         display: flex;
         align-items: center;
         cursor: pointer;
-        padding: 3px 8px;
-        .name {
-          margin: 0 10px 0 5px;
-          font-size: 12px;
-          font-weight: 500;
-          color: var(--theme-font-color-1);
+        padding: 8px 16px;
+        background: transparent;
+        border: 1px solid var(--line-1);
+        gap: 8px;
+        @media ${MediaInfo.mobile}{
+          padding: 0 16px;
         }
-        &:hover {
-          background-color: var(--skin-primary-bg-color-opacity-1);
-          border-radius: 5px;
+        .name {
+          color: var(--text-primary);
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 14px; /* 100% */
+          @media ${MediaInfo.mobile}{
+            font-size: 12px;
+          }
         }
       }
     }

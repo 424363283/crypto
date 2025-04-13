@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { useResponsive } from '@/core/hooks';
 import { useWindowWidthByValue } from '@/core/hooks/src/use-responsive';
 import { MediaInfo } from '@/core/utils';
+import { LANG } from '@/core/i18n';
 
 export const SpotProDesktopLayout = ({
   KlineHeader,
@@ -10,7 +12,7 @@ export const SpotProDesktopLayout = ({
   RecentTrades,
   OrderList,
   NetworkInfo,
-  HotQuote,
+  HotQuote
 }: {
   KlineHeader: React.ReactNode;
   KlineView: React.ReactNode;
@@ -23,44 +25,58 @@ export const SpotProDesktopLayout = ({
 }) => {
   const { isSmallDesktop } = useResponsive(false);
   const { isMatch: isLargeDesktop } = useWindowWidthByValue({ width: 1440 });
-
+  const [tab, setTab] = useState(1);
   return (
     <>
-      <div id='spot-layout'>
-        <div className='spot-layout-left'>
-          <div className='spot-layout-top'>
-            <div className='hot-quote bg'>{HotQuote}</div>
-            <div className='kline-header bg'>{KlineHeader}</div>
+      <div id="spot-layout">
+        <div className="spot-layout-left">
+          <div className="spot-layout-top">
+            <div className="hot-quote bg">{HotQuote}</div>
+            <div className="kline-header bg">{KlineHeader}</div>
             <div className={`${isSmallDesktop ? 'small-layout' : ''} container-wrapper`}>
               <div className={`container ${isSmallDesktop ? 'flex-column' : ''}`}>
-                <div className='spot-layout-top-left'>
-                  <div className='kline-view bg'>{KlineView}</div>
+                <div className="spot-layout-top-left">
+                  <div className="kline-view bg">{KlineView}</div>
                 </div>
-                <div className='spot-layout-top-right'>
-                  <div className='order-book bg'>{OrderBook}</div>
-                  <div className='recent-trades bg'>{RecentTrades}</div>
+                <div className="spot-layout-top-right bg">
+
+                  <div className="right-title">
+                    <span className={tab === 1 ? 'active' : ''} onClick={() => setTab(1)}>
+                      {LANG('盘口')}
+                    </span>
+                    <span className={tab === 2 ? 'active' : ''} onClick={() => setTab(2)}>
+                      {LANG('最近成交')}
+                    </span>
+                  </div>
+
+                  <div className={`right-box order-book bg ${tab === 1 ? 'show' : ''}`}>
+                    <>{OrderBook}</>
+                  </div>
+                  <div className={`right-box recent-trades bg ${tab === 2 ? 'show' : ''}`}>
+                    <>{RecentTrades}</>
+                  </div>
                 </div>
               </div>
-              {isSmallDesktop && <div className='spot-layout-right'>{TradeView}</div>}
+              {isSmallDesktop && <div className="spot-layout-right">{TradeView}</div>}
             </div>
           </div>
-          <div className='order-list bg'>{OrderList}</div>
+          <div className="order-list bg">{OrderList}</div>
         </div>
         <div className={`spot-layout-right ${isSmallDesktop ? 'hide' : ''}`}>{TradeView}</div>{' '}
-        <div className='spot-network-info'>{NetworkInfo}</div>
+        <div className="spot-network-info">{NetworkInfo}</div>
       </div>
       <style jsx>{`
         #spot-layout {
           overflow: auto;
           flex: 1;
-          background-color: var(--theme-trade-bg-color-1);
+          background-color: var(--fill-3);
           padding-top: var(--theme-trade-layout-gap);
           padding-left: var(--theme-trade-layout-spacing);
           display: flex;
           flex-direction: row;
 
           .spot-layout-left {
-            width: calc(100vw - 335px);
+            width: calc(100vw - 346px);
             display: flex;
             flex-direction: column;
             margin-right: var(--theme-trade-layout-spacing);
@@ -68,20 +84,20 @@ export const SpotProDesktopLayout = ({
               width: 100vw;
             }
             .spot-layout-top {
-              min-height: 760px;
+              /* min-height: 504px; */
               display: flex;
               flex-direction: column;
               .hot-quote {
                 height: 48px;
                 display: flex;
                 flex-shrink: 1;
-                border-radius: var(--theme-trade-layout-radius);
+                border-radius:0;
               }
               .kline-header {
                 height: 58px;
                 display: flex;
                 flex-shrink: 1;
-                border-radius: var(--theme-trade-layout-radius);
+                border-radius:0;
                 margin-top: var(--theme-trade-layout-gap);
               }
               .container-wrapper {
@@ -109,7 +125,7 @@ export const SpotProDesktopLayout = ({
                     .recent-trades {
                       flex: 1;
                       border-radius: var(--theme-trade-layout-radius);
-                      height: 403px;
+                      height:600px;
                     }
                     .order-book {
                       margin-right: var(--theme-trade-layout-gap);
@@ -122,10 +138,10 @@ export const SpotProDesktopLayout = ({
                   overflow: hidden;
 
                   .kline-view {
-                    height: 697px;
+                    height: 543px;
                     display: flex;
                     margin-top: var(--theme-trade-layout-gap);
-                    border-radius: var(--theme-trade-layout-radius);
+                    border-radius:0;
                   }
                 }
                 .spot-layout-top-right {
@@ -135,21 +151,21 @@ export const SpotProDesktopLayout = ({
                   margin-top: var(--theme-trade-layout-gap);
                   .order-book {
                     padding-top: 10px;
-                    height: 500px;
+                    height: 504px;
                     display: flex;
                     flex-direction: column;
                     overflow: hidden;
-                    border-top-left-radius: var(--theme-trade-layout-radius);
-                    border-top-right-radius: var(--theme-trade-layout-radius);
+                    border-top-left-radius:0;
+                    border-top-right-radius:0;
                     border-bottom: 1px solid var(--theme-background-color-3);
                   }
                   .recent-trades {
                     display: flex;
                     flex-direction: column;
-                    height: 197px;
+                    height: 504px;
                     overflow: hidden;
-                    border-bottom-left-radius: var(--theme-trade-layout-radius);
-                    border-bottom-right-radius: var(--theme-trade-layout-radius);
+                    border-bottom-left-radius:0;
+                    border-bottom-right-radius:0;
                   }
                 }
               }
@@ -172,19 +188,20 @@ export const SpotProDesktopLayout = ({
             flex-direction: column;
             max-width: var(--theme-trade-trade-view-max-width);
             flex: ${isLargeDesktop ? ' var(--theme-trade-trade-view-flex)' : 'none'};
-            min-width: 320px;
+            max-width: 340px;
+            width:340px;
             margin-right: var(--theme-trade-layout-spacing);
           }
 
           .order-list {
             min-height: 620px;
             margin-top: var(--theme-trade-layout-gap);
-            border-top-left-radius: var(--theme-trade-layout-radius);
-            border-top-right-radius: var(--theme-trade-layout-radius);
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
             padding-bottom: 20px;
           }
           .bg {
-            background-color: var(--theme-background-color-1);
+            background-color: var(--bg-1);
             overflow: hidden;
           }
         }
@@ -200,6 +217,49 @@ export const SpotProDesktopLayout = ({
 
           z-index: 1;
         }
+        .right-title {
+            height: 40px;
+            padding: 16px 4px;
+            border-bottom: 1px solid var(--line-1, rgba(31, 33, 36, 1));
+            color: var(--text-secondary);
+            display:flex;
+            align-items:center;
+            &.ru,
+            &.pt,
+            &.es,
+            &.fr,
+            &.tl {
+              font-size: 12px;
+            }
+            span {
+              cursor: pointer;
+              padding:0 12px;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+
+              font-family: HarmonyOS Sans SC;
+              font-size: 14px;
+              font-weight: 500;
+
+              &.active {
+                color: var(--text-brand);
+              }
+              &:last-child {
+                margin-right: 0px;
+              }
+            }
+          }
+          .right-box {
+            flex: 1;
+            display: none !important;
+            flex-direction: column;
+            overflow: hidden;
+            padding:16px 0 0;
+            &.show {
+              display: flex !important;
+            }
+          }
       `}</style>
     </>
   );

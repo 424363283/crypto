@@ -7,18 +7,18 @@ import message from '@/components/Ymessage';
 import CheckBox from '@/components/CheckBox';
 
 
-import BVIcon from '@/components/YIcons';
+import YIcon from '@/components/YIcons';
 
-import BvModal from '@/components/YModal';
+import YModal from '@/components/YModal';
 
 import styles from './index.module.scss';
-
+import { LANG } from '@/core/i18n';
 export enum IndicatorOperateType {
   Create = 'create',
   Remove = 'remove'
 }
 
-interface IndicatorModalProps{
+interface IndicatorModalProps {
   mainIndicators: string[];
   subIndicators: string[];
   onMainIndicatorChange: (name: string, type: IndicatorOperateType) => void;
@@ -32,80 +32,98 @@ const IndicatorModal: FC<IndicatorModalProps> = ({
   onMainIndicatorChange, onSubIndicatorChange
 }) => {
   return (
-    <BvModal
+    <YModal
       open={true}
-      width={480}
+      width={372}
       header={
         <>
-          <h3>指标</h3>
-          <BVIcon.CloseOutlined className="close-btn" onClick={onClose} />
+          <h3 className='kineindicatorName'>
+            {
+                LANG('kline_config_index')
+            }
+          </h3>
+          <YIcon.CloseOutlined className="close-btn" onClick={onClose} />
         </>
       }
       contentStyle={{ height: 248, padding: '0 24px', boxSizing: 'border-box', overflow: 'hidden' }}
       content={
         <div className={classnames(styles.indicatorContent, 'bv-scroll')}>
-          <span>主指标</span>
+          <span className={styles.indicatorContentTitleName}>
+          {
+                LANG('kline_config_Mainindicators')
+            }
+
+          </span>
           <ol
             className={styles.indicatorChild}>
-              {
-                ['MA', 'EMA', 'BOLL', 'SAR'].map(name => (
-                  <li
-                    key={name}
-                    className={styles.item}>
-                    {/* @ts-ignore */}
-                    <CheckBox
-                      label={name}
-                      checked={mainIndicators.includes(name)}
-                      onChange={(checked) => {
-                        onMainIndicatorChange(name, checked ? IndicatorOperateType.Create : IndicatorOperateType.Remove);
-                      }}/>
-                  </li>
-                ))
-              }
-            </ol>
-            <span style={{ display: 'block', marginTop: 16 }}>
-            副指标
+            {
+              ['MA', 'EMA', 'BOLL', 'SAR'].map(name => (
+                <li
+                  key={name}
+                  className={styles.item}>
+                  {/* @ts-ignore */}
+                  <CheckBox
+                    label={name}
+                    checked={mainIndicators.includes(name)}
+                    onChange={(checked) => {
+                      onMainIndicatorChange(name, checked ? IndicatorOperateType.Create : IndicatorOperateType.Remove);
+                    }} />
+                </li>
+              ))
+            }
+          </ol>
+          <span className={styles.indicatorContentTitleName}>
+            
+            {
+                LANG('kline_config_SubIndicators')
+            }
             </span>
-            <ol
-              style={{ paddingBottom: 16 }}
-              className={styles.indicatorChild}>
-              {
-                [
-                  'VOL', 'MACD', 'KDJ', 'RSI',
-                  'BIAS', 'BRAR', 'CCI', 'DMI',
-                  'CR', 'PSY', 'DMA', 'TRIX',
-                  'OBV', 'VR', 'WR', 'MTM',
-                  'EMV', 'AO', 'ROC'
-                ].map(name => (
-                  <li
-                    key={name}
-                    className={styles.item}>
-                    {/* @ts-ignore */}
-                    <CheckBox
-                      label={name}
-                      checked={subIndicators.includes(name)}
-                      onChange={(checked) => {
-                        if (checked && subIndicators.length > 2) {
-                          message.warning('副指标最多设置3个');
-                          return;
-                        }
-                        onSubIndicatorChange(name, checked ? IndicatorOperateType.Create : IndicatorOperateType.Remove);
-                      }}/>
-                  </li>
-                ))
-              }
+          <ol
+            style={{ paddingBottom: 16 }}
+            className={styles.indicatorChild}>
+            {
+              [
+                'VOL', 'MACD', 'KDJ', 'RSI',
+                'BIAS', 'BRAR', 'CCI', 'DMI',
+                'CR', 'PSY', 'DMA', 'TRIX',
+                'OBV', 'VR', 'WR', 'MTM',
+                'EMV', 'AO', 'ROC'
+              ].map(name => (
+                <li
+                  key={name}
+                  className={styles.item}>
+                  {/* @ts-ignore */}
+                  <CheckBox
+                    label={name}
+                    checked={subIndicators.includes(name)}
+                    onChange={(checked) => {
+                      if (checked && subIndicators.length > 2) {
+                        message.warning( LANG('kline_config_SubIndicatorsMax'));
+                        return;
+                      }
+                      onSubIndicatorChange(name, checked ? IndicatorOperateType.Create : IndicatorOperateType.Remove);
+                    }} />
+                </li>
+              ))
+            }
           </ol>
         </div>
       }
       footer={
         <>
-          <Button className="cancel" onClick={onReset}>
-          重置
+          <Button className={styles.indicatorCancel} onClick={onReset}>
+            
+            {
+               LANG('重置')
+            }
           </Button>
           <Button
-            className="primary"
+            className={styles.indicatorPrimary}
             onClick={onClose}>
-         确认
+            
+            {
+               LANG('确认')
+            }
           </Button>
         </>
       }

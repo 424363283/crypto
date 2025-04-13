@@ -38,13 +38,14 @@ export const MarkPrice = () => {
       if (id) {
         setIndexPrice(data[id].currentPrice.toFixed(digit));
       }
-    } catch {}
+    } catch { }
   });
 
   return (
     <>
-      <Tooltip
+      {/* <Tooltip
         placement='top'
+        overlayClassName='marker-price-tooltip'
         title={
           <>
             <div
@@ -62,12 +63,11 @@ export const MarkPrice = () => {
             {linkStyles}
           </>
         }
-      >
+      > */}
         <div className='mark-price'>
-          <CommonIcon name='common-flag-0' size={16} enableSkin />
           <span className='price'>{formatDefaultText(indexPrice?.toFixed(baseShowPrecision))}</span>
         </div>
-      </Tooltip>
+      {/* </Tooltip> */}
       <style jsx>{`
         .mark-price {
           cursor: pointer;
@@ -77,9 +77,23 @@ export const MarkPrice = () => {
 
           .price {
             margin-left: 4px;
-            font-weight: 500;
-            color: var(--theme-trade-text-color-1);
-            border-bottom: 1px dashed var(--theme-trade-text-color-2);
+            /* border-bottom: 1px dashed var(--theme-trade-text-color-2); */
+            color: var(--text-secondary, #A5A8AC);
+            font-family: "HarmonyOS Sans SC";
+            font-size: 16px;
+            font-weight: 400;
+          }
+        }
+        :global(.marker-price-tooltip) {
+          :global(.ant-tooltip-inner) {
+            font-size: 12px;
+            padding: 16px;
+            font-weight: 400;
+            background-color: var(--fill-pop);
+            color: var(--theme-font-color-1);
+          }
+          :global(.ant-tooltip-arrow::before) {
+            background: var(--fill-pop);
           }
         }
       `}</style>

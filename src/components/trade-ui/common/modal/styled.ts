@@ -27,22 +27,21 @@ const { className, styles: _styles } = css.resolve`
 
     .modal-title {
       position: relative;
-      padding-left: var(--theme-trade-modal-horizontal-padding);
-      padding-right: var(--theme-trade-modal-horizontal-padding);
-      padding-top: 21.5px;
       flex-direction: row;
       align-items: center;
       width: 100%;
       .modal-title-content {
         width: 100%;
-        white-space: nowrap;
-        color: var(--theme-trade-text-color-1);
         font-size: 16px;
         font-weight: 500;
-        text-align: left;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
+      }
+      .modal-title-info{
+        display:flex;
+        align-items:center;
+        color: var(--text-primary);
+        text-align: justify;
+        font-size: 16px;
+        font-weight: 500;
       }
       &.pointer {
         cursor: pointer;
@@ -57,6 +56,7 @@ const { className, styles: _styles } = css.resolve`
         height: 59px;
         display: flex;
         flex-direction: row;
+        align-items:center;
         :global(> div) {
           padding-top: 2px;
           cursor: pointer;
@@ -95,38 +95,57 @@ const { className, styles: _styles } = css.resolve`
         }
       }
     }
+
     .swap-common-modal-content-component {
       max-height: 75vh;
-      padding: 0 var(--theme-trade-modal-horizontal-padding);
       overflow: auto;
+      padding:24px 0;
     }
     .swap-common-modal-content {
       margin: 0 auto;
-      background: var(--theme-trade-modal-color);
       border-radius: 6px;
+      padding: 24px 24px;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      border-radius: 24px;
+      background: var(--common-modal-bg);
       /* padding: 0 18px; */
-      width: 400px;
+      width: 480px;
+    }
+    .common-modal-content-component {
+      max-height: 75vh;
+      overflow: auto;
+      padding:0;
+    }
+    .common-modal-content {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      margin: 0 auto;
+      padding: 24px 24px;
+      border-radius: 24px;
+      background: var(--common-modal-bg);
+      width: 480px;
+      gap: 24px;
     }
     .modal-footer {
       display: flex;
       flex-direction: row;
-      padding: 0 var(--theme-trade-modal-horizontal-padding) 20px;
       .cancel,
       .confirm {
         cursor: pointer;
         user-select: none;
         flex: 1;
-        height: 40px;
-        border-radius: 5px;
-        line-height: 40px;
-        font-size: 14px;
+        display: flex;
+        height: 48px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 40px;
+        background: var(--text-brand);
+        color: var(--text-white);
+        font-size: 16px;
         font-weight: 500;
-        background: var(--theme-trade-sub-button-bg);
-        text-align: center;
-      }
-      .confirm {
-        background: var(--skin-primary-color);
-        color: var(--skin-font-color);
         &:nth-child(2) {
           margin-left: 10px;
         }
@@ -139,11 +158,12 @@ const { className, styles: _styles } = css.resolve`
   }
   .close-wrapper {
     position: absolute;
-    top: 8px;
-    right: 7px;
+    transform:translateY(-50%);
+    top: 50%;
+    right: 0;
     cursor: pointer;
-    height: 47px;
-    width: 47px;
+    height: 24px;
+    width: 24px;
     display: flex;
     justify-content: center;
     align-items: center;

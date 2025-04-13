@@ -1,28 +1,28 @@
-import { Account, Swap } from '@/core/shared';
-import { ORDER_TRADE_TYPE, POSITION_MODE, PRICE_TYPE } from './constants';
-import { DEFAULT_SPSL_VALUE, TradeField } from './field';
+import { Account, Swap } from "@/core/shared";
+import { ORDER_TRADE_TYPE, POSITION_MODE, PRICE_TYPE } from "./constants";
+import { DEFAULT_SPSL_VALUE, TradeField } from "./field";
 
-import { Loading } from '@/components/loading';
-import { postSwapAddOtocoApi } from '@/core/api';
-import { LANG } from '@/core/i18n';
-import { message,playAudio } from '@/core/utils';
-import { assetsInstance as Assets } from '../assets';
-import { SWAP_BOUNS_WALLET_KEY } from '../assets/constants';
-import { Calculate } from '../calculate';
-import { infoInstance as Info } from '../info';
-import { SWAP_DEFAULT_WALLET_ID } from '../info/constants';
-import { orderInstance as Order } from '../order';
-import { Utils } from '../utils';
+import { Loading } from "@/components/loading";
+import { postSwapAddOtocoApi } from "@/core/api";
+import { LANG } from "@/core/i18n";
+import { message, playAudio } from "@/core/utils";
+import { assetsInstance as Assets } from "../assets";
+import { SWAP_BOUNS_WALLET_KEY } from "../assets/constants";
+import { Calculate } from "../calculate";
+import { infoInstance as Info } from "../info";
+import { SWAP_DEFAULT_WALLET_ID } from "../info/constants";
+import { orderInstance as Order } from "../order";
+import { Utils } from "../utils";
 
 export class Trade extends TradeField {
   init({ resso }: any) {
     this.store = resso({
-      quoteId: '',
+      quoteId: "",
       usdtTypeByNotId: undefined,
       positionMode: POSITION_MODE.OPEN,
-      price: '',
-      volume: '',
-      triggerPrice: '',
+      price: "",
+      volume: "",
+      triggerPrice: "",
       triggerPriceType: PRICE_TYPE.FLAG,
       orderTradeType: ORDER_TRADE_TYPE.LIMIT,
       percentVolume: 0,
@@ -121,11 +121,31 @@ export class Trade extends TradeField {
   }
 
   // 下单
-  onPlaceAnOrder({ buy: _isBuy, confirmModal = true, volume, onOrderConfirm, inputVolume: _inputVolume }: { buy?: boolean; confirmModal?: boolean; volume?: any; onOrderConfirm?: any; inputVolume?: any }) {
+  onPlaceAnOrder({
+    buy: _isBuy,
+    confirmModal = true,
+    volume,
+    onOrderConfirm,
+    inputVolume: _inputVolume,
+  }: {
+    buy?: boolean;
+    confirmModal?: boolean;
+    volume?: any;
+    onOrderConfirm?: any;
+    inputVolume?: any;
+  }) {
     const { isUsdtType, quoteId } = this.base;
 
     const { limit: limitOrderConfirm, market: marketOrderConfirm } = Swap.Info.getOrderConfirm(isUsdtType);
-    const { price: inputPrice, effectiveTime, spslMode, onlyReducePosition, triggerPrice, triggerPriceType, modal } = this.store;
+    const {
+      price: inputPrice,
+      effectiveTime,
+      spslMode,
+      onlyReducePosition,
+      triggerPrice,
+      triggerPriceType,
+      modal,
+    } = this.store;
     const { priceOrderPrecision } = Info.getCryptoData(quoteId);
     const price = inputPrice.toFixed(priceOrderPrecision);
     const isBuy = _isBuy === undefined ? this.store.isBuy : _isBuy;
@@ -134,8 +154,17 @@ export class Trade extends TradeField {
     const { isLimit, isSpsl: isSpslType } = this.orderTradeType;
     const isMarketType = !isLimit;
     const orderPrice = Number(isMarketType ? Info.getMarketPrice(isBuy) : inputPrice);
-    const { buyPosition, sellPosition } = Order.getTwoWayPosition({ usdt: isUsdtType, openPosition: isOpenPosition, code: quoteId });
+    const { buyPosition, sellPosition } = Order.getTwoWayPosition({
+      usdt: isUsdtType,
+      openPosition: false,
+      code: quoteId,
+    });
     const position = isBuy ? buyPosition : sellPosition;
+    const { buyPending, sellPending } = Order.getTwoWayPending({
+      usdt: isUsdtType,
+      code: quoteId,
+    });
+    const pending = isBuy ? buyPending : sellPending;
     const volumeDigit = Info.getVolumeDigit(quoteId);
     const value = this.getInputVolume({ isBuy, flagPrice: orderPrice, inputVolume: _inputVolume });
     const maxVolume = this.getMaxVolume({ isBuy });
@@ -150,7 +179,7 @@ export class Trade extends TradeField {
     if (isSpslType) {
       /// 止盈止损触发价为空
       if (!(Number(triggerPrice) > 0)) {
-        return message.error(LANG('请输入触发价格'), 1);
+        return message.error(LANG("请输入触发价格"), 1);
       }
     }
 
@@ -158,30 +187,55 @@ export class Trade extends TradeField {
     if (maxVolume == 0) {
       // 只减仓判断
       if (!twoWayMode && onlyReducePosition) {
-        return message.error(LANG('平仓委托失败，请检查持仓与挂单。如果您当前合约有挂单，请取消该合约的挂单，并再次尝试平仓。如果您当前合约无持仓，请取消该合约只减仓设置，并再次尝试下单。'), 1);
+        return message.error(
+          LANG(
+            "平仓委托失败，请检查持仓与挂单。如果您当前合约有挂单，请取消该合约的挂单，并再次尝试平仓。如果您当前合约无持仓，请取消该合约只减仓设置，并再次尝试下单。"
+          ),
+          1
+        );
       }
 
       if (Info.leverFindErrorData[quoteId]?.code && Info.leverFindErrorData[quoteId].message) {
         return message.error(Info.leverFindErrorData[quoteId].message, 1);
       }
+      if (!isOpenPosition) {
+        if (isBuy) {
+          return message.error(LANG("无多仓，无法平仓。"), 1);
 
-      return message.error(LANG('当前最大可开数量为0，委托失败'), 1);
+        } else {
+          return message.error(LANG("无空仓，无法平仓。"), 1);
+        }
+
+      } else {
+        return message.error(LANG("当前最大可开数量为0，委托失败"), 1);
+      }
     }
 
     /// 止盈止损价格区间判断
-    if (spslMode.enable && this.spslPriceValidate({ isBuy, stopProfitPrice: spslMode.stopProfitPrice, stopLossPrice: spslMode.stopLossPrice, marketPrice: this.getOrderPrice(isBuy), price: Number(this.store.price), isLimit }) != true) {
+    if (
+      spslMode.enable &&
+      this.spslPriceValidate({
+        isBuy,
+        stopProfitPrice: spslMode.stopProfitPrice,
+        stopLossPrice: spslMode.stopLossPrice,
+        marketPrice: this.getOrderPrice(isBuy),
+        price: Number(this.store.price),
+        isLimit,
+      }) != true
+    ) {
       // return;
-      return message.error(LANG('您设置的止盈止损价格不合理，止盈止损订单将立即被触发，请重新设置。'), 1);
+      return message.error(LANG("您设置的止盈止损价格不合理，止盈止损订单将立即被触发，请重新设置。"), 1);
     }
 
     if (!isOpenPosition && !position) {
-      return message.error(LANG('当前没有仓位'), 1);
+      return message.error(LANG("当前没有仓位"), 1);
     }
     // 下单数量最少判断
     if (!value) {
+      let minOrderVolume = this.getMinOrderVolume({ isBuy, code: quoteId, costMode: true });
       return message.error(
-        LANG('下单数量最少为{volume}', {
-          volume: `${this.getMinOrderVolume({ isBuy, code: quoteId, costMode: true })} ${this.getUnitText()}`,
+        LANG("下单数量最少为{volume}", {
+          volume: `${minOrderVolume} ${this.getUnitText()}`,
         }),
         1
       );
@@ -190,10 +244,15 @@ export class Trade extends TradeField {
     //   return message.error(`${LANG('当前杠杆下最大可开为')} ${Swap.Trade.maxVolumeNumber.toFormat(volumeDigit)} ${Swap.Info.getUnitText({ symbol: quoteId })}`, 1);
     // }
     if (twoWayMode && !isOpenPosition) {
-      if (value > Number(position?.availPosition || 0)) {
+      const closeValue = this.getInputVolume({ isBuy, inputVolume: _inputVolume });
+      if (closeValue > Number(position?.availPosition || 0)) {
         return message.error(
-          LANG('最多可平{volume}', {
-            volume: `${this.formatPositionNumber(Number(position?.availPosition || 0), volumeDigit, orderPrice)}${this.getUnitText()}`,
+          LANG("最多可平{volume}", {
+            volume: `${this.formatPositionNumber(
+              Number(position?.availPosition || 0),
+              volumeDigit,
+              Number(position?.avgCostPrice)
+            )} ${this.getUnitText()}`,
           }),
           1
         );
@@ -215,12 +274,20 @@ export class Trade extends TradeField {
       future: isMarketType ? undefined : effectiveTime,
       price: isMarketType ? undefined : price,
       side: isBuy ? 1 : 2,
-      type: isMarketType ? '2' : '1',
+      type: isMarketType ? "2" : "1",
       source: Utils.getSource(),
     };
-    if (closePosition) {
+    if (twoWayMode) {
+      if (isOpenPosition) {
+        params.isAssociatedOrder = true;
+        if (pending?.isAssociatedOrder && pending?.linkedOrderId) {
+          params.linkedOrderId = pending?.linkedOrderId;
+        }
+      }
       params.positionId = position?.positionId;
-      params['type'] = isLimit ? 4 : 5;
+    }
+    if (closePosition) {
+      params["type"] = isLimit ? 4 : 5;
       params.side = isBuy ? 2 : 1;
     }
     if (spslMode.enable) {
@@ -231,8 +298,9 @@ export class Trade extends TradeField {
             symbol: quoteId,
             buy: isBuy,
             volume: params.orderQty,
-            price: Number(spslMode.stopProfitPrice),
+            triggerPrice: Number(spslMode.stopProfitPrice),
             priceType: spslMode.stopProfitPriceType,
+            price: spslMode.stopLossLimitPriceType ? spslMode.stopProfitLimitPrice : '', // 市价则传空 限价传stopProfitLimitPrice
           })
         );
       }
@@ -242,8 +310,9 @@ export class Trade extends TradeField {
             symbol: quoteId,
             buy: isBuy,
             volume: params.orderQty,
-            price: Number(spslMode.stopLossPrice),
+            triggerPrice: Number(spslMode.stopLossPrice),
             priceType: spslMode.stopLossPriceType,
+            price: spslMode.stopProfitLimitPriceType ? spslMode.stopLossLimitPrice : '', // 市价则传空 限价传stopProfitLimitPrice
           })
         );
       }
@@ -251,8 +320,8 @@ export class Trade extends TradeField {
     if (isSpslType) {
       params.opType = 3;
       if (Number(triggerPrice) > 0) {
-        params['triggerPrice'] = triggerPrice;
-        params['priceType'] = triggerPriceType === PRICE_TYPE.FLAG ? 2 : 1; // 1:市场价格，2:标记价格
+        params["triggerPrice"] = triggerPrice;
+        params["priceType"] = triggerPriceType === PRICE_TYPE.FLAG ? 2 : 1; // 1:市场价格，2:标记价格
       }
     }
 
@@ -263,18 +332,27 @@ export class Trade extends TradeField {
     if (onlyReducePosition || closePosition) {
       params.reduceOnly = 1;
     }
+    /**
+     * One-Way Mode
+     * 下单参数增加OrdFlag, 1=reduceonly只减仓;2=postonly被动;3=iceberg冰山
+     */
+    if (onlyReducePosition) {
+      params.ordFlag = 1;
+    }
     const onDone = (data: any) => {
       if (data && data.code === 200) {
         this.onResetTradeForm();
+
+        const { tradeNoticeSound } = Swap.Info.getTradePreference(Swap.Trade.base.isUsdtType);
         message.success(LANG('下单成功'), 1);
-        playAudio('/static/music/swap_order_sound.mp3');
+        tradeNoticeSound && playAudio("/static/music/swap_order_sound.mp3");
       } else {
         message.error(data.message, 1);
       }
       Assets.fetchBalance(isUsdtType);
       Loading.end();
     };
-    const onFail = function (error: any) {
+    const onFail = function(error: any) {
       message.error(error?.error?.message, 1);
       Loading.end();
     };
@@ -289,16 +367,16 @@ export class Trade extends TradeField {
     const isVolUnit = Info.getIsVolUnit(isUsdtType);
     const orderQty = (isUsdtType ? true : !isVolUnit)
       ? Calculate.amountToVolume({
-          usdt: isUsdtType,
-          value: value,
-          code: quoteId,
-          flagPrice: Info.getMarketPrice(isBuy),
-        })
+        usdt: isUsdtType,
+        value: value,
+        code: quoteId,
+        flagPrice: Info.getMarketPrice(isBuy),
+      })
       : value;
 
     if (!orderQty) {
       return message.error(
-        LANG('下单数量最少为{volume}', {
+        LANG("下单数量最少为{volume}", {
           volume: `${this.getMinOrderVolume({ isBuy, code: quoteId })} ${this.getUnitText()}`,
         }),
         1
@@ -314,7 +392,7 @@ export class Trade extends TradeField {
       Assets.fetchBalance(isUsdtType);
       Loading.end();
     };
-    const onFail = function (error: any) {
+    const onFail = function(error: any) {
       message.error(error?.error?.message, 1);
       Loading.end();
     };
@@ -324,7 +402,7 @@ export class Trade extends TradeField {
       side: isBuy ? 1 : 2,
       source: Utils.getSource(),
       symbol: quoteId.toLocaleLowerCase(),
-      type: '2',
+      type: "2",
     })
       .then(onDone)
       .catch(onFail);
@@ -333,7 +411,7 @@ export class Trade extends TradeField {
   ///  止盈止损下单
   async submitSpslOrder(data: any) {
     const { isUsdtType, quoteId } = this.base;
-    data['source'] = Utils.getSource();
+    data["source"] = Utils.getSource();
     return await postSwapAddOtocoApi(isUsdtType, data);
   }
 
@@ -359,7 +437,21 @@ export class Trade extends TradeField {
   }
 
   // 止盈止损价格区间判断
-  spslPriceValidate({ isBuy, stopProfitPrice, stopLossPrice, marketPrice, price, isLimit }: { isLimit: boolean; isBuy: boolean; stopProfitPrice: any; stopLossPrice: any; marketPrice: number; price: number }) {
+  spslPriceValidate({
+    isBuy,
+    stopProfitPrice,
+    stopLossPrice,
+    marketPrice,
+    price,
+    isLimit,
+  }: {
+    isLimit: boolean;
+    isBuy: boolean;
+    stopProfitPrice: any;
+    stopLossPrice: any;
+    marketPrice: number;
+    price: number;
+  }) {
     // 【限价委托&做多】
     // 止盈价格>委托价格
     // 止损价格<委托价格

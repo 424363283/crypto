@@ -1,5 +1,5 @@
 import { AssetValueToggleIcon } from '@/components/common-icon';
-import { MobileOrTablet } from '@/components/responsive';
+import { Desktop, MobileOrTablet } from '@/components/responsive';
 import ProTooltip from '@/components/tooltip';
 import { useLocalStorage } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
@@ -29,7 +29,7 @@ const FundWalletCardUi = (props: CardProps) => {
   };
   const WALLET_TITLE_MAP: any = {
     [WalletType.ASSET_SPOT]: LANG('现货账户'),
-    [WalletType.ASSET_SWAP]: LANG('币本位合约账户'),
+    // [WalletType.ASSET_SWAP]: LANG('币本位合约账户'),
     [WalletType.ASSET_SWAP_U]: LANG('U本位合约账户'),
     [WalletType.ASSET_TOTAL]: LANG('资产总览'),
   };
@@ -47,20 +47,26 @@ const FundWalletCardUi = (props: CardProps) => {
     ),
     [WalletType.ASSET_TOTAL]: LANG('总资产估值({currency})', { currency: selectedCurrency }),
   };
+
   const onCurrencyChange = (value: string) => {
     setSelectedCurrency(value);
   };
+
   return (
     <div className='fund-wallet-card'>
-      <p className='head-title'>{WALLET_TITLE_MAP[type]}</p>
+      <Desktop>
+        <p className='head-title'>{WALLET_TITLE_MAP[type]}</p>
+      </Desktop>
       <div className='assets-info'>
         <div className='left-asset-wrapper'>
           <div className='title'>
-            {TITLE_MAP[type]}
-            <AssetValueToggleIcon show={!hideBalance} onClick={onEyeClick} className='eye-icon' size={18} />
+            <div className='title-box'>
+              {TITLE_MAP[type]}
+              <AssetValueToggleIcon show={!hideBalance} onClick={onEyeClick} className='eye-icon' size={18} />
+            </div>
             {type !== WalletType.ASSET_TOTAL && (
               <MobileOrTablet>
-                <PnlNavButton type={type} />
+                {type !== WalletType.ASSET_SPOT && <PnlNavButton type={type} />}
               </MobileOrTablet>
             )}
           </div>
@@ -75,12 +81,16 @@ const FundWalletCardUi = (props: CardProps) => {
 export const FundWalletCardUiMemo = memo(FundWalletCardUi);
 const styles = css`
   .fund-wallet-card {
-    background-color: var(--theme-background-color-2);
+    background-color: var(--bg-1);
     width: 100%;
     border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin-bottom: 16px;
     @media ${MediaInfo.mobile} {
-      border-bottom: 1px solid var(--theme-border-color-2);
-      padding-bottom: 20px;
+      margin:0;
+      border-bottom: 1px solid var(--line-1);
       position: relative;
       border-radius: 0px;
       border-top-left-radius: 15px;
@@ -89,25 +99,34 @@ const styles = css`
     .head-title {
       font-size: 16px;
       font-weight: 500;
-      color: var(--theme-font-color-6);
-      padding: 18px 14px 15px;
+      color: var(--text-primary);
       @media ${MediaInfo.mobile} {
         padding: 18px 10px 15px;
       }
-      border-bottom: 1px solid var(--theme-border-color-2);
+      @media ${MediaInfo.mobileOrTablet} {
+        border-bottom: 1px solid var(--line-1);
+      }
     }
     .assets-info {
       position: relative;
       display: flex;
       justify-content: space-between;
-      padding: 20px 14px 20px;
-      align-items: center;
+      padding: 0 0 0 16px;
+      align-items: start;
       @media ${MediaInfo.mobile} {
-        padding: 20px 12px 20px;
-        margin-bottom: 60px;
+        padding:0 0 15px 0;
+        display: flex;
+        flex-direction:column;
       }
       .left-asset-wrapper {
         position: relative;
+        display:flex;
+        flex-direction:column;
+        align-items: start;
+        @media ${MediaInfo.mobile} {
+          margin-bottom:15px;
+          width:100%;
+        }
         .title {
           display: flex;
           flex-direction: row;
@@ -115,16 +134,26 @@ const styles = css`
           line-height: 22px;
           font-size: 16px;
           font-weight: 400;
-          color: var(--theme-font-color-3);
-          .text {
-            cursor: pointer;
-            border-bottom: 1px dashed #798296;
+          color: var(--text-secondary);
+          gap: 8px;
+          @media ${MediaInfo.mobile}{
+            width: 100%;
+            justify-content: space-between;
           }
-          :global(.eye-icon) {
-            cursor: pointer;
-            margin-left: 7px;
-            margin-right: 7px;
+          .title-box{
+            display: flex;
+            align-items: center;
+            .text {
+              cursor: pointer;
+              border-bottom: 1px solid var(--line-1);
+            }
+            :global(.eye-icon) {
+              cursor: pointer;
+              margin-left: 7px;
+              margin-right: 7px;
+            }
           }
+          
         }
         .total {
           display: flex;
@@ -147,10 +176,14 @@ const styles = css`
           }
         }
         :global(.assets-text-wrapper) {
-          margin-top: 10px;
+          margin-top: 16px;
           @media ${MediaInfo.tablet} {
             position: absolute;
             top: 28px;
+          }
+          @media ${MediaInfo.mobile} {
+           margin-top: 24px;
+           gap:12px;
           }
         }
       }
@@ -163,85 +196,26 @@ const styles = css`
           right: 20px;
         }
         @media ${MediaInfo.mobile} {
-          position: absolute;
-          right: 0px;
-          top: 130px;
-          width: 100%;
-        }
-        :global(.mobile-action-button-wrapper) {
-          display: flex;
-          align-items: center;
-          @media ${MediaInfo.mobile} {
-            width: 100%;
-            margin-left: 10px;
-          }
-          :global(.common-button) {
-            padding: 7px 0px;
-            width: 100%;
-          }
-          :global(a.button) {
-            color: inherit;
-          }
-          :global(.primary) {
-            margin-right: 10px;
-            :global(.button) {
-              color: var(--skin-font-color);
-            }
-          }
-          :global(.light-sub-2) {
-            color: var(--theme-font-color-1);
-          }
-          :global(.dropdown-btn) {
-            margin-left: 10px;
-            display: flex;
-            align-items: center;
-            min-width: 58px;
-            :global(.more) {
-              color: var(--theme-font-color-1);
-              font-size: 12px;
-              margin-right: 10px;
-            }
-          }
+          width:100%;
+          gap: 8px;
         }
         :global(.button-wrapper) {
-          margin-right: 10px;
+          margin-right: 15px;
+         
           @media ${MediaInfo.mobile} {
             flex: 1;
-          }
-          &:first-child {
-            @media ${MediaInfo.mobile} {
-              margin-left: 10px;
-            }
+            width:100%;
+            margin-right: 0;
           }
           &:last-child {
             margin-right: 0px;
+          }
+          :global(.common-button){
+            padding: 0 5px;
+            width:72px;
             @media ${MediaInfo.mobile} {
-              margin-right: 10px;
-            }
-          }
-          :global(.common-button) {
-            width: 100%;
-          }
-          :global(.button) {
-            cursor: pointer;
-            padding: 7px 18px;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            font-size: 12px;
-            color: var(--theme-font-color-1);
-            border-radius: 5px;
-          }
-          :global(.primary.active .button) {
-            color: var(--skin-font-color);
-          }
-          :global(.button.active) {
-            border: none;
-            background: var(--skin-primary-color);
-            &:hover {
-              background: var(--skin-primary-color) !important;
-              border: none;
+              padding: 0;
+              width: 100%;
             }
           }
         }

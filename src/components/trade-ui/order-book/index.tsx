@@ -17,7 +17,7 @@ import { OrderTypes } from './types';
 
 export enum ORDER_BOOK_TYPES {
   SPOT = 'SPOT',
-  SWAP = 'SWAP',
+  SWAP = 'SWAP'
 }
 export type ListDataType = { asks: OrderBookItem[]; bids: OrderBookItem[] };
 const store = resso({ list: { asks: [], bids: [] } });
@@ -34,7 +34,7 @@ export const OrderBook = ({ type }: { type: ORDER_BOOK_TYPES }) => {
 
   useEffect(() => {
     if (isSpot(id)) {
-      TradeMap.getSpotById(id).then((res) => {
+      TradeMap.getSpotById(id).then(res => {
         res && setQuoteCoin(res?.quoteCoin || '');
       });
     }
@@ -42,11 +42,13 @@ export const OrderBook = ({ type }: { type: ORDER_BOOK_TYPES }) => {
   const { list } = store;
   const setList = (v: any) => (store.list = v);
 
-  useWs(SUBSCRIBE_TYPES.ws4001, (data) => {
+  useWs(SUBSCRIBE_TYPES.ws4001, data => {
     Swap.Utils.setNewestPrice(data?.price);
-    setMarketDetail(data)
+    setMarketDetail(data);
   });
-  useWs(SUBSCRIBE_TYPES.ws7001, (data) => setList(data));
+  useWs(SUBSCRIBE_TYPES.ws7001, data => {
+    setList(data);
+  });
 
   const isSpotOrderBook = type === ORDER_BOOK_TYPES.SPOT;
   const isSwapOrderBook = type === ORDER_BOOK_TYPES.SWAP;
@@ -95,78 +97,59 @@ export const OrderBook = ({ type }: { type: ORDER_BOOK_TYPES }) => {
         isSwap={ORDER_BOOK_TYPES.SWAP === type}
         OrderBookGroupBtn={<DepthConfig onChange={setDepthConfig} type={type} />}
       >
+        {activeIndex != 0 && <OrderPrice marketDetail={marketDetail} />}
         <div className={clsx('order-book-list-title')}>
           {(isSwapUsdt(id as string) || isSwapSLUsdt(id as string)) && (
             <>
               <span>
-                {LANG('價格')}({marketDetail?.quoteCoin})
+                {LANG('价格')}({marketDetail?.quoteCoin})
               </span>
               <span>
                 {LANG('数量')}({coin})
               </span>
               <VolUnitSelect>
-                <span className='select'>
+                <span className="select">
                   <div>
                     <div>
                       {LANG('累计')}({coin})
                     </div>
-                    <Svg src='/static/images/common/arrow_down.svg' width={12} height={12} className={'icon'} />
+                    <Svg src="/static/images/common/arrow_down.svg" width={12} height={12} className={'icon'} />
                   </div>
                 </span>
-                {/* {({ onClick }) => (
-                  <span className='select' onClick={onClick}>
-                    <div>
-                      <div>
-                        {LANG('累计')}({coin})
-                      </div>
-                      <Svg src='/static/images/common/arrow_down.svg' width={12} height={12} className={'icon'} />
-                    </div>
-                  </span>
-                )} */}
               </VolUnitSelect>
             </>
           )}
           {(isSwapCoin(id as string) || isSwapSLCoin(id as string)) && (
             <>
               <span>
-                {LANG('價格')}({marketDetail?.quoteCoin})
+                {LANG('价格')}({marketDetail?.quoteCoin})
               </span>
               <span>
                 {LANG('数量')}({coin})
               </span>
               <VolUnitSelect>
-                <span className='select'>
+                <span className="select">
                   <div>
                     <div>
                       {LANG('累计')}({coin})
                     </div>
-                    <Svg src='/static/images/common/arrow_down.svg' width={12} height={12} className={'icon'} />
+                    <Svg src="/static/images/common/arrow_down.svg" width={12} height={12} className={'icon'} />
                   </div>
                 </span>
-                {/* {({ onClick }) => (
-                  <span className='select' onClick={onClick}>
-                    <div>
-                      <div>
-                        {LANG('累计')}({coin})
-                      </div>
-                      <Svg src='/static/images/common/arrow_down.svg' width={12} height={12} className={'icon'} />
-                    </div>
-                  </span>
-                )} */}
               </VolUnitSelect>
             </>
           )}
           {isSpot(id as string) && (
             <>
               <span>
-                {LANG('價格')}({quoteCoin})
+                {LANG('价格')}({quoteCoin})
               </span>
               <span>{LANG('数量')}</span>
-              <span>{LANG('成交额')}</span>
+              <span> {LANG('成交额')}</span>
             </>
           )}
         </div>
-        <div className='order-book-content'>
+        <div className="order-book-content t1">
           {online && (
             <>
               {activeIndex === 0 && (
@@ -190,11 +173,11 @@ export const OrderBook = ({ type }: { type: ORDER_BOOK_TYPES }) => {
               )}
               {activeIndex === 1 && (
                 <>
-                  <OrderPrice marketDetail={marketDetail} />
                   <OrderList
                     coinType={type}
                     type={OrderTypes.BUY}
-                    count={count * 2}
+                    // count={list?.asks.length}
+                    count={20}
                     data={list}
                     depthConfig={depthConfig}
                   />
@@ -205,17 +188,18 @@ export const OrderBook = ({ type }: { type: ORDER_BOOK_TYPES }) => {
                   <OrderList
                     coinType={type}
                     type={OrderTypes.SELL}
-                    count={count * 2}
+                    // count={list?.bids.length}
+                    count={20}
                     data={list}
                     depthConfig={depthConfig}
                   />
-                  <OrderPrice marketDetail={marketDetail} />
                 </>
               )}
             </>
           )}
         </div>
-        {isSwapOrderBook && <OrderBookRates data={list} id={id} />}
+        {(activeIndex === 0 || isSpotOrderBook) && <OrderBookRates data={list} id={id} />}
+        {/* {isSpotOrderBook && <OrderBookRates data={list} id={id} />} */}
       </OrderWrap>
 
       <style jsx>{`
@@ -223,15 +207,16 @@ export const OrderBook = ({ type }: { type: ORDER_BOOK_TYPES }) => {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 12px 0 7px;
-          background-color: var(--theme-trade-bg-color-2);
-          color: var(--theme-trade-text-color-2);
-          font-size: 12px;
+          padding: 8px 16px;
           font-weight: 400;
           flex-shrink: 0;
-          padding-right: 12px;
+          color: var(--text-tertiary);
+          font-size: 10px;
+          font-weight: 400;
           @media ${MediaInfo.mobile} {
-            padding: 0 0 6.5px;
+            padding: 0 1rem;
+            margin-top: 1rem;
+            margin-bottom: 8px;
           }
           > span {
             white-space: nowrap;
@@ -240,11 +225,10 @@ export const OrderBook = ({ type }: { type: ORDER_BOOK_TYPES }) => {
             flex: 1;
           }
           > span:nth-child(1) {
-            padding-left: 12px;
             text-align: left;
           }
           > span:nth-child(2) {
-            padding-right: 12px;
+            padding-right: 16px;
             text-align: right;
           }
           > span:nth-child(3) {
@@ -253,11 +237,13 @@ export const OrderBook = ({ type }: { type: ORDER_BOOK_TYPES }) => {
 
           .select {
             cursor: pointer;
-            background: var(--theme-trade-bg-color-1);
             border-radius: 5px;
 
             > div {
               padding: 0 3px;
+              @media ${MediaInfo.mobile} {
+                padding: 0;
+              }
               display: flex;
               align-items: center;
               height: 20px;
@@ -277,9 +263,13 @@ export const OrderBook = ({ type }: { type: ORDER_BOOK_TYPES }) => {
         }
         .order-book-content {
           flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
+          /* display: flex;
+          flex-direction: column; */
+          &.t1 {
+            :global(.order-price) {
+              padding: 16px 16px;
+            }
+          }
         }
       `}</style>
     </>

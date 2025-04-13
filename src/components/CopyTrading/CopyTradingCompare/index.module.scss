@@ -1,0 +1,41 @@
+
+$sm: 768px;
+
+.copyTradingCompare {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  @media (max-width: $sm) {
+    gap: 16px;
+  }
+  .topInfo {
+    position: relative;
+
+    :global(.bg) {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .header {
+      display: flex;
+      flex-direction: column;
+      max-width: var(--const-max-page-width);
+      width: 100%;
+      margin: auto;
+      padding-top: 28px;
+      gap: 34px;
+      @media (max-width: $sm) {
+        gap: 16px;
+        padding: 26px 24px 0 24px;
+      }
+    }
+
+  }
+
+  .bottomInfo {
+    max-width: var(--const-max-page-width);
+    width: 100%;
+    margin: auto;
+  }
+}

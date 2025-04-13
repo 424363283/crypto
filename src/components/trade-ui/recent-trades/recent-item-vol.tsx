@@ -9,6 +9,7 @@ import {
   isSwapSLCoin,
   isSwapSLUsdt,
   isSwapUsdt,
+  MediaInfo
 } from '@/core/utils';
 import { useEffect, useState } from 'react';
 
@@ -58,13 +59,16 @@ export const RecentItemVol = ({ item }: { item: RecentTradeItem }) => {
   }
   return (
     <>
-      <div className='recent-item-right'>{text}</div>
+      <div className="recent-item-right">{text}</div>
       <style jsx>{`
         .recent-item-right {
           padding-right: 12px;
           color: var(--theme-trade-text-color-1);
           flex: 1;
           text-align: right;
+          @media ${MediaInfo.mobile} {
+            padding-right: 1rem;
+          }
         }
       `}</style>
     </>

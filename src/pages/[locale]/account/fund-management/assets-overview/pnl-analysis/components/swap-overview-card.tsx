@@ -43,13 +43,14 @@ export default function SwapOverviewCard(props: SwapOverviewCardProps) {
 }
 const styles = css`
   .overview-card {
+    width: 100%;
     .title {
       color: var(--theme-font-color-3);
       font-size: 14px;
       display: flex;
       align-items: center;
       &:not(:first-child) {
-        margin-top: 30px;
+        margin-top: 36px;
       }
     }
   }

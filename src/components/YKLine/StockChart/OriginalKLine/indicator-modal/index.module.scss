@@ -1,19 +1,22 @@
 .indicatorContent {
-  height: 248px;
+  // height: 248px;
   overflow-y: scroll;
-  padding-top: 16px;
+  padding-top: 14px;
 }
 
 .indicatorChild {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 8px;
-  padding: 12px 0;
-  border-bottom: solid 1px #E8E9EA;
+  // gap: 8px;
+  padding: 0px 0;
+  // border-bottom: solid 1px #E8E9EA;
   box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px 40px;
   .item {
-    width: calc((100% - 16px) / 3);
+    // width: calc((100% - 16px) / 3);
     :global {
       .icon-checkbox span {
         font-size: 14px;
@@ -23,4 +26,33 @@
   &:last-child {
     border-bottom: none;
   }
+}
+
+.kineindicatorName{
+  color: var(--text-primary);
+}
+.indicatorContentTitleName{
+  color: var(--text-secondary);
+
+  
+
+}
+.indicatorCancel{
+  // background: var(--text-primary);
+  cursor: pointer;
+  // color: #fff !important;
+  &:hover{
+    // color:  var(--text-primary) !important;
+    // background:var(--text-primary) !important;
+  }
+}
+.indicatorPrimary{
+  background: var(--brand);
+  color: #fff !important;
+  cursor: pointer;
+
+  &:hover{
+    color: #fff !important;
+    background: var(--brand) !important;
+      }
 }

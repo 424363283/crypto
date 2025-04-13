@@ -10,6 +10,7 @@ import { clsx } from '@/core/utils';
 import { useState } from 'react';
 import { CalcSwapAsset } from '../../../../hooks/use-swap-balance';
 import { TradeHref } from './components/trade-href';
+import { Size } from '@/components/constants';
 
 export const Desktop = ({
   data = [],
@@ -29,7 +30,7 @@ export const Desktop = ({
     <>
       <div className='all-asset-swap-desktop'>
         <div className='header'>
-          <div>{LANG('子钱包')}</div>
+          {/* <div>{LANG('子钱包')}</div> */}
           <div>
             {LANG('钱包余额')}({unit})
           </div>
@@ -47,7 +48,7 @@ export const Desktop = ({
         {data.map((v, i) => {
           const code = isSwapU ? DEFAULT_QUOTE_ID.SWAP_U : DEFAULT_QUOTE_ID.SWAP;
           let accb = v.accb;
-          let totalMargin = v.totalMargin;
+          let totalMargin = v.totalMargin.add(v.unrealisedPNL);
           let canWithdrawAmount = v.canWithdrawAmount;
           if (v.wallet === SWAP_BOUNS_WALLET_KEY) {
             canWithdrawAmount = accb;
@@ -57,26 +58,31 @@ export const Desktop = ({
           return (
             <div className='row-wrapper' key={i}>
               <div className='row'>
-                <div className='wallet' onClick={() => Swap.Assets.walletFormat(v).edit && onOpenWalletFormModal(v)}>
-                  <WalletAvatar type={v.pic} size={26} walletData={Swap.Assets.walletFormat(v)} />
+                {/* <div className='wallet'
+                //  onClick={() => Swap.Assets.walletFormat(v).edit && onOpenWalletFormModal(v)} 隐藏设置子账号弹窗
+                 >
+                  { 
+                    //<WalletAvatar type={v.pic} size={20} walletData={Swap.Assets.walletFormat(v)} /> 
+                  }
                   <div>
                     <div>
                       {Swap.Assets.walletFormat(v).alias}
-                      {Swap.Assets.walletFormat(v).edit && <CommonIcon name='common-edit-gray-0' size={12} />}
+                      {
+                      // Swap.Assets.walletFormat(v).edit && <CommonIcon name='common-edit-gray-0' size={14} />
+                      }
                     </div>
-                    <div className='gray'>{v.remark || '-'}</div>
+                    <div className='gray hidden'>{v.remark || '-'}</div>
                   </div>
-                </div>
+                </div> */}
                 <div>{accb}</div>
                 <div>{totalMargin}</div>
                 <div>{canWithdrawAmount}</div>
-                <div className={Number(v.unrealisedPNL) >= 0 ? 'main-raise' : 'main-fall'}>{v.unrealisedPNL}</div>
+                <div className={Number(v.unrealisedPNL) >= 0 ? 'positive-text' : 'negative-text'}>{v.unrealisedPNL}</div>
                 <div className='swap-button-box'>
-                  <Button type='primary'>
+                  <Button type='primary' size={Size.SM} rounded width={72}>
                     <TradeHref href={`/swap/${code?.toLocaleLowerCase()}`}>
                       {(href) => (
                         <div
-                          className={clsx('trade-button')}
                           onClick={() => {
                             Swap.Info.setWalletId(isSwapU, v.wallet || '');
                             window.location.href = href;
@@ -87,7 +93,7 @@ export const Desktop = ({
                       )}
                     </TradeHref>
                   </Button>
-                  <Button type='light-sub-2' className='button' onClick={() => onOpenTransferModal(code, v.wallet)}>
+                  <Button size={Size.SM} width={72} rounded onClick={() => onOpenTransferModal(code, v.wallet)}>
                     {LANG('划转')}
                   </Button>
                   {!isSwapU && (
@@ -135,12 +141,12 @@ export const Desktop = ({
       </div>
       <style jsx>{`
         .all-asset-swap-desktop {
-          color: var(--theme-trade-text-color-1);
-          padding: 0 16px 16px;
+          color: var(--text-primary);
+          padding: 0 24px 16px;
           .header {
             height: 40px;
-            font-size: 12px;
-            color: var(--theme-trade-text-color-3);
+            font-size: 14px;
+            color: var(--text-tertiary);
             display: flex;
             align-items: center;
             > div {
@@ -165,6 +171,7 @@ export const Desktop = ({
           }
           .row {
             display: flex;
+            font-weight: 500;
             align-items: center;
             > div {
               white-space: nowrap;
@@ -183,7 +190,7 @@ export const Desktop = ({
               align-items: center;
               cursor: pointer;
               > div:last-child {
-                margin-left: 10px;
+                margin-left: 0px;
               }
               > div > div {
                 &:first-child {
@@ -191,7 +198,7 @@ export const Desktop = ({
                   align-items: center;
                   font-weight: 500;
                   :global(> *:last-child) {
-                    margin-left: 5px;
+                    margin-left: 16px;
                   }
                 }
                 &:last-child {

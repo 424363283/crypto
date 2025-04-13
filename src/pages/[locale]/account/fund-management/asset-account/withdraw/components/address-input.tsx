@@ -1,7 +1,7 @@
 import CommonIcon from '@/components/common-icon';
 import { getAssetsListApi } from '@/core/api';
 import { LANG, TrLink } from '@/core/i18n';
-import { message } from '@/core/utils';
+import { MediaInfo, message } from '@/core/utils';
 import { useEffect, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import css from 'styled-jsx/css';
@@ -31,9 +31,10 @@ type AddressInputProps = {
   cIndex: number;
   readOnly?: boolean;
   remoteAddress: string;
+  showLabel?: boolean;
 };
 
-export const AddressInput = ({ onChange, currency, chains, cIndex, readOnly, remoteAddress }: AddressInputProps) => {
+export const AddressInput = ({ onChange, currency, chains, cIndex, readOnly, remoteAddress, showLabel = true }: AddressInputProps) => {
   const [list, setList] = useState<TAddressItem[]>([]);
   const [showSelect, setShowSelect] = useState(false);
   const [selectIndex, setSelectIndex] = useState<number | null>(null);
@@ -65,8 +66,8 @@ export const AddressInput = ({ onChange, currency, chains, cIndex, readOnly, rem
   }, [chains]);
 
   const addresses = list?.filter((item) => {
-    if (chains?.[cIndex]?.network === item.network && item.common) return true;
-    if (item.currency !== currency || chains?.[cIndex]?.network !== item.network) return false;
+    if (chains?.[cIndex]?.network === item.chain && item.common) return true;
+    if (item.currency !== currency || chains?.[cIndex]?.network !== item.chain) return false;
     return true;
   });
 
@@ -106,7 +107,7 @@ export const AddressInput = ({ onChange, currency, chains, cIndex, readOnly, rem
   return (
     <div className='address-input'>
       <div className='header'>
-        <div className='label'>{LANG('提币地址')}</div>
+        {showLabel && <div className='label'>{LANG('提币地址')}</div>}
         <TrLink className='manage' href='/account/dashboard' query={{ type: 'address' }} native>
           {LANG('地址管理')}
         </TrLink>
@@ -115,7 +116,7 @@ export const AddressInput = ({ onChange, currency, chains, cIndex, readOnly, rem
         <input
           value={value}
           onChange={_onChange}
-          placeholder={LANG('请选择提币地址')}
+          placeholder={LANG('请选择或输入提币地址')}
           onFocus={() => {
             setActive(true);
             setShowSelect(true);
@@ -133,7 +134,7 @@ export const AddressInput = ({ onChange, currency, chains, cIndex, readOnly, rem
             }
           }}
         >
-          <CommonIcon size={16} name='common-copy-2-grey-0' className='copy-icon' />
+          <CommonIcon size={12} name='common-copy' className='copy-icon' />
         </CopyToClipboard>
         <div className='arrow'></div>
       </div>
@@ -160,7 +161,7 @@ export const AddressInput = ({ onChange, currency, chains, cIndex, readOnly, rem
                       {item.remark}
                     </div>
                   )}
-                  <div className='chain'>{item.network}</div>
+                  <div className='chain'>{item.chain}</div>
                   {item?.white && <div className='tag'>{LANG('已验证')}</div>}
                   {item?.common && <div className='tag'>{LANG('已通用')}</div>}
                 </div>
@@ -185,50 +186,68 @@ const styles = css`
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
+      margin-top: -8px;
       margin-bottom: 14px;
+      @media ${MediaInfo.mobile}{
+        margin-bottom: 5px;
+      }
       .label {
         font-size: 16px;
         font-weight: 500;
-        color: var(--theme-font-color-1);
+        color: var(--text-brand);
+        @media ${MediaInfo.mobile}{
+          font-size: 14px;
+          color: var(--text-secondary);
+        }
       }
 
       :global(.manage) {
         line-height: 20px;
         font-size: 14px;
         font-weight: 500;
-        color: var(--skin-primary-color);
+        color: var(--text-primary);
       }
     }
     .input {
-      background: var(--theme-background-color-8);
+      background: var(--fill-3);
       padding-left: 20px;
       position: relative;
       width: 100%;
-      height: 100%;
-      border-radius: 8px;
+      height: 56px;
+      border-radius: 16px;
       display: flex;
       align-items: center;
+      @media ${MediaInfo.mobile}{
+        height: 40px;
+        border-radius: 8px;
+        width: auto;
+      }
       &:hover,
       &.active {
-        border-color: var(--skin-primary-color);
-      }
-      &.active {
-        box-shadow: var(--skin-focus-shadow-1);
+        box-shadow: 0 0 0 1px var(--brand);
       }
       input {
-        background: var(--theme-background-color-8);
+        background: var(--fill-3);
         width: 100%;
         color: var(--theme-font-color-1);
         font-size: 14px;
         font-weight: 500;
         padding-right: 48px;
         border: 0;
+        border-radius: 16px;
+        @media ${MediaInfo.mobile}{
+          border-radius: 8px;
+          height: 38px;
+        }
       }
       input,
       label {
         line-height: 48px;
         font-size: 14px;
         font-weight: 500;
+        @media ${MediaInfo.mobile}{
+          line-height: 40px;
+        }
       }
       label {
         cursor: text;

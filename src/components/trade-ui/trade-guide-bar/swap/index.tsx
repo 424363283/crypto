@@ -42,7 +42,7 @@ const Index = ({}: {}) => {
             <TrLink className='gift' href='/novice-task'>
               <CommonIcon name='common-guide-gift-0' width={16} height={16} enableSkin />
               <div>{LANG('新人福利最高可得$2,888 ')}</div>
-              <CommonIcon name='common-arrow-right-active-0' width={10} height={10} enableSkin />
+              <CommonIcon name='common-arrow-right-active-0' width={24} height={24} enableSkin />
             </TrLink>
           </div>
           <div className='arrow' onClick={() => setShow(!show)}>
@@ -122,7 +122,7 @@ const Index = ({}: {}) => {
       </div>
       <style jsx>{`
         .swap-trade-guide-bar {
-          background-color: var(--theme-trade-bg-color-2);
+          background-color: var(--bg-1);
           border-radius: var(--theme-trade-layout-radius);
           margin-bottom: var(--theme-trade-layout-gap);
           padding: 0 10px;
@@ -199,7 +199,7 @@ const Index = ({}: {}) => {
                 transform: rotate(-45deg);
                 border-top: 42px solid transparent;
                 border-left: 42px solid transparent;
-                border-right: 42px solid var(--theme-trade-bg-color-2);
+                border-right: 42px solid var(--bg-1);
               }
               :global(> div.right-arrow) {
                 z-index: 0;

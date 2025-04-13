@@ -1,3 +1,4 @@
+import { infoInstance } from './info';
 import { Position } from './position';
 import { Trade } from './trade';
 
@@ -13,4 +14,5 @@ export { AccountType, OrderType, PositionSide, StopType } from './trade/types';
 export const Lite = {
   Trade: Trade,
   Position: Position,
+  Info: infoInstance
 };

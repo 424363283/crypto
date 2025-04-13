@@ -50,10 +50,12 @@ const useBalance = ({ usdt }: { usdt: boolean } = { usdt: false }) => {
  */
 export const useMarginTotal = (usdt: boolean, balance: BalanceData, validatePositionMode?: boolean) => {
   if (usdt) {
-    return balance.accb - balance.frozen;
+    return balance.equity - balance.frozen;
+    // return balance.accb - balance.frozen;
   } else {
     if (!validatePositionMode) {
-      return balance.accb;
+      return balance.equity;
+      // return balance.accb;
     }
     const positions = Swap.Order.getPosition(usdt);
     const { getValue } = useRate();

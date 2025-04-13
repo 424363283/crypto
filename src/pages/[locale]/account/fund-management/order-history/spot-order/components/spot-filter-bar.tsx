@@ -1,15 +1,20 @@
+import { Button } from '@/components/button';
 import { DateRangePicker } from '@/components/date-range-picker';
 import { ExportRecord, EXPORTS_TYPE } from '@/components/modal';
+import { SpotCancelAllModal } from '@/components/order-list/spot/components/spot-cancel-all-modal';
 import { Desktop } from '@/components/responsive';
 import { Select } from '@/components/select';
 import SelectCoin from '@/components/select-coin';
 import { LANG } from '@/core/i18n';
 import { Group, GroupItem } from '@/core/shared';
-import { clsx, getFormatDateRange, getUrlQueryParams, MediaInfo } from '@/core/utils';
+import { clsx, getFormatDateRange, getUrlQueryParams, MediaInfo, Polling } from '@/core/utils';
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
 import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
+import { Loading } from '@/components/loading';
+import { closeSpotOrderApi, getSpotPositionListApi } from '@/core/api';
+import { message } from '@/core/utils';
 
 type SpotFilterBarProps = {
   onSearch: ({
@@ -29,6 +34,7 @@ type SpotFilterBarProps = {
     startDate: string;
     endDate: string;
   }) => void;
+  filterData?: any[];
 };
 const typeString = [
   {
@@ -43,18 +49,18 @@ const typeString = [
     label: LANG('市价委托'),
     value: '1',
   },
-  {
-    label: LANG('限价止盈止损'),
-    value: '2',
-  },
-  {
-    label: LANG('市价止盈止损'),
-    value: '3',
-  },
-  {
-    label: LANG('被动限价'),
-    value: '4',
-  },
+  // {
+  //   label: LANG('限价止盈止损'),
+  //   value: '2',
+  // },
+  // {
+  //   label: LANG('市价止盈止损'),
+  //   value: '3',
+  // },
+  // {
+  //   label: LANG('被动限价'),
+  //   value: '4',
+  // },
 ];
 const dicString = [
   {
@@ -89,26 +95,39 @@ const coinPairString = [
     label: 'USDT',
     value: 0,
   },
-  {
-    label: 'USDC',
-    value: 1,
-  },
-  {
-    label: 'BUSD',
-    value: 2,
-  },
-  {
-    label: 'EUR',
-    value: 3,
-  },
-  {
-    label: 'GBP',
-    value: 4,
-  },
+  // {
+  //   label: 'USDC',
+  //   value: 1,
+  // },
+  // {
+  //   label: 'BUSD',
+  //   value: 2,
+  // },
+  // {
+  //   label: 'EUR',
+  //   value: 3,
+  // },
+  // {
+  //   label: 'GBP',
+  //   value: 4,
+  // },
+];
+
+
+const statusString = [
+  { label: LANG('全部'), value: 'all' },
+  { label: LANG('等待委托'), value: '1' },
+  { label: LANG('委托失败'), value: '2' },
+  { label: LANG('已委托'), value: '3' },
+  { label: LANG('等待撤单'), value: '4' },
+  { label: LANG('正在撤单'), value: '5' },
+  { label: LANG('全部撤单'), value: '6' },
+  { label: LANG('部分成交'), value: '7' },
+  { label: LANG('全部成交'), value: '8' },
 ];
 
 export const SpotFilterBar = (props: SpotFilterBarProps) => {
-  const { onSearch } = props;
+  const { onSearch, filterData = [] } = props;
   const subPage = getUrlQueryParams('tab');
   const { start = '', end = '' } = getFormatDateRange(new Date(), 7, true);
   const [state, setState] = useImmer({
@@ -139,6 +158,12 @@ export const SpotFilterBar = (props: SpotFilterBarProps) => {
     },
     // etf
     etfList: [] as string[],
+    // 状态
+    status: {
+      label: '全部',
+      value: 0,
+    },
+    spotCancelAllModalVisible: false,
   });
   const {
     coinPair,
@@ -153,6 +178,8 @@ export const SpotFilterBar = (props: SpotFilterBarProps) => {
     direction,
     timeOptions,
     etfList,
+    status,
+    spotCancelAllModalVisible
   } = state;
   const searchOptions = {
     startDate,
@@ -162,6 +189,7 @@ export const SpotFilterBar = (props: SpotFilterBarProps) => {
     side: Number(direction.value),
     type: type.value,
     time: timeOptions.value,
+    status: Number(status.value)
   };
   function filterSpotByCode(spot: GroupItem[]): GroupItem[] {
     const filtered: GroupItem[] = [];
@@ -216,6 +244,11 @@ export const SpotFilterBar = (props: SpotFilterBarProps) => {
       draft.direction = v;
     });
   };
+  const onChangeStatus = (v: { label: string; value: number }) => {
+    setState((draft) => {
+      draft.status = v;
+    });
+  };
   const onChangeDateMode = (option: { label: string; value: string }) => {
     //实际持续天数设置
     const duration = [7, 30, 90];
@@ -236,7 +269,7 @@ export const SpotFilterBar = (props: SpotFilterBarProps) => {
       draft.endDate = end.endOf('day').format('YYYY-MM-DD H:m:s');
     });
   };
-  const shouldShowCoinPairSelect = coin !== LANG('全部') && coin !== '' && !etfList.includes(coin);
+  const shouldShowCoinPairSelect = false && coin !== LANG('全部') && coin !== '' && !etfList.includes(coin);
   const handleSelectCoin = (code: number[]) => {
     if (!code.length) return;
     const coinItem = codeOptions[code[0]];
@@ -274,15 +307,34 @@ export const SpotFilterBar = (props: SpotFilterBarProps) => {
       draft.symbol = `${coin}_${pair.label}`;
     });
   };
+  const setCancelAllModalVisible = (value: boolean) => {
+    setState((draft) => {
+      draft.spotCancelAllModalVisible = value;
+    });
+  }
+  const onSubmitCancelOrders = async () => {
+    Loading.start();
+    const orderIds = filterData.map((item: any) => item.id);
+    const result = await closeSpotOrderApi(orderIds);
+    if (result.code === 200) {
+      message.success(LANG('撤单成功'));
+      setCancelAllModalVisible(false);
+      // window.location.reload();
+    } else {
+      message.error(result.message);
+    }
+    Loading.end();
+  }
   return (
     <div className='spot-filter-bar-wrapper'>
+      <Desktop>
       <div className='box'>
         <div className='left-bar'>
           <SelectCoin
             options={codeOptions}
             label={LANG('币种')}
             vertical
-            width={142}
+            width={138}
             className='spot-history-select-coin'
             values={[coinIndex]}
             onChange={(code: number[]) => handleSelectCoin(code)}
@@ -291,7 +343,7 @@ export const SpotFilterBar = (props: SpotFilterBarProps) => {
             <Select
               vertical
               options={coinPairString}
-              width={110}
+              width={138}
               values={[coinPair]}
               onChange={onChangeCoinPair}
               className='select-coin-pair'
@@ -302,7 +354,7 @@ export const SpotFilterBar = (props: SpotFilterBarProps) => {
             <Select
               label={LANG('类型')}
               vertical
-              width={130}
+              width={138}
               options={typeString}
               values={[type]}
               onChange={([v]) => onChangeType(v)}
@@ -311,21 +363,34 @@ export const SpotFilterBar = (props: SpotFilterBarProps) => {
           <Select
             vertical
             label={LANG('方向')}
-            width={110}
+            width={138}
             options={dicString}
             values={[direction]}
             wrapperClassName='spot-history-select-dic'
             onChange={([v]) => onChangeDic(v)}
           />
-          {(subPage === '1' || subPage === '2') && (
+          {/* subPage === '1' && (
             <Select
               vertical
-              width={110}
-              options={dateModeString}
-              values={[timeOptions]}
-              onChange={([v]) => onChangeDateMode(v)}
+              label={LANG('状态')}
+              width={138}
+              options={statusString}
+              values={[status]}
+              wrapperClassName='spot-history-select-dic'
+              onChange={([v]) => onChangeStatus(v)}
             />
-          )}
+          ) */}
+          {/*
+            (subPage === '1' || subPage === '2') && (
+              <Select
+                vertical
+                width={180}
+                options={dateModeString}
+                values={[timeOptions]}
+                onChange={([v]) => onChangeDateMode(v)}
+              />
+            )
+          */}
           <Desktop>
             {(subPage === '1' || subPage === '2') && (
               <DateRangePicker
@@ -336,23 +401,61 @@ export const SpotFilterBar = (props: SpotFilterBarProps) => {
               />
             )}
           </Desktop>
-          <div className={clsx('search-button')} onClick={onSearchClick}>
+          <Button rounded width={72} className={clsx('search-button')} onClick={onSearchClick}>
             {LANG('查询')}
-          </div>
+          </Button>
+          {/* <Button
+            className='reset-button'
+            width={72}
+            rounded
+            onClick={() => {
+              setState((draft) => {
+                draft.coinIndex = 0;
+                draft.coin = '';
+                draft.coinPair = {
+                  label: 'USDT',
+                  value: 0,
+                };
+                draft.commodity = '';
+                draft.symbol = '';
+                draft.type = {
+                  label: LANG('全部'),
+                  value: 'all',
+                };
+                draft.direction = {
+                  label: LANG('全部'),
+                  value: 0,
+                };
+                draft.startDate = start;
+                draft.endDate = end;
+              });
+            }}
+          >
+            {LANG('重置')}
+          </Button> */}
         </div>
         <Desktop>
-          <div className='right-bar'>{subPage === '1' && <ExportRecord type={EXPORTS_TYPE.SPOT_ORDER} />}</div>
+          <div className='right-bar'>
+            {subPage === '0' && <Button width={96} rounded disabled={!filterData.length} onClick={() => setCancelAllModalVisible(true)} >
+              {LANG('一键撤销')}
+            </Button>}
+            {subPage === '1' && <ExportRecord type={EXPORTS_TYPE.SPOT_ORDER} />}
+          </div>
         </Desktop>
       </div>
-
+      </Desktop>
+      <SpotCancelAllModal
+        open={spotCancelAllModalVisible}
+        onClose={() => setCancelAllModalVisible(false)}
+        submit={onSubmitCancelOrders}
+      />
       <style jsx>{styles}</style>
     </div>
   );
 };
 const styles = css`
   .spot-filter-bar-wrapper {
-    background-color: var(--theme-background-color-2);
-    height: 55px;
+    background-color: var(--bg-1);
     @media ${MediaInfo.mobile} {
       padding: 0 10px;
       overflow-x: auto;
@@ -361,8 +464,8 @@ const styles = css`
     }
     .box {
       display: flex;
-      margin-top: 13px;
-      padding: 0 20px;
+      margin-top: 24px;
+      padding: 0 24px;
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
@@ -379,28 +482,19 @@ const styles = css`
     .left-bar {
       display: flex;
       align-items: center;
-      :global(.picker-content) {
-        margin-right: 10px;
-      }
+      gap: 24px;
     }
     :global(.contract-select) {
       margin-right: 20px;
     }
-    .search-button {
-      background-color: var(--theme-background-color-14);
-      cursor: pointer;
-      height: 32px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      padding: 6px 10px;
-      color: var(--skin-color-active);
-      vertical-align: middle;
-      text-align: center;
-      min-width: 50px;
-    }
-    :global(.select-wrapper) {
-      margin-right: 10px;
+    :global(.search-button) {
+        color: var(--text-brand);
+        text-align: center;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 14px; /* 100% */
     }
   }
 `;
+

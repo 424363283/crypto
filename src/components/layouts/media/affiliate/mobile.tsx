@@ -36,7 +36,7 @@ export const AffiliateMobileLayout = ({ children }: any) => {
               <div className='uid'>
                 UID: {uid}
                 <CopyToClipboard text={uid || ''} onCopy={() => message.success(LANG('复制成功'))}>
-                  <CommonIcon name='common-copy-2-grey-0' size={12} className='copy' />
+                  <CommonIcon size={10} name='common-copy' className='copy' />
                 </CopyToClipboard>
               </div>
             </div>

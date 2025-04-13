@@ -6,7 +6,6 @@ import { checkIsUsdtType } from '../../../assets-overview/helper';
 import { SWAP_FUNDS_TYPES } from '../constants';
 
 import { isSwapDemo } from '@/core/utils/src/is';
-const _isSwapDemo = isSwapDemo();
 type SwapAssetsFlowItem = {
   amount: string;
   currency: string;
@@ -17,6 +16,7 @@ type SwapAssetsFlowItem = {
   time: number;
   type: string;
 };
+
 export const useAssetsFlowColumns = () => {
   const isUsdtType = checkIsUsdtType();
   Swap.Assets.getWallet({ usdt: isUsdtType });
@@ -33,7 +33,7 @@ export const useAssetsFlowColumns = () => {
       ),
     },
     {
-      title: LANG('币种'),
+      title: LANG('合约'),
       dataIndex: 'symbol',
       render: (code: string) => (
         <div>
@@ -42,19 +42,19 @@ export const useAssetsFlowColumns = () => {
         </div>
       ),
     },
-    {
-      title: LANG('子钱包账户'),
-      dataIndex: 'subWallet',
-      render: (v: string, item: any) => {
-        return (
-          <span>
-            {_isSwapDemo
-              ? LANG('模拟交易账户')
-              : item?.alias || Swap.Assets.getWallet({ walletId: v, usdt: isUsdtType, withHooks: false })?.alias}
-          </span>
-        );
-      },
-    },
+    // {
+    //   title: LANG('子钱包账户'),
+    //   dataIndex: 'subWallet',
+    //   render: (v: string, item: any) => {
+    //     return (
+    //       <span>
+    //         {_isSwapDemo
+    //           ? LANG('模拟交易账户')
+    //           : item?.alias || Swap.Assets.getWallet({ walletId: v, usdt: isUsdtType, withHooks: false })?.alias}
+    //       </span>
+    //     );
+    //   },
+    // },
     {
       title: LANG('类型'),
       dataIndex: 'type',
@@ -69,12 +69,17 @@ export const useAssetsFlowColumns = () => {
         return SWAP_FUNDS_TYPES[type] || '--';
       },
     },
-
     {
       title: LANG('总额'),
       dataIndex: 'amount',
       render: (amount: number, item: SwapAssetsFlowItem) => {
-        return isUsdtType ? amount : amount.toFixed(Number(item.basePrecision));
+        const formatNum = isUsdtType ? amount : amount.toFixed(Number(item.basePrecision));
+        if(item.type === 'taker_fee' || item.type === 'maker_fee') {
+          return formatNum;
+        }
+        return <span style={{ color: Number(formatNum) >= 0 ? 'var(--color-green)' : 'var(--color-red)' }}>
+          {formatNum}
+        </span>
       },
     },
     {

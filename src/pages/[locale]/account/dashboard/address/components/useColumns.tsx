@@ -71,7 +71,7 @@ export const useColumns = ({
 
         return (
           <Dropdown overlay={actionMenu} trigger={['click']}>
-            <CommonIcon name='common-more-option-0' size={12} style={{ cursor: 'pointer' }} />
+            <CommonIcon name='common-more-option' size={20} style={{ cursor: 'pointer' }} />
           </Dropdown>
         );
       },

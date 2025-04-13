@@ -4,6 +4,8 @@ import { MediaInfo, message } from '@/core/utils';
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
+import { Desktop, Mobile } from '@/components/responsive';
+
 
 interface TopInfoCardProps {
   balance: number;
@@ -55,12 +57,22 @@ export const TopInfoCard = forwardRef((props: TopInfoCardProps, ref) => {
         <p className='name'>{LANG('最小提币数量')}</p>
         <p className='num'>{`${minWithdraw || 0} ${currency || ''}`}</p>
       </div>
-      <div className='card'>
-        <p className='name'>{LANG('24H剩余提币额度')}</p>
-        <p className='num'>
-          {amount} {avaiableCurrency}/{total} {avaiableCurrency}
-        </p>
-      </div>
+      <Desktop>
+        <div className='card'>
+          <p className='name'>{LANG('24H剩余提币额度')}</p>
+          <p className='num'>
+            {amount} {avaiableCurrency}/{total} {avaiableCurrency}
+            </p>
+        </div>
+      </Desktop>
+      <Mobile>
+        <div className='card'>
+          <p className='name'>{LANG('24H剩余额度')}</p>
+          <p className='num'>
+            {amount} {avaiableCurrency}
+            </p>
+        </div>
+      </Mobile>
       <style jsx>{styles}</style>
     </div>
   );
@@ -70,17 +82,18 @@ const styles = css`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-left: 30px;
     max-width: 587px;
     width: 100%;
+    border-radius: 8px;
     @media ${MediaInfo.mobileOrTablet} {
-      margin-top: 20px;
+      margin: 12px 12px 0;
+      width: calc(100% - 24px);
     }
     .card {
+      flex: 1;
       &:not(:last-child) {
         flex: 1;
         border-right: 1px solid var(--skin-border-color-1);
-        margin-right: 20px;
       }
       .name {
         font-size: 12px;

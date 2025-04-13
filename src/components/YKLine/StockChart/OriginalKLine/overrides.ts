@@ -5,10 +5,10 @@ import { Color } from '../types';
 
 export function getTheme (theme: string) {
   const isLight = theme === 'light';
-  const lineColor = !isLight ? 'rgba(232, 233, 234, 0.5)' : 'rgba(45, 48, 51, 0.5)';
-  const textColor = !isLight ? '#131722' : '#d1d4dc';
-  const crosshairLineColor = !isLight ? '#AFAFB4' : '#8E9092';
-  const crosshairBackgroundColor = !isLight ? '#191A24' : '#454A52';
+  const lineColor = !isLight ? 'rgba(45, 48, 50, 0.1)' : 'rgba(45, 48, 50, 0.1)';
+  const textColor = !isLight ? '#717171' : '#d1d4dc';
+  const crosshairLineColor = !isLight ? '#717171' : '#8E9092';
+  const crosshairBackgroundColor = !isLight ? '#717171' : '#454A52';
 
   return {
     grid: {

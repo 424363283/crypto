@@ -1,22 +1,20 @@
-import { useTheme } from '@/core/hooks';
+import { useTheme, useResponsive } from '@/core/hooks';
 import { useRouter } from '@/core/hooks/src/use-router';
 import { LANG } from '@/core/i18n';
 import { EVENT_NAME, EVENT_TRACK } from '@/core/sensorsdata';
 import { useAppContext } from '@/core/store';
-import { MediaInfo, isTradePage } from '@/core/utils';
+import { MediaInfo, getUrlQueryParams, isTradePage } from '@/core/utils';
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 import { ReactNode, memo, useEffect, useState } from 'react';
 import { useImmer } from 'use-immer';
 import CommonIcon from '../common-icon';
-import { Desktop, DesktopOrTablet, MobileOrTablet } from '../responsive';
+import { Desktop, DesktopOrTablet, MobileOrTablet, Mobile } from '../responsive';
 import { TrActiveLink } from './components/active-link';
 import CommonMenuItem from './components/common-menu';
 import { ContractMenu } from './components/contract-menu';
 import AboutDownload from './components/download';
 import { NavDrawer } from './components/drawer/';
 import { headerSwapDemoGuideStore } from './components/header-swap-demo-guide';
-import ConfigIcon from './components/icon/config-icon';
 import DownloadIcon from './components/icon/download-icon';
 import GlobalIcon from './components/icon/global-config-icon';
 import LogoIcon from './components/icon/logo-icon';
@@ -24,6 +22,12 @@ import ThemeIcon from './components/icon/theme-icon';
 import Menu from './components/menu';
 import SKinMenuContent from './components/skin-menu';
 import { HEADER_PATH } from './constants';
+import SpotCoinContent from './components/spot-coin-content';
+import MobileDrawer from '../drawer/mobile-drawer';
+import { NavCard } from '@/pages/[locale]/account/dashboard/components/nav-card';
+import { NavList } from '@/pages/[locale]/account/fund-management/components/common-layout';
+import { useNavMap } from '@/pages/[locale]/account/fund-management/assets-overview/hooks/use-nav-map';
+
 const LoginAndRegister = dynamic(() => import('./components/login-register-btn'), { ssr: false });
 const DERIVATIVE_PATH = ['spot', 'swap', 'lite'];
 const PARTNER_SHIP_PATH = [HEADER_PATH.AFFILIATE, HEADER_PATH.ARMY];
@@ -34,24 +38,26 @@ function HeaderComponent({
   hideBorderBottom,
   desktopMenus,
   renderNavDrawer,
+  backgroundColor
 }: {
   exData?: any;
   hideBorderBottom?: boolean;
   desktopMenus?: ReactNode;
   renderNavDrawer?: (props: { onClose: () => void; open?: boolean }) => ReactNode;
+  backgroundColor?: string;
 }) {
   const router = useRouter();
-  const { isLogin } = useAppContext();
-  const enableLite = process.env.NEXT_PUBLIC_LITE_ENABLE === 'true';
+  // const { isLogin } = useAppContext();
+  // const enableLite = process.env.NEXT_PUBLIC_LITE_ENABLE === 'true';
   const [openNav, setOpenNav] = useState(false);
-  const [bgColor, setBgColor] = useState('transparent');
+  const [bgColor, setBgColor] = useState(backgroundColor || 'var(--bg-1)');
   const pathname = router.asPath;
-  const isZh = router.query.locale === 'zh';
+  // const isZh = router.query.locale === 'zh';
   const [activeState, setActiveState] = useImmer({
     isDerivativeActive: false,
     isSpotCoinActive: false,
     isPartnerShipActive: false,
-    isBuyCoinActive: false,
+    isBuyCoinActive: false
   });
   const { showDemoMenu } = headerSwapDemoGuideStore;
   const { isDerivativeActive, isSpotCoinActive, isPartnerShipActive, isBuyCoinActive } = activeState;
@@ -68,23 +74,28 @@ function HeaderComponent({
     setDownloadIconActive(false);
   };
 
+  //显示侧边栏
   const showNav = () => {
     setOpenNav(true);
   };
+
+  //关闭侧边栏
   const onCloseNavDrawer = () => {
     setOpenNav(false);
   };
+
+  const [urlType, setUrlType] = useState('');
+
   useEffect(() => {
     // 衍生品
     function checkIsDerivativePath(path: string) {
       const splitPath = path.split('/');
-      return DERIVATIVE_PATH.some((key) => {
+      return DERIVATIVE_PATH.some(key => {
         if (key === 'spot') {
           const index = splitPath.indexOf(key);
           const lastPathname = splitPath[splitPath.length - 1];
           return (index > -1 && lastPathname?.includes('3l')) || lastPathname?.includes('3s');
         }
-
         return splitPath.includes(key);
       });
     }
@@ -98,82 +109,99 @@ function HeaderComponent({
     const isDerivativeActive = checkIsDerivativePath(pathname);
 
     const isSpot = checkIsSpotCoin();
-    const isSpotCoinActive = isSpot && SPOT_COIN_PATH.some((path) => pathname.includes(path));
-    const isPartnerShipActive = PARTNER_SHIP_PATH.some((path) => pathname.includes(path));
-    const isBuyCoinActive = BUY_COIN_PATH.some((path) => pathname.includes(path));
-    setActiveState((draft) => {
+    const isSpotCoinActive = isSpot && SPOT_COIN_PATH.some(path => pathname.includes(path));
+    const isPartnerShipActive = PARTNER_SHIP_PATH.some(path => pathname.includes(path));
+    const isBuyCoinActive = BUY_COIN_PATH.some(path => pathname.includes(path));
+    setActiveState(draft => {
       draft.isDerivativeActive = isDerivativeActive;
       draft.isSpotCoinActive = isSpotCoinActive;
       draft.isPartnerShipActive = isPartnerShipActive;
       draft.isBuyCoinActive = isBuyCoinActive;
     });
+
+    const type = getUrlQueryParams('type');
+    setUrlType(type);
+
   }, [pathname]);
+
   useEffect(() => {
-    const handleScroll = () => {
-      if (window?.scrollY > 0) {
-        setBgColor(!isDark ? '#fff' : 'var(--theme-background-color-2)');
-      } else {
-        setBgColor('transparent');
-      }
-    };
-    if (window?.scrollY > 0) {
-      setBgColor(!isDark ? '#fff' : 'var(--theme-background-color-2)');
-    }
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    // const handleScroll = () => {
+    //   if (window?.scrollY > 0) {
+    //     setBgColor(!isDark ? '#fff' : 'var(--bg-1)');
+    //   } else {
+    //     setBgColor(hasBgColor ?'var(--fill-2)': 'var(--bg-1)');
+    //   }
+    // };
+    // window.addEventListener('scroll', handleScroll);
+    // return () => {
+    //   window.removeEventListener('scroll', handleScroll);
+    // };
   }, [isDark]);
+
   let dividedLine = isDark ? '/static/images/header/dark-icon-line.svg' : '/static/images/header/icon-line.svg';
   const onContractLeftMenuHover = (id: number) => {
     setContractMenuHoverIndex(id);
   };
-  const renderBuyCrypto = () => {
-    if (!isZh) {
-      return (
-        <Menu
-          showArrow
-          width='235px'
-          height='157px'
-          position='left:0'
-          content={
-            <CommonMenuItem
-              menuList={[
-                {
-                  name: LANG('快捷买币'),
-                  tips: LANG('一件买币，快捷交易'),
-                  href: HEADER_PATH.BUY_CRYPTO,
-                  newTag: false,
-                },
-                {
-                  name: 'P2P',
-                  tips: LANG('多种方式，0手续费交易'),
-                  newTag: true,
-                  href: HEADER_PATH.P2P_ADVERTISE_LIST,
-                },
-              ]}
-            />
-          }
-          isActive={isBuyCoinActive}
-        >
-          {LANG('买币')}
-        </Menu>
-      );
-    }
-    return <TrActiveLink href={HEADER_PATH.BUY_CRYPTO}>{LANG('快捷买币')}</TrActiveLink>;
-  };
+  // const renderBuyCrypto = () => {
+  //   if (!isZh) {
+  //     return (
+  //       <Menu
+  //         showArrow
+  //         width='235px'
+  //         height='157px'
+  //         position='left:0'
+  //         content={
+  //           <CommonMenuItem
+  //             menuList={[
+  //               {
+  //                 name: LANG('快捷买币'),
+  //                 tips: LANG('一件买币，快捷交易'),
+  //                 href: HEADER_PATH.BUY_CRYPTO,
+  //                 newTag: false,
+  //               },
+  //               {
+  //                 name: 'P2P',
+  //                 tips: LANG('多种方式，0手续费交易'),
+  //                 newTag: true,
+  //                 href: HEADER_PATH.P2P_ADVERTISE_LIST,
+  //               },
+  //             ]}
+  //           />
+  //         }
+  //         isActive={isBuyCoinActive}
+  //       >
+  //         {LANG('买币')}
+  //       </Menu>
+  //     );
+  //   }
+  //   return <TrActiveLink href={HEADER_PATH.BUY_CRYPTO}>{LANG('快捷买币')}</TrActiveLink>;
+  // };
+  const titleList :any = {
+    'overview':'账户总览',
+    'security-setting': '安全中心',
+    'address': '地址管理',
+    'setting': '账户设置',
+    'spot': '现货总览',
+    'swap-u': 'U本位账户',
+    'records': '订单记录',
+    'fund-history':'资金记录'
+  }
+ 
+  const [navShow, setNavShow] = useState(false);
+  const typeList = ['overview', 'security-setting', 'address', 'setting', 'spot', 'swap-u', 'records', 'fund-history'];
+  const getTitle = (type?: any) => {
+    if (pathname.includes('account/fund-management/assets-overview') && (!type || type == 'overview'  )) return '资产总览'
+    if (pathname.includes('account/dashboard') && (!type || type == 'overview'  )) return '账户总览'
+    return titleList[type];
+  }
+  const { NAV_MAP } = useNavMap(false);
+
   return (
     <>
-      <header style={{ backgroundColor: bgColor }}>
-        <div className='left'>
-          <TrActiveLink aria-label='home' href='' style={{ paddingRight: 20, paddingLeft: 18 }}>
-          <Image
-            src='/static/images/header/media/logo_fill.svg'
-            className='logo'
-            alt='logo'
-            width={120}
-            height={50}  />
-            
+      <header className="headerSwap">
+        <div className="left">
+          <TrActiveLink className="logo-brand" aria-label="home" href="">
+            <LogoIcon />
           </TrActiveLink>
           {desktopMenus || (
             <Desktop>
@@ -181,48 +209,59 @@ function HeaderComponent({
                 href={HEADER_PATH.MARKETS}
                 onClick={() => {
                   EVENT_TRACK(EVENT_NAME.PC_TopButtonClick, {
-                    first_button: '行情',
+                    first_button: '行情'
                   });
                 }}
               >
                 {LANG('行情')}
               </TrActiveLink>
-              {/* {renderBuyCrypto()} */}
-              {/* <Menu
-                showArrow
-                width='235px'
-                height='157px'
-                position='left:0'
-                content={
-                  <CommonMenuItem
-                    menuList={[
-                      {
-                        name: LANG('专业版'),
-                        tips: LANG('所有操作可在一个荧幕完成'),
-                        href: HEADER_PATH.SPOT_PRO,
-                      },
-                      { name: LANG('币币闪兑'), tips: LANG('一键兑换不同数字货币'), href: HEADER_PATH.COIN_CONVERT },
-                    ]}
-                  />
-                }
-                isActive={isSpotCoinActive}
-              >
-                {LANG('币币交易')}
-              </Menu> */}
+              {
+                <Menu
+                  showArrow
+                  width="235px"
+                  height="auto"
+                  position="left:0"
+                  content={<SpotCoinContent />}
+                  isActive={isSpotCoinActive}
+                >
+                  {LANG('币币交易')}
+                </Menu>
+              }
               <Menu
-                itemClassName='header-guide-swap-demo-step-1'
+                itemClassName="header-guide-swap-demo-step-1"
                 showArrow
                 width={contractMenuHoverIndex === 4 ? '220px' : '620px'}
-                hot
-                height='480px'
-                position='left:0'
+                hot={false}
+                height="480px"
+                position="left:0"
                 isCommodity
                 content={<ContractMenu onContractLeftMenuHover={onContractLeftMenuHover} />}
                 isActive={isDerivativeActive}
                 openContent={showDemoMenu}
+                boxRadius="24px"
               >
                 {LANG('衍生品')}
               </Menu>
+              {/* <TrActiveLink
+                href={HEADER_PATH.COPY_TRADE}
+                onClick={() => {
+                  EVENT_TRACK(EVENT_NAME.PC_TopButtonClick, {
+                    first_button: '跟单'
+                  });
+                }}
+              >
+                {LANG('跟单')}
+              </TrActiveLink> */}
+              {/* <TrActiveLink
+                href={HEADER_PATH.PARTNERPROGRAM}
+                onClick={() => {
+                  EVENT_TRACK(EVENT_NAME.PC_TopButtonClick, {
+                    first_button: '合伙人计划'
+                  });
+                }}
+              >
+                {LANG('合伙人计划')}
+              </TrActiveLink> */}
               {/* <TrActiveLink
                 href={HEADER_PATH.COPY_TRADING_BOT}
                 onClick={() => {
@@ -233,27 +272,28 @@ function HeaderComponent({
               >
                 {LANG('策略交易')}
               </TrActiveLink> */}
-              {enableLite && <TrActiveLink href={HEADER_PATH.COPY_TRADE}>{LANG('跟单大厅')}</TrActiveLink>}
+              {/* {enableLite && <TrActiveLink href={HEADER_PATH.COPY_TRADE}>{LANG('跟单大厅')}</TrActiveLink>} */}
               <Menu
+                className="hidden"
                 showArrow
-                width='235px'
-                height='224px'
-                position='left:0'
+                width="235px"
+                height="224px"
+                position="left:0"
                 content={
                   <CommonMenuItem
                     menuList={[
                       {
                         name: LANG('全球合伙人'),
                         tips: LANG('将你的流量转换为加密货币佣金'),
-                        href: HEADER_PATH.AFFILIATE,
+                        href: HEADER_PATH.AFFILIATE
                       },
 
                       { name: LANG('成为YMEX ARMY'), tips: LANG('推广YMEX并获得奖励'), href: HEADER_PATH.ARMY },
-                      {
-                        name: LANG('邀请好友'),
-                        tips: LANG('邀请好友 一起赚钱'),
-                        href: isLogin ? HEADER_PATH.INVITE_FRIENDS : HEADER_PATH.LOGIN,
-                      },
+                      // {
+                      //   name: LANG('邀请好友'),
+                      //   tips: LANG('邀请好友 一起赚钱'),
+                      //   href: isLogin ? HEADER_PATH.INVITE_FRIENDS : HEADER_PATH.LOGIN
+                      // }
                     ]}
                   />
                 }
@@ -262,10 +302,11 @@ function HeaderComponent({
                 {LANG('邀请计划')}
               </Menu>
               <TrActiveLink
+                className="hidden"
                 href={HEADER_PATH.NEWER_TASK}
                 onClick={() => {
                   EVENT_TRACK(EVENT_NAME.PC_TopButtonClick, {
-                    first_button: '新手奖励',
+                    first_button: '新手奖励'
                   });
                 }}
               >
@@ -274,21 +315,30 @@ function HeaderComponent({
             </Desktop>
           )}
         </div>
-        <div className='right'>
-          <LoginAndRegister />
-          {isLogin ? <Image src={dividedLine} height='20' width={1} alt='' className='icon-line' /> : null}
+        <div className="right">
+          <Desktop>
+            <LoginAndRegister />
+          </Desktop>
+          {/* {isLogin ? <Image src={dividedLine} height='20' width={1} alt='' className='icon-line' /> : null} */}
           <MobileOrTablet>
-            <CommonIcon name='header-more-option' size={24} onClick={showNav} className='icon' />
+            {/* isTradePage(pathname) ? (
+              <></>
+            ) : (
+              <CommonIcon name="common-search" size={24} onClick={() => { }} className="icon" />
+            ) */}
+            <LoginAndRegister />
+            <CommonIcon name="header-menu" size={24} onClick={showNav} className="icon" />
           </MobileOrTablet>
           {isTradePage(pathname) ? (
-            <div className='icon-area'>
-              <GlobalIcon className='icon' />
+            <div className="icon-area">
               <Desktop>
+                <GlobalIcon className="icon" />
                 <Menu
-                  width='174px'
-                  height='260px'
+                  className="hidden"
+                  width="174px"
+                  height="260px"
                   isIcon
-                  position='right:0; top: 62px !important'
+                  position="right:0; top: 62px !important"
                   content={
                     <AboutDownload
                       onMouseLeaveDownload={onMouseLeaveDownload}
@@ -298,18 +348,19 @@ function HeaderComponent({
                 >
                   <DownloadIcon iconActive={downloadIconActive} />
                 </Menu>
+                <ThemeIcon className="icon theme-icon" />
               </Desktop>
-              <ConfigIcon className='icon' />
             </div>
           ) : (
-            <div className='icon-area'>
-              <GlobalIcon className='icon' />
-              <DesktopOrTablet>
+            <div className="icon-area">
+              <Desktop>
+                <GlobalIcon className="icon" />
                 <Menu
+                  className="hidden"
                   isIcon
-                  width='174px'
-                  height='260px'
-                  position='right:0; top: 62px !important'
+                  width="174px"
+                  height="260px"
+                  position="right:0; top: 62px !important"
                   content={
                     <AboutDownload
                       onMouseLeaveDownload={onMouseLeaveDownload}
@@ -321,9 +372,9 @@ function HeaderComponent({
                 </Menu>
                 <Menu
                   isIcon
-                  width='238px'
-                  height='158px'
-                  position='right:0; top: 62px !important'
+                  width="238px"
+                  height="58px"
+                  position="right:0; top: 62px !important"
                   content={
                     <SKinMenuContent
                       onMouseLeaveDownload={() => setSkinIconActive(false)}
@@ -331,9 +382,9 @@ function HeaderComponent({
                     />
                   }
                 >
-                  <ThemeIcon className='theme-icon' iconActive={skinIconActive} />
+                  <ThemeIcon className="theme-icon" />
                 </Menu>
-              </DesktopOrTablet>
+              </Desktop>
             </div>
           )}
         </div>
@@ -341,25 +392,41 @@ function HeaderComponent({
           (!renderNavDrawer ? (
             <NavDrawer onClose={onCloseNavDrawer} open={openNav} />
           ) : (
-            renderNavDrawer({
-              onClose: onCloseNavDrawer,
-              open: openNav,
-            })
+            renderNavDrawer({ onClose: onCloseNavDrawer, open: openNav })
           ))}
       </header>
+      <Mobile>
+        {
+          (typeList.includes(urlType) || pathname.includes('account/dashboard') || pathname.includes('account/fund-management/assets-overview')) &&
+          <div className='mobile-title' onClick={() => setNavShow(true)} >
+            <CommonIcon name='header-more-option' size={20} className='icon' />
+            <div className='title'>{LANG(getTitle(urlType))}</div>
+          </div>
+        }
+        <MobileDrawer onClose={() => setNavShow(false)} open={navShow} className='nav-drawer' direction='left'>
+          {
+            (pathname.includes('assets')|| urlType =='records')? <NavList navItems={NAV_MAP} close={()=> setNavShow(false)} /> : <NavCard close={() => setNavShow(false)} />
+          }
+        </MobileDrawer>
+      </Mobile>
       <style jsx>
         {`
           header {
             position: sticky;
             top: 0;
-            height: 64px;
+            z-index: 999;
+            height: 56px;
             width: 100%;
             display: flex;
             z-index: var(--zindex-header);
-            border-bottom: ${hideBorderBottom ? 'none' : '0.5px solid var(--theme-border-color-1-1)'};
             justify-content: space-between;
             align-items: center;
             max-width: 100vw;
+            background-color: var(--bg-1);
+            @media ${MediaInfo.mobile} {
+              height: 2.75rem;
+              background:var(--bg-1);
+            }
             .left {
               height: 100%;
               display: flex;
@@ -369,37 +436,45 @@ function HeaderComponent({
               }
               :global(.header-item) {
                 &:hover {
-                  color: 'var(--skin-hover-font-color)';
+                  color: var(--text-brand);
+                }
+              }
+              :global(.logo-brand) {
+                padding-left: 24px;
+                @media ${MediaInfo.mobile} {
+                  padding-left: 1rem;
                 }
               }
             }
+
             .right {
               height: 100%;
               display: flex;
               align-items: center;
-              margin-right: 32px;
+              margin-right: 40px;
               @media ${MediaInfo.mobile} {
-                margin-right: 16px;
-              }
-              :global(.user-icon) {
-                margin: 0 16px;
+                margin-right: 1rem;
               }
               :global(.login-btn) {
-                padding: 8px 14px;
-                border-radius: 6px;
-                background-color: var(--theme-background-color-2);
+                border-radius: 20px;
+                width: 80px;
+                height: 32px;
+                min-height: 32px;
+                line-height: 32px;
+                background-color: var(--bg-1);
+                border: 1px solid var(--brand);
+                color: var(--brand);
+                margin-right: 24px;
                 &:hover {
-                  color: var(--skin-hover-font-color);
+                  color: var(--text-white);
+                  background: var(--brand);
                 }
-              }
-              :global(.icon-line) {
-                margin: 0;
               }
               :global(.line) {
                 margin-left: 12px;
               }
               :global(.deposit-btn) {
-                background-color: var(--skin-primary-color);
+                background-color: var(--brand);
                 padding: 8px 14px;
                 border-radius: 6px;
                 display: flex;
@@ -434,12 +509,25 @@ function HeaderComponent({
             }
             :global(.icon) {
               cursor: pointer;
-              margin-left: 16px;
+              margin-left: 24px;
               height: 100%;
+              :global(svg) {
+                fill: var(--text-primary);
+                &:hover {
+                  fill: var(--brand);
+                }
+              }
             }
-            :global(.theme-icon) {
-              margin-right: -10px;
+            :global(.theme-icon),
+            :global(.user-icon) {
+              :global(svg) {
+                fill: var(--text-primary);
+                &:hover {
+                  fill: var(--brand);
+                }
+              }
             }
+
             :global(.btn) {
               display: block;
               padding: 0 15px;
@@ -466,12 +554,29 @@ function HeaderComponent({
               transition: all 0.3s;
               font-size: 14px;
               font-weight: 500;
-              color: var(--theme-font-color-1);
+              color: var(--text-primary);
             }
             :global(.header-item.active) {
               color: var(--skin-hover-font-color);
               height: 100%;
               border-bottom: 2px solid var(--skin-primary-color);
+            }
+          }
+          .mobile-title{
+            position: sticky;
+            top: 44px;
+            z-index: 999;
+            height: 48px;
+            background: var(--fill-3);
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding-left: 10px;
+            .title{
+              font-size: 16px;
+              font-weight: 500;
+              margin-left: 12px;
+              color:var(--text-primary);
             }
           }
         `}

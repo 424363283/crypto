@@ -56,7 +56,7 @@ const AlertModal = (props: AlertModalProps) => {
       cancelText={cancelText}
       closable
       destroyOnClose
-      closeIcon={<Image src={closeIconSrc} width={24} height={24} />}
+      closeIcon={<Image src={closeIconSrc} width={32} height={32} />}
       {...rest}
     >
       {!hideHeaderIcon && (
@@ -108,10 +108,12 @@ const styles = css`
         background-color: var(--theme-background-color-2);
         color: var(--theme-font-color-1);
         border: 1px solid var(--theme-border-color-2);
+        border-radius:30px;
       }
       :global(.ant-btn:nth-child(2)) {
-        background: var(--skin-primary-color);
+        background: var(--brand);
         color: var(--skin-font-color);
+        border-radius:30px;
       }
       :global(.ant-btn-primary:disabled) {
         cursor: not-allowed;

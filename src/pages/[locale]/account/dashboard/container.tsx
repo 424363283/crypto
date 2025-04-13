@@ -1,110 +1,64 @@
 import { Desktop, MobileOrTablet } from '@/components/responsive';
 import { MediaInfo, getUrlQueryParams } from '@/core/utils';
-import AirDropCard from './components/air-drop-card';
-import AvatarCard from './components/avatar-card';
 import MiddleComponent from './components/middle-content';
 import { NavCard } from './components/nav-card';
-import { RightColumnRewards } from './components/rewards';
-import { MobileNav } from './media/mobile-nav';
+import { LANG } from '@/core/i18n';
+
+import CommonIcon from '@/components/common-icon';
+import { useState } from 'react';
+import { MobileDrawer } from '@/components/drawer';
 
 export default function DashboardContainer() {
-  const type = getUrlQueryParams('type');
-  const shouldRenderRightColumn = type === 'overview' || !type;
+  const option = getUrlQueryParams('option');
+  const shouldRenderRightColumn = option === null;
+
   return (
     <>
-      <div className='account-container'>
-        <MobileOrTablet>
-          <AvatarCard />
-        </MobileOrTablet>
+      <div className="account-container">
         <Desktop>
-          <div className='left-column'>
-            <div className='top-banner'>
-              <AvatarCard />
-            </div>
-            <div className='bottom'>
+          {shouldRenderRightColumn && (
+            <div className="left-column">
               <NavCard />
             </div>
-          </div>
+          )}
         </Desktop>
-        <div className='middle-column'>
-          <MobileOrTablet>
-            <MobileNav />
-          </MobileOrTablet>
-          <Desktop>
-            <MiddleComponent />
-          </Desktop>
-          <MobileOrTablet>
-            <div className='main-content'>
-              <MiddleComponent />
-            </div>
-          </MobileOrTablet>
+        <div className={`middle-column ${!shouldRenderRightColumn ? 'no-margin' : ''}`}>
+          <MiddleComponent />
         </div>
-        {shouldRenderRightColumn && (
-          <div className='right-column'>
-            <AirDropCard />
-            <RightColumnRewards />
-          </div>
-        )}
       </div>
       <style jsx>
         {`
           .account-container {
-            overflow-y: scroll;
             position: relative;
             display: flex;
             flex-direction: row;
             height: 100%;
             min-height: calc(100vh - 64px);
-            background-color: var(--theme-background-color-5);
+            background-color: var(--bg-1);
             @media ${MediaInfo.mobileOrTablet} {
               flex-direction: column;
+              background: var(--fill-3);
             }
             .left-column {
+              z-index: 1;
               height: 100%;
-              width: 258px;
-              .top-banner {
-                padding: 20px;
-                height: 246px;
-                width: 100vw;
-                background-color: var(--theme-secondary-bg-color);
-              }
-              .bottom {
-                height: 100%;
-                width: 100vw;
-              }
+              width: 308px;
+              position:sticky;
+              top: 56px;
+              border-left: 2px solid var(--theme-border-left);
             }
             .middle-column {
               width: 100%;
               height: 100%;
-              padding-top: 18px;
-              @media ${MediaInfo.desktop} {
-                margin-right: 20px;
+              padding: 8px;
+              overflow-x: hidden;
+              overflow-y: auto;
+              @media ${MediaInfo.mobileOrTablet} {
+                margin: 0;
               }
-              .main-content {
-                @media ${MediaInfo.tablet} {
-                  padding: 20px 20px 0 20px;
-                }
-                @media ${MediaInfo.mobile} {
-                  padding: 10px;
-                }
+              &.no-margin {
+                margin: 0;
               }
-            }
-
-            .right-column {
-              flex: 1;
-              margin-top: 20px;
-              @media ${MediaInfo.desktop} {
-                margin-top: 18px;
-              }
-              @media ${MediaInfo.mobile} {
-                margin: 0 10px 10px;
-              }
-              @media ${MediaInfo.tablet} {
-                display: flex;
-                margin-left: 20px;
-              }
-              margin-right: 22px;
-              margin-bottom: 23px;
             }
           }
         `}

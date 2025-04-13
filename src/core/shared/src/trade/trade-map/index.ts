@@ -53,9 +53,6 @@ class TradeMap {
       if (!TradeMap._cacheSwapHttp) TradeMap._cacheSwapHttp = getSwapTradeListApi();
       const { data } = await this._cacheSwapHttp;
       for (const item of data) {
-        if(!item){
-          //  console.log('');
-        }
         TradeMap._swap.set(item.symbol.toUpperCase(), new SwapTradeItem(item));
       }
       return TradeMap._swap;
@@ -80,6 +77,8 @@ class TradeMap {
     const _lite = await TradeMap.getLiteTradeMap();
     return _lite?.get(id?.toUpperCase());
   }
+
+  
 }
 
 export { LiteTradeItem, SpotTradeItem, SwapTradeItem, TradeMap };

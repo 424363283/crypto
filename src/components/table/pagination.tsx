@@ -92,8 +92,8 @@ const styles = css`
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       background: transparent;
       border-radius: 5px;
       font-weight: 500;
@@ -104,48 +104,46 @@ const styles = css`
     }
     :global(.ant-pagination-item) {
       border: none;
-      width: 28px;
-      color: var(--theme-font-color-3);
-      height: 28px;
-      line-height: 28px;
-      border-radius: 5px;
-      border: 1px solid var(--skin-border-color-1);
+      width: 32px;
+      color: var(--text-primary);
+      height: 32px;
+      line-height: 32px;
+      border-radius: 50%;
+      background-color: transparent;
       &:hover {
-        background-color: var(--skin-primary-color);
+        background-color: var(--fill-3);
       }
     }
     :global(.ant-pagination-prev),
     :global(.ant-pagination-next) {
-      width: 28px;
-      height: 28px !important;
-      border: 1px solid var(--skin-border-color-1);
+      width: 32px;
+      height: 32px !important;
       &:focus,
       &:hover {
-        background-color: var(--skin-primary-color);
       }
     }
     :global(.ant-pagination-item-link) {
       width: 28px;
       height: 28px !important;
       :global(.ant-pagination-item-link-icon) {
-        color: var(--skin-primary-color) !important;
+        color: var(--text-brand) !important;
+        font-size: 10px;
         :global(svg) {
           width: 10px;
           height: 10px;
         }
       }
       :global(.ant-pagination-item-ellipsis) {
-        border: 1px solid var(--skin-border-color-1);
         border-radius: 5px;
-        color: var(--theme-font-color-3);
-        width: 28px;
-        height: 28px;
+        color: var(--text-primary);
+        width: 32px;
+        height: 32px;
         font-size: 10px;
       }
     }
     :global(.ant-pagination-item-active) {
-      background: var(--skin-primary-color);
-      color: var(--skin-font-color);
+      background: var(--brand);
+      color: var(--text-white);
       font-weight: 500;
     }
   }

@@ -31,7 +31,9 @@ export const CreatedWallets = ({
             {data.map((v, i) => {
               return (
                 <div className='item' key={i} onClick={() => onItemClick({ walletData: v, isUsdtType: !!v.usdt })}>
-                  <WalletAvatar type={v.pic} size={36} />
+                  { 
+                  // <WalletAvatar type={v.pic} size={36} /> 
+                  }
                   <div className='texts'>
                     <div className='name'>{v.alias}</div>
                     {!!v.remark?.length ? (
@@ -57,13 +59,13 @@ export const CreatedWallets = ({
             justify-content: space-between;
             font-size: 12px;
             > div {
-              color: var(--theme-trade-text-color-3);
+              color: var(--text-tertiary);
               span {
-                color: var(--theme-trade-text-color-1);
+                color: var(--text-primary);
               }
             }
             .more {
-              color: var(--theme-font-color-small-yellow);
+              color: var(--text-brand);
             }
           }
           .list {
@@ -73,18 +75,17 @@ export const CreatedWallets = ({
             .item {
               display: flex;
               border-radius: 6px;
-              border: 1px solid var(--theme-border-color-1);
+              border: 1px solid var(--line-3);
               padding: 16px;
               margin-bottom: 10px;
               .texts {
                 display: flex;
-                flex-direction: column;
                 align-items: flex-start;
                 margin-left: 14px;
                 .name {
                   font-size: 14px;
                   font-weight: 500;
-                  color: var(--theme-trade-text-color-1);
+                  color: var(--text-primary);
                 }
                 .remark {
                   width: 100%;
@@ -102,8 +103,9 @@ export const CreatedWallets = ({
                   line-height: 19px;
                   border-radius: 6px;
                   padding: 0 4px;
-                  background: var(--theme-trade-bg-color-8);
-                  color: var(--theme-trade-text-color-3);
+                  background: var(--tips);
+                  color: var(--yellow);
+                  margin-left: 8px;
                 }
               }
             }

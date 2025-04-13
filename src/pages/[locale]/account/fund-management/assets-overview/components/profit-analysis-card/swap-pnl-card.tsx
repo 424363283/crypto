@@ -23,13 +23,13 @@ export const SwapPnlInfoCard = (props: SwapPnlInfoProps) => {
           <p className='label'>{LANG('净盈利/亏损')}</p>
         </ProTooltip>
         <p className={clsx('value', +totalValue >= 0 ? 'positive' : 'negative')}>
-          {+totalValue > 0 ? `+${totalValue}` : totalValue}
+          ${+totalValue > 0 ? `+${totalValue}` : totalValue}
         </p>
       </div>
       <div className='bottom-pnl'>
         <div className='pnl-area'>
-          <span className='value'>{totalProfit > 0 ? `+${totalProfit.toFixed(2)}` : totalProfit?.toFixed(3)}</span>
-          <span className='value'>{totalLoss?.toFixed(2)}</span>
+          <span className='value'>${totalProfit > 0 ? `+${totalProfit.toFixed(2)}` : totalProfit?.toFixed(3)}</span>
+          <span className='value'>${totalLoss?.toFixed(2)}</span>
         </div>
         <div className='bar-area'>
           <div className='bar-item profit-bar' style={{ width: profitBarWidth }} />
@@ -55,10 +55,10 @@ const styles = css`
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--theme-border-color-2);
-      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line-1);
+      padding-bottom: 16px;
       .label {
-        color: var(--theme-font-color-3);
+        color: var(--text-secondary);
         font-size: 12px;
         border-bottom: 1px dashed var(--theme-font-color-placeholder);
       }
@@ -75,7 +75,10 @@ const styles = css`
       }
     }
     .bottom-pnl {
-      padding-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-top: 24px;
       .pnl-area {
         display: flex;
         align-items: center;
@@ -88,24 +91,16 @@ const styles = css`
       }
       .bar-area {
         display: flex;
-        margin: 10px 0;
-        border-radius: 16px;
-        overflow: hidden;
-        .bar-item {
-          height: 8px;
-          border-radius: 8px;
-          transform-origin: left center;
-          transform: skew(-145deg);
-        }
+        width: 100%;
+        height: 10px;
+        gap: 0px;
         .profit-bar {
-          background-color: var(--color-green);
+          background: linear-gradient(-60deg, transparent 5px, var(--color-green) 0);
+          border-radius: 5px 0 0 5px;
         }
         .loss-bar {
-          border-bottom-right-radius: 30px;
-          border-top-right-radius: 4px;
-          margin-right: -10px;
-          margin-left: 4px;
-          background-color: var(--color-red);
+          background: linear-gradient(120deg, transparent 5px, var( --color-red) 0);
+          border-radius: 0 5px 5px 0;
         }
       }
       .label-area {

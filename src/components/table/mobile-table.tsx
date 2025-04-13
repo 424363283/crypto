@@ -1,5 +1,5 @@
 import { EmptyComponent } from '@/components/empty';
-import { clsx } from '@/core/utils';
+import { clsx, MediaInfo } from '@/core/utils';
 import { memo, useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
 
@@ -32,6 +32,7 @@ const TableCard = memo(({ content, columns }: any) => {
     </div>
   );
 });
+
 export const MobileTable = memo((props: MobileTableProps) => {
   const { columns, dataSource, className, pagination } = props;
   const [data, setData] = useState([]);
@@ -66,25 +67,27 @@ const styles = css`
   .common-mobile-table {
     :global(.mobile-table-card) {
       &:not(:last-child) {
-        border-bottom: 1px solid var(--theme-border-color-2);
+        border-bottom: 1px solid var(--line-1);
       }
-      margin-top: 7px;
+      margin-top: 12px;
       :global(.mobile-card-item) {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 10px;
-        padding-top: 4px;
+        margin-bottom: 16px;
+        
         :global(.card-item-title) {
           flex: 1;
-          color: var(--theme-font-color-1);
-          font-size: 12px;
+          color: var(--text-primary);
+          font-size: 14px;
+          font-weight: 400;
         }
         :global(.card-item-content) {
           flex: 1;
           text-align: right;
-          color: var(--theme-font-color-1);
-          font-size: 12px;
+          color: var(--text-primary);
+          font-size: 14px;
           word-break: break-all;
+          font-weight: 500;
         }
       }
     }

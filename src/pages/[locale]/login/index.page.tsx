@@ -1,4 +1,4 @@
-import LoginCommonLayout, { Login as LoginPage } from '@/components/layouts/login';
+import { Login as LoginPage } from '@/components/layouts/login';
 import { Lang } from '@/core/i18n';
 
 function Login() {

@@ -28,13 +28,13 @@ class Favors {
     return (localStorageApi.getItem(LOCAL_KEY.FAVORS_TOKEN) as FAVORS_LIST[]) || [];
   }
   private _fetchFavorsList = async () => {
-    const res = {data : [] };// TODO await getCommonFavoritesListApi();
+    const res =  await getCommonFavoritesListApi();
     this.favorsList = res.data;
   };
   static async getInstance(): Promise<Favors> {
     return await asyncFactory.getInstance<Favors>(async (): Promise<Favors> => {
       let data = {};
-      if (this.isLogin()) data = [];// TODO (await getCommonFavoritesListApi()).data;
+      if (this.isLogin()) data =  (await getCommonFavoritesListApi()).data;
       Favors.instance = new Favors(data);
       return Favors.instance;
     }, Favors);

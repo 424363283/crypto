@@ -1,17 +1,13 @@
-import Image from '@/components/image';
-import { Desktop } from '@/components/responsive';
-import { TrLink } from '@/core/i18n';
+import { Desktop, Mobile } from '@/components/responsive';
 import { MediaInfo } from '@/core/utils';
 import dynamic from 'next/dynamic';
 import css from 'styled-jsx/css';
 import HeaderAssetCard from '../../components/asset-card';
 import AssetTableCard from '../../components/asset-table-card';
 import { AssetsBottomTitle } from '../../components/assets-bottom-title';
-import { ProfitAnalysisCard } from '../../components/profit-analysis-card';
 import { SpotTable } from '../../components/spot-asset/spot-table';
 import { WalletType } from '../../components/types';
 import { WalletBalanceCard } from '../../components/walet-balance-card';
-// import { PieCharts } from '../../components/pie-chart';
 const PieCharts = dynamic(() => import('../../components/pie-chart'), { ssr: false });
 
 function AssetSpot() {
@@ -21,10 +17,12 @@ function AssetSpot() {
         <HeaderAssetCard>
           <WalletBalanceCard type={WalletType.ASSET_SPOT} />
           <div className='bottom-assets-card'>
-            <AssetsBottomTitle />
+            <Desktop>
+              <AssetsBottomTitle />
+            </Desktop>
             <div className='bottom-container'>
               <PieCharts />
-              <Desktop>
+              {/* <Desktop>
                 <TrLink href='/novice-task' target='_blank'>
                   <Image
                     src='/static/images/account/fund/new-user-banner.svg'
@@ -34,13 +32,10 @@ function AssetSpot() {
                     height={135}
                   />
                 </TrLink>
-              </Desktop>
+              </Desktop> */}
             </div>
           </div>
         </HeaderAssetCard>
-        <Desktop>
-          <ProfitAnalysisCard type={WalletType.ASSET_SPOT} />
-        </Desktop>
       </div>
       <AssetTableCard>
         <SpotTable />
@@ -51,32 +46,46 @@ function AssetSpot() {
 }
 const styles = css`
   .spot-header-card {
-    margin-bottom: 20px;
+    margin-bottom: 8px;
     display: flex;
-    height: 380px;
+    height: 412px;
     width: 100%;
     @media ${MediaInfo.mobile} {
       height: 100%;
     }
+    :global(.assets-overview-card) {
+      margin-right: 0px;
+    }
     .bottom-assets-card {
-      background-color: var(--theme-background-color-2);
+      display: flex;
+      flex-direction: column;
+      flex: 1 auto;
+      background-color: var(--bg-1);
       z-index: 0;
       position: relative;
-      border-radius: 15px;
+      overflow: hidden;
       @media ${MediaInfo.mobile} {
         margin-top: 10px;
       }
       .bottom-container {
         display: flex;
+        flex: 1 auto;
         justify-content: space-between;
+        overflow: hidden;
         @media ${MediaInfo.desktop} {
-          padding: 10px 18px 20px 20px;
+          padding: 0;
         }
         @media ${MediaInfo.tablet} {
           padding-top: 10px;
         }
         @media ${MediaInfo.mobile} {
           padding: 10px 10px 14px;
+        }
+        :global(.pie-chart) {
+          padding: 0 0 0 48px;
+          @media ${MediaInfo.mobile} {
+            padding: 0;
+          }
         }
         :global(.banner) {
           border-radius: 8px;

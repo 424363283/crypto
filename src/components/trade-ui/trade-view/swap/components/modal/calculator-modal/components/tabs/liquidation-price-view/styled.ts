@@ -17,15 +17,23 @@ const { className, styles: _styles } = css.resolve`
   }
 
   .balance-input-wrapper {
-    margin-bottom: 14px;
+    margin-bottom: 24px;
     .balance-input {
       margin-bottom: 0;
     }
     .error {
-      margin-top: 4px;
+      margin-top: 8px;
       line-height: 12px;
       font-size: 12px;
-      color: var(--color-error);
+      color: var(--text-error);
+    }
+  }
+  .input-item {
+    >.label {
+      color: var(--text-tertiary);
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 16px;
     }
   }
 `;

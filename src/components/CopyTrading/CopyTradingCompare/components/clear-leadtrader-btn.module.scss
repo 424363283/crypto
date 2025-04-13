@@ -1,0 +1,14 @@
+.clearLeadTraderButton {
+  :global(.common-button) {
+    color: var(--text-brand)!important;
+    background: unset!important;
+    padding: 0 24px !important;
+    border: 1px solid var(--brand)!important;
+
+    .commonButtonContent {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+  }
+}

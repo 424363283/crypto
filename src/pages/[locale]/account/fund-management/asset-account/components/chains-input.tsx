@@ -1,4 +1,6 @@
+import CommonIcon from '@/components/common-icon';
 import { LANG } from '@/core/i18n';
+import { MediaInfo } from '@/core/utils';
 import { useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
 
@@ -11,10 +13,11 @@ type ChainsInputProps = {
   }[];
   cIndex: number;
   type: string;
+  showLabel?: boolean;
 };
 
 let time: any = null;
-export const ChainsInput = ({ onChange, chains, cIndex, type }: ChainsInputProps) => {
+export const ChainsInput = ({ onChange, chains, cIndex, type, showLabel = true }: ChainsInputProps) => {
   const [showSelect, setShowSelect] = useState(false);
   const [value, setValue] = useState('');
   const [active, setActive] = useState(false);
@@ -46,10 +49,12 @@ export const ChainsInput = ({ onChange, chains, cIndex, type }: ChainsInputProps
 
   return (
     <div className='address-input'>
-      <div className='label'>{LANG('选择网络')}</div>
+      { showLabel && <div className='label'>{LANG('选择网络')}</div> }
       <div className={`input ${active ? 'active' : ''}`} tabIndex={1} onClick={_focus} onBlur={_onBlur}>
         <input placeholder={LANG('请选择网络')} value={value} readOnly />
-        <div className='arrow'></div>
+        <div className='arrow'>
+          <CommonIcon name={'common-tiny-triangle-down-2'} size={12} />
+        </div>
       </div>
       {chains.length > 0 && (
         <div className={`select-view ${showSelect ? 'show' : ''}`}>
@@ -93,21 +98,22 @@ const styles = css`
       position: relative;
       width: 100%;
       height: 100%;
-      border-radius: 8px;
-      background: var(--theme-background-color-8);
+      border-radius: 16px;
+      background: var(--fill-3);
       display: flex;
       align-items: center;
       cursor: pointer;
+      @media ${MediaInfo.mobile}{
+        border-radius: 8px;
+        width:auto;
+      }
       &:hover,
       &.active {
-        border-color: var(--skin-primary-color);
-      }
-      &.active {
-        box-shadow: var(--skin-focus-shadow-1);
+        box-shadow: 0 0 0 1px var(--brand);
       }
       input {
-        background: var(--theme-background-color-8);
-        line-height: 48px;
+        background: var(--fill-3);
+        line-height: 56px;
         width: 100%;
         border-radius: 8px;
         padding-right: 48px;
@@ -116,6 +122,11 @@ const styles = css`
         color: var(--theme-font-color-1);
         font-size: 14px;
         font-weight: 500;
+        border-radius: 16px;
+        @media ${MediaInfo.mobile}{
+          height: 40px;
+          border-radius: 12px;
+        }
       }
       .arrow {
         cursor: text;
@@ -123,10 +134,12 @@ const styles = css`
         position: absolute;
         content: '';
         top: 21px;
-        right: 20px;
+        right: 16px;
         width: 12px;
         height: 12px;
-        background-image: url('/static/images/common/dropdown-2.png');
+        @media ${MediaInfo.mobile}{
+            top: 15px;
+        }
       }
     }
 
@@ -144,10 +157,10 @@ const styles = css`
       position: absolute;
       transition: all 0.3s;
       opacity: 0;
-      top: 104px;
+      top: 62px;
       left: 0;
       width: 100%;
-      background: var(--theme-background-color-2-3);
+      background: var(--fill-3);
       z-index: 99;
       border-radius: 8px;
       box-shadow: 1px 2px 10px 0px rgba(0, 0, 0, 0.08);
@@ -199,8 +212,7 @@ const styles = css`
         }
         .tip {
           border-radius: 5px;
-          background: var(--skin-primary-bg-color-opacity-1);
-          color: var(--skin-main-font-color);
+          color: var(--text-brand);
           font-size: 12px;
           font-weight: 500;
           padding: 0 10px;

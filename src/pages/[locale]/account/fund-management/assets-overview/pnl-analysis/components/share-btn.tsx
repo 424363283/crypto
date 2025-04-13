@@ -1,3 +1,6 @@
+import { Button } from '@/components/button';
+import CommonIcon from '@/components/common-icon';
+import { Size } from '@/components/constants';
 import { LANG } from '@/core/i18n';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
@@ -22,10 +25,10 @@ export const ShareBtn = ({ profitsData, symbolUnit }: any) => {
   };
   return (
     <>
-      <div className='share-btn' onClick={onShareBtnClick}>
-        <Image src='/static/images/account/fund/share-icon.png' alt='share' width={16} height={16} />
+      <Button className='share-btn' rounded size={Size.SM} style={{minWidth: 76}} onClick={onShareBtnClick}>
+        <CommonIcon name='common-share-icon-0' size={16} />
         {LANG('分享')}
-      </div>
+      </Button>
       {sharePnlModalVisible && (
         <SharePnlModal
           open={sharePnlModalVisible}
@@ -39,15 +42,8 @@ export const ShareBtn = ({ profitsData, symbolUnit }: any) => {
   );
 };
 const styles = css`
-  .share-btn {
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--theme-font-color-1);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    :global(img) {
-      margin-right: 3px;
-    }
+  :global(.share-btn) {
+    gap: 8px;
+    padding: 0 12px!important;
   }
 `;

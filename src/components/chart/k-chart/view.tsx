@@ -4,9 +4,9 @@ import { kChartEmitter } from '@/core/events';
 import { useResponsive, useRouter, useTheme } from '@/core/hooks';
 import { WS } from '@/core/network';
 import { useAppContext } from '@/core/store';
-import { isSwap } from '@/core/utils';
+import { isSwap, isLite, getUrlQueryParams } from '@/core/utils';
 import dayjs from 'dayjs';
-import { memo, useEffect } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { KHeader } from './components/k-header';
 import { KTYPE, getKLinePriceType, kHeaderStore } from './components/k-header/store';
 import { OnceRender } from './components/once-render';
@@ -15,12 +15,17 @@ import { KlineChart } from './lib/kline-chart';
 import { TradingView } from './lib/trading-view';
 import { getKlineBoxId } from './utils';
 import Kline from '@/components/YKLine'
+import { Swap, Spot } from '@/core/shared';
+import { Group } from '@/core/shared';
+
 
 export enum TRADINGVIEW_SYMBOL_TYPE {
   SPOT = 'Spot',
   LITE = 'Lite',
   SWAP = 'Swap',
 }
+
+const { Trade } = Spot;
 
 const KChartComponent = ({
   symbolType,
@@ -39,16 +44,30 @@ const KChartComponent = ({
   const { isLogin } = useAppContext();
   const { isMobile } = useResponsive(false);
   const isSwapId = isSwap(id);
+  const isLiteId = isLite(id);
+  const code = 'shib-usdt';
+  const cryptoData = Swap.Info.getCryptoData(code);
+  const { currentPricePrecision, pricePrecision, minChangePrice, settleCoin } = cryptoData;
+  const { coin, quoteCoin, quoteCoinBalance, coinBalance, currentSpotContract } = Trade.state;
+  const [coinPrecision, setCoinPrecision] = useState(4);
+
+
   const showCrosshairOrderBtn = !isMobile && isSwapId && setting.paintOrder && isLogin && klinePriceType == 0;
 
   useEffect(() => {
     // 如果当前缓存的kType是深度图，但是当前symbolType不是lite，那么就切换到k线图
-    if (kType === KTYPE.DEEP_CHART && symbolType == TRADINGVIEW_SYMBOL_TYPE.LITE) {
+    // if (kType === KTYPE.DEEP_CHART && symbolType == TRADINGVIEW_SYMBOL_TYPE.LITE) {
+    if (kType === KTYPE.DEEP_CHART) {
+
       setkType(KTYPE.K_LINE_CHART);
     }
   }, [kType]);
   let klineId = id;
-  console.log("klineId",klineId)
+  // if (isLiteId) {
+  //   const contract = getUrlQueryParams('contract');
+  //   klineId = contract;
+  // }
+
   // if (isSwapId) {
   //   switch (klinePriceType) {
   //     // 标记价格
@@ -68,20 +87,38 @@ const KChartComponent = ({
     kChartEmitter.emit(kChartEmitter.K_CHART_JUMP_DATE, dayjs().valueOf(), 1000);
   };
 
+  // useEffect(() => {
+  //   if (klineId) {
+  //     WS.subscribe4001([klineId]);
+  //     // if (/^[im]/.test(klineId) && !klineGroupMode) {
+  //     //   WS.subscribe4001([klineId, id]);
+  //     // } else {
+  //     //   WS.subscribe4001([id]);
+  //     // }
+  //   }
+  // }, [klineId, klineId, klineGroupMode]);
+
+
   useEffect(() => {
-    if (id) {
-      WS.subscribe4001([id]);
-      // if (/^[im]/.test(klineId) && !klineGroupMode) {
-      //   WS.subscribe4001([klineId, id]);
-      // } else {
-      //   WS.subscribe4001([id]);
-      // }
-    }
-  }, [id, klineId, klineGroupMode]);
+    (async () => {
+      if (isLite(id)) {
+        const group = await Group.getInstance();
+        klineId = group.getLiteQuoteCode(id);
+      }
+      WS.subscribe4001([klineId]);
+    })();
+
+  }, [klineId, klineId, klineGroupMode]);
+
+  useEffect(() => {
+    setCoinPrecision(currentSpotContract.digit)
+  }, [currentSpotContract.digit]);
+
 
   return (
     <>
-    <Kline/>
+
+      <Kline pricePrecision={coinPrecision} />
     </>
   );
 };

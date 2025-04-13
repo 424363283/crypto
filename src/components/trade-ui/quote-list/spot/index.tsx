@@ -11,9 +11,10 @@ import SecondaryTitle from './secondary-title';
 
 interface Props {
   inHeader?: boolean;
+  onClickItem?: Function;
 }
 
-export const Spot = ({ inHeader = false }: Props) => {
+export const Spot = ({ inHeader = false, onClickItem }: Props) => {
   const [list, setList] = useState<{ [key: number | string]: MarketItem[] }>({});
   const tabsRef = useRef<string[]>([]);
   const router = useRouter();
@@ -66,15 +67,34 @@ export const Spot = ({ inHeader = false }: Props) => {
 
   return (
     <>
-      <Title activeIndex={activeIndex} onTabsChange={handleSetActiveIndex} tabs={tabs} />
-      {activeIndex !== 0 && (
-        <SecondaryTitle
-          activeIndex={secondaryActiveIndex}
-          onTabsChange={setSecondaryActiveIndex}
-          tabs={secondaryTabs}
-        />
-      )}
-      <List data={list[activeIndex]} zone={secondaryTabs[secondaryActiveIndex]} />
+      <List
+        data={list[activeIndex]}
+        zone={secondaryTabs[secondaryActiveIndex]}
+        onClickItem={onClickItem}
+        renderSearchBottom={() =>
+          <div className='options'>
+            <Title activeIndex={activeIndex} onTabsChange={handleSetActiveIndex} tabs={tabs} />
+            {activeIndex !== 0 && (
+              <SecondaryTitle
+                activeIndex={secondaryActiveIndex}
+                onTabsChange={setSecondaryActiveIndex}
+                tabs={secondaryTabs}
+              />
+            )}
+          </div>
+        }
+      />
+      <style jsx>{`
+        :global(.options) {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          padding-bottom: 16px;
+        }
+        :global(.search-wrap) {
+          margin: 16px 16px 0;
+        }
+      `}</style>
     </>
   );
 };

@@ -1,14 +1,25 @@
+import { Button } from '@/components/button';
 import { Loading } from '@/components/loading';
 import { clsx } from '@/core/utils';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import { isNaN } from 'lodash';
 import React, { useEffect } from 'react';
 import { useImmer } from 'use-immer';
 
 dayjs.extend(duration);
 // 提币按钮组件
-const SubmitButton = ({ disabled, ...props }: any) => (
-  <div className={clsx('pc-v2-btn', 'submit-button', disabled && 'disabled')} {...props} />
+const SubmitButton = ({ disabled, children, ...props }: any) => (
+  <Button
+    type='primary'
+    className={clsx('submit-button', disabled && 'disabled')}
+    style={{ padding: '10px 22px' }}
+    width='100%'
+    {...props}
+  >
+    {children}
+  </Button>
+  // <div className={clsx('pc-v2-btn', 'submit-button', disabled && 'disabled')} {...props} />
 );
 
 type WithdrawTimeProps = {
@@ -52,6 +63,7 @@ export const WithdrawTimeBtn = React.memo((props: WithdrawTimeProps) => {
   };
 
   useEffect(() => {
+    if(isNaN(withdrawTime)) return;
     if (withdrawTime) {
       calcTime(withdrawTime);
       setState((draft) => {

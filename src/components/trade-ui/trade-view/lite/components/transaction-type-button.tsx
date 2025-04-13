@@ -34,35 +34,33 @@ export default React.memo(TransactionTypeButton);
 const styles = css`
   .trade-type-bar {
     width: 100%;
+    height: 36px;
     overflow: hidden;
     display: flex;
     flex-direction: row;
-    height: 30px;
+    border-radius: 8px;
+    background-color: var(--fill-3);
     > div {
       cursor: pointer;
-      border: 1px solid rgba(121, 130, 150, 0.3);
       flex: 1;
-      line-height: 28px;
-      font-size: 14px;
+      line-height: 36px;
+      font-size: 16px;
       font-weight: 400;
-      color: var(--theme-font-color-2);
+      color: var(--text-secondary);
       text-align: center;
       &.active {
+        border-radius: 8px;
         border-color: transparent;
         color: #fff;
       }
       &.buy {
         border-right: 0;
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
       }
       &.buy.active {
         background-color: var(--color-green);
       }
       &.sell {
         border-left: 0;
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
         &.active {
           background-color: var(--color-red);
         }

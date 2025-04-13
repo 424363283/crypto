@@ -1,24 +1,34 @@
 // 资产账户
-import { deleteAddressApi, getAssetsListApi, getCommonBaseInfoApi, getLiteAssetApi, getLitePositionApi, getLiteRewardsAccountApi, getPerpetualCoinAssetApi, getPerpetualUAssetApi, getSpotAssetApi, getSwapPositionApi } from '@/core/api';
+import {
+  deleteAddressApi,
+  getAssetsListApi,
+  getCommonBaseInfoApi,
+  getLiteAssetApi,
+  getLitePositionApi,
+  getLiteRewardsAccountApi,
+  getPerpetualCoinAssetApi,
+  getPerpetualUAssetApi,
+  getSpotAssetApi,
+  getSwapPositionApi
+} from '@/core/api';
 import { LITE_POSITION } from '@/core/formulas/src/lite-position';
 import { SUBSCRIBE_TYPES } from '@/core/network';
 import { resso } from '@/core/resso';
 import { LiteListItem, MarketsMap, PositionSide, Rate } from '@/core/shared';
 import { SWAP_DEFAULT_WALLET_ID } from '@/core/shared/src/swap/modules/info/constants';
-import { fetchIfNotFetched } from '@/core/utils';
 import { ILiteAsset, ISpotAsset, ISwapAsset, ISwapUAsset, SpotItem, SwapItem } from './types';
 
 const SPOT_STORE = resso<ISpotAsset>({
   allSpotAssets: [],
   noneZeroSpotAssets: [],
-  spotTotalBalance: '0',
+  spotTotalBalance: 0
 });
 
 const SWAP_STORE = resso<ISwapAsset>({
   assets: {
     accounts: {},
     equitySum: '0',
-    wallet: SWAP_DEFAULT_WALLET_ID,
+    wallet: SWAP_DEFAULT_WALLET_ID
   },
   wallets: [],
   swapList: [],
@@ -27,14 +37,14 @@ const SWAP_STORE = resso<ISwapAsset>({
   bonusAmount: 0, // 体验金
   deductionAmount: 0, //抵扣金
   contractMarginBalance: 0, // 永续合约保证金余额
-  frozenMargin: 0, // 冻结保证金
+  frozenMargin: 0 // 冻结保证金
 });
 
 const SWAP_U_STORE = resso<ISwapUAsset>({
   assets: {
     accounts: {},
     equitySum: '0',
-    wallet: SWAP_DEFAULT_WALLET_ID,
+    wallet: SWAP_DEFAULT_WALLET_ID
   },
   wallets: [],
   swapList: [],
@@ -43,7 +53,7 @@ const SWAP_U_STORE = resso<ISwapUAsset>({
   bonusAmount: 0, // 体验金
   deductionAmount: 0, //抵扣金
   contractMarginBalance: 0,
-  frozenMargin: 0, // 冻结保证金
+  frozenMargin: 0 // 冻结保证金
 });
 
 const LITE_STORE = resso<ILiteAsset>({
@@ -53,13 +63,13 @@ const LITE_STORE = resso<ILiteAsset>({
     game: 0,
     lucky: 0,
     money: 0,
-    uid: '0',
+    uid: '0'
   },
   luckyRate: 0,
   position: [],
   occupiedBalance: 0,
   floatProfit: 0, // 浮动收益
-  experienceBalance: 0, // 体验金余额
+  experienceBalance: 0 // 体验金余额
 });
 function sortArray(arr: SpotItem[]): SpotItem[] {
   // 创建副本，避免更改原始数组
@@ -97,11 +107,16 @@ class Assets {
   }
   // 获取现货资产总额
   private static _getSpotTotalBalance = (spotData: SpotItem[]) => {
-    const targetUBiggerZero = spotData.filter((item: SpotItem) => {
-      return Number(item.targetU) > 0;
-    });
-    const total = targetUBiggerZero.reduce((acc: any, cur: any) => {
-      return acc.add(cur.targetU);
+
+    // const targetUBiggerZero = spotData.filter((item: SpotItem) => {
+    //   return Number(item.targetU) > 0;
+    // });
+    // const total = targetUBiggerZero.reduce((acc: any, cur: any) => {
+    //   return acc.add(cur.targetU);
+    // }, 0);
+
+    const total = spotData.reduce((acc: any, cur: any) => {
+      return acc.add(cur.targetU).add(cur?.lite?.planMargin || 0).add(cur?.lite?.positionMargin || 0);
     }, 0);
     SPOT_STORE.spotTotalBalance = Number(total) < 0 ? 0 : total; // 若数值没有变化，则不会通知ui更新
     return total;
@@ -121,35 +136,43 @@ class Assets {
   //  @fetchIfNotFetched
   public static async getAllSpotAssets(forceFetch = false) {
     const spotAsset = await getSpotAssetApi();
-    const rate = await Rate.getInstance();
-    const data = spotAsset.data || [];
-    const newData = data.map(async (item: any) => {
-      const total = item.balance.add(item.frozen) as number; // 代币总数
-      const target = await rate.toRate({ money: total, currency: item.currency, exchangeRateCurrency: 'USDT', useScale: false }); // 代币转为usdt
-      const local = await rate.toRate({ money: total, currency: item.currency }); // 代币转为本地货币
-      return {
-        ...item,
-        balance: item.balance < 0 ? 0 : item.balance, // 可用资产
-        code: item.currency,
-        total: total < 0 ? 0 : total,
-        scale: item?.scale,
-        targetU: target,
-        local,
-      };
-    });
+    if (spotAsset?.code === 200) {
+      const rate = await Rate.getInstance();
+      const data = spotAsset.data || [];
+      const newData = data.map(async (item: any) => {
+        const total = item.balance.add(item.frozen) as number; // 代币总数
+        const target = await rate.toRate({
+          money: total,
+          currency: item.currency,
+          exchangeRateCurrency: 'USDT',
+          useScale: false
+        }); // 代币转为usdt
+        const local = await rate.toRate({ money: total, currency: item.currency }); // 代币转为本地货币
+        return {
+          ...item,
+          balance: item.balance < 0 ? 0 : item.balance, // 可用资产
+          code: item.currency,
+          total: total < 0 ? 0 : total,
+          scale: item?.scale,
+          targetU: target,
+          local
+        };
+      });
 
-    const response = await Promise.all(newData);
-    const fiatList = Rate.store.fiatList;
-    // 排除掉法币
-    const removeTwoItemOfFiatList = fiatList.filter((code) => code !== 'EUR' && code !== 'GBP');
-    const excludeFiatList = response.filter((item: any) => {
-      return !removeTwoItemOfFiatList.includes(item.code);
-    });
-    // 先按名字排序，然后按资产总额targetU排序
-    const sortData = sortArray(excludeFiatList);
-    SPOT_STORE.allSpotAssets = sortData;
-    Assets._getNoZeroSpotAssets(sortData);
-    return sortData;
+      const response = await Promise.all(newData);
+      const fiatList = Rate.store.fiatList;
+      // 排除掉法币
+      const removeTwoItemOfFiatList = fiatList.filter(code => code !== 'EUR' && code !== 'GBP');
+      const excludeFiatList = response.filter((item: any) => {
+        return !removeTwoItemOfFiatList.includes(item.code);
+      });
+      // 先按名字排序，然后按资产总额targetU排序
+      const sortData = sortArray(excludeFiatList);
+      SPOT_STORE.allSpotAssets = sortData;
+      Assets._getNoZeroSpotAssets(sortData);
+      return sortData;
+    }
+    return [];
   }
 
   // 简单合约资产
@@ -160,7 +183,7 @@ class Assets {
     return result;
   }
   private static _formatSwapList(accounts: { [key: string]: SwapItem }, isUsdt: boolean) {
-    const allList = Object.keys(accounts).map((v) => ({ code: v, ...accounts[v] }));
+    const allList = Object.keys(accounts).map(v => ({ code: v, ...accounts[v] }));
     isUsdt ? (SWAP_U_STORE.swapList = allList) : (SWAP_STORE.swapList = allList);
     return allList;
   }
@@ -182,9 +205,9 @@ class Assets {
   // @fetchIfNotFetched
   public static async getPerpetualUAsset(forceFetch = false) {
     const perpetualUAsset = await getPerpetualUAssetApi();
-    const defaultAsset = perpetualUAsset?.data?.find((e) => e.wallet === SWAP_DEFAULT_WALLET_ID) || SWAP_U_STORE.assets;
+    const defaultAsset = perpetualUAsset?.data?.find(e => e.wallet === SWAP_DEFAULT_WALLET_ID) || SWAP_U_STORE.assets;
     SWAP_U_STORE.assets = defaultAsset;
-    const formatAssets = perpetualUAsset.data.map((v) => {
+    const formatAssets = perpetualUAsset?.data?.map(v => {
       const { alias, pic, remark, url } = Object.values(v.accounts)[0] as any;
       return { accounts: v.accounts, wallet: v.wallet, alias: alias || v.wallet, url: url, pic, remark };
     });
@@ -197,9 +220,9 @@ class Assets {
   // @fetchIfNotFetched
   public static async getPerpetualAsset(forceFetch = false) {
     const perpetualAsset = await getPerpetualCoinAssetApi();
-    const defaultAsset = perpetualAsset.data.find((e) => e.wallet === SWAP_DEFAULT_WALLET_ID) || SWAP_U_STORE.assets;
+    const defaultAsset = perpetualAsset.data.find(e => e.wallet === SWAP_DEFAULT_WALLET_ID) || SWAP_U_STORE.assets;
     SWAP_STORE.assets = defaultAsset;
-    const formatAssets = perpetualAsset.data.map((v) => {
+    const formatAssets = perpetualAsset.data.map(v => {
       const { alias, pic, remark, url } = Object.values(v.accounts)[0] as any;
       return { accounts: v.accounts, wallet: v.wallet, alias: alias || v.wallet, url: url, pic, remark };
     });
@@ -220,7 +243,7 @@ class Assets {
   }
   // 获取简单合约占用资产
   public static async getLiteOccupiedBalance(data: LiteListItem[] = []) {
-    const standData = data?.filter((item) => {
+    const standData = data?.filter(item => {
       return Number(item.bonusId) === 0;
     });
     const occupiedBalance = standData?.reduce((acc: any, cur: any) => {
@@ -251,7 +274,13 @@ class Assets {
     LITE_STORE.position?.forEach((item: LiteListItem) => {
       const { buy, opPrice, lever, margin, commodity } = item;
       const price = marketsMap[commodity]?.price;
-      const income = LITE_POSITION.positionProfitAndLoss(buy ? PositionSide.LONG : PositionSide.SHORT, price, opPrice, lever, margin);
+      const income = LITE_POSITION.positionProfitAndLoss(
+        buy ? PositionSide.LONG : PositionSide.SHORT,
+        price,
+        opPrice,
+        lever,
+        margin
+      );
       profit = Number(income.toFixed(2).add(profit));
     });
     LITE_STORE.floatProfit = profit;
@@ -292,7 +321,7 @@ class Assets {
       bonusList,
       luckyList,
       bonusBlance,
-      luckyBalance,
+      luckyBalance
     };
   }
 }

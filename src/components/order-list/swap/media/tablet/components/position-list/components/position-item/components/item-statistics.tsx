@@ -1,8 +1,9 @@
-import CommonIcon from '@/components/common-icon';
+// import CommonIcon from '@/components/common-icon';
 import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
 import { isSwapDemo } from '@/core/utils/src/is';
 import { ItemWallet } from '../../../../item-wallet';
+import YIcon from '@/components/YIcons';
 
 export const ItemStatistics = ({
   volume,
@@ -18,7 +19,7 @@ export const ItemStatistics = ({
   wallet,
   callbackValue,
   onTrack,
-  onWalletClick,
+  onWalletClick
 }: {
   volume: any;
   margin: any;
@@ -38,9 +39,17 @@ export const ItemStatistics = ({
   const isDemo = isSwapDemo(location.pathname);
   return (
     <>
-      <div className='item-statistics'>
-        <div className='row'>
-          <div
+      <div className="item-statistics">
+        <div className="row">
+          <div className="item">
+            <div>{LANG('标记价格')}</div>
+            <div>{flagPrice}</div>
+          </div>
+          <div className="item">
+            <div>{LANG('开仓价格')}</div>
+            <div>{openPrice}</div>
+          </div>
+          {/* <div
             className='item'
             onClick={() => {
               if (!isDemo && Swap.Assets.walletFormat(wallet).edit) {
@@ -56,27 +65,27 @@ export const ItemStatistics = ({
             <div className='wallet'>
               <ItemWallet wallet={wallet} />
             </div>
-          </div>
-          <div className='item'>
+          </div> */}
+          <div className="item">
             <div>
-              {LANG('数量')}({unit})
+              {LANG('数量')}
+              {/* ({unit}) */}
             </div>
             <div>{volume}</div>
           </div>
-          <div className='item' onClick={() => marginType === 2 && onChangeMargin()}>
+        </div>
+        <div className="row">
+          <div className="item" onClick={() => marginType === 2 && onChangeMargin()}>
             <div>
-              {LANG('保证金')}({priceUnit})
+              {LANG('保证金')}
+              {/* ({priceUnit}) */}
             </div>
-            <div>
+            <div className="margin">
               {margin}
-              {marginType === 2 && (
-                <CommonIcon name='common-small-edit-0' width={12} height={13} enableSkin className='icon' />
-              )}
+              {marginType === 2 && <YIcon.positionEdit className="editIcon" />}
             </div>
           </div>
-        </div>
-        <div className='row'>
-          <div className='item'>
+          <div className="item">
             <div>{LANG('保证金率')}</div>
             <div>{marginRate}</div>
           </div>
@@ -87,7 +96,7 @@ export const ItemStatistics = ({
             <div>{openPrice}</div>
           </div> */}
 
-          <div className='item'>
+          <div className="item">
             <div>
               {LANG('强平价格')}({priceUnit})
             </div>
@@ -104,21 +113,23 @@ export const ItemStatistics = ({
       </div>
       <style jsx>{`
         .item-statistics {
-          margin-top: 12px;
+          // margin-top: 8px;
           font-size: 12px;
+          padding: 12px 0;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
 
           .row {
             width: 100%;
             display: flex;
-            margin-bottom: 8px;
-            &:last-child {
-              margin-bottom: 0;
-            }
             .item {
               flex: 1;
               display: flex;
               flex-direction: column;
               overflow: hidden;
+              gap: 4px;
               &:nth-child(1) {
                 align-items: start;
               }
@@ -129,6 +140,11 @@ export const ItemStatistics = ({
                 align-items: end;
                 text-align: right;
               }
+              .margin {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+              }
               > div {
                 width: 100%;
                 &,
@@ -138,16 +154,15 @@ export const ItemStatistics = ({
                   overflow: hidden;
                 }
                 &:first-child {
-                  color: var(--theme-trade-text-color-3);
+                  color: var(--text-tertiary);
                 }
                 &:last-child {
                   width: 100%;
                   white-space: nowrap;
                   text-overflow: ellipsis;
                   overflow: hidden;
-                  margin-top: 4px;
 
-                  color: var(--theme-trade-text-color-1);
+                  color: var(--text-primary);
                   :global(.icon) {
                     margin-left: 3px;
                   }

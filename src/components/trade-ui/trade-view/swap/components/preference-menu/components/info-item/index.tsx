@@ -1,3 +1,4 @@
+import CommonIcon from '@/components/common-icon';
 import { Svg } from '@/components/svg';
 import { Switch } from '@/components/switch';
 import Tooltip from '@/components/trade-ui/common/tooltip';
@@ -30,7 +31,7 @@ export const InfoItem = ({
         {valueInfo ? (
           <Svg className={clsx('icon')} src='/static/images/swap/tips_info.svg' height={12} width={12} />
         ) : (
-          <Svg src='/static/images/common/arrow-right.svg' width={12} className={clsx('icon')} />
+            <CommonIcon name='common-arrow-more-0' width={24} height={24} enableSkin />
         )}
       </div>
     ) : (
@@ -55,7 +56,7 @@ export const InfoItem = ({
       </div>
       <style jsx>{`
         .item {
-          padding: 0 var(--const-spacing);
+          padding: 0 24px;
           display: flex;
           flex-direction: row;
           align-items: center;
@@ -66,14 +67,14 @@ export const InfoItem = ({
             display: flex;
             align-items: center;
             font-size: 14px;
-            font-weight: 500;
-            color: var(--theme-trade-text-color-1);
+            font-weight: 400;
+            color: var(--text-secondary);
           }
           :global(.value) {
             display: flex;
             align-items: center;
-            font-size: 12px;
-            color: var(--theme-trade-text-color-1);
+            font-size: 14px;
+            color: var(--text-primary);
             line-height: 12px;
           }
           :global(.icon) {

@@ -10,6 +10,8 @@ import { isCaptcha } from '@/core/utils/src/regexp';
 import { useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
 import { ACCOUNT_ROUTE_PATH } from '../constants';
+import { Size } from '@/components/constants';
+import { MediaInfo } from '@/core/utils';
 
 type GaVerifyProps = {
   token: string;
@@ -81,6 +83,7 @@ export const BindGaVerify = (props: GaVerifyProps) => {
         placeholder={LANG('请输入Google验证码')}
         type={INPUT_TYPE.CAPTCHA}
         value={gaCode}
+        size={Size.XL}
         withBorder
         onInputChange={onGaInputChange}
       />
@@ -88,7 +91,6 @@ export const BindGaVerify = (props: GaVerifyProps) => {
         type='primary'
         className={clsx('ga-confirm-btn')}
         disabled={shouldDisableBtn}
-        height={50}
         width='100%'
         onClick={handleVerifyGaCode}
       >
@@ -104,5 +106,20 @@ const styles = css`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    :global(.basic-input-box){
+      input{
+        height:56px;
+        line-height:56px;
+        @media ${MediaInfo.mobileOrTablet} {
+          height:48px;
+          line-height:48px;
+        }
+      }
+    }
+    :global(.common-button){
+      height:56px;
+      line-height:56px;
+      border-radius: 28px;
+    }
   }
 `;

@@ -65,7 +65,7 @@ export const KeepAliveContextProvider = (props: KeepAliveProviderProps) => {
 
   const { current: cacheData } = useRef<Map<string, ICacheItem>>(new Map());
 
-  console.log(`[keep-alive]----`, children, cacheData, aliveName)
+  // console.log(`[keep-alive]----`, children, cacheData, aliveName)
 
   //若为keepAlive组件，则计入缓存
   if (isAliveCom && aliveName && !cacheData.has(aliveName)) {
@@ -107,7 +107,7 @@ export const KeepAliveContextProvider = (props: KeepAliveProviderProps) => {
   );
 
   useEffect(() => {
-    console.log(`[keep-alive]----cacheData`, cacheData);
+    // console.log(`[keep-alive]----cacheData`, cacheData);
   }, [cacheData]);
 
   return (

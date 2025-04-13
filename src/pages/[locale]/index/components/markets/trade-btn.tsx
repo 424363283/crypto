@@ -38,14 +38,15 @@ const styles = css`
   .trade-btn {
     display: inline-block;
     padding: 0 10px;
-    line-height: 32px;
+    line-height: 40px;
     font-size: 14px;
     font-weight: 500;
-    color: var(--theme-font-color-1);
+    color: var(--text-white);
     border-radius: 4px;
     cursor: pointer;
-    min-width: 68px;
+    min-width: 88px;
     text-align: center;
+    height:40px;
     border: 1px solid var(--theme-border-color-2);
     &:hover {
       background: var(--skin-primary-color);

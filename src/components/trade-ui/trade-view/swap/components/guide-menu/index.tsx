@@ -31,9 +31,9 @@ export const GuideMenu = ({ children }: { children: (visible: boolean) => ReactN
   const isDemo = isSwapDemo(useLocation().pathname);
   const swapInfo = !isDemo ? `/swap-info` : `/swap-info/demo`;
   const data = [
-    [LANG('指南'), isUsdtType ? '/sections/5692040237583' : '/sections/5692040658191', true],
+    [LANG('指南'), isUsdtType ? '/sections/11320601264783' : '/sections/11320601264783', true],
     [LANG('新手引导'), () => setStepGuide(!stepGuide)],
-    [LANG('交易规则'), _handleRuleModalVisible],
+    // [LANG('交易规则'), _handleRuleModalVisible],
     [LANG('实时资金费率'), swapInfo, false, `page=0${query}`],
     [LANG('资金费率历史'), swapInfo, false, `page=1${query}`],
     [LANG('风险保障基金'), swapInfo, false, `page=2${query}`],
@@ -88,14 +88,14 @@ export const GuideMenu = ({ children }: { children: (visible: boolean) => ReactN
         {children?.(visible)}
       </Dropdown>
       {ruleVisible && <RuleModal />}
-      {stepGuide && (
+      {/* {stepGuide && ( */}
         <TutorialModel
           open={stepGuide}
           onCancel={() => setStepGuide(false)}
           type='swap'
           title={LANG('如何完成一笔合约交易')}
         />
-      )}
+      {/* )} */}
     </>
   );
 };

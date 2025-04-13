@@ -6,24 +6,26 @@ import { useState } from 'react';
 import css from 'styled-jsx/css';
 import { Modal } from './components/modal';
 import { EXPORTS_TYPE } from './types';
+import { Button } from '@/components/button';
 
 const ExportRecord = (props: { type: EXPORTS_TYPE; digital?: boolean }) => {
   const [visible, setVisible] = useState(false);
   return (
     <div className='export-box'>
-      <Link href='https://cointracking.info/?ref=M815131 ' target='_blank'>
+      {/* <Link href='https://cointracking.info/?ref=M815131 ' target='_blank'>
         <CommonIcon name='external-cointracking' width={110} height={42} className='logo' />
-      </Link>
-      <ProTooltip
+      </Link> */}
+      {/* <ProTooltip
         placement='topRight'
         title={<span>{LANG('Get a 10% discount on Tracking and Tax Reporting by CoinTracking')}</span>}
       >
         <CommonIcon name='common-tooltip-0' size={20} className='logo' />
-      </ProTooltip>
-      <div className='export' onClick={() => setVisible(true)}>
-        <CommonIcon name='common-download' className='icon' size={14} />
-        <span>{LANG('导出')}</span>
-      </div>
+      </ProTooltip> */}
+      <Button className='export' width={96} rounded onClick={() => setVisible(true)}
+      >
+        <CommonIcon name='common-export' size={16} className='logo' />
+        {LANG('导出')}
+      </Button>
       {visible && <Modal visible={visible} onClose={() => setVisible(false)} {...props} />}
       <style jsx>{styles}</style>
     </div>
@@ -39,20 +41,7 @@ const styles = css`
     .export {
       display: flex;
       align-items: center;
-      padding: 5px 8px;
-      background: var(--theme-background-color-14);
-      border-radius: 2px;
-      cursor: pointer;
-      border-radius: 5px;
-      margin-left: 14px;
-      :global(.icon) {
-        margin-right: 6px;
-      }
-      span {
-        font-size: 12px;
-        font-weight: 500;
-        color: var(--theme-font-color-1);
-      }
+      gap: 8px;
     }
   }
 `;

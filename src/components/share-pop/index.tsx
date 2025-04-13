@@ -46,7 +46,7 @@ const SharePop: React.FC<P> = ({ domID, shareCallback, shareUrl, idea }) => {
       key: 'x',
     },
   ];
-  const newIdea = idea || LANG('立即加入Y-MEX，超过{num}体验金静待领取！', { num: '$5000' });
+  const newIdea = idea || LANG('立即加入YMEX，超过{num}体验金静待领取！', { num: '$5000' });
 
   const onShareItemClick = (name: string) => {
     const inviteUrl = shareUrl || `https://www.Y-MEX.com/invite?ru=${user?.ru}`;

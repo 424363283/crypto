@@ -8,6 +8,8 @@ import css from 'styled-jsx/css';
 import { BasicInput } from '../../basic-input';
 import { store } from '../store';
 import { CaptchaButton } from './captcha-btn';
+import { Size } from '@/components/constants';
+import { useResponsive } from '@/core/hooks';
 
 export const InputVerificationCode = (props: {
   type: LOCAL_KEY;
@@ -16,7 +18,7 @@ export const InputVerificationCode = (props: {
   className?: string;
   withBorder?: boolean;
   autoSend?: boolean;
-  label?: string;
+  label?: React.ReactNode;
   withdrawData?: any;
   showLabel?: boolean;
 }) => {
@@ -33,6 +35,7 @@ export const InputVerificationCode = (props: {
   } = props;
   const isEmailInput = type === LOCAL_KEY.INPUT_VERIFICATION_EMAIL || type === LOCAL_KEY.INPUT_REGISTER_EMAIL;
   const isPhoneInput = type === LOCAL_KEY.INPUT_VERIFICATION_PHONE || type === LOCAL_KEY.INPUT_REGISTER_PHONE;
+  const { isMobile } = useResponsive();
   const [code, setCode] = useState('');
   const getPlaceholder = () => {
     if (isEmailInput) {
@@ -54,6 +57,16 @@ export const InputVerificationCode = (props: {
     };
   }, []);
 
+  useEffect(() => {
+    if (isEmailInput) {
+      setCode(store.emailCode);
+    } else if (isPhoneInput) {
+      setCode(store.smsCode);
+    } else {
+      setCode(store.gaCode);
+    }
+  }, [store.smsCode, store.emailCode, store.gaCode]);
+
   const handleInputChange = (value: string) => {
     if (isEmailInput) {
       store.emailCode = value;
@@ -62,7 +75,6 @@ export const InputVerificationCode = (props: {
     } else {
       store.gaCode = value;
     }
-    setCode(value);
     onInputChange?.(value);
   };
   const LABEL_MAP: { [key: string]: string } = {
@@ -82,7 +94,8 @@ export const InputVerificationCode = (props: {
         maxLength={6}
         withBorder={withBorder}
         suffix={<CaptchaButton type={type} scene={scene} autoSend={autoSend} />}
-        showLabel = {showLabel}
+        showLabel={showLabel}
+        size={isMobile ? Size.LG : Size.XL}
       />
       <style jsx>{styles}</style>
     </div>
@@ -113,6 +126,7 @@ const styles = css`
         border-color: #d8d8d8;
         color: #bcc0ca;
       }
+      
     }
     .focus-border {
       border: 1px solid var(--skin-primary-color) !important;

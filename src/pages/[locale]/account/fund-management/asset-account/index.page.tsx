@@ -1,9 +1,9 @@
-import { UniversalLayout } from '@/components/layouts/login/universal';
+import { UniversalLayout } from '@/components/layouts/universal';
 import Table from '@/components/table';
 import { getDepositRecordsApi, getPaymentsRecordsApi, getWithdrawRecordsApi } from '@/core/api';
 import { useLastPathname } from '@/core/hooks';
 import { LANG, Lang } from '@/core/i18n';
-import { getUrlQueryParams, message } from '@/core/utils';
+import { getUrlQueryParams, MediaInfo, message } from '@/core/utils';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
@@ -11,13 +11,14 @@ import { useImmer } from 'use-immer';
 import { useRechargeColumns } from '../assets-overview/modules/fund-history/components/hooks/use-recharge-columns';
 import { useTransferRecordColumns } from '../assets-overview/modules/fund-history/components/hooks/use-transfer-record-columns';
 import { useWithdrawColumns } from '../assets-overview/modules/fund-history/components/hooks/use-withdraw-columns';
-import { TableStyle } from '../components/table-style';
 import TableContent from './components/table-content';
 import { Recharge } from './recharge/components/recharge';
 import { TransferEntry } from './transfer/components/transfer-entry';
 import { WithdrawEntry } from './withdraw/components/withdraw-entry';
+import { StepsStyle } from '../asset-account/components/steps-style';
+import Nav from '@/components/nav';
 
-enum TAB_KEY {
+export enum TAB_KEY {
   RECHARGE = 'recharge',
   WITHDRAW = 'withdraw',
   TRANSFER = 'transfer',
@@ -113,40 +114,75 @@ function AssetAccount() {
   const TABLET_TITLE_MAP = {
     [TAB_KEY.RECHARGE]: LANG('近期充币记录'),
     [TAB_KEY.WITHDRAW]: LANG('近期提币记录'),
-    [TAB_KEY.TRANSFER]: LANG('近期转账记录'),
+    [TAB_KEY.TRANSFER]: LANG('近期内部转账记录'),
   };
   const FUND_HISTORY_LINK_ID = {
     [TAB_KEY.RECHARGE]: '2',
     [TAB_KEY.WITHDRAW]: '3',
     [TAB_KEY.TRANSFER]: '4',
   };
+  const NAV_TITLE_MAP = {
+    [TAB_KEY.RECHARGE]: LANG('充币'),
+    [TAB_KEY.WITHDRAW]: LANG('提币'),
+    [TAB_KEY.TRANSFER]: LANG('内部转账'),
+  };
+  console.log(TABLE_COLUMN_MAP[lastPathname]);
+  console.log(tableData, 111);
+  
   return (
-    <UniversalLayout className='asset-count-container' bgColor='var(--theme-secondary-bg-color)'>
+    <UniversalLayout className='asset-count-container' bgColor='var(--fill-2)' headerBgColor='var(--fill-2)'>
+      <div className='asset-account-header'>
+        <Nav title={NAV_TITLE_MAP[curTab]} />
+      </div>
       {renderTabContent()}
       <TableContent
         title={TABLET_TITLE_MAP[curTab]}
         allUrl='/account/fund-management/assets-overview'
         query={{ type: 'fund-history', tab: FUND_HISTORY_LINK_ID[curTab] }}
       >
-        <Table
-          dataSource={tableData}
-          columns={TABLE_COLUMN_MAP[lastPathname]}
-          pagination={false}
-          showTabletTable
-          showMobileTable
-        />
+         <Table
+            dataSource={tableData}
+            columns={TABLE_COLUMN_MAP[lastPathname]}
+            pagination={false}
+            showTabletTable
+            showMobileTable
+            isHistoryList
+          />
       </TableContent>
-      <TableStyle />
       <style jsx>{styles}</style>
+      <StepsStyle />
     </UniversalLayout>
   );
 }
 const styles = css`
+  :global(.uni-layout .main) {
+    min-height: 100% !important;
+    margin-bottom: 24px;
+  }
+  :global(.common-table) {
+    position: relative;
+    min-height: 300px;
+  }
+
   :global(.asset-count-container) {
     :global(table) {
       padding: 0;
     }
-    background-color: var(--theme-background-color-2);
+    background-color: var(--bg-1);
+    @media ${MediaInfo.mobile} {
+      padding: 0 12px;
+      background-color: transparent;
+    }
+    .asset-account-header {
+      position: sticky;
+      top: 56px;
+      z-index: 10;
+      @media ${MediaInfo.mobile} {
+        background-color:transparent;
+        top: 44px;
+        z-index: 99;
+      }
+    }
     .asset-account-card {
       background-color: #fff;
       width: 100%;

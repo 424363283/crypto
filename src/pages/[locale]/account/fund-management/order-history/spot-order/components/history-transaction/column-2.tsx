@@ -1,3 +1,4 @@
+import ClipboardItem from '@/components/clipboard-item';
 import { LANG } from '@/core/i18n';
 import dayjs from 'dayjs';
 
@@ -74,7 +75,6 @@ export const column3 = [
   },
   {
     title: LANG('成交额'),
-    align: 'right',
     render: (value: SpotHistoryTransactionOrderItem, o: SpotHistoryTransactionOrderItem) => {
       const coin = o.side === 1 ? o.sourceCoin : o.targetCoin;
       return (
@@ -84,5 +84,13 @@ export const column3 = [
         </div>
       );
     },
+  },
+  {
+    title: LANG('订单编号'),
+    dataIndex: 'id',
+    align: 'right',
+    render: (id: any, item: any) => {
+      return <ClipboardItem text={id} style={{justifyContent: 'flex-end'}}/>
+    }
   },
 ];

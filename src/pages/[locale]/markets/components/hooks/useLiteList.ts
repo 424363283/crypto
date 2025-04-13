@@ -5,26 +5,34 @@ import { store } from '../../store';
 import { CURRENT_TAB } from '../../types';
 
 interface LITE_LIST_STATE {
-  mainListIds: string[];
-  liteInnovateListIds: string[];
+  liteCryptoIds: string[];
+  liteDerivIds: string[];
+  liteUStockIds: string[];
+  liteHKStockIds: string[];
   liteOrderListIds: string[];
 }
 const useLiteList = () => {
   const { currentId } = store;
   const [liteList, setLiteList] = useState<LITE_LIST_STATE>({
-    mainListIds: [],
-    liteInnovateListIds: [],
+    liteCryptoIds: [],
+    liteDerivIds: [],
+    liteUStockIds: [],
+    liteHKStockIds: [],
     liteOrderListIds: [],
   });
   useEffect(() => {
     const getLiteData = async () => {
       const group = await Group.getInstance();
-      const mainListIds = group.getLiteMainByIds();
-      const liteInnovateListIds = group.getLiteInnovateByIds();
+      const liteCryptoIds = group.getLiteCryptoByIds();
+      const liteDerivIds = group.getLiteDerivByIds();
+      const liteUStockIds = group.getLiteUStockByIds();
+      const liteHKStockIds = group.getLiteHKStockByIds();
       const liteOrderListIds = group.getLiteOrderByIds();
       setLiteList({
-        mainListIds,
-        liteInnovateListIds,
+        liteCryptoIds,
+        liteDerivIds,
+        liteUStockIds,
+        liteHKStockIds,
         liteOrderListIds,
       });
     };

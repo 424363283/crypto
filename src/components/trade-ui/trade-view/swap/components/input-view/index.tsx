@@ -11,6 +11,8 @@ import { OrderBookEmitter } from '@/core/events';
 import { useEffect } from 'react';
 import { VolUnitSelect } from './components/vol_unit_select';
 import { clsx, styles } from './styled';
+import OrderTypeSelect from '../input-view-header/components/order-type-select';
+import { useSwapMinOrderVolumeState } from '@/core/hooks/src/use-swap-min-order-state';
 
 export const InputView = () => {
   const { isDark } = useTheme();
@@ -24,6 +26,7 @@ export const InputView = () => {
   const cryptoData = Swap.Info.getCryptoData(quoteId);
   const flagPrice = Swap.Socket.getFlagPrice(quoteId);
   const { isMarket: isMarketType, isSpsl } = Swap.Trade.orderTradeType;
+  const orderTradeType = Swap.Trade.store.orderTradeType;
   const { minChangePrice, baseShowPrecision } = cryptoData;
   // const baseSymbol = Swap.Trade.getBaseSymbol(quoteId);
   const { buyMinPrice, buyMaxPrice, sellMinPrice, sellMaxPrice } = Swap.Utils.formatCryptoPriceRange(
@@ -41,6 +44,8 @@ export const InputView = () => {
     volumeMax = Number(balance.toFixed(balanceDigit));
   }
 
+  const { minOrderVolume, volumeUnitText } = useSwapMinOrderVolumeState();
+
   useEffect(() => {
     const event = (price: string) => {
       Swap.Trade.onPriceChange(Swap.Utils.minChangeFormat(cryptoData.minChangePrice, price));
@@ -50,78 +55,135 @@ export const InputView = () => {
       emitter.off(OrderBookEmitter.ORDER_BOOK_ITEM_PRICE, event);
     };
   }, [cryptoData]);
+  useEffect(() => {
+    return () => {
+      Swap.Trade.clearInputVolume();
+    };
+  }, []);
   return (
     <>
       <div className={clsx('input-view', !isDark && 'light')}>
         {isSpsl && (
-          <Input
-            aria-label={LANG('触发价格')}
-            className={clsx('swap-input')}
-            inputComponent={MinChangeInput}
-            label={LANG('触发价格')}
-            type='number'
-            value={triggerPrice}
-            onChange={(v: any) => Swap.Trade.onTriggerPriceChange(v)}
-            max={sellMaxPrice}
-            min={buyMinPrice}
-            step={minChangePrice || 1}
-            digit={baseShowPrecision}
-            blankDisplayValue=''
-            enableMinChange={!triggerPriceIsFlagPriceType}
-            suffix={() => (
-              <PriceTypeSelect onChange={(v) => Swap.Trade.onTriggerPriceTypeChange(v)} value={triggerPriceType} />
-            )}
-          />
-        )}
-        {!isMarketType && (
-          <Input
-            aria-label={LANG('价格')}
-            className={clsx('swap-input')}
-            inputComponent={MinChangeInput}
-            label={LANG('价格')}
-            type='number'
-            value={inputPrice}
-            onChange={(v: any) => Swap.Trade.onPriceChange(v)}
-            onBlur={(e: any, next: any) => {
-              if (!Swap.Trade.store.price) {
-                Swap.Trade.onPriceChange(Swap.Utils.getNewestPrice());
-              } else {
-                next();
-              }
-            }}
-            max={sellMaxPrice}
-            min={buyMinPrice}
-            step={minChangePrice || 1}
-            digit={baseShowPrecision}
-            suffix={() => (
-              <div className={clsx('price-suffix')}>
-                <div
-                  className={clsx('newest')}
-                  onClick={() =>
-                    Swap.Trade.onPriceChange(
-                      Swap.Utils.minChangeFormat(cryptoData.minChangePrice, Swap.Utils.getNewestPrice())
-                    )
-                  }
-                >
-                  {LANG('最新')}
+          <>
+            <div className={clsx('title')}>{LANG('触发价格')}</div>
+            <Input
+              aria-label={LANG('触发价格')}
+              className={clsx('swap-input')}
+              inputComponent={MinChangeInput}
+              // label={LANG('触发价格')}
+              type="number"
+              value={triggerPrice}
+              onChange={(v: any) => Swap.Trade.onTriggerPriceChange(v)}
+              max={sellMaxPrice}
+              min={buyMinPrice}
+              step={minChangePrice || 1}
+              digit={baseShowPrecision}
+              blankDisplayValue=""
+              enableMinChange={!triggerPriceIsFlagPriceType}
+              controllerV3
+              suffix={() => (
+                <div className={clsx('price-suffix ')}>
+                  <PriceTypeSelect onChange={v => Swap.Trade.onTriggerPriceTypeChange(v)} value={triggerPriceType} />
                 </div>
-                <div className={clsx('unit')}>{priceUnitText}</div>
-              </div>
-            )}
-          />
+              )}
+            />
+            <div className={clsx('title')}>{isMarketType ? LANG('市价') : LANG('限价')}</div>
+            <Input
+              aria-label={LANG('价格')}
+              className={clsx('swap-input')}
+              inputComponent={MinChangeInput}
+              label={isMarketType ? LANG('市价') : ''}
+              type="number"
+              value={inputPrice}
+              disabled={isMarketType}
+              onChange={(v: any) => Swap.Trade.onPriceChange(v)}
+              onBlur={(e: any, next: any) => {
+                if (isMarketType) return;
+                if (!Swap.Trade.store.price) {
+                  Swap.Trade.onPriceChange(Swap.Utils.getNewestPrice());
+                } else {
+                  next();
+                }
+              }}
+              max={sellMaxPrice}
+              min={buyMinPrice}
+              step={minChangePrice || 1}
+              digit={baseShowPrecision}
+              suffix={() => (
+                <div className={clsx('price-suffix ')}>
+                  <OrderTypeSelect
+                    value={orderTradeType}
+                    onChange={(type: any) => {
+                      Swap.Trade.store.orderTradeType = type;
+                      Swap.Trade.onPriceChange('');
+                      Swap.Trade.clearInputVolume();
+                    }}
+                  />
+                </div>
+              )}
+            />
+          </>
         )}
+        {!isSpsl && !isMarketType && (
+          <>
+            <div className={clsx('title')}>{LANG('价格')}</div>
+            <Input
+              controllerV3
+              aria-label={LANG('价格')}
+              className={clsx('swap-input')}
+              inputComponent={MinChangeInput}
+              // label={LANG('价格')}
+              type="number"
+              value={inputPrice}
+              onChange={(v: any) => Swap.Trade.onPriceChange(v)}
+              onBlur={(e: any, next: any) => {
+                if (!Swap.Trade.store.price) {
+                  Swap.Trade.onPriceChange(Swap.Utils.getNewestPrice());
+                } else {
+                  next();
+                }
+              }}
+              // max={sellMaxPrice}
+              // min={buyMinPrice}
+              max={Number.MAX_SAFE_INTEGER}
+              min={0}
+              step={minChangePrice || 1}
+              digit={baseShowPrecision}
+              suffix={() => (
+                <div className={clsx('price-suffix ')}>
+                  <div
+                    className={clsx('newest')}
+                    onClick={() =>
+                      Swap.Trade.onPriceChange(
+                        Swap.Utils.minChangeFormat(cryptoData.minChangePrice, Swap.Utils.getNewestPrice())
+                      )
+                    }
+                  >
+                    {LANG('最新价')}
+                  </div>
+                  {
+                    // <div className={clsx('unit')}>{priceUnitText}</div>
+                  }
+                </div>
+              )}
+            />
+          </>
+        )}
+        <div className={clsx('title')}>{LANG('数量')}</div>
         <Input
+          placeholder={`${LANG('最小')} ${minOrderVolume}`}
           aria-label={LANG('数量')}
           className={clsx('swap-input')}
           component={DecimalInput}
-          label={isMarginUnit ? LANG('保证金') : LANG('数量')}
-          type='number'
+          // label={isMarginUnit ? LANG('保证金') : LANG('数量')}
+          type="number"
           value={inputVolume}
           onChange={(v: any) => Swap.Trade.onVolumeChange(v)}
-          max={volumeMax}
+          // max={volumeMax}
+          max={Number.MAX_SAFE_INTEGER}
           min={0}
           digit={volumeDigit}
-          blankDisplayValue=''
+          blankDisplayValue=""
           suffix={() => <VolUnitSelect />}
         />
       </div>

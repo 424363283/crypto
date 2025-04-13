@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
+import { Dropdown, MenuProps } from 'antd';
 
 const Overview = ({ data, isMobile = false }: { data: any; isMobile?: boolean }) => {
   const totalPrice = data?.low?.add(data?.high);
@@ -19,6 +20,7 @@ const Overview = ({ data, isMobile = false }: { data: any; isMobile?: boolean })
   const router = useRouter();
   const routerId = router.query.id as string;
   const [currentSpotScale, setCurrentSpotScale] = useState(2);
+  const [chatItems, setChatItems] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -28,6 +30,17 @@ const Overview = ({ data, isMobile = false }: { data: any; isMobile?: boolean })
       }
     })();
   }, [routerId]);
+
+  useEffect(() => {
+    const items = data?.chat?.split(',').map((item: any, index: any) => ({
+      key: index,
+      label: <Link className='link' href={item} target='_blank' rel='noreferrer'>
+        <span>{item}</span>
+      </Link>
+    }));
+    setChatItems(items || []);
+
+  }, [data?.chat]);
 
   const renderMediaWrapper = () => {
     if (data?.twitter || data?.telegram || data?.reddit || data?.chat) {
@@ -54,32 +67,55 @@ const Overview = ({ data, isMobile = false }: { data: any; isMobile?: boolean })
                   <span>Reddit</span>
                 </Link>
               )}
-              {data?.chat && (
+              {/* data?.chat && (
                 <Link className='link' href={formatDefaultText(data?.chat)} target='_blank' rel='noreferrer'>
                   <Svg src='/static/images/trade/header/chat.svg' width={28} height={28} />
                   <span>Chat</span>
                 </Link>
-              )}
+              ) */}
+              {data?.chat && <Dropdown
+                menu={{ items: chatItems }}
+                overlayClassName=''
+                placement='topLeft'
+                trigger={['hover']} >
+                <div className='chat' >
+                  <Svg src='/static/images/trade/header/chat.svg' width={28} height={28} />
+                  <span>Chat</span>
+                </div>
+              </Dropdown>}
             </div>
           </div>
           <style jsx>{`
             .media-wrapper {
-              margin: 10px 0;
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 16px;
+              align-self: stretch;
               .title {
-                color: var(--theme-font-color-1);
+                color: var(--text-primary);
                 font-weight: 500;
               }
               .container {
-                margin-top: 10px;
                 display: flex;
+                align-items: center;
+                gap: 16px;
                 :global(a) {
                   display: flex;
                   flex-direction: column;
                   align-items: center;
-                  color: var(--theme-font-color-1);
-                  margin-right: 20px;
+                  line-height: normal;
+                  color: var(--text-primary);
+                  gap: 8px;
+                }
+                .chat {
+                  display: flex;
+                  flex-direction: column;
+                  align-items: flex-start;
+                  cursor: pointer;
+                  gap: 8px;
                   span {
-                    margin-top: 8px;
+                    line-height: normal;
                   }
                 }
               }
@@ -238,7 +274,6 @@ const Overview = ({ data, isMobile = false }: { data: any; isMobile?: boolean })
               </>
             )}
           </ul>
-          <div className='divider' />
           {!data.isEtf && (
             <div className='price-wrapper'>
               <div className='price-container'>
@@ -289,10 +324,10 @@ const Overview = ({ data, isMobile = false }: { data: any; isMobile?: boolean })
 const styles = css`
   .content {
     display: flex;
-    width: 800px;
-    height: 368px;
-    padding: 20px;
-    color: var(--theme-trade-text-color-1);
+    align-self: stretch;
+    align-items: flex-start;
+    color: var(--text-primary);
+    gap: 24px;
     @media ${MediaInfo.tablet} {
       flex-direction: column;
       width: 469px;
@@ -319,8 +354,8 @@ const styles = css`
             flex: 1;
             text-align: center;
             padding: 8px;
-            background: var(--theme-background-color-3);
-            color: var(--theme-font-color-1);
+            background: var(--fill-3);
+            color: var(--text-primary);
             margin-right: 4px;
             border-radius: 6px;
             &:last-child {
@@ -334,7 +369,6 @@ const styles = css`
         margin-top: 15px;
         .base-info {
           padding-bottom: 12px;
-          border-bottom: 1px solid var(--theme-background-color-3);
         }
         .publish {
           margin-top: 12px;
@@ -342,12 +376,16 @@ const styles = css`
       }
     }
     > .left {
-      width: 420px;
-      margin-right: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+      flex: 1 0 0;
       .header {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        align-self: stretch;
         .left {
           display: flex;
           align-items: center;
@@ -360,32 +398,33 @@ const styles = css`
         }
         .subtitle {
           font-size: 12px;
-          color: var(--theme-font-color-2);
+          color: var(--text-secondary);
         }
         .right {
           display: flex;
+          flex-direction: row;
           justify-content: flex-end;
           align-items: center;
         }
       }
       .introduction {
-        margin-top: 12px;
         white-space: normal;
         word-break: normal;
-        color: var(--theme-trade-text-color-1);
+        color: var(--text-primary);
         height: 130px;
         overflow-y: auto;
       }
       .link-wrapper {
-        margin-top: 20px;
         display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        align-self: stretch;
         :global(a) {
           flex: 1;
           text-align: center;
           padding: 8px;
-          background: var(--theme-background-color-2-4);
-          color: var(--theme-font-color-1);
-          margin-right: 4px;
+          background: var(--fill-3);
+          color: var(--text-primary);
           border-radius: 6px;
           &:last-child {
             margin-right: 0;
@@ -394,49 +433,61 @@ const styles = css`
       }
     }
     .right {
-      width: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+      flex: 1 0 0;
       .base-info {
-        color: var(--theme-font-color-1);
+        color: var(--text-primary);
         font-weight: 500;
       }
       .publish {
-        margin-top: 10px;
-        color: var(--theme-font-color-2);
+        color: var(--text-secondary);
       }
       .icon-wrapper {
-        margin-top: 12px;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
+        gap: 8px;
+        align-self: stretch;
         .item {
-          margin-right: 4px;
-          width: 33.3%;
+          display: flex;
+          padding: 8px 0px;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+          flex: 1 0 0;
           display: flex;
           justify-content: center;
           align-items: center;
           padding: 6px;
-          background: var(--theme-background-color-2-4);
-          color: var(--theme-font-color-1);
+          background: var(--fill-3);
+          color: var(--text-primary);
           border-radius: 6px;
           cursor: default;
-          span {
-            margin-left: 4px;
-          }
         }
       }
       .info-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        align-self: stretch;
+        flex-direction: column;
+        gap: 16px;
+        flex: 1 0 0;
         padding: 0;
-        margin: 10px 0;
+        margin: 0;
         li {
           display: flex;
           justify-content: space-between;
-          align-items: center;
-          margin-bottom: 14px;
+          align-items: flex-start;
+          align-self: stretch;
           > div {
             &:first-child {
-              color: var(--theme-font-color-2);
+              color: var(--text-secondary);
             }
             span {
-              color: var(--theme-font-color-2);
+              color: var(--text-secondary);
             }
             &.raise {
               color: var(--color-green);
@@ -447,37 +498,36 @@ const styles = css`
           }
         }
       }
-      .divider {
-        height: 0.5px;
-        background: var(--theme-background-color-3);
-        margin: 10px 0;
-      }
       .from {
         display: flex;
         justify-content: center;
         align-items: center;
-        color: var(--theme-font-color-2);
+        color: var(--text-secondary);
         :global(.coinMarketCap_icon) {
           margin-left: 5px;
         }
       }
       .price-wrapper {
-        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: stretch;
+        align-self: stretch;
+        gap: 10px;
         .price-container {
           display: flex;
           justify-content: space-between;
           align-items: center;
           &:first-child {
-            color: var(--theme-font-color-1);
+            color: var(--text-primary);
           }
           &:last-child {
-            color: var(--theme-font-color-2);
+            color: var(--text-secondary);
           }
         }
         .percent-wrapper {
           display: flex;
           align-items: center;
-          margin: 8px 0;
           .low,
           .high,
           .none {
@@ -485,14 +535,14 @@ const styles = css`
             border-radius: 3px;
           }
           .low {
-            background: var(--skin-primary-color);
+            background: var(--yellow);
             position: relative;
             &:after {
               content: ' ';
               display: inline-block;
               height: 6px;
               width: 4px;
-              background: var(--theme-trade-bg-color-2);
+              background: var(--bg-1);
               position: absolute;
               right: -4px;
               border-top-right-radius: 3px;
@@ -500,10 +550,10 @@ const styles = css`
             }
           }
           .high {
-            background: var(--const-color-orange);
+            background: var(--red);
           }
           .none {
-            background: var(--theme-background-color-8);
+            background: var(--fill-3);
           }
         }
       }

@@ -72,7 +72,11 @@ export type LiteListItem = {
   /**
    * 商品标识
    */
-  commodity: string;
+  commodity: string; 
+  /**
+  * 合约标识
+  */
+  contract: string;
   /**
    * 商品名称
    */
@@ -157,4 +161,7 @@ export type LiteListItem = {
    * 移动止损偏移量
    */
   trailOffset: number | string;
+
+  deferDays?: number;
+  deferFee?: number;
 };

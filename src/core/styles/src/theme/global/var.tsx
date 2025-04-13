@@ -8,7 +8,7 @@ import { zIndexMap } from './z-index';
  * --const 主要用于常量，方便全局更改
  * --skin-font-color 黄底黑色字，或者蓝底白色字
  * --skin-font-reverse-color 黄底白色字，或者蓝底黑色字
- * --skin-primary-color 品牌色。默认的为#782CE8；韩国的为#1772F8
+ * --skin-primary-color 品牌色。默认的为#07828B；韩国的为#1772F8
  * --skin-main-font-color 主要字体颜色。默认的品牌字体颜色为#ebb30e；韩国的字体颜色还是品牌色不变
  * --skin-color-active 激活颜色。韩国为品牌蓝色，其余为品牌黄色
  * --color-red 下跌颜色值。会自动根据locale切换韩国色值

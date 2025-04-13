@@ -12,12 +12,22 @@ export class Position {
   public static state = state;
 
   public static pollingPosition = new Polling({
-    interval: 2000,
+    interval: 1000,
     callback: Position.fetchPositionList,
   });
 
+  public static pollingTradeHistory = new Polling({
+    interval: 1000,
+    callback: Position.fetchTradeHistoryList,
+  });
+
+  public static pollingOrderHistory = new Polling({
+    interval: 1000,
+    callback: Position.fetchOrderHistoryList,
+  });
+
   public static pollingAssets = new Polling({
-    interval: 2000,
+    interval: 1000,
     callback: Position.fetchSpotAssetsList,
   });
 
@@ -79,8 +89,8 @@ export class Position {
    */
   public static async fetchOrderHistoryList() {
     if (!Account.isLogin) return;
-    Position.state.orderHistoryList = [];
-    Position.state.loading = true;
+    // Position.state.orderHistoryList = [];
+    // Position.state.loading = true;
 
     let payload: any = {
       openTypes: '0,2',
@@ -109,7 +119,7 @@ export class Position {
    */
   public static async fetchTradeHistoryList() {
     if (!Account.isLogin) return;
-    Position.state.tradeHistoryList = [];
+    // Position.state.tradeHistoryList = [];
     let [createTimeGe, createTimeLe] = <dayjs.Dayjs[]>[];
     const historyRange = Position.state.historyRange;
     switch (historyRange) {
@@ -131,7 +141,7 @@ export class Position {
         break;
     }
 
-    Position.state.loading = true;
+    // Position.state.loading = true;
 
     const res = await getSpotHistoryDetailApi({
       openTypes: '0,2',

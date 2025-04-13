@@ -1,6 +1,7 @@
 import { LiteListItem, TPlanCommission } from '@/core/shared';
 import { http } from '../../http/request';
 import { paths } from '../paths';
+import { infoInstance as Info } from '@/core/shared/src/lite/info';
 
 /** 简单合约资产 */
 export function getLiteAssetApi() {
@@ -11,28 +12,59 @@ export function getLiteAssetApi() {
     lucky: number;
     money: number;
     uid: string;
+    frozen: number;
+    position: number;
+    plan: number;
   }>(paths['lite_asset']);
 }
 
 /** 简单合约历史成交量 */
 export function getLiteHistoryVolumeApi() {
-  return http.get<{ amountToday: number; amountTotal: number }>(paths['lite_history_amount'], { params: { standard: true } });
+  return http.get<{ amountToday: number; amountTotal: number }>(paths['lite_history_amount'], {
+    params: { standard: true }
+  });
 }
 
 /** 简单合约历史 */
-export function getLiteHistoryApi(params = {} as { size?: number; standard?: boolean; commodityZone?: string; commodity?: string }) {
+export function getLiteHistoryApi(params = {} as { page?: number; size?: number; timeGe?: string; timeLe?: string }) {
   return http.get<LiteListItem[]>(paths['lite_history'], {
-    params: { _: new Date().getTime(), standard: true, ...params },
+    params: { ...params }
   });
+}
+
+/** 简单合约历史分页数据 */
+export function getLiteHistoryTransactionApi(params = {} as { page?: number; size?: number; timeGe?: string; timeLe?: string }) {
+  return http.get<LiteListItem[]>(paths['lite_history_transaction'], {
+    params: { ...params }
+  });
+}
+
+/** 简单合约资金流水 */
+export function getLiteHistoryFundsApi(
+  params = {} as { size?: number; standard?: boolean; commodityZone?: string; commodity?: string }
+) {
+  return http.get<LiteListItem[]>(paths['lite_history_funds'], {
+    params: { _: new Date().getTime(), standard: true, ...params }
+  });
+}
+
+/** 简单合约资金流水v2 */
+export function getLiteHistoryFundsV2Api(
+  params = {} as { size?: number; standard?: boolean; commodityZone?: string; commodity?: string }
+) {
+  return http.post<LiteListItem[]>(paths['lite_history_funds_v2'], params);
 }
 
 /** 简单合约计划委托撤单 */
 export function cancelLitePlanOrderApi(id: string | string[]) {
-  return http.post<{ successNum: number; failureNum: number }>(`${paths['lite_revoke']}`, Array.isArray(id) ? { ids: id } : { id });
+  return http.post<{ successNum: number; failureNum: number }>(
+    `${paths['lite_revoke']}`,
+    Array.isArray(id) ? { ids: id } : { id }
+  );
 }
 /** 简单合约计划委托 */
-export function getLitePlanOrdersApi() {
-  return http.get<TPlanCommission[]>(paths['lite_plan_orders']);
+export function getLitePlanOrdersApi(data?: any) {
+  return http.get<TPlanCommission[]>(paths['lite_plan_orders'], { params: data });
 }
 /** 简单合约资金费率 */
 export function getLiteFundingRateApi(id: string) {
@@ -46,11 +78,16 @@ export function withdrawSellApi(data: any) {
 
 /** 获取简单合约基本配置 */
 export function getLiteConfigInfoApi<T>() {
-  return http.get<{ tp: number; sl: number; confirmPlace: boolean; confirmClose: boolean; overnight: boolean }>(paths['get_lite_setting']);
+  return {code: 200, data: Info.getTradePreference()};
+  return http.get<{ tp: number; sl: number; confirmPlace: boolean; confirmClose: boolean; overnight: boolean, deferPref: boolean }>(
+    paths['get_lite_setting']
+  );
 }
 
 /** 设置简单合约基本配置 */
 export function setLiteConfigInfoApi(data: any) {
+  Info.setTradePreference(data);
+  return {code: 200};
   return http.post(paths['get_lite_set_info'], data);
 }
 
@@ -111,13 +148,22 @@ export function getAccountFollowDataApi() {
 }
 
 /** 获取正在跟单 */
-export function getAccountFollowListApi(data: { page: number; rows: number; sumIncomeGe: number; sumIncomeLt: number }) {
-  return http.get<{ count: number; size: number; page: number; list: [] }>(paths['lite_follow_follower_traders'], { params: { ...data, page: data.page || 1, rows: data.rows || 10 } });
+export function getAccountFollowListApi(data: {
+  page: number;
+  rows: number;
+  sumIncomeGe: number;
+  sumIncomeLt: number;
+}) {
+  return http.get<{ count: number; size: number; page: number; list: [] }>(paths['lite_follow_follower_traders'], {
+    params: { ...data, page: data.page || 1, rows: data.rows || 10 }
+  });
 }
 
 /** 获取跟单交易详情 */
 export function getAccountFollowDetailApi(data: { page: number; rows: number }) {
-  return http.get<{ list: []; totalPage: number; page: number; size: number }>(paths['lite_follow_follower_orders'], { params: { ...data, page: data.page || 1, size: data.rows || 10 } });
+  return http.get<{ list: []; totalPage: number; page: number; size: number }>(paths['lite_follow_follower_orders'], {
+    params: { ...data, page: data.page || 1, size: data.rows || 10 }
+  });
 }
 /** 交易员修改跟随人数 */
 export function saveFollowMaxApi(data: { followTeamMax: number; followOpenMax: number }) {
@@ -141,12 +187,18 @@ export function getFollowTraderIncomeViewApi(data: { currency?: string }) {
     incomeAll: number;
     ratio: number;
   }>(paths['lite_follow_trader_income_view'], {
-    params: { ...data, currency: data.currency || 'USDT' },
+    params: { ...data, currency: data.currency || 'USDT' }
   });
 }
 
 /** 获取跟单交易员的跟随者 */
-export function getFollowTraderFollowersApi(data: { currency?: string; rows: number; page: number; traderId: number; relation?: boolean }) {
+export function getFollowTraderFollowersApi(data: {
+  currency?: string;
+  rows: number;
+  page: number;
+  traderId: number;
+  relation?: boolean;
+}) {
   return http.get<{
     list: [{ uid: number; username: string }];
     count: number;
@@ -154,7 +206,7 @@ export function getFollowTraderFollowersApi(data: { currency?: string; rows: num
     page: number;
     size: number;
   }>(paths['lite_follow_trader_followers'], {
-    params: { ...data, currency: data.currency || 'USDT' },
+    params: { ...data, currency: data.currency || 'USDT' }
   });
 }
 
@@ -168,7 +220,9 @@ export function addFollowTraderStyleApi(code: string) {
 }
 /** 获取所有系统理念 */
 export function getFollowTraderIdeaApi() {
-  return http.get<{ id: string; type: number; code: string; name: string; content: string }[]>(`${paths['lite_follow_trader_sysTags']}/1`);
+  return http.get<{ id: string; type: number; code: string; name: string; content: string }[]>(
+    `${paths['lite_follow_trader_sysTags']}/1`
+  );
 }
 /** 获取我的理念 */
 export function getFollowTraderMyIdeaApi() {
@@ -218,7 +272,7 @@ export function getLitePositionApi(
   }
 ) {
   return http.get<LiteListItem[]>(paths['lite_position'], {
-    params: { ...params },
+    params: { ...params }
   });
 }
 /** 获取体验金账户 */

@@ -32,7 +32,7 @@ const AffiliateTableUserInfo = ({ avatar, username, distance, uid }: Props) => {
             UID: {uid}
             <div onClick={stopPropagation} className='copy-wrapper'>
               <CopyToClipboard text={uid} onCopy={() => message.success(LANG('复制成功'))}>
-                <CommonIcon name='common-copy-2-yellow-0' size={10} className='copy' enableSkin />
+                <CommonIcon size={10} name='common-copy' className='copy' enableSkin />
               </CopyToClipboard>
             </div>
           </div>

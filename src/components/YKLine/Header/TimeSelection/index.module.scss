@@ -6,7 +6,7 @@
     .leftTitle {
       flex: 1;
       font-size: 14px;
-      color: var(--text-text-primary);
+      color: var(--text-primary);
       font-style: normal;
       font-weight: 500;
     }
@@ -15,8 +15,8 @@
   .timeListContent {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 16px;
+    gap: 7px;
+    margin-top: 30px;
   }
 
   .timeBtn {
@@ -24,49 +24,52 @@
     padding: 1px 8px;
     justify-content: center;
     align-items: center;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     position: relative;
-    color: var(--text-text-tertiary, #9fa1a6);
+    color: var(--text-secondary);
     box-sizing: border-box;
-    min-width: 66px;
+    min-width: 48px;
     &:hover {
-      border-radius: 4px;
-      background: var(--functional-orange-1, rgba(255, 143, 52, 0.1));
-      color: var(--theme-theme-normal, #ff8f34);
+      border-radius: 8px;
+      border-color:var(--brand) ;
+      // background: var(--brand, rgba(255, 143, 52, 0.1));
+      color: var(--brand);
     }
   }
 }
 
 .selectTimeBtn {
-  border-radius: 4px;
-  border: 1px solid var(--text-text-tertiary, #9fa1a6);
-  background: var(--fill-page-tertiary, #f4f5f6);
+  border-radius: 8px;
+  border: 1px solid var(--text-secondary);
+  // color: var(--brand) !important;
+  // background: var(--bg-1, #f4f5f6);
 }
 
 .timeBtnContent {
-  width: 320px;
-  background-color: var(--special-mask);
-  border-radius: 8px;
+  width: 248px;
+  background-color: var(--bg-1);
+  border-radius: 16px;
   :global {
     .ant-popover-inner {
       padding: 16px !important;
-      background: var(--fill-page-secondary);
-      bottom: 0
+      background: var(--fill-3);
+      bottom: 0;
+      border-radius: 16px;
     }
 
     .ant-popover-content {
       background-color: transparent;
-      border-radius: 4px;
+      border-radius: 16px;
     }
   }
 }
 
 .activeBtn {
-  border-radius: 4px;
-  border: 1px solid var(--theme-theme-normal, #ff8f34);
-  background: var(--functional-orange-1, rgba(255, 143, 52, 0.1));
-  color: var(--theme-theme-normal, #ff8f34);
+  border-radius: 8px;
+  border: 1px solid var(--brand);
+  // background: var(--brand);
+  color: var(--brand) !important;
 }
 
 .selectIcon {
@@ -76,7 +79,7 @@
 }
 
 .rightTitle {
-  color: var(--theme-theme-normal, #ff8f34);
+  color: var(--brand);
   font-weight: 500;
 
   span {
@@ -99,7 +102,7 @@
     transition: all 0.2s ease;
 
     &:hover path {
-      fill: #ff7800;
+      fill: var(--brand);
     }
   }
 }

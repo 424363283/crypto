@@ -1,5 +1,3 @@
-import OrderTypeSelect from './components/order-type-select';
-
 import CommonIcon from '@/components/common-icon';
 import { DesktopOrTablet } from '@/components/responsive';
 import { Svg } from '@/components/svg';
@@ -23,13 +21,10 @@ export const InputViewHeader = () => {
   const options = [
     [LANG('限价'), LIMIT],
     [LANG('市价'), MARKET],
+    // [LANG('计划委托'), LIMIT_SPSL],
   ];
-  const moreOptions = [
-    [LANG('限价止盈止损'), LIMIT_SPSL],
-    [LANG('市价止盈止损'), MARKET_SPSL],
-  ];
+  const triggerOrderOptions = [LIMIT_SPSL, MARKET_SPSL];
 
-  const balance = Swap.Assets.getDisplayBalance({ code: quoteId, walletId: Swap.Info.getWalletId(isUsdtType) });
   const onLimitTypeChange = (type: any) => {
     Swap.Trade.store.orderTradeType = type;
     Swap.Trade.clearInputVolume();
@@ -83,7 +78,7 @@ export const InputViewHeader = () => {
         <div className={clsx('section-1')}>
           <div className={clsx('left')}>
             {options.map(([text, type], index) => {
-              const active = type === orderTradeType;
+              const active = type === orderTradeType || triggerOrderOptions.includes(type) && triggerOrderOptions.includes(orderTradeType);
 
               return (
                 <div key={index} className={clsx('option', active && 'active')} onClick={() => onLimitTypeChange(type)}>
@@ -91,11 +86,13 @@ export const InputViewHeader = () => {
                 </div>
               );
             })}
-            <OrderTypeSelect
-              options={moreOptions}
-              value={orderTradeType}
-              onChange={(value: any) => onLimitTypeChange(value)}
-            />
+            {
+              // <OrderTypeSelect
+              //   options={moreOptions}
+              //   value={orderTradeType}
+              //   onChange={(value: any) => onLimitTypeChange(value)}
+              // /> 
+            }
           </div>
           <Tooltip
             placement='topRight'
@@ -113,38 +110,33 @@ export const InputViewHeader = () => {
             }
           >
             <div className={clsx('info')}>
-              <Svg src={'/static/images/swap/info.svg'} width='16' height='16' />
+              <CommonIcon name='common-info-0' size={16} />
             </div>
           </Tooltip>
         </div>
-        <div className={clsx('section-2')}>
-          <div className={clsx('left', 'swap-guide-step-1')}>
-            {balanceTips ? (
-              <Tooltip placement='bottomLeft' title={balanceTips}>
-                <InfoHover className={clsx('label')}>{LANG('可用')}&nbsp;</InfoHover>
-              </Tooltip>
-            ) : (
-              <div className={clsx('label')}>{LANG('可用')}&nbsp;</div>
-            )}
-            <div className={clsx('text')} onClick={onTransfer}>
-              {balance} {cryptoData.settleCoin}
-            </div>
-            <div className={clsx('transfer')} onClick={onTransfer}>
-              {!isDemo ? (
-                <CommonIcon name='common-exchange-0' size={12} enableSkin />
-              ) : (
-                <CommonIcon name='common-exchange-demo-0' size={14} enableSkin />
-              )}
-            </div>
-          </div>
-          <div className={clsx('right')}>
-            <DesktopOrTablet>
-              <div className={clsx('calculator')} onClick={() => Swap.Trade.setModal({ calculatorVisible: true })}>
-                <Svg src={'/static/images/swap/calculator.svg'} width='16' height='16' />
-              </div>
-            </DesktopOrTablet>
-          </div>
-        </div>
+        {
+          // <div className={clsx('section-2')}>
+          //   <div className={clsx('left', 'swap-guide-step-1')}>
+          //     {balanceTips ? (
+          //       <Tooltip placement='bottomLeft' title={balanceTips}>
+          //         <InfoHover className={clsx('label')}>{LANG('可用')}&nbsp;</InfoHover>
+          //       </Tooltip>
+          //     ) : (
+          //       <div className={clsx('label')}>{LANG('可用')}&nbsp;</div>
+          //     )}
+          //     <div className={clsx('text')} onClick={onTransfer}>
+          //       {balance} {cryptoData.settleCoin}
+          //     </div>
+          //     <div className={clsx('transfer')} onClick={onTransfer}>
+          //       {!isDemo ? (
+          //         <CommonIcon name='common-exchange-0' size={12} enableSkin />
+          //       ) : (
+          //         <CommonIcon name='common-exchange-demo-0' size={14} enableSkin />
+          //       )}
+          //     </div>
+          //   </div>
+          // </div>
+        }
       </div>
       {styles}
     </>

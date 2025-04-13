@@ -42,13 +42,14 @@ export default function LangContent({ onLanguageItemClick }: { onLanguageItemCli
     const localLang = router.query.locale || 'en';
     setLang(localLang);
   }, []);
+  
   return (
     <>
       <ul className='list'>
         {Object.entries(Lang.getLanguageMap).map(([key, value]) => {
           return (
             <li key={key} onClick={() => onLanguageChange(key)} className={clsx(lang === key && 'selected-lang')}>
-              {value}
+              <span>{value}</span>
               <Mobile>{lang === key && <CommonIcon name='common-checked-0' size={18} enableSkin />}</Mobile>
             </li>
           );
@@ -76,6 +77,9 @@ export default function LangContent({ onLanguageItemClick }: { onLanguageItemCli
               padding-left: 12px;
               background-color: var(--theme-background-color-3);
               color: var(--skin-hover-font-color);
+            }
+            span{
+              min-width: 100px;
             }
           }
           li.selected-lang {

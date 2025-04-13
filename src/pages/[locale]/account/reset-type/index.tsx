@@ -104,18 +104,19 @@ export default function ResetType() {
       coin: true,
     });
     if (res.data.list.length) {
-      if (user?.identityNumberValid) {
-        _goToReset();
-      } else {
-        AlertFunction({
-          width: 515,
-          okText: LANG('确认'),
-          content: LANG('请完成身份认证再进行下一步操作'),
-          onOk: () => {
-            setShowVerifyModal(true);
-          },
-        });
-      }
+      _goToReset();
+      // if (user?.identityNumberValid) {
+      //   _goToReset();
+      // } else {
+      //   AlertFunction({
+      //     width: 515,
+      //     okText: LANG('确认'),
+      //     content: LANG('请完成身份认证再进行下一步操作'),
+      //     onOk: () => {
+      //       setShowVerifyModal(true);
+      //     },
+      //   });
+      // }
     } else {
       _goToReset();
     }
@@ -129,14 +130,14 @@ export default function ResetType() {
     <AccountBox
       title={LANG('验证码不可用')}
       prompt={LANG(
-        '为了您的账户安全，请谨慎选择需要重置的安全项，系统会根据您的操作行为决定是否禁用提现48小时。重置成功后，您需重新登录。'
+        '为了您的账户安全，请谨慎选择需要重置的安全项，系统会根据您的操作行为决定是否禁用提现24小时。重置成功后，您需重新登录。'
       )}
     >
       <div className='reset-type'>
         <div className='r-title'>{LANG('选择不可用安全项')}</div>
         <ul className='reset-list'>
           <Item type='ga' content={LANG('谷歌验证不可用，申请重置')} />
-          <Item
+          {/* <Item
             type='phone'
             content={LANG('手机号{phone}不可用，申请重置', {
               phone: bindOptions.find((item) => item.type === 'phone')?.target,
@@ -147,7 +148,7 @@ export default function ResetType() {
             content={LANG('邮箱{email}不可用，申请重置', {
               email: bindOptions.find((item) => item.type === 'email')?.target,
             })}
-          />
+          /> */}
         </ul>
         <div className={clsx('pc-v2-btn', !resetType && 'disabled')} style={{ width: '530px' }} onClick={_verify}>
           {LANG('确定重置')}
@@ -164,24 +165,31 @@ export default function ResetType() {
 }
 const styles = css`
   .reset-type {
+    width:530px;
+    margin:auto;
     .r-title {
-      font-size: 15px;
-      font-weight: 500;
-      color: #333333;
-      padding-bottom: 20px;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 20px;
+      color: var(--text-primary);
+      padding-bottom: 16px;
     }
     .reset-list {
-      margin: 0;
-      padding: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      border-radius: 8px;
+      border: 1px solid var(--line-1);
+      margin: 0 0 40px 0;
+      gap: 24px;
       :global(.r-li) {
         display: flex;
         align-items: center;
-        margin-bottom: 20px;
         :global(.item-content) {
           font-size: 14px;
-          margin-left: 14px;
-          font-weight: 500;
-          color: var(--theme-font-color-1);
+          margin-left: 8px;
+          font-weight: 400;
+          color: var(--text-primary);
         }
       }
     }

@@ -8,17 +8,23 @@ const _isSwapDemo = isSwapDemo();
 const list = [
   {
     name: LANG('合约'),
-    href: enableLite
-      ? '/account/fund-management/order-history/lite-order?id=0'
-      : !_isSwapDemo
-        ? '/account/fund-management/order-history/swap-u-order?tab=0'
-        : '/account/fund-management/order-history/demo/swap-u-order?tab=0',
+    href: !_isSwapDemo
+      ? '/account/fund-management/order-history/swap-u-order?type=records&tab=0'
+      : '/account/fund-management/order-history/demo/swap-u-order?type=records&tab=0',
+    // href: enableLite
+    //   ? '/account/fund-management/order-history/lite-order?id=0'
+    //   : !_isSwapDemo
+    //     ? '/account/fund-management/order-history/swap-u-order?type=records&tab=0'
+    //     : '/account/fund-management/order-history/demo/swap-u-order?type=records&tab=0',
   },
 ];
-/* 先隐藏现货菜单 */
-// if (!_isSwapDemo) {
-//   list.push({ name: LANG('现货'), href: '/account/fund-management/order-history/spot-order?tab=0' });
-// }
+/* 现货菜单 */
+if (!_isSwapDemo) {
+  list.push({ name: LANG('币币'), href: '/account/fund-management/order-history/spot-order?type=records&tab=0' });
+}
+if(enableLite) {
+  list.push({ name: LANG('简易合约'), href: '/account/fund-management/order-history/lite-order?type=records&tab=0' });
+}
 const HeaderOrder = () => {
   return (
     <ul className='order-list-wrapper'>
@@ -54,10 +60,9 @@ const styles = css`
       word-break: keep-all;
       font-size: 16px;
       font-weight: 500;
-      color: var(--theme-font-color-1);
+      color: var(--text-secondary);
       &:hover {
-        background-color: var(--theme-background-color-3);
-        color: var(--skin-hover-font-color);
+        color: var(--brand);
       }
     }
   }

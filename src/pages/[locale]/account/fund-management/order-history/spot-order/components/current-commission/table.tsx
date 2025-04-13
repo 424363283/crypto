@@ -1,11 +1,15 @@
 import { getSpotPositionApi } from '@/core/api';
-import { message } from '@/core/utils';
-import { useMemo } from 'react';
+import { Polling, message } from '@/core/utils';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import { TableStyle } from '../../../../components/table-style';
 import HistoricalTable from '../../../components/historical-table';
 import { SpotFilterBar } from '../spot-filter-bar';
 import { columns0 } from './column-0';
+import { Loading } from '@/components/loading';
+import { LoadingType, Spot } from '@/core/shared';
+import { closeSpotOrderApi, getSpotPositionListApi } from '@/core/api';
+import { LANG } from '@/core/i18n';
 
 export const SpotCurrentCommissionTable = () => {
   const [state, setState] = useImmer({
@@ -72,8 +76,11 @@ export const SpotCurrentCommissionTable = () => {
     });
   };
 
-  const onChangePagination = (pagi: number) => {
-    fetchSpotPosition({ ...searchParam, page: pagi });
+  const onChangePagination = (page: number) => {
+    setState((draft) => {
+      draft.page = page;
+    });
+    fetchSpotPosition({ ...searchParam, page: page });
   };
 
   const filterList = useMemo(() => {
@@ -90,12 +97,23 @@ export const SpotCurrentCommissionTable = () => {
     return list;
   }, [data, state.searchParam]);
 
+  useEffect(() => {
+    const iter = setInterval(() => {
+      fetchSpotPosition({ ...searchParam, page: page })
+    }, 2000);
+
+    return () => {
+      clearInterval(iter);
+    };
+
+  }, [page, searchParam])
   return (
     <>
-      <SpotFilterBar onSearch={fetchSpotPosition} />
+      <SpotFilterBar onSearch={fetchSpotPosition} filterData={filterList} />
       <HistoricalTable
         dataSource={filterList}
-        loading={loading}
+        // loading={loading}
+        loading={false}
         columns={columns0}
         showTabletTable
         showMobileTable

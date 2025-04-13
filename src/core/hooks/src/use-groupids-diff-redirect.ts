@@ -1,6 +1,6 @@
 import { useRouter } from '@/core/hooks';
 import { Group, GroupItem } from '@/core/shared';
-import { getUrlQueryParams } from '@/core/utils';
+import { getUrlQueryParams,isLite } from '@/core/utils';
 import { useLayoutEffect } from 'react';
 
 type MapType = {
@@ -13,6 +13,13 @@ type MapType = {
     ids: GroupItem[];
     action: () => void;
   };
+
+
+  lite: {
+    ids: GroupItem[];
+    action: () => void;
+  };
+  
 };
 
 /**
@@ -48,9 +55,29 @@ export const useGroupidsDiffRedirect = (key: keyof MapType): void => {
             }
           },
         },
+        lite: {
+          ids: group.getLiteList,
+          action: () => {
+            let klineId = group.getLiteQuoteCode(id);
+            if(klineId){
+              router.push(`/${key}/${id.toLocaleLowerCase()}`);
+              // router.push(`/${key}/${id.toLocaleLowerCase()}?contract=${klineId}`);
+            }else{
+              let _id = '';
+              if (MAP[key].ids.find((item) => item.id === 'BTCUSDT')) {
+                _id = 'btcusdt';
+              } else {
+                _id = MAP[key].ids[0]?.id?.toLocaleLowerCase();
+              }
+              klineId = group.getLiteQuoteCode(id) || id;
+              router.push(`/${key}/${_id}`);
+              // router.push(`/${key}/${_id}?contract=${klineId}`);
+            }
+          },
+        },
       };
       const findData = MAP[key].ids.find((item) => item.id === id);
-      if (!findData && id) {
+      if (isLite(id) || (!findData && id)) {
         MAP[key].action();
       }
     })();

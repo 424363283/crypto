@@ -31,7 +31,9 @@ export const AssetsBalanceBefore = memo(
               toCurrency={selectedCurrency}
               scale={selectedCurrency === 'USDT' ? 2 : 8}
             />
-            {selectedCurrency}
+            <span className='px-1'>
+              {selectedCurrency}
+            </span>
           </>
         )}
       </div>
@@ -86,7 +88,9 @@ export const AssetsBalance = (props: AssetsBalanceProps) => {
   const { spotAssetsStore } = Account.assets;
   const { spotTotalBalance } = spotAssetsStore;
   const { swapBalance, swapUBalance } = useSwapBalance(); // 不包含冻结部分，未实现盈亏不计算入内
-  const totalAssetsBalance = spotTotalBalance.add(swapBalance).add(swapUBalance);
+  const swapUTotalMargin = useCalcSwapAssets({ isSwapU: true }).total.totalMargin2;
+  const swapTotalMargin = useCalcSwapAssets({ isSwapU: false }).total.totalMargin2;
+  const totalAssetsBalance = spotTotalBalance.add(swapTotalMargin || swapBalance).add(swapUTotalMargin || swapUBalance);
   // console.log('spotTotalBalance', spotTotalBalance, swapBalance, swapUBalance);
 
   const [selectedCurrency, setSelectedCurrency] = useLocalStorage(LOCAL_KEY.ASSETS_COIN_UNIT, 'BTC');
@@ -98,7 +102,7 @@ export const AssetsBalance = (props: AssetsBalanceProps) => {
 
   const { total: calcTotal } = useCalcSwapAssets({ isSwapU });
   useEffect(() => {
-    if (type === WalletType.ASSET_SPOT || type === WalletType.ASSET_TOTAL) {
+    if (type === WalletType.ASSET_SPOT) {
       const polling = new Polling({
         interval: 4000,
         callback: () => {
@@ -112,6 +116,22 @@ export const AssetsBalance = (props: AssetsBalanceProps) => {
         Assets.destroyWsListener();
       };
     }
+    if (type === WalletType.ASSET_SWAP_U || type === WalletType.ASSET_TOTAL) {
+      const polling = new Polling({
+        interval: 4000,
+        callback: () => {
+          Account.assets.getAllSpotAssets(true);
+          Account.assets.getPerpetualUAsset(true);
+        },
+      });
+      polling.start();
+      Assets.dispatchWsListener();
+      return () => {
+        polling.stop();
+        Assets.destroyWsListener();
+      };
+    }
+
   }, [type]);
   const ASSETS_BALANCE_MAP: any = {
     [WalletType.ASSET_TOTAL]: totalAssetsBalance,
@@ -121,16 +141,18 @@ export const AssetsBalance = (props: AssetsBalanceProps) => {
   };
   return (
     <div className='assets-text-wrapper'>
-      <AssetsBalanceBefore
-        enableHideBalance={enableHideBalance}
-        assetsBalance={ASSETS_BALANCE_MAP[type]}
-        selectedCurrency={selectedCurrency}
-      />
-      <Dropdown menu={{ items, onClick: handleButtonClick }} trigger={['click']}>
-        <div className='dropdown-btn'>
-          <CommonIcon name='common-arrow-down-0' size={12} />
-        </div>
-      </Dropdown>
+      <div className='assets-before-selector'>
+        <AssetsBalanceBefore
+          enableHideBalance={enableHideBalance}
+          assetsBalance={ASSETS_BALANCE_MAP[type]}
+          selectedCurrency={selectedCurrency}
+        />
+        <Dropdown menu={{ items, onClick: handleButtonClick }} trigger={['click']}>
+          <div className='dropdown-btn'>
+            <CommonIcon name='common-tiny-triangle-down' size={12} />
+          </div>
+        </Dropdown>
+      </div>
       <AssetsBalanceAfter assetsBalance={ASSETS_BALANCE_MAP[type]} enableHideBalance={enableHideBalance} />
       <style jsx>{styles}</style>
     </div>
@@ -139,43 +161,41 @@ export const AssetsBalance = (props: AssetsBalanceProps) => {
 const styles = css`
   .assets-text-wrapper {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     position: relative;
     white-space: nowrap;
-    :global(.assets-before) {
-      font-size: 20px;
-      font-weight: 500;
-      color: var(--theme-font-color-6);
-      background-image: linear-gradient(
-        to right,
-        transparent 50%,
-        var(--theme-font-color-6) 0%,
-        var(--theme-font-color-6) 50%
-      );
-      background-size: 8px 1px;
-      background-position: bottom; /* 将虚线显示在下方 */
-      background-repeat: repeat-x;
+    gap: 8px;
+    .assets-before-selector {
+      display: flex;
+      flex-direction: row;
+      :global(.assets-before) {
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 32px;
+        @media ${MediaInfo.mobile} {
+          font-size: 30px;
+        }
+      }
     }
     :global(.hide-balance) {
       color: var(--theme-font-color-6);
     }
     :global(.assets-after) {
-      color: var(--theme-font-color-3);
-      font-size: 18px;
-      font-weight: 500;
+      color: var(--text-tertiary);
+      font-size: 14px;
+      font-weight: 400;
       white-space: nowrap;
       @media ${MediaInfo.mobile} {
-        font-size: 16px;
-        position: absolute;
-        top: 34px;
+        font-size: 14px;
       }
     }
     :global(.dropdown-btn) {
       cursor: pointer;
-      background-color: var(--theme-background-color-14);
-      padding: 6px 7px;
+      background-color: transparent;
       border-radius: 5px;
-      margin: 0 10px;
+      margin-right: 8px;
       display: flex;
       align-items: center;
       justify-content: center;

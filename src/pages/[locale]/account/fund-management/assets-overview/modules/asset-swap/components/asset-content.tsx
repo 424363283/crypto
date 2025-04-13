@@ -7,6 +7,7 @@ import css from 'styled-jsx/css';
 import { AssetsBottomTitle } from '../../../components/assets-bottom-title';
 import InfoCard from '../../../components/header-info-card';
 import { checkIsUsdtType } from '../../../helper';
+import { useResponsive } from '@/core/hooks';
 
 export const AssetContent = ({
   margin,
@@ -20,6 +21,7 @@ export const AssetContent = ({
   deductionAmount: number;
 }) => {
   const [swapLuckyRate, setSwapLuckyRate] = useState(0);
+  const { isMobile } = useResponsive();
   const fetchBasicInfo = async () => {
     const { data, code, message: errorMsg } = await getCommonBaseInfoApi();
     if (code === 200) {
@@ -33,7 +35,7 @@ export const AssetContent = ({
   }, []);
   const currencySymbol = checkIsUsdtType() ? 'USDT' : 'USD';
   return (
-    <div className='assets-swap-bottom-card'>
+    <div className={`assets-swap-bottom-card ${!isMobile ? 'border-t':''}`}>
       <DesktopOrTablet>
         <AssetsBottomTitle />
       </DesktopOrTablet>
@@ -42,12 +44,14 @@ export const AssetContent = ({
           title={`${LANG('保证金余额')}${currencySymbol}`}
           titleTips={LANG('保证金余额=钱包余额+全仓未实现亏损')}
           amount={margin}
+          direction={isMobile?'bottom':'left'}
         />
         <InfoCard
           title={`${LANG('未实现盈亏')}${currencySymbol}`}
           titleTips={LANG('采用标记价格计算未实现盈亏、保证金余额，以及回报率')}
           amount={unrealisedPNL}
           amountClass={clsx(Number(unrealisedPNL) >= 0 ? 'main-raise' : 'main-fall')}
+          direction={isMobile?'bottom':'left'}
         />
         <InfoCard
           sub
@@ -71,8 +75,9 @@ export const AssetContent = ({
             </div>
           }
           amount={bonusAmount}
+          direction={isMobile?'bottom':'left'}
         />
-        <InfoCard
+        {/* <InfoCard
           sub
           title={`${LANG('抵扣金')}${currencySymbol}`}
           titleTips={
@@ -84,7 +89,7 @@ export const AssetContent = ({
             </div>
           }
           amount={deductionAmount}
-        />
+        /> */}
       </div>
       <style jsx>{styles}</style>
     </div>
@@ -94,20 +99,20 @@ const styles = css`
   .assets-swap-bottom-card {
     border-bottom-right-radius: 15px;
     border-bottom-left-radius: 15px;
-    background-color: var(--theme-background-color-2);
+    background-color: var(--bg-1);
     @media ${MediaInfo.desktop} {
-      margin-top: 20px;
+      margin-top: 0px;
     }
     .assets-content-wrapper {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 18px;
+      padding: 8px 16px;
       @media ${MediaInfo.mobile} {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        grid-gap: 10px;
-        padding: 10px 10px 17px;
+        grid-row-gap: 20px;
+        padding: 10px 0 17px;
       }
     }
     :global(.bonus-info) {

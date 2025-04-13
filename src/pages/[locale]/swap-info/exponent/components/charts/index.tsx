@@ -2,7 +2,7 @@ import { ResolutionType, config } from '@/components/chart/k-chart/components/k-
 import { KlineChart } from '@/components/chart/k-chart/lib/kline-chart';
 import { LANG } from '@/core/i18n';
 import { WS } from '@/core/network';
-import { Group, TradeMap } from '@/core/shared';
+import { Group, SwapTradeItem, TradeMap } from '@/core/shared';
 import { clsx } from '@/core/utils';
 import { useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
@@ -26,6 +26,17 @@ const Charts = ({ isUsdtType, setSymbol, setType, id, switchId }: any) => {
     setUsdtList(group.getSwapUsdList.map((swap: any) => Trade.get(swap.id)));
     setCoinList(group.getSwapCoinList.map((swap: any) => Trade.get(swap.id)));
   };
+
+  useEffect(() => {
+    let idx: number = 0;
+    if(isUsdtType) {
+      idx = usdtList.findIndex(( item: SwapTradeItem  ) => item.id === id?.toUpperCase());
+    } else {
+      idx = coinList.findIndex(( item: SwapTradeItem ) => item.id === id?.toUpperCase());
+    }
+    setCrypto(idx < 0 ? 0 : idx);
+  }, [usdtList, coinList, isUsdtType]);
+
   useEffect(() => {
     if (isUsdtType) {
       setCryptoList(usdtList.map((item: any) => item?.name));
@@ -109,7 +120,7 @@ const styles = css`
     }
     .r {
       display: flex;
-      border: 1px solid var(--theme-border-color-3);
+      /* border: 1px solid var(--theme-border-color-3); */
       border-radius: 5px;
       padding: 5px 5px;
       justify-content: space-between;

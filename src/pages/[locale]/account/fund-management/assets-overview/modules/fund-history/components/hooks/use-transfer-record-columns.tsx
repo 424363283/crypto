@@ -45,7 +45,7 @@ export const useTransferRecordColumns = () => {
     },
     {
       title: LANG('交易ID'),
-      dataIndex: 'txid',
+      dataIndex: 'id',
       render: (value: string) => {
         return <div className={'fw-300'}>{value}</div>;
       },
@@ -53,8 +53,9 @@ export const useTransferRecordColumns = () => {
     },
     {
       title: LANG('类型'),
-      render: () => {
-        return <div className={locale === 'zh' ? '' : 'fw-300'}>{LANG('转出')}</div>;
+      dataIndex: 'type',
+      render: (value: number) => {
+        return <div className={locale === 'zh' ? '' : 'fw-300'}>{value == 100 ? LANG('转入') : LANG('转出') }</div>;
       },
     },
     {

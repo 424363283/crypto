@@ -1,5 +1,5 @@
 import { TradeLink } from '@/core/i18n';
-import { clsx } from '@/core/utils';
+import { clsx, isLite } from '@/core/utils';
 import { memo, useContext } from 'react';
 import { MarketItemContext } from './marquee/utils';
 
@@ -12,11 +12,14 @@ const MaeketItem = ({ id, last }: { id?: string; last?: boolean }) => {
   // });
   const { data: marketsDetail } = useContext(MarketItemContext);
   const item = marketsDetail?.[id ?? ''];
+  if(!item) {
+    return <></>;
+  }
   return (
     <>
-      <TradeLink key={id} id={id}>
+      <TradeLink key={id} id={item?.id}>
         <div className={clsx(last && 'last', 'my-div')}>
-          <span>{item?.name}</span>
+          {isLite(item?.id) ? <span>{item?.name}</span> : <span>{`${item?.coin}${item?.type === 'SPOT' ? '/' : ''}${item?.quoteCoin} `}</span>}
           <span className={clsx('price', item?.isUp ? 'green' : 'red')}>
             {item?.rate !== undefined ? `${item?.rate}%` : ''}
           </span>

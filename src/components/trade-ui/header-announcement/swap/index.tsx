@@ -1,10 +1,10 @@
 import { Svg } from '@/components/svg';
 import { useZendeskLink } from '@/components/zendesk';
 import { getCommonNoticesApi } from '@/core/api';
-import { useTheme } from '@/core/hooks';
+import { useResponsive, useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { LOCAL_KEY, resso, useResso } from '@/core/store';
-import { Debounce, clsx } from '@/core/utils';
+import { MediaInfo, Debounce, clsx } from '@/core/utils';
 import { isSwapDemo } from '@/core/utils/src/is';
 import React, { useEffect, useRef, useState } from 'react';
 import SwiperCore, { Autoplay } from 'swiper';
@@ -19,7 +19,7 @@ const _store = resso<{ ids: string[] }>(
   {
     nameSpace: !isSwapDemo()
       ? LOCAL_KEY.TRADE_UI_SWAP_HEADER_ANNOUNCEMENT
-      : LOCAL_KEY.TRADE_UI_SWAP_DEMO_HEADER_ANNOUNCEMENT,
+      : LOCAL_KEY.TRADE_UI_SWAP_DEMO_HEADER_ANNOUNCEMENT
   }
 );
 const getListDebounce = new Debounce(() => {}, 500);
@@ -29,7 +29,9 @@ export const Index = React.memo(() => {
   const [opts, setOpts] = useState<any[]>([]);
   const { isDark } = useTheme();
   const store = useResso(_store);
-  const zendeskLink = useZendeskLink('/categories/5708257368591');
+  const zendeskLink = useZendeskLink('/categories/11310192831119');
+  const { isMobile } = useResponsive();
+
   const getList = () => {
     ref.current.count = ref.current.count + 1;
     const retry = () => {
@@ -38,7 +40,7 @@ export const Index = React.memo(() => {
       }
     };
     getCommonNoticesApi('3,4,5')
-      .then((res) => {
+      .then(res => {
         if (res.code == 200) {
           let notices: any[] = [...res.data];
           notices.sort((a, b) => {
@@ -55,40 +57,50 @@ export const Index = React.memo(() => {
   };
 
   const onClose = () => {
-    _store.ids = [..._store.ids, ...dataStore.data.map((v) => v.id)];
+    _store.ids = [..._store.ids, ...dataStore.data.map(v => v.id)];
     setOpts([]);
   };
 
   useEffect(() => {
-    setOpts(
-      dataStore.data.filter((v: any) => v.module?.includes('永续合约交易') && !_store.ids.includes(v.id)).slice(0, 5)
-    );
-  }, [dataStore.data, _store.ids]);
+    // setOpts(
+    //   dataStore.data.filter((v: any) => v.module?.includes('永续合约') && !_store.ids.includes(v.id)).slice(0, 5)
+    // );
+    setOpts(dataStore.data.filter((v: any) => v.label?.includes('永续合约')));
+    // }, [dataStore.data, _store.ids]);
+  }, [dataStore.data]);
 
   useEffect(() => {
     getListDebounce.run(() => getList());
   }, []);
+
+  // console.log('opts', opts);
+
   return (
     <>
       <div className={clsx('announcement', !opts.length && 'hidden', !isDark && 'light')}>
-        <Svg src='/static/images/announcement/info.svg' width={12} />
-        <div className='content'>
-          <div className='texts'>
+        <Svg src="/static/images/announcement/info.svg" width={isMobile ? 16 : 24} />
+        <div className="content">
+          <div className="texts">
             <Swiper
               direction={'vertical'}
               autoplay={{
-                delay: 5500,
+                delay: 5500
               }}
               loop={true}
-              className='announcement-swiper'
+              className="announcement-swiper"
             >
               {opts.map((v, i) => (
                 <SwiperSlide key={i}>
-                  <a className='item-title' href={v.url || zendeskLink} target='_blank'>
+                  <a className="item-title" href={v.url || zendeskLink} target="_blank">
                     <span>{v.title}</span>
-                    <div className='more'>
-                      {LANG('查看更多')}
-                      {'>>'}
+                    <div className="more">
+                      {/* {LANG('查看更多')} */}
+                      {/* {'>'} */}
+                      {isMobile ? null : isDark ? (
+                        <Svg src="/static/icons/primary/common/arrow-more.svg" width={24} />
+                      ) : (
+                        <Svg src="/static/icons/primary/common/arrow-more-light.svg" width={24} />
+                      )}
                     </div>
                   </a>
                 </SwiperSlide>
@@ -96,25 +108,30 @@ export const Index = React.memo(() => {
             </Swiper>
           </div>
         </div>
-        <ModalClose className='announcement-close' onClose={onClose} size={16} />
+        <ModalClose onClose={onClose} size={16} />
       </div>
       <style jsx>{`
         .announcement {
+          position: relative;
           overflow: hidden;
-          height: 34px;
-          border-radius: var(--theme-trade-layout-gap);
-          padding-left: 17.5px;
+          height: 40px;
+          /* border-radius: var(--theme-trade-layout-gap); */
+          padding: 8px 24px;
           display: flex;
           align-items: center;
-          border-radius: 8px;
-          border: 1px solid rgba(255, 211, 15, 0.5);
-          background: var(--skin-primary-bg-color-opacity-1);
-          margin-bottom: var(--theme-trade-layout-gap);
+          background: var(--label);
+          /* margin-bottom: var(--theme-trade-layout-gap); */
           transition: 0.3s all;
+          gap: 16px;
+          @media ${MediaInfo.mobile} {
+            height: 2.5rem;
+            padding: 0 1rem;
+            gap: 8px;
+          }
           &.light {
-            border-radius: 8px;
-            border: 1px solid #fde57b;
-            background: #faf7e7;
+            /* border-radius: 8px; */
+            /* border: 1px solid #fde57b; */
+            background: var(--label);
           }
           &.hidden {
             margin-bottom: 0;
@@ -128,8 +145,8 @@ export const Index = React.memo(() => {
             flex: 1;
             display: flex;
             align-items: center;
-            padding-left: 10px;
             overflow: hidden;
+            gap: 16px;
             .texts {
               height: 100%;
               width: 100%;
@@ -138,8 +155,6 @@ export const Index = React.memo(() => {
             .more {
               font-size: 12px;
               flex: none;
-
-              margin-left: 10px;
               color: var(--skin-main-font-color);
             }
           }
@@ -149,19 +164,23 @@ export const Index = React.memo(() => {
           .item-title {
             display: flex;
             align-items: center;
-            height: 32px;
             width: 100%;
-            font-size: 12px;
-            color: var(--theme-trade-text-color-1);
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            color: var(--text-primary);
+            @media ${MediaInfo.mobile} {
+              height: 100%;
+              font-size: 12px;
+            }
             span {
               white-space: nowrap;
               text-overflow: ellipsis;
               overflow: hidden;
             }
           }
-          :global(.announcement-close) {
-            flex: none;
-            position: unset;
+          :global(.close-wrapper) {
+            margin-right: 16px;
           }
         }
       `}</style>

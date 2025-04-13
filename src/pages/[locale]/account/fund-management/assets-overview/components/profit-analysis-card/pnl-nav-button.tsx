@@ -16,8 +16,8 @@ export const PnlNavButton = ({ type }: { type: WalletType }) => {
   };
   return (
     <div className='right-nav' onClick={onNavClick}>
-      <CommonIcon name='common-overview-active-0' size={20} enableSkin />
-      <span className='name'>{LANG('盈亏分析')}</span>
+      <CommonIcon className='hidden' name='common-overview-active-0' size={20} enableSkin />
+      <span className='name'>{LANG('分析详情')}</span>
       <CommonIcon name='common-next-icon-0' size={12} className='right-arrow' />
       <style jsx>{styles}</style>
     </div>
@@ -26,15 +26,14 @@ export const PnlNavButton = ({ type }: { type: WalletType }) => {
 const styles = css`
   .right-nav {
     cursor: pointer;
-    background-color: var(--theme-background-color-8);
     border-radius: 6px;
     display: flex;
     align-items: center;
     padding: 2px 4px;
     .name {
       margin-left: 5px;
-      color: var(--theme-font-color-1);
-      font-size: 12px;
+      color: var(--text-secondary);
+      font-size: 14px;
     }
     :global(.right-arrow) {
       margin-left: 5px;

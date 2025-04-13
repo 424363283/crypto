@@ -8,6 +8,7 @@ import { OrderListener } from '@/components/trade-ui/trade-view/swap/components/
 import { useRouter } from '@/core/hooks';
 import { Agreement, useAgreement } from '../../trade-view/swap/components/agreement';
 import { MobileTradeViewContext } from './components/order-actions-provider';
+import { MediaInfo } from '@/core/utils';
 
 export const Index = () => {
   const { onArgee, allow } = useAgreement();
@@ -43,9 +44,9 @@ export const Index = () => {
 
   return (
     <>
-      <div className='order-actions'>
+      <div className="order-actions">
         <div
-          className='button pc-v2-btn-green'
+          className="button pc-v2-btn-green"
           onClick={() => {
             _onOrder(true);
           }}
@@ -53,7 +54,7 @@ export const Index = () => {
           {buyText}
         </div>
         <div
-          className='button pc-v2-btn-red'
+          className="button pc-v2-btn-red"
           onClick={() => {
             _onOrder(false);
           }}
@@ -61,12 +62,12 @@ export const Index = () => {
           {sellText}
         </div>
       </div>
-      <MobileModal visible={visible} onClose={() => setVisible(false)} type='bottom'>
+      <MobileModal visible={visible} onClose={() => setVisible(false)} type="bottom">
         <BottomModal
           title={buy ? buyText : sellText}
           // titles={twoWayMode ? [LANG('开仓'), LANG('平仓')] : undefined}
           tabIndex={positionMode === OPEN ? 0 : 1}
-          onChangeIndex={(v) => onChange(v === 0 ? OPEN : CLOSE)}
+          onChangeIndex={v => onChange(v === 0 ? OPEN : CLOSE)}
           onConfirm={async () => {
             try {
               const result = Swap.Trade.onPlaceAnOrder({ buy: buy, onOrderConfirm: () => setVisible(false) });
@@ -79,7 +80,7 @@ export const Index = () => {
         >
           <MobileTradeViewContext.Provider value={{ isBuy: buy }}>
             <div
-              className='hide-scroll-bar'
+              className="hide-scroll-bar"
               style={{ marginTop: !twoWayMode ? -10 : 0, maxHeight: '70vh', overflowY: 'auto' }}
             >
               <SwapTradeViewContent />
@@ -87,7 +88,7 @@ export const Index = () => {
           </MobileTradeViewContext.Provider>
         </BottomModal>
       </MobileModal>
-      <MobileModal visible={visibleAgreement} onClose={() => setVisibleAgreement(false)} type='bottom'>
+      <MobileModal visible={visibleAgreement} onClose={() => setVisibleAgreement(false)} type="bottom">
         <BottomModal
           title={LANG('开通合约账户')}
           onConfirm={async () => {
@@ -112,6 +113,10 @@ export const Index = () => {
           display: flex;
           align-items: center;
           padding: 10px 8px 0;
+          @media ${MediaInfo.mobile} {
+            padding: 0;
+            gap: 8px;
+          }
           .button {
             color: var(dark-text-1);
             border-radius: 5px;
@@ -121,6 +126,21 @@ export const Index = () => {
             margin-right: 15px;
             &:nth-child(2) {
               margin-right: 0;
+            }
+            @media ${MediaInfo.mobile} {
+              height: 2.5rem;
+              line-height: 2.5rem;
+              border-radius: 2.5rem;
+              font-size: 14px;
+              font-weight: 500;
+              color: var(--text-white);
+              margin-right: 0;
+              &:nth-child(1) {
+                background: var(--green);
+              }
+              &:nth-child(2) {
+                background: var(--red);
+              }
             }
           }
         }

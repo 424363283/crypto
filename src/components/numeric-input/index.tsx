@@ -26,6 +26,7 @@ export const NumericInput = ({
   component,
   controller,
   controllerV2,
+  controllerV3: controllerV3,
   controllerReverse,
   className,
   inputClassName,
@@ -46,6 +47,7 @@ export const NumericInput = ({
   component?: any;
   controller?: any;
   controllerV2?: any;
+  controllerV3?: any;
   controllerReverse?: any;
   className?: any;
   inputClassName?: any;
@@ -99,6 +101,12 @@ export const NumericInput = ({
           fullWidth && 'full-width',
           className
         )}
+        onClick={(e: React.MouseEvent<HTMLElement>) => {
+          const target = event.target as HTMLElement;
+          if (target?.classList.contains('components-numeric-input')) {
+            inputRef?.current?.focus();
+          }
+        }}
       >
         {useMemo(() => (typeof prefix === 'function' ? prefix?.() : prefix), [prefix])}
         <Input
@@ -109,6 +117,13 @@ export const NumericInput = ({
           {...props}
           {...others}
         />
+        {controllerV3 && (
+          <div className={clsx('controller', 'v3', controllerClassName)}>
+            {clearable && <ClearButton onClick={onClear} />}
+            {renderAdd()}
+            {renderMinus()}
+          </div>
+        )}
         {!disabled && !controller && clearable && <ClearButton onClick={onClear} />}
         {useMemo(() => (typeof suffix === 'function' ? suffix?.() : suffix), [suffix])}
         {controller && (

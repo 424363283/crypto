@@ -16,7 +16,7 @@ export const COPY_LINK_ICON = () => {
   return (
     <div>
       <div className={`icon-wrapper `}>
-        <CommonIcon name='common-copy-link-0' size={17} />
+        <CommonIcon size={12} name='common-copy' />
       </div>
       <style jsx>{styles}</style>
     </div>

@@ -36,21 +36,22 @@ const styles = css`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 12px;
     font-size: 14px;
     .name {
-      border-bottom: 1px dashed var(--theme-font-color-placeholder);
-      color: var(--theme-font-color-3);
+      border-bottom: 1px dashed var(--line-3);
+      color: var(--text-secondary);
+      padding-bottom: 4px;
     }
     .value {
-      color: var(--theme-font-color-1);
+      color: var(--text-primary);
       font-size: 14px;
+      font-weight: 500;
     }
     .green {
-      color: var(-color-green);
+      color: var(-text-true);
     }
     .red {
-      color: var(--color-red);
+      color: var(--text-error);
     }
   }
 `;

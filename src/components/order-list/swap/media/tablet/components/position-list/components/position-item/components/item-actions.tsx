@@ -1,7 +1,7 @@
-import { Svg } from '@/components/svg';
+import CommonIcon from '@/components/common-icon';
 import { SubButton } from '@/components/trade-ui/trade-view/components/button';
-import { useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
+import { Swap } from '@/core/shared';
 
 export const ItemActions = ({
   onTrack,
@@ -9,7 +9,7 @@ export const ItemActions = ({
   onClose,
   onCloseAll,
   onReverse,
-  buy,
+  buy
 }: {
   buy: boolean;
   onTrack: any;
@@ -18,51 +18,49 @@ export const ItemActions = ({
   onCloseAll: any;
   onReverse: any;
 }) => {
-  const { isDark } = useTheme();
-  const reveseImg = !buy
-    ? isDark
-      ? '/static/images/swap/position/reverse_buy.svg'
-      : '/static/images/swap/position/reverse_buy_light.svg'
-    : isDark
-    ? '/static/images/swap/position/reverse_sell.svg'
-    : '/static/images/swap/position/reverse_sell_light.svg';
+  // const { isDark } = useTheme();
+  const twoWayMode = Swap.Trade.twoWayMode;
 
   return (
     <>
-      <div className='item-actions'>
+      <div className="item-actions">
         <SubButton onClick={onSpsl}>{LANG('止盈/止损')}</SubButton>
         <SubButton onClick={onClose}>{LANG('平仓')}</SubButton>
         <SubButton onClick={onCloseAll}>{LANG('市价全平')}</SubButton>
-        <SubButton onClick={onReverse} className={'reverse'}>
-          <Svg src={reveseImg} width={14} height={14} />
-        </SubButton>
+        {twoWayMode && (
+          <SubButton onClick={onReverse} className={'reverse'}>
+            <CommonIcon name="common-reverse-fan" width={16} height={16} enableSkin className="icon" />
+          </SubButton>
+        )}
       </div>
       <style jsx>{`
         .item-actions {
-          margin-top: 12px;
+          margin-top: 10px;
           display: flex;
           flex-direction: row;
           font-size: 12px;
+          gap: 8px;
           :global(> div) {
             cursor: pointer;
-            background-color: var(--theme-trade-sub-button-bg);
-            color: var(--theme-trade-text-color-1);
+            background-color: var(--brand);
+            color: var(--text-white);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 400;
-            height: 32px;
-            border-radius: 6px;
-            margin-right: 6px;
-            flex: 1;
-            padding: 0 5px;
-            &:last-child {
-              margin-right: 0;
-            }
+            height: 2rem;
+            border-radius: 1.375rem;
+            // margin-right: 6px;
+            gap: 10px;
+            flex: 1 0 0;
           }
           :global(.reverse) {
             flex: none;
-            width: 32px;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 2rem;
+            flex: 0;
+            background-color: var(--brand);
           }
         }
       `}</style>

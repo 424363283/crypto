@@ -1,3 +1,5 @@
+import ClipboardItem from '@/components/clipboard-item';
+import { getStatus } from '@/components/order-list/spot/components/order-history-table';
 import { LANG } from '@/core/i18n';
 import dayjs from 'dayjs';
 
@@ -21,7 +23,7 @@ type SpotHistoryCommissionItem = {
 };
 const SPOT_STATUS_MAP: { [key: string]: string } = {
   1: LANG('等待委托'),
-  2: LANG('委托识别'),
+  2: LANG('委托失败'),
   3: LANG('已委托'),
   4: LANG('等待撤单'),
   5: LANG('正在撤单'),
@@ -74,12 +76,12 @@ export const columns1 = [
       return <div className={`fw-300 ${value === 1 ? 'raise' : 'fall'}`}>{value === 1 ? LANG('买') : LANG('卖')}</div>;
     },
   },
-  {
-    title: LANG('触发价'),
-    dataIndex: 'triggerPrice',
-    render: (triggerPrice: number, { triggerType }: any) =>
-      triggerPrice ? `${triggerType === 1 ? '≥' : '≤'}${triggerPrice?.toFormat()}` : '--',
-  },
+  // {
+  //   title: LANG('触发价'),
+  //   dataIndex: 'triggerPrice',
+  //   render: (triggerPrice: number, { triggerType }: any) =>
+  //     triggerPrice ? `${triggerType === 1 ? '≥' : '≤'}${triggerPrice?.toFormat()}` : '--',
+  // },
   {
     title: LANG('委托价'),
     dataIndex: 'price',
@@ -92,7 +94,7 @@ export const columns1 = [
     dataIndex: 'dealPrice',
   },
   {
-    title: `${LANG('委托量')}/${LANG('完成')}`,
+    title: `${LANG('委托量')}/${LANG('成交量')}`,
     dataIndex: 'volume',
     render: (_: any, { volume, dealVolume, targetCoin, sourceCoin, side, type }: any) => {
       const isBuy = side === 1;
@@ -102,7 +104,7 @@ export const columns1 = [
     },
   },
   {
-    title: `${LANG('委托金额')}/${LANG('完成')}`,
+    title: `${LANG('委托金额')}/${LANG('成交金额')}`,
     dataIndex: 'amount',
     render: (_: any, { amount, dealAmount, targetCoin, sourceCoin, side, type }: any) => {
       const isSell = side === 2;
@@ -112,6 +114,14 @@ export const columns1 = [
     },
   },
   {
+    title: LANG('订单编号'),
+    dataIndex: 'id',
+    width: 100,
+    render: (id: any, item: any) => {
+      return <ClipboardItem text={id} />
+    }
+  },
+  {
     title: LANG('状态'),
     align: 'right',
     dataIndex: 'state',
@@ -119,7 +129,7 @@ export const columns1 = [
       if (o.dealVolume > 0 && o.dealVolume < o.volume) {
         value = 7;
       }
-      return <div className={'fw-300'}>{SPOT_STATUS_MAP[spotStatus[value]]}</div>;
+      return <div className={'fw-300'}>{getStatus(value)}</div>;
     },
   },
 ];

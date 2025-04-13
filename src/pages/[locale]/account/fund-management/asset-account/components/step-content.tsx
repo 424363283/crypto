@@ -1,4 +1,4 @@
-import { clsx } from '@/core/utils';
+import { clsx, MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
 
 interface StepContentProps {
@@ -26,6 +26,9 @@ const StepContent: React.FC<StepContentProps> = ({
 const styles = css`
   .step-content {
     position: relative;
+    @media ${MediaInfo.mobile}{
+      // width: calc(100% - 24px);
+    }
     &.children-space {
       padding-bottom: 0;
       > * {

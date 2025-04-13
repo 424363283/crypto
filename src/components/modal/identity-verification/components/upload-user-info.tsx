@@ -39,7 +39,7 @@ export const UploadIDInfo = () => {
   const _verifyInfo = () => {
     const images = identityType === IDENTITY_TYPE.PASSPORT ? [img_0, img_1] : [img_0, img_1, img_2];
     const imgArr = images.filter(Boolean);
-    const verifyImg = identityType === IDENTITY_TYPE.PASSPORT ? imgArr.length === 1 : imgArr.length === 2;
+    const verifyImg = identityType === IDENTITY_TYPE.PASSPORT ? imgArr.length >= 1 : imgArr.length >= 2;
     if (/^[A-Za-z0-9]{5,}$/.test(identityNumber) && identityName && verifyImg) {
       setDisableStep2Btn(false);
     } else {
@@ -58,7 +58,7 @@ export const UploadIDInfo = () => {
 
   // 改变名字
   const _changeName = (value: string): void => {
-    setApiState((draft) => {
+    setApiState(draft => {
       draft.identityName = value;
     });
   };
@@ -66,18 +66,18 @@ export const UploadIDInfo = () => {
   // 改变证件号码
   const _changeIdNumber = (value: string) => {
     if (/^[A-Za-z0-9]+$/.test(value) || value === '') {
-      setApiState((draft) => {
+      setApiState(draft => {
         draft.identityNumber = value?.toUpperCase();
       });
     }
   };
   const goPrevStep = () => {
-    setApiState((draft) => {
+    setApiState(draft => {
       draft.pageStep = 'select-country';
     });
   };
   const goNextStep = () => {
-    setApiState((draft) => {
+    setApiState(draft => {
       draft.pageStep = 'upload-selfie';
     });
   };
@@ -85,9 +85,13 @@ export const UploadIDInfo = () => {
     if (identityType === IDENTITY_TYPE.PASSPORT) {
       return (
         <UpButton
-          key='passport'
-          src='/static/images/account/dashboard/passport.svg'
-          onChange={(file) => {
+          key="passport"
+          src={
+            img_0
+              ? URL.createObjectURL(new Blob([img_0], { type: 'text/plain' }))
+              : '/static/images/account/dashboard/passport.svg'
+          }
+          onChange={file => {
             _upImg(file, 0);
           }}
         />
@@ -96,17 +100,25 @@ export const UploadIDInfo = () => {
     return (
       <>
         <UpButton
-          key='id-card'
-          src='/static/images/account/dashboard/id-card.svg'
-          className='id-card-placeholder'
-          onChange={(file) => {
+          key="id-card"
+          src={
+            img_0
+              ? URL.createObjectURL(new Blob([img_0], { type: 'text/plain' }))
+              : '/static/images/account/dashboard/id-card.svg'
+          }
+          className="id-card-placeholder"
+          onChange={file => {
             _upImg(file, 0);
           }}
         />
         <UpButton
-          key='id-card-reverse'
-          src='/static/images/account/dashboard/id-reverse.svg'
-          onChange={(file) => {
+          key="id-card-reverse"
+          src={
+            img_1
+              ? URL.createObjectURL(new Blob([img_1], { type: 'text/plain' }))
+              : '/static/images/account/dashboard/id-reverse.svg'
+          }
+          onChange={file => {
             _upImg(file, 1);
           }}
         />
@@ -114,15 +126,20 @@ export const UploadIDInfo = () => {
     );
   };
   return (
-    <div className='upload-id-info'>
+    <div className="upload-id-info">
+      <p className="warn-tips">
+        <CommonIcon name="common-warning-0" width={14} height={14} enableSkin />
+        {LANG('为了方便您快速通过审核，请确保您填写的信息与您证件上的信息一致')}
+      </p>
       <HorizontalStepBar step={2} />
-      <p className='id-label'>{LANG('ID Type')}</p>
-      <div className='id-type'>
+      <p className="id-label">{LANG('ID Type')}</p>
+
+      <div className="id-type">
         <section
           className={clsx('passport-card', 'common-card', identityType === IDENTITY_TYPE.PASSPORT && 'active-card')}
           onClick={() => changeIdentityType(IDENTITY_TYPE.PASSPORT)}
         >
-          <div className='icon-wrapper'>
+          <div className="icon-wrapper">
             <Image
               src={
                 identityType === IDENTITY_TYPE.PASSPORT
@@ -133,22 +150,23 @@ export const UploadIDInfo = () => {
               height={24}
               enableSkin={identityType === IDENTITY_TYPE.PASSPORT}
             />
+            <span className="name">{LANG('护照')}</span>
           </div>
-          <span className='name'>{LANG('护照')}</span>
+
           <CommonIcon
             name={
               identityType === IDENTITY_TYPE.PASSPORT ? 'common-checkbox-circle-active-0' : 'common-unchecked-box-0'
             }
             size={12}
             enableSkin
-            className='check-icon'
+            className="check-icon"
           />
         </section>
         <section
           className={clsx('id-card', 'common-card', identityType === IDENTITY_TYPE.ID_CERTIFICATE && 'active-card')}
           onClick={() => changeIdentityType(IDENTITY_TYPE.ID_CERTIFICATE)}
         >
-          <div className='icon-wrapper'>
+          <div className="icon-wrapper">
             <Image
               src={
                 identityType === IDENTITY_TYPE.ID_CERTIFICATE
@@ -159,8 +177,9 @@ export const UploadIDInfo = () => {
               height={24}
               enableSkin={identityType === IDENTITY_TYPE.ID_CERTIFICATE}
             />
+            <span className="name">{LANG('身份证')}</span>
           </div>
-          <span className='name'>{LANG('身份证')}</span>
+
           <CommonIcon
             name={
               identityType === IDENTITY_TYPE.ID_CERTIFICATE
@@ -168,7 +187,7 @@ export const UploadIDInfo = () => {
                 : 'common-unchecked-box-0'
             }
             width={12}
-            className='check-icon'
+            className="check-icon"
             height={12}
             enableSkin
           />
@@ -187,20 +206,16 @@ export const UploadIDInfo = () => {
         onInputChange={_changeIdNumber}
         value={identityNumber}
         placeholder={LANG('Enter ID Number')}
-        className='id-number-input'
+        className="id-number-input"
       />
-      <p className='upload-label'>{LANG('Please take photo and upload')}</p>
-      <div className='upload-img'>{renderUploadImgPlaceholder()}</div>
-      <p className='warn-tips'>
-        <CommonIcon name='common-warning-0' width={14} height={14} enableSkin />
-        {LANG('为了方便您快速通过审核，请确保您填写的信息与您证件上的信息一致')}
-      </p>
+      <p className="upload-label">{LANG('Please take photo and upload')}</p>
+      <div className="upload-img">{renderUploadImgPlaceholder()}</div>
 
-      <div className='footer-button'>
-        <Button type='light-sub-2' onClick={goPrevStep} className='cancel-button'>
-          {LANG('返回上一步')}
+      <div className="footer-button">
+        <Button type="light-sub-2" onClick={goPrevStep} className="cancel-button">
+          {LANG('上一步')}
         </Button>
-        <Button type='primary' onClick={goNextStep} className='ok-button' disabled={shouldDisableStep2Btn}>
+        <Button type="primary" onClick={goNextStep} className="ok-button" disabled={shouldDisableStep2Btn}>
           {LANG('下一步')}
         </Button>
       </div>
@@ -215,30 +230,48 @@ const styles = css`
       color: var(--const-color-grey);
       font-weight: 500;
       font-size: 14px;
-      margin-top: 30px;
+      margin-top: 24px;
       margin-bottom: 12px;
+
+      color: var(--text-tertiary);
+      font-family: 'HarmonyOS Sans SC';
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 400;
     }
     .id-type {
       display: flex;
-      margin-bottom: 16px;
+      gap: 8px;
       .common-card {
         position: relative;
-        flex: 1;
-        border: 1px solid #f2f2f0;
-        padding: 12px;
-        border-radius: 6px;
-        display: flex;
+
         cursor: pointer;
-        align-items: center;
+
+        display: flex;
+        height: 48px;
+        padding: 0px 16px;
+        justify-content: space-between;
+        gap: 8px;
+        flex: 1 0 0;
+
+        border-radius: 8px;
+        background: var(--fill-3);
+
         .icon-wrapper {
           display: flex;
           align-items: center;
           padding: 4px;
           border-radius: 5px;
           margin-right: 8px;
+          gap: 4px;
         }
         .name {
-          color: var(--theme-font-color-1);
+          color: var(--text-primary);
+          font-family: 'HarmonyOS Sans SC';
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
         }
         :global(.check-icon) {
           position: absolute;
@@ -247,44 +280,65 @@ const styles = css`
         }
       }
       .active-card {
-        border: 1px solid var(--skin-primary-color);
+        /* border: 1px solid var(--skin-primary-color); */
       }
-      .passport-card {
-        margin-right: 10px;
+    }
+    :global(.basic-input-container) {
+      margin: 24px 0 0;
+      :global(.basic-input) {
+        height: 48px;
       }
     }
     :global(.basic-input-container .label) {
-      color: var(--theme-font-color-3);
-      font-size: 14px;
-      font-weight: 500;
+      color: var(--text-tertiary);
+      font-family: 'HarmonyOS Sans SC';
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      margin-bottom: 8px;
     }
     :global(.id-number-input) {
       margin-top: 16px;
     }
     .upload-label {
-      color: var(--theme-font-color-3);
-      margin-top: 33px;
-      font-size: 14px;
-      font-weight: 500;
+      color: var(--text-tertiary);
+      font-family: 'HarmonyOS Sans SC';
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      margin-top: 24px;
     }
     .upload-img {
       display: flex;
       margin-top: 12px;
-      :global(.id-card-placeholder) {
-        margin-right: 12px;
-      }
+      justify-content: space-between;
     }
     .warn-tips {
-      background-color: var(--theme-background-color-8);
-      border-radius: 5px;
-      margin-top: 21px;
-      padding: 8px 15px;
-      color: var(--theme-font-color-1);
-      text-align: left;
+      margin: 6px 0 0;
+      border-radius: 8px;
+      background: var(--yellow_tips, rgba(240, 186, 48, 0.1));
+
       display: flex;
-      align-items: flex-start;
+      padding: 6px 16px;
+      align-items: center;
+      gap: 8px;
+      flex: 1 0 0;
+
+      color: var(--yellow, #f0ba30);
+      font-family: 'HarmonyOS Sans SC';
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 22px; /* 157.143% */
       :global(img) {
         margin-right: 6px;
+      }
+    }
+    .footer-button {
+      :global(.common-button) {
+        border-radius: 40px;
       }
     }
   }

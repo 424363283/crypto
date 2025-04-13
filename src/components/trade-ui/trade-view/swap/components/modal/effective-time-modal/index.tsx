@@ -8,6 +8,7 @@ import { useResponsive } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
 import { clsx, styles } from './styled';
+import Radio from '@/components/Radio';
 
 export const EffectiveTimeModal = () => {
   const { isMobile } = useResponsive();
@@ -42,13 +43,13 @@ export const EffectiveTimeModal = () => {
             <div className={clsx('item', active && 'active')} key={i} onClick={() => setValue(v as number)}>
               <div className={clsx('title-wrapper')}>
                 <div className={clsx('title')}>{title}</div>
-                {active ? (
-                  <Svg src={'/static/images/common/checkbox_circle_active.svg'} height={14} width={14} />
-                ) : (
-                  <div />
-                )}
+                <div className={clsx('tips')}>{tips}</div>
               </div>
-              <div className={clsx('tips')}>{tips}</div>
+              <Radio
+                label={''}
+                checked={active}
+                {...{ width: 16, height: 16 }}
+              />
             </div>
           );
         })}

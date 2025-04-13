@@ -1,10 +1,11 @@
 import { FavorEmitter } from '@/core/events';
 import { FAVORITE_TYPE, FAVORS_LIST, Favors } from '@/core/shared';
-import { isSwapDemo, isSwapTradePage } from '@/core/utils/src/is';
+import { isLite, isLiteTradePage, isSpotTradePage, isSwapDemo, isSwapTradePage } from '@/core/utils/src/is';
 import { debounce } from 'lodash';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-use';
 import MarketItem from '../market-item';
+import { Group } from '@/core/shared';
 
 export const FavorList = ({
   setWidth,
@@ -19,10 +20,19 @@ export const FavorList = ({
   const [totalFavorsList, setFavorsList] = useState<FAVORS_LIST[]>([]);
   // const [marketsDetail, setMarketDetail] = useState<MarketsMap>();
 
-  const isSwap = isSwapTradePage();
+  const isSwapTrade = isSwapTradePage();
+  const isSpotTrade = isSpotTradePage();
+  const isLiteTrade = isLiteTradePage();
   const fetchFavorsList = async () => {
+    const group = await Group.getInstance();
     const favors = await Favors.getInstance();
-    const favList = [] as any;// TODO favors.getFavorsList();
+    const favList = favors.getFavorsList().map(obj => {
+      let item = {...obj};
+      if (obj.type === FAVORITE_TYPE.LITE) {
+        item.list = obj.list.map(id => group.getLiteQuoteCode(id) || id);
+      }
+      return item;
+    });
     setFavorsList(favList || []);
   };
   // 行情数据
@@ -40,23 +50,24 @@ export const FavorList = ({
     };
   }, []);
   const isDemo = isSwapDemo(useLocation().pathname);
-  const favorsList = totalFavorsList
-    // .find((v) => v.type === (isUsdtType ? FAVORITE_TYPE.SWAP_USDT : FAVORITE_TYPE.SWAP_COIN))
-    .reduce<any>(
-      (r, v) => [
-        ...r,
-        ...((isSwap
-          ? !isDemo
-            ? [FAVORITE_TYPE.SWAP_USDT, FAVORITE_TYPE.SWAP_COIN]
-            : [FAVORITE_TYPE.SWAP_USDT_TESTNET, FAVORITE_TYPE.SWAP_COIN_TESTNET]
-          : [FAVORITE_TYPE.SPOT]
-        ).includes(v.type)
-          ? v.list
-          : []),
-      ],
-      []
-    );
+  const favorsList = totalFavorsList.reduce<any>((r, v) => {
+    let typeList: string[] = [];
+    if (isSwapTrade) {
+      if (!isDemo) {
+        typeList = [FAVORITE_TYPE.SWAP_USDT, FAVORITE_TYPE.SWAP_COIN];
+      } else {
+        typeList = [FAVORITE_TYPE.SWAP_USDT_TESTNET, FAVORITE_TYPE.SWAP_COIN_TESTNET];
+      }
+    } else if (isSpotTrade) {
+      typeList = [FAVORITE_TYPE.SPOT];
 
+    } else if (isLiteTrade) {
+      typeList = [FAVORITE_TYPE.LITE];
+    }
+    r = [...r, ...(typeList.includes(v.type) ? v.list : [])];
+    return r;
+
+  }, []);
   const favorListRef = useRef<any>(null);
   useLayoutEffect(() => {
     if (favorListRef?.current?.offsetWidth > 0 && favorListRef?.current?.offsetWidth != _.width) {

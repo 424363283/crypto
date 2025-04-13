@@ -10,7 +10,7 @@ const OrderHistoryContainer = dynamic(() => import('./container'), {
 // [name] + query 的形式会渲染两次
 function OrderHistory() {
   return (
-    <UniversalLayout hideFooter bgColor='var(--theme-secondary-bg-color)'>
+    <UniversalLayout >
       <OrderHistoryContainer />
     </UniversalLayout>
   );

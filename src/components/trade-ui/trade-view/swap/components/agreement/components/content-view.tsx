@@ -1,20 +1,22 @@
+import { Button } from '@/components/button';
 import CommonIcon from '@/components/common-icon';
 import { DesktopOrTablet } from '@/components/responsive';
 import { useResponsive, useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { clsx } from '@/core/utils';
 
-export const ContentView = ({ onArgee }: { onArgee: any }) => {
+// <div className={'title'}>{LANG('开通合约账户')}</div>
+export const ContentView = ({ title = LANG('开通合约账户'), onArgee }: { title?: string, onArgee: any }) => {
   const { isMobile } = useResponsive();
   const { isDark } = useTheme();
   return (
     <>
       <div className={clsx('agreement', !isDark && 'light')}>
-        <DesktopOrTablet>
-          <div className={'title'}>{LANG('开通合约账户')}</div>
-        </DesktopOrTablet>
+        {title && <DesktopOrTablet>
+          <div className={'title'}>{title}</div>
+        </DesktopOrTablet>}
         <div className={'info-title'}>
-          <CommonIcon size={16} className='icon' name='common-question-outline-0' />
+          <CommonIcon size={24} className='icon' name='common-question-outline-0' />
           {LANG('重要提示')}：
         </div>
         <div className={'info-content'}>
@@ -23,40 +25,40 @@ export const ContentView = ({ onArgee }: { onArgee: any }) => {
           )}
         </div>
         <DesktopOrTablet>
-          <div className={clsx('button', 'pc-v2-btn')} onClick={onArgee}>
-            {LANG('立即开户')}
-          </div>
+          <Button className='submit' type='primary' rounded style={{width: '100%'}} onClick={onArgee}>{LANG('立即开户')}</Button>
         </DesktopOrTablet>
       </div>
       <style jsx>{`
         .agreement {
-          padding: 26px 15px ${!isMobile ? '100px' : '0'};
+          display: flex;
+          padding: 16px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 24px;
           .title {
-            font-size: 20px;
+            color: var(--text-primary);
+            font-size: 24px;
+            font-style: normal;
             font-weight: 500;
-            color: var(--theme-trade-text-color-1);
-            margin-bottom: 30px;
+            line-height: normal;
           }
           .info-title {
             display: flex;
-            flex-direction: row;
             align-items: center;
-            margin-bottom: 15px;
+            gap: 4px;
+            align-self: stretch;
+            color: var(--yellow);
             font-size: 16px;
-            font-weight: 400;
-            color: #798296;
-            :global(.icon) {
-              width: 16px;
-              height: 16px;
-              margin-right: 7px;
-            }
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
           }
           .info-content {
-            font-size: 16px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-style: normal;
             font-weight: 400;
-            color: #798296;
             line-height: 24px;
-            margin-bottom: 50px;
           }
           .button {
             cursor: pointer;
