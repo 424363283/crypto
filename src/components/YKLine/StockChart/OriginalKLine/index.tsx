@@ -43,7 +43,11 @@ import { HistoryOrderMarkArrowDirection } from './extension/historyOrderMark';
 
 import IndicatorModal, { IndicatorOperateType } from './indicator-modal';
 
-import { LiquidationModal, ReverseConfirmModal } from '@/components/trade-ui/order-list/swap/components/modal';
+import {
+  LiquidationModal,
+  ReverseConfirmModal,
+  StopProfitStopLossModal
+} from '@/components/trade-ui/order-list/swap/components/modal';
 
 import { useModalProps, usePositionActions } from '@/components/order-list/swap/stores/position-list';
 import { useOrderData } from '@/components/order-list/swap/hooks/use-order-data';
@@ -57,7 +61,7 @@ import {
   getSwapHistoryOrderApi
 } from '@/core/api';
 import { cancelOrder } from './cancelOrder';
-
+import YIcon from '@/components/YIcons';
 const intlPrefix = 'system.common.klinechart.';
 
 const { Trade } = Spot;
@@ -78,7 +82,10 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
     onCloseLiquidationModal,
     onVisibleReverseModal,
     reverseModalProps,
-    onCloseReverseModal
+    onCloseReverseModal,
+    onVisiblesSpslModal,
+    spslModalProps,
+    onCloseSpslModal
   } = useModalProps();
 
   const { coinPricePrecision } = props;
@@ -112,6 +119,8 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
   const theme = isDark ? 'dark' : 'light';
 
   const [loading, setLoading] = useState(true);
+
+  const [showCreateOrderModal, setShowCreateOrderModal] = useState(false);
 
   const isLogin = true;
 
@@ -154,7 +163,7 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
   const YKlineRef = useRef<any>(null);
 
   const cryptoData = Swap.Info.getCryptoData(symbolSwapId, { withHooks: isLite ? false : true });
-
+  const { baseShowPrecision } = cryptoData;
   const { coin, quoteCoin, quoteCoinBalance, coinBalance, currentSpotContract } = Trade.state;
   let { currentPricePrecision, pricePrecision, minChangePrice, settleCoin } = cryptoData;
 
@@ -441,6 +450,8 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
   kChartEmitter.on(kChartEmitter.K_CHART_POSITION_UPDATE, (data: any) => {
     setPositionList(data);
 
+    // console.log("position1111111",data)
+
     const newTpSlList = data.flatMap((item: any) =>
       item.tpSlList.map((tpSl: any) => ({
         ...tpSl,
@@ -459,54 +470,199 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
     if (widgetRef.current && showPositionLine && isSwapLink) {
       positionList.forEach(position => {
         if (position?.symbolId === symbolSwapId) {
-          let unrealizedPnl = position?.unrealizedPnl;
+          let unrealizedPnl = position.unrealizedPnl;
           const isLong = position?.side === '1';
           const direction = isLong ? LANG('多') : LANG('空'); //持仓方向
-          let total = position?.volume;
+          let total = position.volume;
           const profitLossColor = unrealizedPnl >= 0 ? Color.Green : Color.Red;
           const openDirectionBg = unrealizedPnl >= 0 ? Color.Green : Color.Red; //开仓内容背景色
           const directionColor = '#399BA2'; //多/空
           const isLight = theme === 'light';
           const tooltipColor = isLight ? '#3B3C45' : '#3B3C45';
           const backgroundColor = isLight ? '#FFFFFF' : '#FFFFFF';
-          // console.log("position",position.id)
-          const position = widgetRef?.current?.createPositionLine2({
-            dataIndex: 100,
-            timestamp: 1717027200000,
-            price: 87300.5,
-            direction: 'long'
-          }, {
-            onPositionClick: (data) => console.log('仓位点击', data),
-            onCloseClick: (data) => console.log('平仓点击', data),
-            onAddTakeProfitClick: (data) => console.log('添加止盈', data)
+          position.orginalItem.ctime = position?.ctime?.ctime;
+
+          let positionOverlayConfig = {
+            chart: null,
+            // 仓位覆盖物
+            //位按钮+ ↑↓ 按钮 + 平仓按钮 + 持仓价线
+            positionOverlay: {
+              id: null,
+              // 仓位数据，仓位的坐标用于所有覆盖物做参照点，这样在每个覆盖物中计算值的时候就不会乱
+              // 貌似坐标转换的时候是用的dataIndex转换的,dataFeed新增bar时要记得,更新dataIndex, 覆盖物重绘制的时候会自动更新位置
+              positionData: { timestamp: position?.orginalItem?.ctime, price: position?.avgPrice, direction: 'long' },
+              // 仓位按钮
+
+              positionBtnFigure: {
+                show: true,
+                option: null,
+                styles: {
+                  width: 0,
+                  height: 0,
+                  marginLeft: 0
+                }
+                // 添加事件回调callback
+                // onClick: (e) =>{ console.log('positionOverlay positionBtnFigure click')}
+              },
+              positionQtyFigure: {
+                show: true,
+                option: null,
+                styles: {
+                  width: 0,
+                  height: 0,
+                  marginLeft: 0
+                }
+                // 添加事件回调callback
+                // onClick: (e) =>{ console.log('positionOverlay positionBtnFigure click')}
+              },
+
+              // 切换按钮
+              changeBtnFigure: {
+                show: true,
+                option: null,
+                styles: {
+                  width: 0,
+                  height: 0,
+                  marginLeft: 0
+                }
+                // 添加事件回调callback
+                // onClick: (e) =>{ console.log('positionOverlay changeBtnFigure click')}
+              },
+              // 平仓按钮
+              closePositionBtnFigure: {
+                show: true,
+                option: null,
+                styles: {
+                  width: 0,
+                  height: 0,
+                  marginLeft: 0
+                }
+                // 添加事件回调callback
+                // onClick: (e) =>{ console.log('positionOverlay closePositionBtnFigure click')}
+              },
+              positionLineFigure: {
+                show: true,
+                option: null,
+                styles: {
+                  width: 0,
+                  height: 0,
+                  marginLeft: 0
+                }
+              }
+            },
+
+            // 止盈覆盖物
+            takeProfitOverlay: {
+              id: null,
+              // 止盈线
+              takeProfitLineFigure: {
+                show: false,
+                option: null,
+                styles: {
+                  width: 0,
+                  height: 0,
+                  marginLeft: 0
+                }
+              },
+              // 止盈按钮
+              takeProfitBtnFigure: {
+                show: false,
+                option: null,
+                styles: {
+                  width: 0,
+                  height: 0,
+                  marginLeft: 0
+                }
+                // onClick: (e) =>{ console.log('takeProfitOverlay takeProfitBtnFigure click')}
+              },
+              // 新增按钮
+              addBtnFigure: {
+                show: false,
+                option: null,
+                styles: {
+                  width: 0,
+                  height: 0,
+                  marginLeft: 0
+                }
+                // onClick: (e) =>{ console.log('takeProfitOverlay addBtnFigure click')}
+              }
+            },
+
+            // 止损覆盖物
+            stopLossOverlay: {
+              id: null,
+              // 止损线
+              stopLossLineFigure: {
+                show: false,
+                option: null,
+                styles: {
+                  width: 0,
+                  height: 0,
+                  marginLeft: 0
+                }
+              },
+              // 止损按钮
+              stopLossBtnFigure: {
+                show: false,
+                option: null,
+                styles: {
+                  width: 0,
+                  height: 0,
+                  marginLeft: 0
+                }
+                // onClick: (e) =>{ console.log('stopLossOverlay stopLossBtnFigure click')}
+              },
+              // 新增按钮
+              addBtnFigure: {
+                show: false,
+                option: null,
+                styles: {
+                  width: 0,
+                  height: 0,
+                  marginLeft: 0
+                }
+                // onClick: (e) =>{ console.log('stopLossOverlay addBtnFigure click')}
+              }
+            },
+            extendsConfig: {
+              profitLoss: `${direction} ${unrealizedPnl} (${position?.profitRate})`,
+              volume: `${total}`,
+              positionId: position.id,
+              direction,
+              isLong
+            }
+          };
+
+          widgetRef.current?.createPositionLine({
+            direction,
+            directionColor,
+            positionId: position.id,
+            timestamp: position?.orginalItem?.ctime,
+            openDirectionBg,
+            positionOverlayConfig,
+            profitLoss: `${direction} ${unrealizedPnl} (${position?.profitRate})`,
+            profitLossColor,
+            price: +position?.avgPrice,
+            volume: `${total}`,
+            tooltipColor,
+            backgroundColor,
+            showStopProfitLoss: false,
+            closeTooltip: LANG('市价平仓'),
+            reverseTooltip: LANG('反手'),
+            orginalItem: position.orginalItem,
+            onOrderdrag: e => {
+              console.log('eeeee', e);
+            },
+            onReverseClick: () => {
+              onReverse(position.orginalItem, ({ onConfirm }) =>
+                onVisibleReverseModal(position.orginalItem, onConfirm)
+              );
+              console.log('点击反手开仓');
+            },
+            onCloseClick: () => {
+              onVisibleLiquidationModal(position.orginalItem, false);
+            }
           });
-          // widgetRef.current?.createPositionLine({
-          //   direction,
-          //   directionColor,
-          //   positionId: position.id,
-          //   openDirectionBg,
-          //   profitLoss: `${direction} ${unrealizedPnl} (${position?.profitRate})`,
-          //   profitLossColor,
-          //   price: +position?.avgPrice,
-          //   volume: `${total}`,
-          //   tooltipColor,
-          //   backgroundColor,
-          //   showStopProfitLoss: false,
-          //   closeTooltip: LANG('市价平仓'),
-          //   reverseTooltip: LANG('反手'),
-          //   onOrderdrag: e => {
-          //     console.log('eeeee', e);
-          //   },
-          //   onReverseClick: () => {
-          //     onReverse(position.orginalItem, ({ onConfirm }) =>
-          //       onVisibleReverseModal(position.orginalItem, onConfirm)
-          //     );
-          //     console.log('点击反手开仓');
-          //   },
-          //   onCloseClick: () => {
-          //     onVisibleLiquidationModal(position.orginalItem, false);
-          //   }
-          // });
         }
       });
     }
@@ -528,7 +684,7 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
     positionUnitType
   ]);
 
-  // 绘制止盈止损
+  // 绘止盈止损
   useEffect(() => {
     if (widgetRef.current && showPositionTPSLLine && isSwapLink) {
       tpSlList?.forEach((position: any) => {
@@ -588,7 +744,9 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
             income: isLongProfit ? Number(stopProfitIncome) : Number(stopLossIncome)
           }).toFixed(2);
 
-          let total = isLongProfit ? `${LANG('预计止盈')}(${roe}%)` : `${LANG('预计止损')}(${roe}%)`;
+          let total = isLongProfit
+            ? `${LANG('预计止盈')}${isLong ? LANG('平多') : LANG('平空')}(${roe}%)`
+            : `${LANG('预计止损')}${isLong ? LANG('平多') : LANG('平空')}(${roe}%)`;
 
           widgetRef.current?.createPositionTPSLLine({
             direction,
@@ -612,63 +770,101 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
               if (price <= 0) {
                 return;
               }
+              const data = orginalItem;
 
-              const data = position.orginalItem;
               const baseShowPrecision = Number(data.baseShowPrecision);
               const flagPrice = Swap.Socket.getFlagPrice(code);
               const priceNow = Swap.Utils.getNewPrice(code);
+              const params = [];
               data.orders.forEach((o: any) => {
+                params.push({
+                  priceType: o.priceType,
+                  triggerPrice: o.triggerPrice,
+                  strategyType: o.strategyType
+                });
                 if (o.strategyType === '1') stopProfit = Number(o.triggerPrice).toFixed(baseShowPrecision);
                 if (o.strategyType === '2') stopLoss = Number(o.triggerPrice).toFixed(baseShowPrecision);
               });
 
-              const params = [
-                {
-                  priceType: 1,
-                  triggerPrice: stopProfit,
-                  strategyType: 1
-                },
-                {
-                  priceType: 1,
-                  triggerPrice: stopLoss,
-                  strategyType: 2
+              const strategyType = e?.overlay?.extendData?.profitLoss === 'TP' ? 1 : 2;
+              params.forEach(item => {
+                if (item.strategyType == strategyType) {
+                  item.triggerPrice = price;
                 }
-              ].filter(item => item.triggerPrice > 0);
-              YmexLoading.start();
-              // 更新止盈止损价格
-              if (isLongProfit) {
-                params[0].triggerPrice = price;
-              } else {
-                params[1].triggerPrice = price;
-              }
-              const result = await Utils.SubmitStopProfitStopLoss({
-                position: data,
-                params: params,
-                edit: true,
-                flagPrice,
-                priceNow,
-                stopProfit: price,
-                stopLoss: price,
-                isUsdtType,
-                balanceData: Swap.Assets.getBalanceData({ code: data.symbol, walletId: data.subWallet }),
-                subWallet: data['subWallet']
               });
-              if (result) {
-                try {
-                  if (result?.code === 200) {
-                    Swap.Order.fetchPending(isUsdtType);
-                    Swap.Order.fetchPosition(isUsdtType);
-                    message.success(LANG('修改成功'), 1);
+
+              const { positionId } = data;
+              const position = positionList.find(item => item?.orginalItem.positionId === positionId);
+
+              if (position) {
+                const positionSide = position?.orginalItem.positionSide;
+                const avgCostPrice = position?.orginalItem.avgCostPrice;
+
+                // 根据持仓方向和价格判断止盈止损类型
+                // !!! strategyType 1 止盈 2 止损
+                const strategyType =
+                  positionSide === 'SHORT' ? (price > avgCostPrice ? '2' : '1') : price > avgCostPrice ? '1' : '2'; // 空仓
+
+                if (!position.orginalItem.orders || position.orginalItem.orders.length === 0) {
+                  // orders为空
+                  position.orginalItem.orders = [
+                    {
+                      positionSide: positionSide,
+                      triggerPrice: price,
+                      strategyType: strategyType
+                    }
+                  ];
+                } else {
+                  // 检查是否存在相同strategyType的订单
+                  const existingOrder = position.orginalItem.orders.find(order => order.strategyType === strategyType);
+
+                  if (existingOrder) {
+                    // 如果存在，更新triggerPrice
+                    existingOrder.triggerPrice = price;
                   } else {
-                    message.error(result?.message || LANG('失败'), 1);
+                    // 如果不存在，添加新的订单
+                    position.orginalItem.orders.push({
+                      positionSide: positionSide,
+                      orderType: 2,
+                      triggerPrice: price,
+                      priceType: '1',
+                      strategyType: strategyType
+                    });
                   }
-                } catch (e: any) {
-                  console.log('xxxx', e);
-                  message.error(e?.error?.message || LANG('失败'), 1);
-                } finally {
                 }
+                onVisiblesSpslModal(position.orginalItem, 0);
+                setCurrentPosition(position.orginalItem);
               }
-              YmexLoading.end();
+
+              // YmexLoading.start();
+
+              // const result = await Utils.SubmitStopProfitStopLoss({
+              //   position: data,
+              //   params: params,
+              //   edit: true,
+              //   flagPrice,
+              //   priceNow,
+              //   stopProfit: price,
+              //   stopLoss: price,
+              //   isUsdtType,
+              //   balanceData: Swap.Assets.getBalanceData({ code: data.symbol, walletId: data.subWallet }),
+              //   subWallet: data['subWallet']
+              // });
+              // if (result) {
+              //   try {
+              //     if (result?.code === 200) {
+              //       Swap.Order.fetchPending(isUsdtType);
+              //       Swap.Order.fetchPosition(isUsdtType);
+              //       message.success(LANG('修改成功'), 1);
+              //     } else {
+              //       message.error(result?.message || LANG('失败'), 1);
+              //     }
+              //   } catch (e: any) {
+              //     message.error(e?.error?.message || LANG('失败'), 1);
+              //   } finally {
+              //   }
+              // }
+              // YmexLoading.end();
             },
             onMoveStart: e => {
               console.log('反手开仓', e);
@@ -777,6 +973,24 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
           const backgroundColor = isLight ? '#FFFFFF' : '#FFFFFF';
           let price = Number(position.price);
           let total = position.volume;
+          const code = position?.symbol?.toUpperCase();
+          const isUsdtType = Swap.Info.getIsUsdtType(code);
+          const unitMode = position.unitMode;
+
+          let volumeDigit = Swap.Info.getVolumeDigit(code);
+          const isMarginUnit = Swap.Info.getIsMarginUnit(isUsdtType);
+          const balanceDigit = Swap.Assets.getBalanceDigit({ code: code });
+          if (isMarginUnit) {
+            volumeDigit = balanceDigit;
+          }
+
+          total = Swap.Calculate.formatPositionNumber({
+            usdt: isUsdtType,
+            value: Number(total),
+            code: position.symbol,
+            flagPrice: price,
+            fixed: volumeDigit
+          });
           widgetRef.current?.createCurrentEntrustLine({
             direction,
             directionColor,
@@ -792,7 +1006,22 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
             onMoveStart: e => {
               console.log('反手开仓', e);
             },
-            onCloseClick: async e => {}
+            onCloseClick: async e => {
+              YmexLoading.start();
+              await Swap.Order.cancelPending(position);
+              try {
+                const result = await Swap.Order.cancelPending(position);
+                if (result.code == 200) {
+                  message.success(LANG('撤销成功'));
+                } else {
+                  message.error(result);
+                }
+              } catch (error: any) {
+                message.error(error);
+              } finally {
+                YmexLoading.end();
+              }
+            }
           });
         }
       });
@@ -838,16 +1067,85 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
   };
 
   //拖动止盈止损
-  const { TpSlInfo, positionTpSLInfo } = getKineState();
+  const { TpSlInfo, positionTpSLInfo, dragOverlayData } = getKineState();
+
+  const [currentPosition, setCurrentPosition] = useState<any>(null);
 
   useEffect(() => {
-    console.log('拖动当前的止盈止损🔥🔥🔥🔥🔥🔥🔥===========');
-    console.log('拖动当前的止盈止损', TpSlInfo);
+    if (widgetRef.current && TpSlInfo) {
+      const { type, price, positionId } = TpSlInfo;
+      const position = positionList.find(item => item?.orginalItem.positionId === positionId);
+      if (position) {
+        const positionSide = position?.orginalItem.positionSide;
+        const code = position?.orginalItem?.symbol?.toUpperCase();
+        const avgCostPrice = Swap.Socket.getFlagPrice(code);
+
+        // 根据持仓方向和价格判断止盈止损类型
+        // !!! strategyType 1 止盈 2 止损
+        const strategyType =
+          positionSide === 'SHORT' ? (price > avgCostPrice ? '2' : '1') : price > avgCostPrice ? '1' : '2'; // 空仓
+
+        if (!position.orginalItem.orders || position.orginalItem.orders.length === 0) {
+          // orders为空
+          position.orginalItem.orders = [
+            {
+              positionSide: positionSide,
+              triggerPrice: price,
+              strategyType: strategyType
+            }
+          ];
+        } else {
+          // 检查是否存在相同strategyType的订单
+          const existingOrder = position.orginalItem.orders.find(order => order.strategyType === strategyType);
+
+          if (existingOrder) {
+            // 如果存在，更新triggerPrice
+            existingOrder.triggerPrice = price;
+          } else {
+            // 如果不存在，添加新的订单
+            position.orginalItem.orders.push({
+              positionSide: positionSide,
+              orderType: 2,
+              triggerPrice: price,
+              priceType: '1',
+              strategyType: strategyType
+            });
+          }
+        }
+
+        onVisiblesSpslModal(position.orginalItem, 0);
+        setCurrentPosition(position.orginalItem);
+      }
+    }
   }, [TpSlInfo]);
+
+  useEffect(() => {
+    if (dragOverlayData) {
+      const { pageX, pageY } = dragOverlayData;
+      setShowCreateOrderModal(true);
+    }
+  }, [dragOverlayData]);
 
   return (
     <div ref={rootEl} style={{ height: '100%', position: 'relative' }}>
       <div id={containerId} className={styles.klineChart}></div>
+      {showCreateOrderModal}--showCreateOrderModal
+      {showCreateOrderModal && (
+        <div
+          style={{
+            left: dragOverlayData.pageX,
+            top: dragOverlayData.pageY / 2 + 20
+          }}
+          className={styles.createOrderOverlay}
+          onClick={() => {
+            Swap.Trade.onPriceChange(dragOverlayData.volume.toFixed(baseShowPrecision));
+            setShowCreateOrderModal(false);
+          }}
+        >
+          <YIcon.addOrderIcon />
+          {LANG('创建交易')}
+        </div>
+      )}
       {loading && <Loading />}
       {indicatorModalVisible && (
         <IndicatorModal
@@ -879,13 +1177,16 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
           }}
         />
       )}
-
       {/* 市价平仓 */}
       {liquidationModalProps.visible && (
         <LiquidationModal {...liquidationModalProps} onClose={onCloseLiquidationModal} />
       )}
       {/* 反手开仓 */}
       {reverseModalProps.visible && <ReverseConfirmModal {...reverseModalProps} onClose={onCloseReverseModal} />}
+      {/* 止盈止损 */}
+      {spslModalProps.visible && (
+        <StopProfitStopLossModal {...spslModalProps} data={currentPosition} onClose={onCloseSpslModal} />
+      )}
     </div>
   );
 };

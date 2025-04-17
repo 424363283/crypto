@@ -12,9 +12,8 @@
  * limitations under the License.
  */
 
-import  type { OverlayTemplate } from '../../index.esm';
 // import type { OverlayTemplate } from "klinecharts"
-
+import type { OverlayTemplate } from '@/components/YKLine/StockChart/OriginalKLine/index.esm';
 
 const priceLine: OverlayTemplate = {
   name: 'priceLine',
@@ -45,7 +44,7 @@ const priceLine: OverlayTemplate = {
           x: coordinates[0].x,
           y: coordinates[0].y,
           text: chart.getDecimalFold().format(chart.getThousandsSeparator().format(value.toFixed(precision))),
-          baseline: 'bottom'
+          baseline: 'bottom',
         }
       }
     ]

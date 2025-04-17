@@ -16,13 +16,7 @@ import {
 
 // import { ActionType, init, OverlayMode, registerFigure, registerOverlay } from 'klinecharts';
 
-import {
-  getKineState,
-  setDragOverlayDataFun,
-  setPositionLineTpSl,
-  setPositionTpSLInfoFun,
-  setPositionTpSlFun
-} from '@/store/kline';
+import { getKineState, setPositionLineTpSl, setPositionTpSLInfoFun, setPositionTpSlFun } from '@/store/kline';
 import { ResolutionString } from '../../../../../public/tradingView/charting_library/charting_library';
 
 import dayjs from 'dayjs';
@@ -96,32 +90,18 @@ export interface HistoryOrderMarkOptions {
 }
 
 // 修改新版本k线
-const drawOverlay = (index: number, positoinData: any, chart: any, positionOverlayConfig: any, orginalItem: any) => {
-  /** 
+// const drawOverlay = (index: number, positoinData: any, chart: any, positionOverlayConfig: any) => {
+/** 
    你可以在交互组件中把回调函数传到positionView中,
    然后在overlay里面触发事件的时候进行调用
    positionOverlayView.positionOverlay.positionBtnFigure.onClick= (data:any) => { 
     console.log('点击了仓位按钮', data); 
    }
   */
-  //  const { onReverse } = usePositionActions(); // 反向开仓
-  // const {
-  //   onVisibleLiquidationModal,
-  //   liquidationModalProps,
-  //   onCloseLiquidationModal,
-  //   onVisibleReverseModal,
-  //   reverseModalProps,
-  //   onCloseReverseModal,
-  //   onVisiblesSpslModal,
-  //   spslModalProps,
-  //   onCloseSpslModal
-  // } = useModalProps();
+// const { onReverse } = usePositionActions(); // 反向开仓
+const drawOverlay = (index: number, positoinData: any, chart: any, positionOverlayConfig: any, onReverse: any) => {
   const overlayViewConfig = JSON.parse(JSON.stringify(positionOverlayConfig));
-  const positionData: any = {
-    timestamp: positoinData.timestamp,
-    value: positoinData.price,
-    direction: positoinData.direction
-  };
+  const positionData: any = { timestamp: positoinData.timestamp, value: positoinData.price, direction: 'long' };
   // console.log('仓位数据', positionData);
   overlayViewConfig.positionOverlay.positionData = positionData;
   overlayViewConfig.chart = chart;
@@ -131,12 +111,14 @@ const drawOverlay = (index: number, positoinData: any, chart: any, positionOverl
     console.log('点击了仓位按钮', data);
   };
   overlayViewConfig.positionOverlay.changeBtnFigure.onClick = (data: any) => {
-    positoinData?.onReverseClick?.();
+    console.log('点击了切换按钮', data, onReverse);
+    // onReverse && onReverse();
+    onReverse &&
+      onReverse(position.orginalItem, ({ onConfirm }) => onVisibleReverseModal(position.orginalItem, onConfirm));
     // console.log('点击反手开仓');
   };
   overlayViewConfig.positionOverlay.closePositionBtnFigure.onClick = (data: any) => {
     console.log('点击了平仓按钮', data);
-    positoinData?.onCloseClick?.();
   };
   overlayViewConfig.takeProfitOverlay.takeProfitBtnFigure.onClick = (data: any) => {
     console.log('点击了止盈按钮', data);
@@ -179,10 +161,7 @@ const drawOverlay = (index: number, positoinData: any, chart: any, positionOverl
     lock: true,
     mode: OverlayMode.Normal,
     points: [{ timestamp: positionData.timestamp, value: positionData.value }],
-    extendData: overlayViewConfig,
-    onclick: (data: any) => {
-      debugger;
-    }
+    extendData: overlayViewConfig
   });
   overlayViewConfig.positionOverlay.id = positionOverlayId;
 
@@ -202,7 +181,6 @@ const addBtnOverlayConfig = {
   id: null,
   point: { x: 0, y: 0 },
   onClick: (data: any) => {
-    setDragOverlayDataFun(data);
     console.log('点击了加号按钮', data);
   }
 };
@@ -631,7 +609,12 @@ export default class Widget {
     const count = this._positionLineCountMap[key] ?? 0;
 
     // console.log("position=======",position)
-    drawOverlay(position.timestamp, position, this._chart, position.positionOverlayConfig);
+    // 从 position 中获取所需的 actions
+    const { actions } = position;
+
+    const { onReverse } = usePositionActions(); // 反向开仓
+    drawOverlay(position.timestamp, position, this._chart, position.positionOverlayConfig, onReverse);
+    // drawOverlay(position.timestamp, position, this._chart, position.positionOverlayConfig);
 
     // const positionOverlayId = this._chart?.createOverlay({
     //   name: 'positionOverlay',

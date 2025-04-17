@@ -1,7 +1,9 @@
-// import type { CircleAttrs, Coordinate, PolygonAttrs, RectAttrs, TextAttrs, TextStyle } from "klinecharts"
-import type { CircleAttrs, Coordinate, PolygonAttrs, RectAttrs, TextAttrs, TextStyle } from '../index.esm';
 
-import { calcTextWidth } from "./canvas"
+
+import type { CircleAttrs, Coordinate, PolygonAttrs, RectAttrs, TextAttrs, TextStyle }  from '@/components/YKLine/StockChart/OriginalKLine/index.esm';
+
+// import type { CircleAttrs, Coordinate, PolygonAttrs, RectAttrs, TextAttrs, TextStyle } from "klinecharts"
+import { calcTextWidth } from "../../common/utils/canvas"
 
 
 

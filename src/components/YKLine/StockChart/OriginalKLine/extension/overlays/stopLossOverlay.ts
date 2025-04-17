@@ -12,30 +12,35 @@
  * limitations under the License.
  */
 
-import   type { OverlayEvent, OverlayTemplate } from '../../index.esm';
+// import { getFigureClass, type OverlayEvent, type OverlayTemplate } from "klinecharts"
+import  { getFigureClass, type OverlayEvent, type OverlayTemplate } from '@/components/YKLine/StockChart/OriginalKLine/index.esm';
 // import type { OverlayEvent, OverlayTemplate } from "klinecharts"
-import { calcTextWidth } from "../../utils/canvas";
-import { checkCoordinateOnText } from  "../../utils/checkEventOn";
+import { calcTextWidth } from "../../common/utils/canvas";
+import { checkCoordinateOnText } from "../../common/utils/checkEventOn";
+
 
 
 const stopLossOverlay: OverlayTemplate = {
   name: 'stopLossOverlay',
   totalStep: 2,
-  needDefaultPointFigure: true,
+  // 需要默认的点位图形,选中覆盖物时会有个蓝点，表示选中，这个可以控制蓝点是否显示
+  needDefaultPointFigure: false,
   needDefaultXAxisFigure: true,
   needDefaultYAxisFigure: true,
   extendData: {
     marginLeft: 10,
-    position: {dataIndex: 300, timestamp: 1743688800000, value: 81172.2}
+    position: {dataIndex: 900, timestamp: 1743688800000, value: 81172.2}
   },
   createPointFigures: ({ coordinates, bounding, overlay, xAxis, yAxis }) => {
     const positonExtendData:any = overlay.extendData.positionOverlay
     const takeProfitExtendData:any = overlay.extendData.takeProfitOverlay
     const stopLossExtendData:any = overlay.extendData.stopLossOverlay
-    const positionPoint = { x: xAxis.convertToPixel(positonExtendData.positionData.dataIndex), y: yAxis.convertToPixel(positonExtendData.positionData.value) }
+    const positionPoint = {  x:50, y: yAxis.convertToPixel(positonExtendData.positionData.value) }
     
     const btnSpace = 10
-    const text = '止损:' + yAxis?.convertFromPixel(coordinates[0].y).toFixed(2);
+    // const text = '止损:' + yAxis?.convertFromPixel(coordinates[0].y).toFixed(2);
+    const text = 'SL'
+
     const marginLeft = positonExtendData.positionBtnFigure.styles.width + 
                       positonExtendData.changeBtnFigure.styles.width + 
                       positonExtendData.closePositionBtnFigure.styles.width + 
@@ -48,11 +53,11 @@ const stopLossOverlay: OverlayTemplate = {
                                { x: bounding.width, y: coordinates[0].y }] },
         styles: {
           // 样式，可选项`solid`，`dashed`
-          style: 'dashed',
+          style: 'solid',
           // 尺寸
           size: 1,
           // 颜色
-          color: '#000000',
+          color: '#399BA2',
           // 虚线参数
           dashedValue: [5, 5]
         }
@@ -68,9 +73,9 @@ const stopLossOverlay: OverlayTemplate = {
         },
         styles: {
           // 样式，可选项`fill`，`stroke`，`stroke_fill`
-          style: 'fill',
+          style: 'stroke_fill',
           // 颜色
-          color: '#FFFFFF',
+          color: '#F0BA30',
           // 尺寸
           size: 12,
           // 字体
@@ -88,15 +93,15 @@ const stopLossOverlay: OverlayTemplate = {
           // 边框样式
           borderStyle: 'solid',
           // 边框颜色
-          borderColor: 'transparent',
+          borderColor: '#F0BA30',
           // 边框尺寸
-          borderSize: 0,
+          borderSize: 1,
           // 边框虚线参数
           borderDashedValue: [2, 2],
           // 边框圆角值
           borderRadius: 2,
           // 背景色
-          backgroundColor: 'rgba(0, 0, 0, 0.8)'
+          backgroundColor: '#121212'
         }
       }
 
@@ -116,7 +121,7 @@ const stopLossOverlay: OverlayTemplate = {
           // 样式，可选项`fill`，`stroke`，`stroke_fill`
           style: 'fill',
           // 颜色
-          color: '#FFFFFF',
+          color: '#F0BA30',
           // 尺寸
           size: 12,
           // 字体
@@ -142,24 +147,39 @@ const stopLossOverlay: OverlayTemplate = {
           // 边框圆角值
           borderRadius: 2,
           // 背景色
-          backgroundColor: 'rgba(0, 0, 0, 0.8)'
+        backgroundColor: 'rgba(0, 0, 0, 0.8)'
         }
       }
       stopLossExtendData.addBtnFigure.option = addBtnFigure
 
-    figures.push(lineFigure, stopLossBtnFigure, addBtnFigure)
+    // figures.push(lineFigure, stopLossBtnFigure, addBtnFigure)
+    figures.push(lineFigure, stopLossBtnFigure)
+
     return figures
   },
   onClick: (e:any) => {
+    const textFigure = getFigureClass('text')
     const stopLossExtendData:any = e.overlay.extendData.stopLossOverlay
-    if (checkCoordinateOnText({x: e.x, y: e.y}, stopLossExtendData.stopLossBtnFigure.option.attrs, stopLossExtendData.stopLossBtnFigure.option.styles)) {
+    if (textFigure?.prototype.checkEventOnImp({x: e.x, y: e.y}, stopLossExtendData.stopLossBtnFigure.option.attrs, stopLossExtendData.stopLossBtnFigure.option.styles)) {
       e.overlay.extendData.stopLossOverlay.stopLossBtnFigure.onClick(e)
     }
-    if (checkCoordinateOnText({x: e.x, y: e.y}, stopLossExtendData.addBtnFigure.option.attrs, stopLossExtendData.addBtnFigure.option.styles)) {
+    if (textFigure?.prototype.checkEventOnImp({x: e.x, y: e.y}, stopLossExtendData.addBtnFigure.option.attrs, stopLossExtendData.addBtnFigure.option.styles)) {
       e.overlay.extendData.stopLossOverlay.addBtnFigure.onClick(e)
     }
     return true
+  },
+  onPressedMoveEnd: (e: OverlayEvent) => {
+    const textFigure = getFigureClass('text')
+    const stopLossExtendData:any = e.overlay.extendData.stopLossOverlay
+    if (textFigure?.prototype.checkEventOnImp({x: e.x, y: e.y}, stopLossExtendData.stopLossBtnFigure.option.attrs, stopLossExtendData.stopLossBtnFigure.option.styles)) {
+      e.overlay.extendData.stopLossOverlay.stopLossBtnFigure.onPressedMoveEnd(e)
+    }
+    if (textFigure?.prototype.checkEventOnImp({x: e.x, y: e.y}, stopLossExtendData.addBtnFigure.option.attrs, stopLossExtendData.addBtnFigure.option.styles)) {
+      e.overlay.extendData.stopLossOverlay.addBtnFigure.onPressedMoveEnd(e)
+    }
+    return true
   }
+
 }
 
 export default stopLossOverlay
