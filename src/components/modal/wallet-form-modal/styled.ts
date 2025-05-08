@@ -20,7 +20,7 @@ const { className, styles } = css.resolve`
     height: 100%;
     display: flex;
     flex-direction: column;
-    color: var(--text-secondary);
+    color: var(--text_2);
     .content {
       display: flex;
       flex-direction: column;
@@ -86,7 +86,7 @@ const { className, styles } = css.resolve`
       }
     }
     .repeat-tips {
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-size: 12px;
       margin: 10px 0 11px;
     }

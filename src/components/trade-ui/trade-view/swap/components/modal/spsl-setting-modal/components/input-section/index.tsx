@@ -367,7 +367,7 @@ const InputSection = ({
             gap: 16px;
             flex: 1 0 0;
             .label {
-              color: var(--text-tertiary);
+              color: var(--text_3);
               font-size: 14px;
               font-weight: 500;
             }
@@ -407,7 +407,7 @@ const InputSection = ({
                 align-items: center;
                 flex: 1 0 0;
                 border-radius: 8px;
-                background: var(--fill-3);
+                background: var(--fill_3);
               }
               .type {
                 display: flex;
@@ -417,7 +417,7 @@ const InputSection = ({
                 align-items: center;
                 gap: 8px;
                 border-radius: 8px;
-                background: var(--fill-3);
+                background: var(--fill_3);
               }
             }
           }
@@ -490,7 +490,7 @@ const InputSection = ({
                 margin-top: 0;
                 margin-bottom: 15px;
                 height: 40px;
-                background: var(--fill-3);
+                background: var(--fill_3);
                 border-radius: 5px;
 
                 :global(input) {
@@ -506,8 +506,8 @@ const InputSection = ({
                 padding-left: 15px;
                 border-radius: 5px;
                 height: 40px;
-                background: var(--fill-3);
-                color: var(--text-primary);
+                background: var(--fill_3);
+                color: var(--text_1);
                 :global(.arrow) {
                   position: absolute;
                   right: 10px;
@@ -542,7 +542,7 @@ const InputSection = ({
             .error {
               font-size: 13px;
               font-weight: 400;
-              color: var(--text-error);
+              color: var(--text_red);
             }
           }
         `}

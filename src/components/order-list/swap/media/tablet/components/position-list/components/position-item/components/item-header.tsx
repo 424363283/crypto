@@ -74,7 +74,7 @@ export const ItemHeader = ({
           .code {
             font-size: 16px;
             font-weight: 500;
-            color: var(--text-primary);
+            color: var(--text_1);
           }
         }
       `}</style>

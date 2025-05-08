@@ -33,51 +33,51 @@ export const GlobalTableThemeStyle = ({ excludePaths }: { excludePaths: string[]
               }
             }
             :global(.ant-table-empty .ant-table-tbody .ant-table-placeholder td) {
-              background-color: var(--bg-1);
+              background-color: var(--fill_bg_1);
               &:hover {
-                background-color: var(--bg-1) !important;
+                background-color: var(--fill_bg_1) !important;
               }
               border-bottom: none;
             }
             :global(.ant-table-tbody > tr.ant-table-row:hover > td, .ant-table-wrapper .ant-table-tbody > tr > td.ant-table-cell-row-hover) {
-              background-color: var(--fill-2);
+              background-color: var(--fill_2);
             }
             :global(.ant-table-content) {
-              background-color: var(--bg-1);
+              background-color: var(--fill_bg_1);
               :global(.ant-table-thead > tr > th) {
                 border-bottom: none !important;
                 &:hover {
                   background-color: unset !important;
                 }
-                color: var(--text-tertiary);
+                color: var(--text_3);
               }
               :global(.ant-table-tbody > tr > td) {
                 padding: 16px 24px;
                 transition: none;
               }
               :global(.ant-table-tbody .ant-table-cell-fix-left) {
-                background-color: var(--bg-1);
+                background-color: var(--fill_bg_1);
               }
               :global(.ant-table-thead .ant-table-cell-fix-left) {
-                background-color: var(--bg-1);
+                background-color: var(--fill_bg_1);
               }
               :global(.ant-table-tbody .ant-table-row) {
                 :global(td) {
                   border-bottom: unset;
-                  color: var(--text-primary);
+                  color: var(--text_1);
                   font-size: 14px;
                   font-weight: 500;
                 }
                 :global(.ant-table-column-sort) {
-                  background-color: var(--bg-1);
+                  background-color: var(--fill_bg_1);
                 }
                 :global(td.ant-table-cell-row-hover) {
-                  background-color: var(--fill-2);
+                  background-color: var(--fill_2);
                   &:first-child {
-                    border-radius: 8px 0 0 8px;
+                    border-radius: 0px;
                   }
                   &:last-child {
-                    border-radius: 0 8px 8px 0;
+                    border-radius: 0px;
                   }
                 }
               }
@@ -85,7 +85,7 @@ export const GlobalTableThemeStyle = ({ excludePaths }: { excludePaths: string[]
             :global(.ant-spin-nested-loading) {
               :global(.ant-spin-blur) {
                 &::after {
-                  background-color: var(--bg-1) !important;
+                  background-color: var(--fill_bg_1) !important;
                   opacity: 0;
                 }
               }

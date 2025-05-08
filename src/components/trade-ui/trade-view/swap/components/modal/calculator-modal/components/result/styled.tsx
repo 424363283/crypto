@@ -50,7 +50,7 @@ const { className, styles: _styles } = css.resolve`
   }
   .result {
     padding: 24px;
-    background: var(--fill-3);
+    background: var(--fill_3);
     display: flex;
     flex-direction: column;
     border-radius: 16px;
@@ -63,7 +63,7 @@ const { className, styles: _styles } = css.resolve`
       .title {
         font-size: 16px;
         font-weight: 500;
-        color: var(--text-primary);
+        color: var(--text_1);
       }
       .row {
         display: flex;
@@ -72,9 +72,9 @@ const { className, styles: _styles } = css.resolve`
         > div {
           font-size: 14px;
           font-weight: 400;
-          color: var(--text-secondary);
+          color: var(--text_2);
           &:nth-child(2) {
-            color: var(--text-primary);
+            color: var(--text_1);
           }
         }
       }
@@ -82,7 +82,7 @@ const { className, styles: _styles } = css.resolve`
     .tips {
       font-size: 12px;
       font-weight: 400;
-      color: var(--text-tertiary);
+      color: var(--text_3);
     }
   }
   @media ${MediaInfo.mobile} {

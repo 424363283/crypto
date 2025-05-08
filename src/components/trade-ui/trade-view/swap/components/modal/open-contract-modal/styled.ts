@@ -9,7 +9,7 @@ const { className, styles: _styles } = css.resolve`
     align-items: center;
     gap: 40px;
     .open-contract-title {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 16px;
       font-style: normal;
       font-weight: 400;

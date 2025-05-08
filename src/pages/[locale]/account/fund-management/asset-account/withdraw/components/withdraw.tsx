@@ -498,7 +498,7 @@ export const Withdraw = ({ hasQueryCode }: {
         values={coinIndex}
         options={withdrawCoinList}
         icon='common-tiny-triangle-down-2'
-        bgColor='var(--fill-3)'
+        bgColor='var(--fill_3)'
         borderColor='transparent'
         onChange={debouncedSelectCoin}
         className='withdraw-select-coin'
@@ -819,8 +819,8 @@ export const Withdraw = ({ hasQueryCode }: {
               options={withdrawCoinList}
               icon='common-arrow-down-0'
               height={48}
-              bgColor='var(--bg-1)'
-              borderColor='var(--line-2)'
+              bgColor='var(--fill_bg_1)'
+              borderColor='var(--fill_line_2)'
               onChange={debouncedSelectCoin}
               className='recharge-select-coin'
             />
@@ -913,7 +913,7 @@ export const Withdraw = ({ hasQueryCode }: {
 };
 const styles = css`
   .main-content-wrapper {
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     margin: 0 auto;
     width: 100%;
     .asset-account-content {
@@ -949,7 +949,7 @@ const styles = css`
               line-height: 20px;
               font-size: 14px;
               font-weight: 500;
-              color: var(--text-primary);
+              color: var(--text_1);
             }
           }
           :global(.withdraw-amount-footer) {
@@ -1080,7 +1080,7 @@ const styles = css`
         
         .bottom-row {
           padding: 20px;
-          border: 1px solid var(--fill-3);
+          border: 1px solid var(--fill_3);
           border-radius: 8px;
           @media ${MediaInfo.mobile}{
             padding:12px;
@@ -1182,7 +1182,7 @@ const styles = css`
   }
   :global( .top-info-card ) {
     padding: 24px 0 ;
-    border: 1px solid var(--fill-3);
+    border: 1px solid var(--fill_3);
     :global( .card ) {
       text-align: center;
       &:not(:last-child) {
@@ -1225,7 +1225,7 @@ const styles = css`
         justify-content: space-between;
         margin:12px 0;
         font-size:14px;
-        color: var(--text-tertiary);
+        color: var(--text_3);
       }
     }
   } 

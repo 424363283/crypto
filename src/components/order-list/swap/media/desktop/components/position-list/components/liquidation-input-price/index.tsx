@@ -13,8 +13,11 @@ import Slider from '@/components/Slider';
 import { message } from '@/core/utils';
 import { getCryptoData } from '@/core/shared/src/swap/modules/calculate/utils';
 import BigNumber from 'bignumber.js';
+import { POSITION_TYPE } from '@/core/shared/src/constants/order';
 // import { Slider } from 'antd';
-
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
+import { useCopyTradingSwapStore } from '@/store/copytrading-swap';
+import { UsingAccountType } from '@/core/shared/src/copy/types';
 /** 数字转字符串 */
 export const numberToString = (_num: string | number) => {
   let num = Number(_num);
@@ -67,6 +70,7 @@ export const cutFloatDecimal = (_value: any, dec: number) => {
 };
 
 const LiquidationInputPrice = ({ getFormData, item, isUsdtType, onReverse }: any) => {
+  const isCopyTrader = useCopyTradingSwapStore.use.isCopyTrader();
   const [formData, setFormData] = useState({
     price: LANG('市价'),
     volume: item.currentPositionFormat,
@@ -210,9 +214,9 @@ const LiquidationInputPrice = ({ getFormData, item, isUsdtType, onReverse }: any
 
   const content = (
     <div className={clsx('select-list')}>
-      {typeList.map((item: any) => {
+      {typeList.map((item: any, index: number) => {
         return (
-          <div onClick={() => onPerSelect(item)} className={clsx('select-item')}>
+          <div key={index} onClick={() => onPerSelect(item)} className={clsx('select-item')}>
             {LANG(item.label)}
           </div>
         );
@@ -241,13 +245,13 @@ const LiquidationInputPrice = ({ getFormData, item, isUsdtType, onReverse }: any
         mode !== 'coin' && quantityData.quantity < 1
           ? 0
           : priceData.price > 0
-          ? Swap.Calculate.amountToVolume({
+            ? Swap.Calculate.amountToVolume({
               usdt: isUsdtType,
               value: Number(quantityData.quantity),
               code: item.symbol,
               flagPrice: Number(priceData.price)
             })
-          : 0;
+            : 0;
     }
     const res = Swap.Calculate.income({
       usdt: isUsdtType,
@@ -352,7 +356,10 @@ const LiquidationInputPrice = ({ getFormData, item, isUsdtType, onReverse }: any
                 isUsdtType,
                 isLimit: priceData.isLimit,
                 value: quantityData.quantity,
-                data: item,
+                data: {
+                  ...item,
+                  usingAccountType: item.subWallet === WalletKey.COPY ? (isCopyTrader ? UsingAccountType.trader : UsingAccountType.follower ): UsingAccountType.ordinary,
+                },
                 inputPrice: priceData.isLimit ? priceData.price : ''
               });
               setStopProfitRoe(0);
@@ -368,8 +375,12 @@ const LiquidationInputPrice = ({ getFormData, item, isUsdtType, onReverse }: any
               isUsdtType,
               isLimit: false,
               value: item.currentPositionFormat,
-              data: item,
-              inputPrice: ''
+              data: {
+                ...item,
+                usingAccountType: item.subWallet === WalletKey.COPY ? (isCopyTrader ? UsingAccountType.trader : UsingAccountType.follower ): UsingAccountType.ordinary,
+              },
+              inputPrice: '',
+             
             });
             setStopProfitRoe(0);
             setFormData({
@@ -380,7 +391,7 @@ const LiquidationInputPrice = ({ getFormData, item, isUsdtType, onReverse }: any
         >
           {LANG('市价全平')}
         </SubButton>
-        {!value && (
+        {item.posType === POSITION_TYPE.ONE && (
           <SubButton className="sub-button" onClick={() => onReverse?.()}>
             {LANG('反手')}
           </SubButton>

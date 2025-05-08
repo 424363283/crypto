@@ -66,7 +66,7 @@ const { className, styles: _styles } = css.resolve`
     left: 0;
     width: 100%;
     display: flex;
-    color: var(--text-primary);
+    color: var(--text_1);
     height: 60px;
     > div {
       cursor: pointer;
@@ -88,7 +88,7 @@ const { className, styles: _styles } = css.resolve`
   }
   .trade-config-wrapper {
     .subtitle {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 16px;
       font-weight: 500;
       padding: 0 24px;
@@ -99,7 +99,7 @@ const { className, styles: _styles } = css.resolve`
       margin-top: 1.5rem;
     }
     :global(.ant-drawer-content) {
-      background: var(--fill-1) !important;
+      background: var(--fill_1) !important;
     }
   }
 `;

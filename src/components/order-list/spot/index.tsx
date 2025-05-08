@@ -345,7 +345,7 @@ const styles = css`
       font-size: 14px;
       font-style: normal;
       font-weight: 400;
-      color: var(--text-secondary);
+      color: var(--text_2);
       margin-top: 16px;
     }
   }
@@ -353,7 +353,7 @@ const styles = css`
     width: 100%;
     height: 48px;
     border-radius: 40px;
-    background: var(--text-brand);
+    background: var(--text_brand);
     color: #fff;
     text-align: center;
     line-height: 48px;
@@ -371,7 +371,7 @@ const styles = css`
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--line-1);
+      border-bottom: 1px solid var(--fill_line_1);
       padding: 10px;
       padding-left: 20px;
       height: 48px;
@@ -387,7 +387,7 @@ const styles = css`
           font-size: 14px;
           user-select: none;
           cursor: pointer;
-          color: var(--text-secondary);
+          color: var(--text_2);
           margin-right: 25px;
           &.active {
             color: var(--brand) !important;
@@ -423,7 +423,7 @@ const styles = css`
           }
         }
         button {
-          background: var(--text-brand);
+          background: var(--text_brand);
           color: #fff;
           cursor: pointer;
           padding: 5px 16px;

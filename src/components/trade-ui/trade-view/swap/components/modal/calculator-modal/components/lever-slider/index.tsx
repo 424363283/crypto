@@ -59,7 +59,7 @@ export const LeverSlider = () => {
             align-items: center;
             gap: 8px;
             align-self: stretch;
-            color: var(--text-secondary);
+            color: var(--text_2);
             font-family: "HarmonyOS Sans SC";
             font-size: 14px;
             font-style: normal;
@@ -68,11 +68,11 @@ export const LeverSlider = () => {
             &.error {
               &,
               span {
-                color: var(--text-error) !important;
+                color: var(--text_red) !important;
               }
             }
             span {
-              color: var(--text-primary);
+              color: var(--text_1);
               font-family: "HarmonyOS Sans SC";
               font-size: 14px;
               font-style: normal;

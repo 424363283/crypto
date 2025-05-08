@@ -45,7 +45,7 @@ export const Agreement = ({ children, allow: _allow }: { children: any; allow?: 
               content: '';
               width: 100%;
               margin-top: 32px;
-              border-bottom: 2px solid var(--line-1);
+              border-bottom: 2px solid var(--fill_line_1);
             }
           }
         }

@@ -38,7 +38,6 @@ export const AssetsTrendCard = (props: AssetsTrendProps) => {
 
   useEffect(() => {
     fetchAccountProfitHistory(dateRange);
-    console.log(dateRange);
     handleXInter(dateRange);
   }, [dateRange]);
   
@@ -51,7 +50,6 @@ export const AssetsTrendCard = (props: AssetsTrendProps) => {
       if (day == 90) return 10;
     }
   }
-
   return (
     <LineChart
       data={{ dates: xAxisDate, prices: yAxisProfits }}

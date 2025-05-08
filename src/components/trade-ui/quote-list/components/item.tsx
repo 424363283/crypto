@@ -103,11 +103,11 @@ const _ListItem = ({
             font-weight: 400;
             padding: 8px 16px;
             &:hover {
-              background-color: var(--fill-3);
+              background-color: var(--fill_3);
             }
 
             &.active {
-              background: var(--fill-3);
+              background: var(--fill_3);
             }
             > div {
               font-size: 12px;
@@ -126,7 +126,7 @@ const _ListItem = ({
               flex: 1;
             }
             .name {
-              color: var(--text-primary);
+              color: var(--text_1);
               display: flex;
               align-items: center;
               width: 140px;
@@ -135,18 +135,18 @@ const _ListItem = ({
                 margin-right: 4px;
               }
               .quoteCoin {
-                color: var(--text-tertiary);
+                color: var(--text_3);
               }
               :global(.star_icon) {
               }
             }
             .price {
               height: 14px;
-              color: var(--text-primary);
+              color: var(--text_1);
             }
             .rate {
               height: 14px;
-              color: var(--text-primary);
+              color: var(--text_1);
             }
             .new {
               color: #f04e3f;

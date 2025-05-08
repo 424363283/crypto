@@ -283,7 +283,7 @@ const styles = css`
     :global(.verify-tabbar) {
       padding: 0;
       margin-bottom: 16px;
-      border-bottom: 1px solid var(--line-3)!important;
+      border-bottom: 1px solid var(--fill_line_3)!important;
     }
   }
 `;

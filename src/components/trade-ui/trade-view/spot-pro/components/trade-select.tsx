@@ -147,7 +147,7 @@ const styles = css`
         border: none;
         background: transparent;
         padding: 0;
-        color: var(--text-secondary);
+        color: var(--text_2);
         font-size: 14px;
         font-style: normal;
         font-weight: 500;
@@ -155,7 +155,7 @@ const styles = css`
         cursor: pointer;
       }
       :global(button.active) {
-        color: var(--text-brand);
+        color: var(--text_brand);
       }
     }
     :global(.type-select) {
@@ -187,7 +187,7 @@ const styles = css`
   }
   :global(.ant-tooltip-inner),
   :global(.ant-tooltip-arrow:before) {
-    background: var(--fill-pop) !important;
-    color: var(--text-primary) !important;
+    background: var(--fill_pop) !important;
+    color: var(--text_1) !important;
   }
 `;

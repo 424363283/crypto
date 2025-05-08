@@ -82,7 +82,7 @@ const styles = css`
         border: 1px solid transparent;
         .value {
           flex: 1 0 0;
-          color: var(--text-secondary);
+          color: var(--text_2);
           font-family: "HarmonyOS Sans SC";
           font-size: 14px;
           font-style: normal;
@@ -91,7 +91,7 @@ const styles = css`
         }
         &.active {
           .value {
-            color: var(--text-primary);
+            color: var(--text_1);
           }
           border: 1px solid var(--brand);
         }

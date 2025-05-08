@@ -1,20 +1,22 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import styles from '../index.module.scss';
+import styles from '@/components/CopyTrading/CopyTradingDetail/index.module.scss';
 import LeverType from './leverType';
 import { CopyTradeType, CopyTradeSetting } from './types';
 import CopyBtn from './copyBtn';
 import { EmptyComponent } from '@/components/empty';
-import { useCopyState } from '@/core/hooks/src/use-copy-state';
+// import { useCopyState } from '@/core/hooks/src/use-copy-state';
 import { useResponsive, useRouter } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Copy } from '@/core/shared';
 import dayjs from 'dayjs';
+import { useCopyTradingSwapStore } from '@/store/copytrading-swap';
+import { maginModelOpts, leverModelOpts, copyStyleObj } from '@/components/CopyTrading/CopyTradingDetail/meta';
 export default function TraderFollowerSetting() {
-  const { copyUserType, copyUserId } = useCopyState();
   const router = useRouter();
-
+  const { id } = router.query as any;
+  const isRefresh = useCopyTradingSwapStore.use.isRefresh();
   const { isMobile } = useResponsive();
-  const [followData, setFollowData] = useState({});
+  const [followData, setFollowData] = useState({} as any);
 
   const PreIcon = () => {
     return (
@@ -34,23 +36,48 @@ export default function TraderFollowerSetting() {
 
   const fetchConfig = async () => {
     let { id } = router.query;
-    const user: any = Copy.getUserInfo();
+    const user: any = await Copy.getUserInfo();
     const res: any = await Copy.fetchCopyTraderConfigDetail({
       lUid: id,
-      fUid:  user?.user?.uid
+      fUid: user?.uid
     });
     if (res?.code === 200) {
       setFollowData({
         ...res.data,
-        contractString: showContract(res.data.contractInfo)
+        contractString: showContract(res.data.contractInfo),
+        showMarginMode: marginModeFun(res.data.marginMode),
+        showPositionLeverage: positionLeverageFun(res.data)
       });
     }
   };
-  const showContract = (contractInfo:string) => {
-    if(!contractInfo)  return ''
-      const contract  = contractInfo && JSON.parse(contractInfo)
-      return contract &&  Object.values(contract).map((key: any,idx) => key.replace('-', '')).join(',');
-  }
+  const showContract = (contractInfo: string) => {
+    if (!contractInfo) return '';
+    const contract = contractInfo && JSON.parse(contractInfo);
+    return (
+      contract &&
+      Object.values(contract)
+        .map((key: any, idx) => key.replace('-', '').toUpperCase())
+        .join(',')
+    );
+  };
+  const marginModeFun = (margin: string) => {
+    if (!margin) return '';
+    return maginModelOpts.find(m => m.value === margin)?.label;
+  };
+  const positionLeverageFun = (leverage: object) => {
+    if (!leverage) return '';
+    const findObj = leverModelOpts.find(m => m.value === leverage.positionLeverage);
+    if (!findObj) return '';
+    console.log(findObj, 'findObj=====');
+    if (leverage.positionLeverage === 2) return `${findObj?.label || ''} ${leverage?.leverageLevel || ''}X`;
+    return `${findObj?.label} `;
+  };
+  useEffect(() => {
+    if (isRefresh) {
+      fetchConfig();
+    }
+  }, [isRefresh]);
+
   useEffect(() => {
     fetchConfig();
   }, []);
@@ -59,17 +86,13 @@ export default function TraderFollowerSetting() {
       <div className={styles.flexSpace}>
         <div className={`${isMobile ? styles.flexCol : ''}`}>
           <label className={styles.label}>{LANG('设置时间')}</label>
-          <span>{dayjs(followData.ctime).format('YYYY-MM-DD HH:mm:ss')}</span>
+          <span className={styles.textPrimary}>{followData?.followStatus === 0 ? dayjs(followData.mtime).format('YYYY-MM-DD HH:mm:ss') : ''}</span>
         </div>
         <CopyBtn
           onClick={() => {
-            router.push({
-              pathname: `/copyTrade/setting/${copyUserId}`,
-              query: {
-                userType: CopyTradeType.myFllow,
-                copyActiveType: CopyTradeSetting.futures
-              }
-            });
+            router.push(
+              `/copyTrade/setting/${id}?userType=${CopyTradeType.traderDetail}&copyActiveType=${CopyTradeSetting.futures}`
+            );
           }}
           btnTxt={LANG('编辑')}
           preIcon={<PreIcon />}
@@ -81,23 +104,27 @@ export default function TraderFollowerSetting() {
         <div className={styles.tradeRow}>
           <div>
             <label>{LANG('跟单方式')}</label>
-            <span>固定保证金</span>
+            <span>
+              {copyStyleObj[followData.copyStyle]}{' '}
+              {followData.copyStyle === 1 && <span>{followData.fixedQuota} USDT</span>}
+              {followData.copyStyle === 2 && <span>{followData.magnification}</span>}
+            </span>
           </div>
-          <div>
+          {/* <div>
             <label>{LANG('跟单额度')}</label>
             <span>100 USDT</span>
-          </div>
+          </div> */}
           <div className={`${styles.flexCenter}`}>
             <label>{LANG('跟单合约')}</label>
             <span className={styles.textOverflow}>{followData?.contractString}</span>
           </div>
           <div>
             <label>{LANG('保证金模式')}</label>
-            <span>全仓</span>
+            <span>{followData.showMarginMode}</span>
           </div>
           <div>
             <label>{LANG('杠杆模式')}</label>
-            <span>固定杠杆 10x</span>
+            <span>{followData?.showPositionLeverage}</span>
           </div>
         </div>
       </div>

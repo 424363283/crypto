@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal } from 'antd';
 import styles from './index.module.scss';
 import clsx from 'clsx';
+import { useTheme } from '@/core/hooks';
 
 export { Header } from './Header';
 
@@ -19,6 +20,7 @@ function BvModal({
   overlayClassName,
   ...otherProps
 }: any) {
+  const { isDark } = useTheme();
   return (
     <Modal
       width={400}
@@ -28,7 +30,7 @@ function BvModal({
       closable={false}
       footer={null}
       title={null}
-      className={clsx(styles.antdModalWrap, overlayClassName)}
+      className={clsx(styles.antdModalWrap, overlayClassName, isDark && styles.dark)}
     >
       {header ? (
         <div className={clsx(styles.modalHeader, headerClassName)} style={headerStyle}>

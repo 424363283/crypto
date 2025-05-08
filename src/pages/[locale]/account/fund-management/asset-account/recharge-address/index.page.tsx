@@ -193,7 +193,7 @@ const RechargeAddress = () => {
   }, [currency, network]);
 
   return (
-    <UniversalLayout bgColor='var(--theme-background-color-9)' headerBgColor='var(--fill-2)'>
+    <UniversalLayout bgColor='var(--theme-background-color-9)' headerBgColor='var(--fill_2)'>
       <Nav title={LANG('地址簿')} />
       <div className='recharge-address'>
         <div className='title'>

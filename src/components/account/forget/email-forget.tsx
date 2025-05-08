@@ -20,7 +20,7 @@ export const EmailForget = () => {
           padding:24px 0;
           text-align: center;
           :global(.label) {
-            color: var(--text-brand);
+            color: var(--text_brand);
             text-align: center;
             font-size: 14px;
             font-weight: 400;

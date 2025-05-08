@@ -67,7 +67,7 @@ export const TopInfoCard = forwardRef((props: TopInfoCardProps, ref) => {
       </Desktop>
       <Mobile>
         <div className='card'>
-          <p className='name'>{LANG('24H剩余额度')}</p>
+          <p className='name'>{LANG('24H剩余提币额度')}</p>
           <p className='num'>
             {amount} {avaiableCurrency}
             </p>

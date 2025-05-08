@@ -4,17 +4,20 @@ import { Loading } from '@/components/loading';
 import { useKycState } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Account } from '@/core/shared';
-import { message } from '@/core/utils';
+import { MediaInfo, message } from '@/core/utils';
 import { useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
 import { useApiContext } from '../context';
 import { IDENTITY_TYPE } from '../types';
 import { HorizontalStepBar } from './horizontal-stepbar';
 import { UpButton } from './upload-button';
+import { useLoginUser } from '@/core/store';
+
 
 export const UploadSelfie = ({ onVerifiedDone }: { onVerifiedDone?: () => void }) => {
   const { updateKYCAsync } = useKycState();
   const { apiState, setApiState } = useApiContext();
+  const { fetchUserInfo } = useLoginUser();
 
   const { identityNumber, identityName, identityType, img_0, img_1, img_2, countryId } = apiState;
   const [shouldDisableStep3Btn, setDisableStep3Btn] = useState(false);
@@ -30,13 +33,16 @@ export const UploadSelfie = ({ onVerifiedDone }: { onVerifiedDone?: () => void }
     }
   };
   useEffect(() => {
-    if( identityType == IDENTITY_TYPE.PASSPORT && img_1 != '' || identityType != IDENTITY_TYPE.PASSPORT && img_2 != ''){
+    if (
+      (identityType == IDENTITY_TYPE.PASSPORT && img_1 != '') ||
+      (identityType != IDENTITY_TYPE.PASSPORT && img_2 != '')
+    ) {
       return setDisableStep3Btn(false);
     }
     if (!img_1 || !img_2) {
       return setDisableStep3Btn(true);
     }
-  }, [img_1, img_2,identityType]);
+  }, [img_1, img_2, identityType]);
   // 上传图片
   const onSubmitUserInfo = async () => {
     Loading.start();
@@ -54,7 +60,8 @@ export const UploadSelfie = ({ onVerifiedDone }: { onVerifiedDone?: () => void }
           draft.showUploadPage = false;
           draft.pageStep = 'init';
         });
-        updateKYCAsync(true);
+        await fetchUserInfo();
+        await updateKYCAsync(true);
         onVerifiedDone?.();
         message.success(LANG('提交成功,请耐心等待审核'));
       } else {
@@ -117,7 +124,7 @@ const styles = css`
       .upload-label {
         margin-bottom: 8px;
 
-        color: var(--text-tertiary);
+        color: var(--text_3);
         font-family: 'HarmonyOS Sans SC';
         font-size: 12px;
         font-style: normal;
@@ -128,12 +135,15 @@ const styles = css`
         :global(img) {
           width: 100%;
           height: 274px;
+          @media ${MediaInfo.mobile} {
+            height: auto;
+          }
         }
       }
     }
     .warn-tips {
       border-radius: 8px;
-      background: var(--yellow_tips, rgba(240, 186, 48, 0.1));
+      background: var(--yellow_10);
       border-radius: 5px;
       margin-top: 20px;
       padding: 6px 15px;

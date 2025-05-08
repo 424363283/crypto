@@ -12,6 +12,7 @@ import { ASSET_TYPE } from '../../assets-overview/types';
 import TabBar, { TAB_TYPE } from '@/components/tab-bar';
 import { Size } from '@/components/constants';
 import LiteHistoryOrder from '../lite-order';
+import { MediaInfo } from '@/core/utils';
 
 export default function OrderHistoryContainer() {
   const [verifiedDeveloped, setVerifiedDeveloped] = useState(false);
@@ -25,8 +26,8 @@ export default function OrderHistoryContainer() {
       pathname: url,
       query: {
         type: 'records',
-        tab: id,
-      },
+        tab: id
+      }
     });
   }, []);
 
@@ -37,25 +38,25 @@ export default function OrderHistoryContainer() {
           pathname: '/account/fund-management/order-history/spot-order',
           query: {
             type: 'records',
-            tab: 0,
-          },
-        })
+            tab: 0
+          }
+        });
       } else if (selectedTab === ORDER_HISTORY_TYPE.SWAP_U_ORDER) {
         router.replace({
           pathname: '/account/fund-management/order-history/swap-u-order',
           query: {
             type: 'records',
-            tab: 0,
-          },
-        })
+            tab: 0
+          }
+        });
       } else if (selectedTab === ORDER_HISTORY_TYPE.LITE_ORDER) {
         router.replace({
           pathname: '/account/fund-management/order-history/lite-order',
           query: {
             type: 'records',
-            tab: 0,
-          },
-        })
+            tab: 0
+          }
+        });
       }
     }
   };
@@ -63,7 +64,7 @@ export default function OrderHistoryContainer() {
     [ORDER_HISTORY_TYPE.SPOT_ORDER]: <SpotHistoryOrder onTabChange={onTabChange} />,
     [ORDER_HISTORY_TYPE.SWAP_ORDER]: <SwapHistoryOrder isSwapU={isSwapU} onTabChange={onTabChange} />,
     [ORDER_HISTORY_TYPE.SWAP_U_ORDER]: <SwapHistoryOrder isSwapU={isSwapU} onTabChange={onTabChange} />,
-    [ORDER_HISTORY_TYPE.LITE_ORDER]: <LiteHistoryOrder onTabChange={onTabChange} />,
+    [ORDER_HISTORY_TYPE.LITE_ORDER]: <LiteHistoryOrder onTabChange={onTabChange} />
   };
 
   const SPECIFIC_ORDER_HISTORY_MODULES = () => {
@@ -86,31 +87,50 @@ export default function OrderHistoryContainer() {
   return (
     <>
       <CommonLayout navItems={NAV_MAP}>
-        <div className='order-history-common border-1 rounded-1'>
+        <div className="order-history-common border-1 rounded-1">
           <TabBar
             type={TAB_TYPE.TEXT}
-            size = {isMobile? Size.LG : Size.XL}
+            size={isMobile ? Size.LG : Size.XL}
             options={[
               { label: LANG('U本位合约'), value: ORDER_HISTORY_TYPE.SWAP_U_ORDER },
               { label: LANG('币币'), value: ORDER_HISTORY_TYPE.SPOT_ORDER },
-              { label: LANG('简易合约'), value: ORDER_HISTORY_TYPE.LITE_ORDER },
+              { label: LANG('简易合约'), value: ORDER_HISTORY_TYPE.LITE_ORDER }
             ]}
             value={type}
             onChange={onOrderTabChange}
+            className="order-history-tab"
           />
           <SPECIFIC_ORDER_HISTORY_MODULES />
         </div>
       </CommonLayout>
       <style jsx>{styles}</style>
     </>
-   
   );
-
 }
 
 const styles = css`
- .order-history-common {
-    background-color:var(--bg-1);
+  .order-history-common {
+    background-color:var(--fill_bg_1);
+    @media ${MediaInfo.mobile} {
+      padding: 12px;
+      :global(.order-history-tab) {
+        width: auto;
+        padding: 0;
+        :global(.tabs) {
+          width: 100%;
+          gap: 24px;
+          border-bottom: 1px solid var(--fill_line_1);
+        }
+        :global(.tab) {
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+          height: 28px;
+        }
+        :global(.tab.active) {
+          border-bottom: 1px solid var(--brand);
+        }
+      }
+    }
   }
 `;
-

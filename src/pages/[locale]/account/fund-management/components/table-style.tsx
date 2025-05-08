@@ -6,7 +6,7 @@ export const TableStyle = () => {
             .ant-table-row td {
               font-size: 12px;
               font-weight: 400;
-              color: var(--text-primary);
+              color: var(--text_1);
             }
             td.ant-table-cell {
               padding: 16px;
@@ -15,7 +15,7 @@ export const TableStyle = () => {
           .ant-table-wrapper .ant-table-content .ant-table-thead {
             th.ant-table-cell {
               font-weight: normal;
-              color: var(--text-tertiary);
+              color: var(--text_3);
               font-size: 12px;
               padding-bottom: 0;
             }

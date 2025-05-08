@@ -11,14 +11,14 @@ export interface FILTER_INFO {
   traderType: number; // 交易员类型：1，初级2,中级，3高级，4资深
   hideTrader: boolean; // 隐藏满员的交易员：0，隐藏 1，不隐藏
   contractInfo: string; // 带单合约
-  followAssetMin: number; // 交易员资产规模最小值
-  followAssetMax: number; // 交易员资产规模最大值
-  traderAssetMin: number; // 交易员资产规模最小值
-  traderAssetMax: number; // 交易员资产规模最大值
-  profitAmount: number; // 收益额
-  profitRate: number; // 收益率
-  victoryRateMin: number; //  最小胜率
-  victoryRateMax: number; // 最大胜率
+  followAssetMin: any; // 交易员资产规模最小值
+  followAssetMax: any; // 交易员资产规模最大值
+  traderAssetMin: any; // 交易员资产规模最小值
+  traderAssetMax: any; // 交易员资产规模最大值
+  profitAmount: any; // 收益额
+  profitRate: any; // 收益率
+  victoryRateMin: any; //  最小胜率
+  victoryRateMax: any; // 最大胜率
   settledDays: number; // 入驻天数
   userTag: string; // 交易员标签
   page: number; // 当前页码
@@ -29,6 +29,7 @@ export interface FILTER_INFO {
 //带单交易员
 export interface LEAD_TRADER {
   id: number;
+  uid:string,
   name: string; //头像
   url: string; //昵称
   leverType: number; //战绩登录
@@ -90,11 +91,13 @@ export interface OVERVIEW_DATA {
   settledDays: number; // 从入驻开始到当前日期的天数
   currentFollowers: number; // 当前跟单人数
   totalFollowers: number; // 累计跟单人数
+  maxCopyTraderCount: number; // 最大跟单人数
   userAmount: number; // 交易员带单资产
   profitRate: number; //总收益率
   settledTotalAmount: number; //带单规模
   settledTotalProfit: number; // 当前跟随者收益
   workRate: number; // 交易频率
+  shareRoyaltyRatio: number; // 分润比例
 }
 // 跟随者
 export interface FOLLOWERS_DATA {
@@ -113,6 +116,7 @@ export interface FOLLOWERS_DATA {
   totalProfit: number; // 总收益
   profit: number; // 当日的收益
   totalMargin: number; // 总保证金
+  nickName:string, // 昵称
 }
 
 // 品种偏好
@@ -131,10 +135,13 @@ export interface BRING_SETING_DATA {
   copyMinAvailableMargin: number; // 跟单员最低可用保证金
   nickname: string; // 昵称
   description: string; // 带单备注
+  contractList: Array<any>; // 合约列表
+  status:number; // 昵称审核状态
 }
 
 // 跟单账户
 export interface COPY_ACCOUNT_ASSET {
+  dailyProfit:number, //今日收益
   unrealisedPNL: number; // 未实现盈亏
   equity: number, // 保证余额
   availableBalance: number; //可用保证金
@@ -142,4 +149,13 @@ export interface COPY_ACCOUNT_ASSET {
   positionMargin: number; // 持仓保证金？保证金余额
   profitRate: number; // 收益率
   profitAmount: number; // 收益额
+  totalCopyTradingProfit: number; // 跟单总收益
+  netCopyTradingProfit: number; // 跟单净收益收益
+}
+
+// 不同用户选择不同类型账户下单
+export enum UsingAccountType {
+  ordinary = 0, // 普通用户 选择非跟单账户下单
+  trader= 1, // 带单员下单 选择跟单账户下单
+  follower = 2 // 跟单员下单 选择跟单账户下单
 }

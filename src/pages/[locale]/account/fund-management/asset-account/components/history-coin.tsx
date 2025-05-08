@@ -99,13 +99,13 @@ const styles = css`
         cursor: pointer;
         padding: 8px 16px;
         background: transparent;
-        border: 1px solid var(--line-1);
+        border: 1px solid var(--fill_line_1);
         gap: 8px;
         @media ${MediaInfo.mobile}{
           padding: 0 16px;
         }
         .name {
-          color: var(--text-primary);
+          color: var(--text_1);
           font-size: 14px;
           font-weight: 400;
           line-height: 14px; /* 100% */

@@ -7,7 +7,7 @@ export const getList = (locale: string) => {
   const enableLite = process.env.NEXT_PUBLIC_LITE_ENABLE === 'true';
   const list: { label: string; children: { label: string; href: string; blank?: boolean; tooltip?: boolean }[] }[] = [
     {
-      label: process.env.NEXT_PUBLIC_APP_NAME,
+      label: `${LANG('关于')} ${process.env.NEXT_PUBLIC_APP_NAME}`,
       children: [
         // {
         //   label: LANG('关于我们'),
@@ -45,7 +45,7 @@ export const getList = (locale: string) => {
         // },
         {
           label: LANG('举报通道'),
-          href: ``,
+          href: `https://ymex.zendesk.com/hc/${language}`,
           tooltip: true,
         },
         {

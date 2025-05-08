@@ -301,7 +301,7 @@ export const Transfer = ({
             options={transferAbleList}
             icon='common-arrow-down-0'
             height={isMobile ? 40: 56}
-            bgColor='var(--fill-3)'
+            bgColor='var(--fill_3)'
             borderColor='transparent'
             onChange={onSelectCoin}
             className='recharge-select-coin'
@@ -501,14 +501,14 @@ export const Transfer = ({
 };
 const styles = css`
   .main-content-wrapper {
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     margin: 0 auto;
     width: 100%;
     @media ${MediaInfo.mobile} {
       padding-bottom: 12px;
     }
     .asset-account-header {
-      background-color: var(--fill-2);
+      background-color: var(--fill_2);
       @media ${MediaInfo.mobile} {
         background-color: transparent;
       }
@@ -670,7 +670,7 @@ const styles = css`
         }
         .bottom-row {
           padding: 20px;
-          border: 1px solid var(--fill-3);
+          border: 1px solid var(--fill_3);
           border-radius: 8px;
           @media ${MediaInfo.mobile}{
             padding:12px;
@@ -682,7 +682,7 @@ const styles = css`
     :global( .top-info-card ) {
       padding: 24px 0;
       margin: 24px 0;
-      border: 1px solid var(--fill-3);
+      border: 1px solid var(--fill_3);
       border-radius: 8px;
       @media ${MediaInfo.mobile}{
         margin: 12px 12px 0;

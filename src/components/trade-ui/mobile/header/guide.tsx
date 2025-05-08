@@ -172,7 +172,7 @@ const styles = css`
     flex-direction: column;
     padding: 0 0.5rem;
     padding-bottom: 0.5rem;
-    color: var(--text-primary);
+    color: var(--text_1);
     overflow-y: auto;
     // min-height: 35rem;
   }
@@ -182,12 +182,12 @@ const styles = css`
     .title {
       font-size: 1.25rem;
       font-weight: 500;
-      color: var(--text-brand);
+      color: var(--text_brand);
     }
     .page {
       font-size: 14px;
       span {
-        color: var(--text-tertiary);
+        color: var(--text_3);
       }
     }
   }
@@ -252,7 +252,7 @@ const styles = css`
       background: var(--brand);
       font-size: 1rem;
       font-weight: 500;
-      color: var(--text-white);
+      color: var(--text_white);
     }
   }
   .img-wrapper {
@@ -265,7 +265,7 @@ const styles = css`
     }
   }
   :global(.modal) {
-    background-color: var(--fill-pop) !important;
+    background-color: var(--fill_pop) !important;
   }
 `;
 export default GuideModal;

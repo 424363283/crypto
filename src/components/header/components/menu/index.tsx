@@ -114,7 +114,7 @@ export default function Menu({
               font-size: 14px;
               font-weight: 500;
               margin: 0 12px;
-              color: var(--text-primary);
+              color: var(--text_1);
               > div {
                 min-height: 30px;
                 display: flex;
@@ -136,7 +136,7 @@ export default function Menu({
               }
             }
             .active-path {
-              color: var(--text-brand);
+              color: var(--text_brand);
             }
             .icon-item {
               padding: 0;

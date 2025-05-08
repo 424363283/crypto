@@ -2,7 +2,7 @@ import { kChartEmitter } from '@/core/events';
 import { useRouter, useTheme } from '@/core/hooks';
 import { LANG, TrLink } from '@/core/i18n';
 import { SESSION_KEY } from '@/core/store';
-import { clsx } from '@/core/utils';
+import { clsx, MediaInfo } from '@/core/utils';
 import { useLayoutEffect } from 'react';
 
 export const UnLoginView = () => {
@@ -21,12 +21,12 @@ export const UnLoginView = () => {
   return (
     <>
       <div className={clsx('un-login-view', !isDark && 'light')}>
-        <div className='text'>
-          <TrLink href='/login' onClick={handleLogin}>
+        <div className="text">
+          <TrLink href="/login" onClick={handleLogin}>
             {LANG('立即登录')}
           </TrLink>
           <span>{LANG('或')}</span>
-          <TrLink href='/register'>{LANG('立即注册')}</TrLink>
+          <TrLink href="/register">{LANG('立即注册')}</TrLink>
           <span>{LANG('进行交易')}</span>
         </div>
       </div>
@@ -46,6 +46,9 @@ export const UnLoginView = () => {
           }
           :global(a) {
             color: var(--skin-primary-color);
+          }
+          @media ${MediaInfo.mobile} {
+            padding: 24px 0;
           }
         }
       `}</style>

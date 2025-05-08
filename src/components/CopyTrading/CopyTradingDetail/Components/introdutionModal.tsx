@@ -22,13 +22,14 @@ const IntrodutionModal = (props: CancelSettingProps) => {
   const handleConfrim = async () => {
     const briefValue = childRef.current?.getBrief();
     Loading.start();
-    const user: any = Copy.getUserInfo();
+    const user: any = await Copy.getUserInfo();
     const res = await Copy.fetchUpdateTraderContentAudit({
-      uid: user?.user.uid,
+      uid: user?.uid,
       content: briefValue
     });
     Loading.end();
-    if (res.code === 200) {
+    if (res?.code === 200) {
+      message.success(LANG('个人简介修改已提交，审核中'));
       close(true);
     } else {
       message.error(res.message);
@@ -104,8 +105,17 @@ const copyCancelStyle = css`
 
     .copy-modal-container {
       :global(.ant-input-outlined) {
-        background: var(--fill-3);
+        background: var(--fill_3);
         border-radius: 12px;
+      }
+      :global(textarea.ant-input) {
+        padding-top:24px;
+      }
+          
+        :global(.ant-input) {
+        &::placeholder {
+          color: var(--text_1);
+        }
       }
       .show-len {
         text-align: right;
@@ -113,9 +123,9 @@ const copyCancelStyle = css`
         font-family: HarmonyOS Sans SC;
         font-size: 12px;
         font-weight: 400;
-        color: var(--text-tertiary);
+        color: var(--text_3);
         .current {
-          color: var(--text-brand);
+          color: var(--text_brand);
         }
         .split {
           padding: 0 4px;
@@ -125,6 +135,8 @@ const copyCancelStyle = css`
     :global(.my24) {
       margin: 24px 0;
     }
+     
+    
   }
 `;
 

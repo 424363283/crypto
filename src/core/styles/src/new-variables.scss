@@ -5,7 +5,7 @@ $nui-base-size: 10px !default;
 // Body
 
 $nui-body-bg: var(-bg-1) !default;
-$nui-body-color: var(--text-primary) !default;
+$nui-body-color: var(--text_1) !default;
 $nui-body-font-size: $nui-base-size * 1.6 !default;
 
 // Fonts
@@ -13,6 +13,7 @@ $nui-body-font-size: $nui-base-size * 1.6 !default;
 $nui-font-size:    floor($nui-base-size) * 1.4 !default;
 $nui-font-size-xs: floor($nui-base-size) * 1.2 !default;
 $nui-font-size-sm: floor($nui-base-size) * 1.4 !default;
+$nui-font-size-md: floor($nui-base-size) * 1.6 !default;
 $nui-font-size-lg: floor($nui-base-size) * 1.4 !default;
 $nui-font-size-xl: floor($nui-base-size) * 1.6 !default;
 
@@ -20,7 +21,8 @@ $nui-font-size-map: (
   xs: $nui-font-size-xs,
   sm: $nui-font-size-sm,
   lg: $nui-font-size-lg,
-  xl: $nui-font-size-xl
+  xl: $nui-font-size-xl,
+  md: $nui-font-size-md,
 );
 
 $nui-font-weight-light:           300 !default;
@@ -34,18 +36,18 @@ $nui-font-weight-bold:            700 !default;
 $nui-intents: 'primary', 'positive', 'negative', 'warning';
 
 $nui-text-color:                $nui-body-color !default;
-$nui-placeholder-color:         var(--text-secondary) !default;
-$nui-placeholder-color-focus:   var(--text-secondary) !default;
+$nui-placeholder-color:         var(--text_2) !default;
+$nui-placeholder-color-focus:   var(--text_2) !default;
 
-$nui-base-text-color:          var(--text-primary) !default;
-$nui-base-text-color-hover:    var(--text-primary) !default;
-$nui-base-gradient:            var(--fill-3) !default;
-$nui-base-gradient-hover:      var(--fill-pop) !default;
-$nui-base-border-color:        var(--line-3) !default;
-$nui-base-border-color-hover:  var(--line-3) !default;
+$nui-base-text-color:          var(--text_1) !default;
+$nui-base-text-color-hover:    var(--text_1) !default;
+$nui-base-gradient:            var(--fill_3) !default;
+$nui-base-gradient-hover:      var(--fill_pop) !default;
+$nui-base-border-color:        var(--fill_line_3) !default;
+$nui-base-border-color-hover:  var(--fill_line_3) !default;
 
 $nui-primary-gradient:            var(--brand) !default;
-$nui-primary-gradient-hover:      var(--hover) !default;
+$nui-primary-gradient-hover:      var(--btn_brand_hover) !default;
 
 $nui-primary-border-color:        var(--brand) !default;
 $nui-primary-border-color-hover:  var(--brand) !default;
@@ -66,18 +68,20 @@ $nui-border-color-hover-map: (
 );
 
 // Base dimensions
-$nui-sizes: 'xs', 'sm', 'lg', 'xl';
+$nui-sizes: 'xs', 'sm', 'lg', 'xl','md';
 
 $nui-base-height:     $nui-base-size * 4 !default;
 $nui-base-height-xs:  $nui-base-size * 2.4 !default;
 $nui-base-height-sm:  $nui-base-size * 3.2 !default;
 $nui-base-height-lg:  $nui-base-size * 4.8 !default;
+$nui-base-height-md:  $nui-base-size * 4.8 !default;
 $nui-base-height-xl:  $nui-base-size * 5.6 !default;
 
 $nui-height-map: (
   xs: $nui-base-height-xs,
   sm: $nui-base-height-sm,
   lg: $nui-base-height-lg,
+  md: $nui-base-height-md,
   xl: $nui-base-height-xl
 );
 
@@ -85,12 +89,14 @@ $nui-base-padding:      $nui-base-size * 1.6 !default;
 $nui-base-padding-xs:   $nui-base-size * 1.6 !default;
 $nui-base-padding-sm:   $nui-base-size * 1.6 !default;
 $nui-base-padding-lg:   $nui-base-size * 1.6 !default;
+$nui-base-padding-md:   $nui-base-size * 1.6 !default;
 $nui-base-padding-xl:   $nui-base-size * 1.6 !default;
 
 $nui-padding-map: (
   xs: $nui-base-padding-xs,
   sm: $nui-base-padding-sm,
-  lg: $nui-base-padding-lg,
+  lg: $nui-base-padding-md,
+  md: $nui-base-padding-md,
   xl: $nui-base-padding-xl
 );
 

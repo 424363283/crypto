@@ -1,6 +1,7 @@
 import { UniversalLayout } from '@/components/layouts/universal';
 import { Loading } from '@/components/loading';
 import { Lang } from '@/core/i18n';
+import { WS3001 } from '@/core/network';
 import dynamic from 'next/dynamic';
 
 const OrderHistoryContainer = dynamic(() => import('./container'), {
@@ -15,7 +16,7 @@ function OrderHistory() {
     </UniversalLayout>
   );
 }
-export default Lang.SeoHead(OrderHistory);
+export default Lang.SeoHead(WS3001(OrderHistory, { swap: true }));
 export const getStaticPaths = Lang.getStaticPathsOrderHistoryCallback();
 export const getStaticProps = Lang.getStaticProps({
   auth: true,

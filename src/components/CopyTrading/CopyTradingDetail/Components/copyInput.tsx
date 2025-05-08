@@ -2,18 +2,28 @@ import YIcon from '@/components/YIcons';
 import css from 'styled-jsx/css';
 import { Input } from 'antd';
 import { LANG } from '@/core/i18n';
+import { useEffect, useState } from 'react';
+import CommonIcon from '@/components/common-icon';
+import { useCopyTradingSwapStore } from '@/store/copytrading-swap';
 export default function CopyInput(props: { placeTxt: string }) {
   const { placeTxt } = props;
-  const onSearch = (value: string) => {};
+  const setSearchKey = useCopyTradingSwapStore.use.setSearchKey();
+    const tabsActive = useCopyTradingSwapStore.use.tabsActive();
+  const searchKey = useCopyTradingSwapStore.use.searchKey();
+  const [copySearch, setCopySearch] = useState(searchKey);
+  useEffect(() => {
+    setCopySearch('');
+  },[tabsActive])
   return (
     <>
       <Input
         placeholder={LANG(placeTxt)}
         className="input-search"
-        prefix={<YIcon.searchIcon />}
-        
+        value={copySearch}
+        prefix={<CommonIcon size={20} className="prefix-icon" name="common-search-copy-0" />}
         onChange={({ target: { value } }) => {
-          onSearch(value);
+          setCopySearch(value);
+          setSearchKey(value);
         }}
       />
       <style jsx>{styles}</style>
@@ -26,10 +36,19 @@ const styles = css`
     height: 40px;
     border: none;
     border-radius: 40px;
-    background: var(--fill-3);
+    font-size: 14px;
+    background: var(--fill_3);
+    padding-left: 24px;
+    color: var(--text_1);
+    :global(.ant-input) {
+      &::placeholder {
+        color: var(--text_3);
+      }
+    }
     &:focus,
     &:hover,
     &:focus-within {
+      background: var(--fill_3);
       border: 1px solid var(--brand);
     }
   }

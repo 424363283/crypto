@@ -1,6 +1,5 @@
 import Table from '@/components/table';
 import { MediaInfo } from '@/core/utils';
-import css from 'styled-jsx/css';
 import styles from './copytrading-compare-bar.module.scss';
 import TabBar, { TAB_TYPE } from '@/components/tab-bar';
 import { Size } from '@/components/constants';

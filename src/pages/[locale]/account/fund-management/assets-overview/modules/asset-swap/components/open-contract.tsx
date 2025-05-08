@@ -62,7 +62,7 @@ export { OpenContractView };
 const styles = css`
   .open-contract-view {
     height: 822px;
-    background: var(--bg-1);
+    background: var(--fill_bg_1);
     margin-top: 110px;
     display: flex;
     flex-direction: column;

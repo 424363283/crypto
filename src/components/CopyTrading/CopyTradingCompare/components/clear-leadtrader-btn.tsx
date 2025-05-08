@@ -3,6 +3,7 @@ import styles from './clear-leadtrader-btn.module.scss';
 import { Button } from '@/components/button';
 import CommonIcon from '@/components/common-icon';
 import { useResponsive } from '@/core/hooks';
+import { LANG } from '@/core/i18n';
 const ClearLeadTraderButton = ({ onClick }: { onClick: () => void }) => {
   const { isMobile } = useResponsive();
   return (
@@ -12,7 +13,7 @@ const ClearLeadTraderButton = ({ onClick }: { onClick: () => void }) => {
           <Button rounded onClick={() => onClick()}>
             <div className={styles.commonButtonContent}>
               <CommonIcon name="common-clear-0" size={16} />
-              <span>清空</span>
+              <span>{LANG('清空')}</span>
             </div>
           </Button>
         )}

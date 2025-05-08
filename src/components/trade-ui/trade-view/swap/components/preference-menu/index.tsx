@@ -51,7 +51,7 @@ export const PreferenceMenu = ({
       return;
     }
     if (!isBounsWallet) {
-      store.positionVisible =  !store.positionVisible;
+      store.positionVisible = !store.positionVisible;
       // if (!isMobile) {
       //   store.positionVisible = !store.positionVisible;
       //   if (store.positionVisible) {
@@ -73,13 +73,13 @@ export const PreferenceMenu = ({
         <div>
           {isUsdtType && (
             <div className={clsx('position-mode')}>
-            <InfoItem
-              label={LANG('仓位模式')}
-              value={twoWayMode}
-              valueInfo={isBounsWallet ? LANG('体验金子钱包仅支持单向持仓') : null}
-              onClick={_handlePositionVisible}
-              valueLabel={twoWayMode ? LANG('双向持仓') : LANG('单向持仓')}
-            />
+              <InfoItem
+                label={isUsdtType ? LANG('U本位账户仓位模式') : LANG('币本位账户仓位模式')}
+                value={twoWayMode}
+                valueInfo={isBounsWallet ? LANG('体验金子钱包仅支持单向持仓') : null}
+                onClick={_handlePositionVisible}
+                valueLabel={twoWayMode ? LANG('双向持仓') : LANG('单向持仓')}
+              />
             </div>
           )}
 
@@ -134,22 +134,22 @@ export const PreferenceMenu = ({
           /> */}
           {/* <NotificationsSettings /> */}
           <DesktopOrTablet>
-          <div className={clsx('section-title')}>
-            {LANG('下单确认')}
-            <MySwitch
-              value={limitOrderConfirm || marketOrderConfirm || limitSpsl || marketSpsl || track || reverse}
-              onChange={(v: boolean) => {
-                _setPreference({ market: v, limit: v, limitSpsl: v, marketSpsl: v, track: v, reverse: v });
-              }}
-            />
-          </div>
+            <div className={clsx('section-title')}>
+              {LANG('下单确认')}
+              <MySwitch
+                value={limitOrderConfirm || marketOrderConfirm || limitSpsl || marketSpsl || track || reverse}
+                onChange={(v: boolean) => {
+                  _setPreference({ market: v, limit: v, limitSpsl: v, marketSpsl: v, track: v, reverse: v });
+                }}
+              />
+            </div>
           </DesktopOrTablet>
           <Mobile>
-          <InfoItem
-            label={LANG('下单确认')}
-            value={marketOrderConfirm}
-            onChange={(v: any) =>  _setPreference({ market: v, limit: v, limitSpsl: v, marketSpsl: v, track: v, reverse: v })}
-          />
+            <InfoItem
+              label={LANG('下单确认')}
+              value={marketOrderConfirm}
+              onChange={(v: any) => _setPreference({ market: v, limit: v, limitSpsl: v, marketSpsl: v, track: v, reverse: v })}
+            />
           </Mobile>
           <InfoItem
             label={LANG('市价订单')}

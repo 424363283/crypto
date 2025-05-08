@@ -93,7 +93,7 @@ const styles = css`
       font-size: 14px;
       font-style: normal;
       font-weight: 400;
-      color: var(--text-secondary);
+      color: var(--text_2);
       margin-top: 16px;
     }
   }
@@ -101,7 +101,7 @@ const styles = css`
     width: 100%;
     height: 48px;
     border-radius: 40px;
-    background: var(--text-brand);
+    background: var(--text_brand);
     color: #fff;
     text-align: center;
     line-height: 48px;

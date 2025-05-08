@@ -598,7 +598,8 @@ export const SWAP = {
       const estimateLoss = Math.min(0, Number(isBuy ? Number(flag).sub(position2) : position2.sub(flag)));
       // 委托成本 =  预估起始保证金 + 预估手续费 + abs(预估亏损)
       // EIM + EF + abs(EL)
-      const margin = estimateMargin + estimateFee + format(Math.abs(estimateLoss));
+      // const margin = estimateMargin + estimateFee + format(Math.abs(estimateLoss));
+      const margin = estimateMargin + estimateFee;
       return margin;
     },
     /**
@@ -673,7 +674,6 @@ export const SWAP = {
     income(isBuy: boolean, volume: number, contractFactor: number, avgCostPrice: number, flagPrice: number) {
       let income: number | string = 0;
       if (flagPrice < 0) return 0;
-
       if (isBuy) {
         // 买 Vol*S*(FP -HP)
         income = Number(volume).mul(contractFactor).mul(flagPrice.sub(avgCostPrice));

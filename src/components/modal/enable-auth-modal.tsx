@@ -158,10 +158,10 @@ const styles = css`
           height: 80px;
           flex-shrink: 0;
           border-radius: 16px;
-          border: 1px solid var(--line-3);
+          border: 1px solid var(--fill_line_3);
           &:hover,
           &.active {
-            border-color: var(--line-3);
+            border-color: var(--fill_line_3);
           }
         }
 
@@ -178,7 +178,7 @@ const styles = css`
         }
         .tips {
           width: 196px;
-          color: var(--text-tertiary);
+          color: var(--text_3);
           text-align: center;
           font-size: 14px;
           font-weight: 400;

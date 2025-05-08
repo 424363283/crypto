@@ -8,7 +8,6 @@ import TradeTab from '@/components/CopyTrading/Components/tradeTab'
 export default function CopyTradingPage() {
   return (
     <>
-
       <UserInformation />
       <TradeTab />
     </>

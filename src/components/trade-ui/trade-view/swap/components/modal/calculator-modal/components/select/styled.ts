@@ -17,7 +17,7 @@ const { className, styles: _styles } = css.resolve`
       line-height: 28px;
       font-size: 14px;
       font-weight: 400;
-      color: var(--text-primary);
+      color: var(--text_1);
       margin-bottom: 1px;
       padding: 0 16px;
       &:last-child {
@@ -34,7 +34,7 @@ const { className, styles: _styles } = css.resolve`
     width: 100%;
     height: 40px;
     line-height: 28px;
-    background: var(--fill-3);
+    background: var(--fill_3);
     border-radius: 8px;
     text-align: left;
     padding: 0 16px;

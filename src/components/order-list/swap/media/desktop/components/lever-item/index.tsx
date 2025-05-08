@@ -19,7 +19,7 @@ export const LeverItem = ({
       <style jsx>
         {`
           .lever {
-            color: var(--text-primary);
+            color: var(--text_1);
             font-size: 12px;
             font-weight: 400;
             padding:0 4px;

@@ -39,7 +39,7 @@ const styles = css`
     padding: 8px 0 20px 0;
     min-height: calc(100vh - 256px);
     @media ${MediaInfo.mobileOrTablet} {
-      background: var(--fill-3);
+      background: var(--fill_3);
     }
     .card-box {
       display: flex;
@@ -58,6 +58,6 @@ const styles = css`
     }
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
   }
 `;

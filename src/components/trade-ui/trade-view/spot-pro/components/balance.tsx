@@ -36,14 +36,14 @@ const styles = css`
     gap: 8px;
     flex: 1 0 0;
     .label {
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-size: 12px;
       font-style: normal;
       font-weight: 400;
       line-height: normal;
     }
     .balance {
-      color: var(--text-primary);
+      color: var(--text_1);
       text-align: right;
       font-size: 12px;
       font-style: normal;

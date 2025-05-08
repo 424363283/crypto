@@ -37,6 +37,12 @@ export function getCopyTraderListApi(params: FormData) {
     params: params,
   });
 }
+/** 查询带单员下的所有跟单员 */
+export function getCopyFollowListApi(params: FormData) {
+  return http.get<object[]>(paths['getCopyFollowList'], {
+    params: params,
+  });
+}
 /** 查询带单仓位历史 */
 export function getPageCopyTradePositionHistoryApi(params: FormData) {
   return http.get<object[]>(paths['getPageCopyTradePositionHistory'], {
@@ -54,6 +60,16 @@ export function getIsShareTraderApi(params?: FormData) {
     params: params,
   });
 }
+/** 跟单员取消跟单 */
+export function copyCancelStatusApi(params?: FormData) {
+  return http.get<object[]>(paths['copyCancelStatus'], {
+    params: params,
+  });
+}
+/** 跟单员申请跟单 */
+export function copyApplyStatusApi(data: FormData) {
+  return http.post<object>(paths['copyApplyStatus'], data);
+ }
 
 /** 查询周期性带单员数据  k线 */
 export function copyTradeUserStatisticsListApi(params?: FormData) {
@@ -85,12 +101,7 @@ export function copyTradeuserTradProportionApi(params?: FormData) {
     params: params,
   });
 }
-/** 跟单员申请(取消)跟单 */
-export function copyApplyStatusApi(params?: FormData) {
-  return http.get<object[]>(paths['copyApplyStatus'], {
-    params: params,
-  });
-}
+
 /** 查询带单配置信息 */
 export function getShareTradeConfigApi(params?: FormData) {
   return http.get<object[]>(paths['getShareTradeConfig'], {
@@ -134,5 +145,33 @@ export function positionByUidApi(params?: FormData) {
 export function shareChannelStatusApi(params?: FormData) {
   return http.get<object[]>(paths['shareChannelStatus'], {
     params: params,
+  });
+}
+/** 跟单数据统计 */
+export function getFollowStatisticsApi(params?: FormData) {
+  return http.get<object[]>(paths['getFollowStatistics'], {
+    params: params,
+  });
+}
+/** 昵称修改 */
+export function updateNickNameAuditApi(data?: FormData) {
+  return http.post<object>(paths['updateNickNameAudit'], data);
+}
+/** 获取交易员昵称 */
+export function getAllNickNameAuditsApi(params?: FormData) {
+  return http.get<object[]>(paths['getAllNickNameAudits'], {
+    params: params,
+  });
+}
+/** 交易员备注状态 */
+export function getAllTraderContentAuditsApi(params?: FormData) {
+  return http.get<object[]>(paths['getAllTraderContentAudits'], {
+    params: params,   
+  });
+}
+/** 根据uid查询用户合约账户配置 */
+export function getUserSettingsByUidApi(params?: FormData) {
+  return http.get<object[]>(paths['getUserSettingsByUid'], {
+    params: params,   
   });
 }

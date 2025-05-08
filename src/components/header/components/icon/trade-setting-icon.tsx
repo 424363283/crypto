@@ -3,7 +3,7 @@ import { useResponsive } from '@/core/hooks';
 import { memo, useEffect, useState } from 'react';
 import { TradeConfigDrawer } from '../drawer/';
 
-const TradeSettingIcon = memo(({ className, iconActive }: { className?: string; iconActive?: boolean }) => {
+const TradeSettingIcon = memo(({ className, iconActive, size = 16 }: { className?: string; iconActive?: boolean; size?: number }) => {
   const [hover, setIsHover] = useState(false);
   const [open, setIsOpen] = useState(false);
   const url = hover ? 'trade-config-0' : 'trade-config-0';
@@ -28,7 +28,7 @@ const TradeSettingIcon = memo(({ className, iconActive }: { className?: string; 
         onClick={() => setIsOpen(true)}
         style={{cursor: 'pointer'}}
         className={className}
-        size={16}
+        size={size}
       />
       {/* <Mobile> */}
       <TradeConfigDrawer open={open} onClose={() => setIsOpen(false)} />
@@ -37,3 +37,4 @@ const TradeSettingIcon = memo(({ className, iconActive }: { className?: string; 
   );
 });
 export default TradeSettingIcon;
+

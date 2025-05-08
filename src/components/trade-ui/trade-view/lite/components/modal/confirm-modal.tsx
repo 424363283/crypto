@@ -136,14 +136,14 @@ const styles = css`
       align-self: stretch;
       > * {
         &:first-child {
-          color: var(--text-secondary);
+          color: var(--text_2);
           font-size: 14px;
           font-style: normal;
           font-weight: 400;
           line-height: normal;
         }
         &:last-child {
-          color: var(--text-primary);
+          color: var(--text_1);
           text-align: right;
           font-size: 14px;
           font-style: normal;
@@ -155,13 +155,13 @@ const styles = css`
     }
     .total.row {
       > * :first-child {
-        color: var(--text-primary);
+        color: var(--text_1);
       }
     }
     .divider {
       width: 420px;
       height: 1px;
-      background: var(--line-3);
+      background: var(--fill_line_3);
     }
   }
   :global(.confirmModal) {

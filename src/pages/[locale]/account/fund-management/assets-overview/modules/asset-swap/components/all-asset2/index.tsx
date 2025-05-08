@@ -6,13 +6,16 @@ import { useState } from 'react';
 import { CalcSwapAsset } from '../../../../hooks/use-swap-balance';
 import { Desktop } from './desktop';
 import { Tablet } from './tablet';
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
 
 export const AllAsset2 = ({
   isSwapU,
+  walletId,
   wallets,
   onOpenWalletFormModal,
 }: {
   isSwapU: boolean;
+  walletId: WalletKey;
   wallets: CalcSwapAsset[];
   onOpenWalletFormModal: any;
 }) => {
@@ -37,6 +40,7 @@ export const AllAsset2 = ({
         <Desktop
           data={wallets}
           isSwapU={isSwapU}
+          wallet={walletId}
           onOpenTransferModal={onOpenTransferModal}
           onOpenWalletFormModal={onOpenWalletFormModal}
         />
@@ -52,7 +56,7 @@ export const AllAsset2 = ({
       {transferModalVisible && (
         <TransferModal
           open={transferModalVisible}
-          defaultTargetAccount={isSwapU ? ACCOUNT_TYPE.SWAP_U : ACCOUNT_TYPE.SWAP}
+          defaultTargetAccount={isSwapU ? (walletId === WalletKey.COPY ? ACCOUNT_TYPE.COPY : ACCOUNT_TYPE.SWAP_U) : ACCOUNT_TYPE.SWAP}
 
           onCancel={onCloseTransferModal}
           defaultCoin={code}

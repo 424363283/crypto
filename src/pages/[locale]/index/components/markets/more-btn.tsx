@@ -30,6 +30,10 @@ const styles = css`
       width: 100%;
       padding: 0 24px 24px;
       box-sizing: border-box;
+      :global(.favors-list-wrapper) {
+        width: 100%;
+        padding: 0;
+      }
     }
   }
   .market-title {
@@ -42,7 +46,7 @@ const styles = css`
       padding: 24px 0;
     }
     h2 {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 32px;
       font-weight: 700;
       white-space: nowrap;
@@ -51,7 +55,7 @@ const styles = css`
       }
     }
     p {
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-size: 16px;
       font-weight: 400;
       text-align: center;

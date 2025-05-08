@@ -15,7 +15,7 @@ const { className, styles: _styles } = css.resolve`
       align-items: center;
       gap: 40px;
       border-radius: 16px;
-      border: 1px solid var(--line-3);
+      border: 1px solid var(--fill_line_3);
       @media ${MediaInfo.mobile} {
         width: auto;
       }
@@ -30,12 +30,12 @@ const { className, styles: _styles } = css.resolve`
           flex: 1;
           margin-right: 10px;
           font-size: 16px;
-          color: var(--text-primary);
+          color: var(--text_1);
         }
       }
       .tips {
         font-size: 12px;
-        color: var(--text-secondary);
+        color: var(--text_2);
       }
       &.active,
       &:hover {

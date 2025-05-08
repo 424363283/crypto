@@ -386,7 +386,7 @@ $moduleMargin: 14px;
   .view-main-right,
   .view-positions {
     border-radius: 0px;
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
   }
 
   .draggable-module-ctr {

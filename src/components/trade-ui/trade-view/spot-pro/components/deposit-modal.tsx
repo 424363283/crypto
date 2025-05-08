@@ -89,7 +89,7 @@ const styles = css`
         gap: 16px;
         align-self: stretch;
         border-radius: 16px;
-        background: var(--fill-3);
+        background: var(--fill_3);
         cursor: pointer;
         :global(.icon-wrap) {
           display: flex;
@@ -99,7 +99,7 @@ const styles = css`
           height: 38px;
           flex-shrink: 0;
           border-radius: 9.5px;
-          background: var(--fill-projection);
+          background: var(--fill_shadow);
         }
         :global(.icon-wrap + div) {
           display: flex;
@@ -110,7 +110,7 @@ const styles = css`
           flex: 1 0 0;
         }
         .title {
-          color: var(--text-primary);
+          color: var(--text_1);
           font-size: 16px;
           font-style: normal;
           font-weight: 400;
@@ -118,7 +118,7 @@ const styles = css`
           align-self: stretch;
         }
         .subtitle {
-          color: var(--text-secondary);
+          color: var(--text_2);
           font-size: 12px;
           font-style: normal;
           font-weight: 400;

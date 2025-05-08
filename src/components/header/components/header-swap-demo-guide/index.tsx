@@ -33,10 +33,11 @@ export const HeaderSwapDemoGuide = ({ children }: { children: ReactNode }) => {
   };
 
   const { isLogin } = {isLogin:true};//useAppContext();
+  const isSkipTour = true;
 
   const { _initCached, step: headerSwapDemoGuideStoreStep } = headerSwapDemoGuideStore;
   useLayoutEffect(() => {
-    if (_initCached && isLogin && !isSwapDemo()) {
+    if (!isSkipTour && _initCached && isLogin && !isSwapDemo()) {
       if (headerSwapDemoGuideStoreStep == 0) {
         setCurrentStep(0);
         setIsOpen(true);

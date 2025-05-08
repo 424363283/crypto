@@ -126,7 +126,7 @@ const Center = () => {
           :global(.ant-collapse-item) {
             border-bottom: none;
             :global(.ant-collapse-header) {
-              color: var(--text-primary);
+              color: var(--text_1);
               font-family: 'HarmonyOS Sans SC';
               font-size: 16px;
               font-style: normal;
@@ -146,7 +146,7 @@ const Center = () => {
             flex-direction: column;
             gap: 8px;
             :global(a) {
-              color: var(--text-tertiary);
+              color: var(--text_3);
               font-family: 'HarmonyOS Sans SC';
               font-size: 14px;
               font-style: normal;
@@ -174,7 +174,7 @@ const Center = () => {
             margin-right: 16px;
             cursor: pointer;
             :global(svg) {
-              fill: var(--text-tertiary);
+              fill: var(--text_3);
             }
             &:hover {
               :global(svg) {
@@ -191,13 +191,13 @@ const Center = () => {
           font-weight: 900;
           gap: 4px;
           :global(.ymex) {
-            color: var(--text-white);
+            color: var(--text_white);
           }
           :global(.global) {
             color: var(--brand);
           }
           :global(.copyright) {
-            color: var(--text-secondary);
+            color: var(--text_2);
             font-size: 14px;
             font-weight: 400;
           }
@@ -211,7 +211,7 @@ const Center = () => {
             align-items: flex-start;
             gap: 16px;
             p {
-              color: var(--text-tertiary);
+              color: var(--text_3);
               font-size: 14px;
               font-weight: 400;
             }
@@ -219,12 +219,12 @@ const Center = () => {
             :global(span) {
               text-decoration: none;
               outline: none;
-              color: var(--text-tertiary);
+              color: var(--text_3);
               font-size: 14px;
               font-weight: 400;
             }
             .title {
-              color: var(--text-primary);
+              color: var(--text_1);
               font-size: 16px;
               font-weight: 500;
             }

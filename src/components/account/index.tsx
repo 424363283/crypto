@@ -171,7 +171,7 @@ const styles = css`
     }
     .title {
       text-align: center;
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 24px;
       font-weight: 700;
       @media ${MediaInfo.desktop} {
@@ -184,7 +184,7 @@ const styles = css`
       margin-top: 16px;
       font-size: 16px;
       font-weight: 400;
-      color: var(--text-tertiary);
+      color: var(--text_3);
       text-align: center;
       @media ${MediaInfo.desktop} {
         text-align: left;
@@ -192,7 +192,7 @@ const styles = css`
     }
     :global(.tabs) {
       padding-bottom: 16px;
-      border-bottom: 1px solid var(--line-2);
+      border-bottom: 1px solid var(--fill_line_2);
     }
   }
 

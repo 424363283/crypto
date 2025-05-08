@@ -19,7 +19,6 @@ export default function CopyTradingCompareTraders({
   onAddClick: () => void,
   onRemoveClick: (value: number) => void,
 }) {
-  const ranks = useCopyTradingSwapStore.use.copyTradeInfo().ranks;
   const maxCompareCount = useCopyTradingSwapStore.use.maxCompareCount();
   const leftCompareCount = Math.max(0, maxCompareCount - traders.length);
 
@@ -44,7 +43,7 @@ export default function CopyTradingCompareTraders({
         {Array(leftCompareCount).fill('').map((item, index) => {
           return (
             <div key={index} className={styles.compareBoxItem}>
-              {index === 0 && <AddLeadTraderButton onClick={onAddClick} />}
+              {index === 0 && <AddLeadTraderButton type="inner" onClick={onAddClick} />}
             </div>
           )
         })}

@@ -129,7 +129,7 @@ const Rates = ({ isUSDT }: { isUSDT: boolean }) => {
 
 const styles = css`
   .rates-content {
-    background: var(--bg-1);
+    background: var(--fill_bg_1);
     .box {
       display: flex;
       flex-direction: column;
@@ -143,13 +143,13 @@ const styles = css`
       position: relative;
       font-size: 10px;
       font-weight: 400;
-      color: var(--text-tertiary);
+      color: var(--text_3);
       line-height: normal;
       margin: 0;
     }
     :global(.ant-table-thead > tr > th) {
       padding: 0;
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-weight: 400;
       border: 0;
       &:last-child {
@@ -162,7 +162,7 @@ const styles = css`
     :global(td.ant-table-cell) {
       padding: 0;
       font-size: 14px;
-      color: var(--text-primary);
+      color: var(--text_1);
       font-weight: 500;
       // &:nth-child(2) {
       //   text-align: center;
@@ -195,7 +195,7 @@ const styles = css`
         border: none;
         width: 1.25rem;
         min-width: 1.25rem;
-        color: var(--text-primary);
+        color: var(--text_1);
         height: 1.25rem;
         line-height: 1.25rem;
         border-radius: 50%;
@@ -204,7 +204,7 @@ const styles = css`
         font-size: 12px;
         font-weight: 500;
         &:hover {
-          background-color: var(--fill-3);
+          background-color: var(--fill_3);
         }
       }
       :global(.ant-pagination-prev),
@@ -221,7 +221,7 @@ const styles = css`
         width: 1rem;
         height: 1rem !important;
         :global(.ant-pagination-item-link-icon) {
-          color: var(--text-brand) !important;
+          color: var(--text_brand) !important;
           font-size: 10px;
           :global(svg) {
             width: 10px;
@@ -230,7 +230,7 @@ const styles = css`
         }
         :global(.ant-pagination-item-ellipsis) {
           border-radius: 1.25rem;
-          color: var(--text-primary);
+          color: var(--text_1);
           width: 1.25rem;
           height: 1.25rem;
           font-size: 10px;
@@ -238,7 +238,7 @@ const styles = css`
       }
       :global(.ant-pagination-item-active) {
         background: var(--brand);
-        color: var(--text-white);
+        color: var(--text_white);
         font-weight: 500;
       }
     }

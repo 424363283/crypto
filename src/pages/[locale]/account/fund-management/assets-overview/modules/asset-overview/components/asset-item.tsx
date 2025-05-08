@@ -51,7 +51,7 @@ export const AssetItem: React.FC<{
           justify-content: space-between;
           align-items: center;
           .title {
-            color: var(--text-primary);
+            color: var(--text_1);
             font-size: 14px;
             flex: 1;
             @media ${MediaInfo.desktop} {
@@ -75,7 +75,7 @@ export const AssetItem: React.FC<{
             flex: 1;
             font-size: 14px;
             font-weight: 500;
-            color: var(--text-primary);
+            color: var(--text_1);
             gap: 8px;
             :global(span) {
               word-break: keep-all;
@@ -84,7 +84,7 @@ export const AssetItem: React.FC<{
               word-break: keep-all;
               font-size: 12px;
               font-weight: 400;
-              color: var(--text-tertiary);
+              color: var(--text_3);
             }
             @media ${MediaInfo.mobile} {
               margin-top: 8px;
@@ -97,7 +97,7 @@ export const AssetItem: React.FC<{
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            color: var(--text-primary);
+            color: var(--text_1);
             @media ${MediaInfo.mobile} {
               margin-right: 0px;
               margin-top: 15px;
@@ -105,13 +105,13 @@ export const AssetItem: React.FC<{
             .percent {
               font-size: 14px;
               font-weight: 500;
-              color: var(--text-primary);
+              color: var(--text_1);
             }
             .bar {
               width: 46px;
               height: 4px;
               border-radius: 8px;
-              background: var(--fill-3);
+              background: var(--fill_3);
               margin-top: 10px;
               .bar-inner {
                 border-radius: 8px;

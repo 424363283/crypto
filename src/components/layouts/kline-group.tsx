@@ -24,7 +24,7 @@ export const KlineGroupLayout = () => {
           padding: 4px;
           overflow: hidden;
           > div {
-            background-color: var(--bg-1);
+            background-color: var(--fill_bg_1);
             display: flex;
             color: var(--theme-trade-text-color-1);
             flex: 1;

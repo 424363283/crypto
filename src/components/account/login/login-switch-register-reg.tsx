@@ -30,14 +30,14 @@ const styles = css`
     :global(.bottom-link) {
       font-size: 14px;
       font-weight: 400;
-      color: var(--text-brand);
+      color: var(--text_brand);
       margin-left: 8px;
     }
     .switch-login-reg-tips {
       text-align: center;
       font-size: 14px;
       font-weight: 400;
-      color: var(--text-primary);
+      color: var(--text_1);
       @media ${MediaInfo.mobile} {
         margin-top: 16px;
       }

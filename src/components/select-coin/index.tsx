@@ -142,10 +142,10 @@ const styles = css`
     height: 40px;
     padding: 0px 6px;
     &:hover {
-      background-color: var(--fill-3);
+      background-color: var(--fill_3);
       border-radius: 5px;
       :global(.label) {
-        color: var(--text-primary);
+        color: var(--text_1);
       }
     }
   }

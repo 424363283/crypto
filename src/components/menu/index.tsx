@@ -121,7 +121,7 @@ const MenuItem = ({ item }: any) => {
           position: relative;
           &.link {
             padding: 8px 0;
-            border-bottom: 1px solid var(--line-1);
+            border-bottom: 1px solid var(--fill_line_1);
           }
           .title-wrap {
             display: flex;

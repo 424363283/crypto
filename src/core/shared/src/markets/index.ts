@@ -5,7 +5,7 @@ import { Group } from '../group';
 import { MarketItem } from './item';
 import { MarketsData } from './markets-map';
 import { MarketsMap } from './types';
- 
+
 type params<T = {}> = { lite?: boolean; spot?: boolean; swap?: boolean; swapSL?: boolean; key: string } & T;
 
 class Markets {
@@ -138,8 +138,10 @@ class Markets {
         spotLoading: this._spotLoading,
         swapLoading: this._swapLoading,
       });
-      Markets.markets = Object.assign(obj, data);
-      window.dispatchEvent(new CustomEvent(SUBSCRIBE_TYPES.ws3001, { detail: Markets.markets }));
+      if (data) {
+        Markets.markets = Object.assign(obj, data);
+        window.dispatchEvent(new CustomEvent(SUBSCRIBE_TYPES.ws3001, { detail: Markets.markets }));
+      }
     });
   }
 

@@ -11,9 +11,9 @@ function ApplyTraders() {
     <>
       <UniversalLayout bgColor="var(--theme-background-color-2)">
         <div className="apply-traders-box">
-        <ApplyHeader />
-        <ApplyBenefit />
-        <ApplyOther />
+          <ApplyHeader />
+          <ApplyBenefit />
+          <ApplyOther />
         </div>
       </UniversalLayout>
       <style jsx>{styles}</style>
@@ -26,5 +26,7 @@ export const getStaticPaths = Lang.getStaticPaths;
 export const getStaticProps = Lang.getStaticProps({ key: 'copy-traders' });
 const styles = css`
   .apply-traders-box {
+    width: 100%;
+    height: 100%;
   }
 `;

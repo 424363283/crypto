@@ -3,6 +3,7 @@ export enum ASSET_TYPE {
     ASSETS_SPOT = 'spot',
     ASSETS_SWAP = 'swap',
     ASSETS_SWAP_U = 'swap-u',
+    ASSETS_SWAP_COPY = 'swap-copy',
     ASSETS_LITE = 'lite',
     TAX_REPORT = 'tax',
     ASSETS_FUND = 'fund-history',

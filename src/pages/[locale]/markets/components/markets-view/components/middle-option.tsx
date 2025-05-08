@@ -1,6 +1,6 @@
 import { Button } from '@/components/button';
 import CommonIcon from '@/components/common-icon';
-import { Desktop, MobileOrTablet } from '@/components/responsive';
+import { Desktop, Mobile, MobileOrTablet } from '@/components/responsive';
 import { Select } from '@/components/select';
 import ProTooltip from '@/components/tooltip';
 import { LANG } from '@/core/i18n';
@@ -180,24 +180,28 @@ const MiddleOption = () => {
           :global(.item) {
             font-size: 12px;
             font-weight: 400;
-            color: var(--text-secondary);
+            color: var(--text_2);
             padding: 8px 16px;
             position: relative;
             cursor: pointer;
             flex-shrink: 0;
             border-radius: 6px;
-            border: 1px solid var(--line-3);
+            border: 1px solid var(--fill_line_3);
             :global(img) {
               border-top-right-radius: 6px;
               width: 22px;
               height: auto;
               margin-left: 2px;
             }
+            @media ${MediaInfo.mobile} {
+              padding: 4px 16px;
+              border-radius: 4px;
+            }
           }
           :global(.item.active),
           :global(.item:hover) {
-            color: var(--text-primary);
-            background-color: var(--fill-3);
+            color: var(--text_1);
+            background-color: var(--fill_3);
             border: 1px solid transparent;
           }
           :global(.right-btn-wrapper) {

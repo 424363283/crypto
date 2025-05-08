@@ -35,8 +35,8 @@ const styles = css`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: var(--text-secondary);
-    background-color: var(--fill-3);
+    color: var(--text_2);
+    background-color: var(--fill_3);
     border-radius: 8px;
     height: 30px;
     .buy-wrapper,
@@ -52,11 +52,11 @@ const styles = css`
     }
     .buy-wrapper.active {
       background-color: var(--color-green);
-      color: var(--text-white);
+      color: var(--text_white);
     }
     .sell-wrapper.active {
       background-color: var(--color-red);
-      color: var(--text-white);
+      color: var(--text_white);
     }
   }
 `;

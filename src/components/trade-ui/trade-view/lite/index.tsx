@@ -265,7 +265,7 @@ const SPSLSetting = ({
             justify-content: space-between;
             width: 100%;
             .setting-wrapper {
-              color: var(--text-secondary);
+              color: var(--text_2);
               display: flex;
               align-items: center;
               cursor: pointer;
@@ -288,7 +288,7 @@ const SPSLSetting = ({
               &:first-child {
                 font-size: 12px;
                 font-weight: 500;
-                color: var(--text-secondary) !important;
+                color: var(--text_2) !important;
                 padding-right: 4px;
               }
               &:last-child {
@@ -744,14 +744,14 @@ function LiteTradeUI() {
             cursor: pointer;
             gap: 4px;
             .total {
-              color: var(--text-secondary);
+              color: var(--text_2);
               font-size: 12px;
               font-style: normal;
               font-weight: 400;
               line-height: normal;
             }
             .mix {
-              color: var(--text-primary);
+              color: var(--text_1);
               font-size: 12px;
               font-style: normal;
               font-weight: 400;
@@ -766,7 +766,7 @@ function LiteTradeUI() {
             .row {
               display: flex;
               align-items: flex-start;
-              color: var(--text-secondary);
+              color: var(--text_2);
               line-height: 8px;
               gap: 8px;
             }
@@ -795,7 +795,7 @@ function LiteTradeUI() {
             <Radio
               size={14}
               label={
-                <span style={{ fontSize: 12, color: 'var(--text-primary)' }}>
+                <span style={{ fontSize: 12, color: 'var(--text_1)' }}>
                   {LANG('默认止盈比例')}
                 </span>
               }
@@ -818,7 +818,7 @@ function LiteTradeUI() {
             <Radio
               size={14}
               label={
-                <span style={{ fontSize: 12, color: 'var(--text-primary)' }}>
+                <span style={{ fontSize: 12, color: 'var(--text_1)' }}>
                   {LANG('默认止损比例')}
                 </span>
               }
@@ -1035,7 +1035,7 @@ const styles = css`
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: var(--bg-1);
+      background: var(--fill_bg_1);
       height: 48px;
       padding: 16px;
       > .left {
@@ -1043,7 +1043,7 @@ const styles = css`
         align-items: center;
         gap: 4px;
         > span {
-          color: var(--text-secondary);
+          color: var(--text_2);
           leading-trim: both;
           text-edge: cap;
           font-size: 14px;
@@ -1051,7 +1051,7 @@ const styles = css`
           font-weight: 400;
           line-height: normal;
           &.rate {
-            color: var(--text-primary);
+            color: var(--text_1);
           }
         }
       }
@@ -1059,7 +1059,7 @@ const styles = css`
     .main-section {
       display: flex;
       flex-direction: column;
-      background: var(--bg-1);
+      background: var(--fill_bg_1);
       margin-top: var(--theme-trade-layout-spacing);
       padding: 16px;
       gap: 8px;
@@ -1073,7 +1073,7 @@ const styles = css`
           justify-content: space-between;
           > div {
             cursor: pointer;
-            color: var(--text-secondary);
+            color: var(--text_2);
             border-bottom: 2px dashed transparent;
             span {
               margin-right: 10px;
@@ -1105,7 +1105,7 @@ const styles = css`
           justify-content: space-between;
           width: 100%;
           .setting-wrapper {
-            color: var(--text-secondary);
+            color: var(--text_2);
             display: flex;
             align-items: center;
             cursor: pointer;
@@ -1128,7 +1128,7 @@ const styles = css`
             &:first-child {
               font-size: 12px;
               font-weight: 500;
-              color: var(--text-secondary) !important;
+              color: var(--text_2) !important;
               padding-right: 4px;
             }
             &:last-child {
@@ -1152,7 +1152,7 @@ const styles = css`
         gap: 16px;
         .line {
           height: 1px;
-          background: var(--line-1);
+          background: var(--fill_line_1);
         }
       }
       :global(.operation-btn) {
@@ -1164,7 +1164,7 @@ const styles = css`
         gap: 8px;
         span,
         b {
-          color: var(--text-white);
+          color: var(--text_white);
           font-size: 14px;
           font-style: normal;
           font-weight: 500;
@@ -1224,7 +1224,7 @@ const tabStyles = css`
       font-size: 14px;
       line-height: 14px;
       font-weight: 400;
-      color: var(--text-secondary);
+      color: var(--text_2);
       justify-content: space-between;
       ul {
         padding: 0;
@@ -1234,13 +1234,13 @@ const tabStyles = css`
         gap: 24px;
         li {
           cursor: pointer;
-          color: var(--text-secondary);
+          color: var(--text_2);
           font-size: 14px;
           font-style: normal;
           font-weight: 500;
           line-height: normal;
           &.active {
-            color: var(--text-brand);
+            color: var(--text_brand);
           }
           &.not-pointer {
             cursor: default;
@@ -1251,17 +1251,17 @@ const tabStyles = css`
       .sub {
         display: flex;
         align-items: center;
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 12px;
         font-style: normal;
         font-weight: 400;
         line-height: normal;
         gap: 8px;
         .sub-title {
-          color: var(--text-tertiary);
+          color: var(--text_3);
         }
         .volume {
-          color: var(--text-primary);
+          color: var(--text_1);
         }
       }
     }
@@ -1288,7 +1288,7 @@ const tabStyles = css`
             &:first-child {
               font-size: 12px;
               font-weight: 400;
-              color: var(--text-secondary);
+              color: var(--text_2);
             }
             &:last-child {
               cursor: pointer;
@@ -1322,10 +1322,10 @@ const groupStyles = css`
     justify-content: space-between;
     overflow: hidden;
     width: 100%;
-    color: var(--text-secondary);
+    color: var(--text_2);
     > div {
-      background: var(--fill-3);
-      color: var(--text-secondary);
+      background: var(--fill_3);
+      color: var(--text_2);
       cursor: pointer;
       width: 52px;
       height: 24px;
@@ -1345,7 +1345,7 @@ const groupStyles = css`
       }
       &:hover,
       &.active {
-        color: var(--text-brand);
+        color: var(--text_brand);
       }
     }
   }

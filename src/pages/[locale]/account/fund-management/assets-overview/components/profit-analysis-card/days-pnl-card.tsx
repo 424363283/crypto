@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
 import { WalletType } from '../types';
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
 
 export const INTERVAL_DAY: { [key: string]: number } = {
   TODAY: 0,
@@ -22,6 +23,7 @@ const TITLE_MAP: { [key: string]: string } = {
 
 interface DaysPNLProps {
   type: WalletType;
+  wallet: WalletKey;
   dayType?: number;
 }
 interface SpotProfits {
@@ -56,7 +58,7 @@ export const SwapDayProfitAndLoss = (props: SwapProfits) => {
             }
             .name {
               margin-right: 8px;
-              color: var(--text-tertiary);
+              color: var(--text_3);
             }       
             .rate {
               margin-right: 8px;
@@ -81,7 +83,7 @@ const defaultSpotProfits: SpotProfits[] = [ {balance:0, dateType:0, netIncome:0}
 const defaultSwapProfits: SwapProfits[] = [ {indexDay:0, totalPnl:0, totalPnlRate:0, pnl:0}, {indexDay:7, totalPnl:0, totalPnlRate:0, pnl:0}, {indexDay:30, totalPnl:0, totalPnlRate:0, pnl:0}] 
 // 今日/7日/30日盈亏
 export const DaysProfitAndLossSmallCard = (props: DaysPNLProps) => {
-  const { type, dayType } = props;
+  const { type, wallet, dayType } = props;
   const [state, setState] = useImmer({
     spotProfits: defaultSpotProfits as SpotProfits[],
     swapProfits: defaultSwapProfits as SwapProfits[],
@@ -89,12 +91,12 @@ export const DaysProfitAndLossSmallCard = (props: DaysPNLProps) => {
   const { spotProfits, swapProfits } = state;
   const { spotAssetsStore } = Account.assets;
   const { spotTotalBalance } = spotAssetsStore;
-
+  //TO-DO 添加钱包类型筛选数据(如跟单数据)
   const getAccountProfit = async () => {
     const PROFITS_REQUESTS: any = {
       [WalletType.ASSET_SPOT]: async () => await getAccountProfitApi({ type: 2 }),
       [WalletType.ASSET_SWAP]: async () => await getSwapTotalProfitsApi(),
-      [WalletType.ASSET_SWAP_U]: async () => await getSwapUTotalProfitsApi(),
+      [WalletType.ASSET_SWAP_U]: async () => await getSwapUTotalProfitsApi({subWallet: wallet}),
     };
     const res = await PROFITS_REQUESTS[type]();
     if (res.code === 200) {
@@ -122,7 +124,7 @@ export const DaysProfitAndLossSmallCard = (props: DaysPNLProps) => {
       polling.stop();
       Assets.destroyWsListener();
     };
-  }, []);
+  }, [type, wallet]);
 
   if (dayType !== undefined) {
     if (type === WalletType.ASSET_SWAP || type === WalletType.ASSET_SWAP_U) {

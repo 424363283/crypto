@@ -79,11 +79,11 @@ const noticeStyle = css`
         flex-direction: column;
         width: 360px;
         height: 380px;
-        border: 1px solid var(--fill-3);
+        border: 1px solid var(--fill_3);
         border-radius: 8px;
         margin-left: 8px;
         padding: 16px 24px;
-        background-color:var(--bg-1);
+        background-color:var(--fill_bg_1);
         @media ${MediaInfo.mobileOrTablet} {
           width: auto;
           height: auto;
@@ -98,14 +98,14 @@ const noticeStyle = css`
           .title{
             font-size:16px;
             font-weight:500;
-            color: var(--text-primary);
+            color: var(--text_1);
           }
           .view-more {
             display: flex;
             cursor: pointer;
             align-items: center;
             font-weight: 400;
-            color: var(--text-secondary);
+            color: var(--text_2);
           }
         }
         .notice {
@@ -126,11 +126,11 @@ const noticeStyle = css`
           div{
             font-size:14px;
             font-weight:500;
-            color: var(--text-primary);
+            color: var(--text_1);
           }
           span{
             font-size:12px;
-            color: var(--text-tertiary);
+            color: var(--text_3);
           }
         }
       }

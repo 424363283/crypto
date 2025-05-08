@@ -108,9 +108,9 @@ const styles = css`
         font-weight: 400;
         margin-left: 10px;
         line-height: 18px;
-        color: var(--text-tertiary);
+        color: var(--text_3);
         :global(a) {
-          color: var(--text-primary);
+          color: var(--text_1);
           cursor: pointer;
         }
       }

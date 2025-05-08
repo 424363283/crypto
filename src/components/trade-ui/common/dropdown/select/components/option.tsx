@@ -20,7 +20,7 @@ const { className, styles } = css.resolve`
     &:hover,
     &.active {
       border-radius: 5px;
-      color: var(--text-brand);
+      color: var(--text_brand);
       font-weight: 500;
     }
   }

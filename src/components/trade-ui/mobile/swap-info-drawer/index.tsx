@@ -75,7 +75,7 @@ const styles = css`
     width: 100%;
     height: 100%;
     :global(.ant-drawer-content) {
-    background: var(--bg-1);
+    background: var(--fill_bg_1);
     }
     :global(.ant-drawer-header) {
       border: 0;
@@ -102,7 +102,7 @@ const styles = css`
       align-items: center;
       fonts-size: 14px;
       font-weight: 500;
-      color: var(--text-secondary);
+      color: var(--text_2);
       .active {
         color: var(--brand);
       }
@@ -111,7 +111,7 @@ const styles = css`
       margin: 8px 0;
       width: 100%;
       height: 1px;
-      background: var(--line-2);
+      background: var(--fill_line_2);
     }
   }
 `;

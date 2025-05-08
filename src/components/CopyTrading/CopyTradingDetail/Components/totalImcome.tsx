@@ -1,60 +1,19 @@
-import styles from '../index.module.scss';
+import clsx from 'clsx';
+import css from 'styled-jsx/css';
+import {Tooltip as TooltipMessage}   from '@/components/trade-ui/common/tooltip';
 import React, { PureComponent } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Svg } from '@/components/svg';
 import { Popover } from 'antd';
 import { useResponsive } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
-export default function CopyYieldsRatio() {
+import { EmptyComponent } from '@/components/empty';
+export default function CopyYieldsRatio(props: { profitAmountList: any }) {
   const { isMobile } = useResponsive();
-  const data = [
-    {
-      name: '2-16',
-      uv: 4000,
-      pv: 2400,
-      amt: 2400
-    },
-    {
-      name: '2-18',
-      uv: 3000,
-      pv: 1398,
-      amt: 2210
-    },
-    {
-      name: '2-20',
-      uv: -1000,
-      pv: 9800,
-      amt: 2290
-    },
-    {
-      name: '2-22',
-      uv: 500,
-      pv: 3908,
-      amt: 2000
-    },
-    {
-      name: '2-24',
-      uv: -2000,
-      pv: 4800,
-      amt: 2181
-    },
-    {
-      name: '2-26',
-      uv: -250,
-      pv: 3800,
-      amt: 2500
-    },
-    {
-      name: '2-28',
-      uv: 3490,
-      pv: 4300,
-      amt: 2100
-    }
-  ];
-
+  const { profitAmountList = [] } = props;
   const gradientOffset = () => {
-    const dataMax = Math.max(...data.map(i => i.uv));
-    const dataMin = Math.min(...data.map(i => i.uv));
+    const dataMax = profitAmountList && Math.max(...profitAmountList.map(i => i.incomeAmount.toFixed(0)));
+    const dataMin = profitAmountList && Math.min(...profitAmountList.map(i => i.incomeAmount.toFixed(0)));
 
     if (dataMax <= 0) {
       return 0;
@@ -67,44 +26,148 @@ export default function CopyYieldsRatio() {
   };
 
   const off = gradientOffset();
-  const copyDetailTab = {
-    day: '165',
-    copyTotal: '8,254.98',
-    scalePre: '1.09',
-    scaleNext: '2',
-    scale: '759,837.02',
-    follower: '-19,087.98',
-    follerCount: 187,
-    porfit: '10%'
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      const total = payload.reduce((sum, item) => sum + item.value, 0);
+      return (
+        <div
+          style={{
+            backgroundColor: 'var(--dropdown-select-bg-color)',
+            boxShadow: '0px 4px 16px 0px var(--dropdown-select-shadow-color)',
+            borderRadius: 8,
+            marginTop: 8,
+            marginLeft: 70,
+            height: 'auto',
+            padding: '16px',
+            fontFamily: 'HarmonyOS Sans SC',
+            fontWeight: 500,
+            fontSize: '12px'
+          }}
+        >
+          <div style={{ marginTop: 0, color: 'var(--text_1)' }}>{label}</div>
+          <table style={{ width: '100%' }}>
+            <tbody>
+              {payload.map((entry, idx) => (
+                <tr key={`item-${idx}`}>
+                  <td style={{ color: 'var(--text_2)', fontWeight: 500 }}>{entry.name}</td>
+                  <td style={{ textAlign: 'right', fontWeight: 500 }}>
+                    {entry.dataKey === 'incomeAmount' && (
+                      <span
+                        style={{
+                          color: entry.value > 0 ? 'var(--green)' : 'var(--red)'
+                        }}
+                      >
+                        {entry.value.toLocaleString()}
+                        {entry.unit}
+                      </span>
+                    )}
+                    {entry.dataKey !== 'incomeAmount' && (
+                      <>
+                        {' '}
+                        {entry.value.toLocaleString()}
+                        {entry.unit}
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+    return null;
   };
-
   return (
     <>
-      <div className={`${styles.all24} ${styles.gap24}`}>
-        <div className={`${styles.performanceTitle} ${styles.flexCenter}`}>
+      <div className={clsx('all24', 'gap24')}>
+        <div className={clsx('performanceTitle', 'flexCenter', 'gap4')}>
           {LANG('总收益')}
-          <Popover content={'收益率解释解释解释解释解释'} title={LANG('总收益')}>
-            <div>
-              <Svg className={styles.ml4} src={`/static/icons/primary/common/question.svg`} width={20} height={20} />
+          <TooltipMessage title={<p>{LANG('成为交易员以来，历史带单的所有订单收益总和')}</p>}>
+          <div className={clsx('pointer')}>
+              <Svg src={`/static/icons/primary/common/question.svg`} width={20} height={20} />
             </div>
-          </Popover>
+          </TooltipMessage>
         </div>
-        <div>
-          <AreaChart width={isMobile ? 310 : 648}  height={242} data={data} >
-            <CartesianGrid stroke="var(--line-1)" vertical={false} />
-            <XAxis dataKey="name" stroke={'var(--line-3)'}   tick={{ color: 'var(--text-secondary)', fontFamily: 'HarmonyOS Sans SC', fontSize: 12, fontWeight: 400 }}/>
-            <YAxis stroke={'var(--line-3)'}  tick={{ color: 'var(--text-secondary)', fontFamily: 'HarmonyOS Sans SC', fontSize: 12, fontWeight: 400 }} />
-            <Tooltip />
-            <defs>
-              <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
-                <stop offset={off} stopColor="#2AB26C" stopOpacity={0.6} />
-                <stop offset={off} stopColor="#EF454A" stopOpacity={0.6} />
-              </linearGradient>
-            </defs>
-            <Area type="monotone" dataKey="uv" stroke="url(#splitColor)" fill="url(#splitColor)" />
-          </AreaChart>
-        </div>
+        {!profitAmountList?.length && <EmptyComponent />}
+        {profitAmountList?.length > 0 && (
+          <div>
+            <AreaChart width={isMobile ? 310 : 648} height={242} data={profitAmountList}>
+              <CartesianGrid stroke="var(--fill_line_1)" vertical={false} />
+              <XAxis
+                dataKey="ctime"
+                stroke={'var(--line-3)'}
+                tick={{
+                  color: 'var(--text_2)',
+                  fontFamily: 'HarmonyOS Sans SC',
+                  fontSize: 12,
+                  fontWeight: 400
+                }}
+              />
+              <YAxis
+                stroke={'var(--line-3)'}
+                tick={{
+                  color: 'var(--text_2)',
+                  fontFamily: 'HarmonyOS Sans SC',
+                  fontSize: 12,
+                  fontWeight: 400
+                }}
+              />
+              <Tooltip content={<CustomTooltip />} />
+              <defs>
+                <linearGradient id="splitIncomeColor" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset={off} stopColor="#2AB26C" stopOpacity={0.6} />
+                  <stop offset={off} stopColor="#EF454A" stopOpacity={0.6} />
+                </linearGradient>
+              </defs>
+              <Area
+                type="monotone"
+                name={LANG('总收益')}
+                dataKey="incomeAmount"
+                stroke="url(#splitIncomeColor)"
+                fill="url(#splitIncomeColor)"
+                unit={'USDT'}
+              />
+            </AreaChart>
+          </div>
+        )}
       </div>
+      <style jsx>{styles}</style>
     </>
   );
 }
+
+const styles = css`
+  .all24 {
+    padding: 24px;
+    border-radius: 24px;
+    border: 1px solid var(--fill_line_2);
+  }
+  .gap24 {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .gap4 {
+    gap: 4px;
+  }
+
+  .performanceTitle {
+    color: var(--text_1);
+    font-family: 'HarmonyOS Sans SC';
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+  .ml4 {
+    margin-left: 4px;
+  }
+  .flexCenter {
+    display: flex;
+    align-items: center;
+  }
+  .pointer {
+    cursor: pointer;
+  }
+`;

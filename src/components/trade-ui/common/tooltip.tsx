@@ -30,7 +30,7 @@ const { className, styles } = css.resolve`
       padding: 16px !important;
       font-size: 12px !important;
       font-weight: 400 !important;
-      color: var(--text-tertiary) !important;
+      color: var(--text_3) !important;
       line-height: 1.5;
       border-radius: 16px;
       background: var(--dropdown-select-bg-color) !important;

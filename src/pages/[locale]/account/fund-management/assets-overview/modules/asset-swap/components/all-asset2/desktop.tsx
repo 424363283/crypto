@@ -4,27 +4,31 @@ import CommonIcon from '@/components/common-icon';
 import { WalletAvatar } from '@/components/wallet-avatar';
 import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
-import { SWAP_BOUNS_WALLET_KEY } from '@/core/shared/src/swap/modules/assets/constants';
+import { SWAP_BOUNS_WALLET_KEY, WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
 import { DEFAULT_QUOTE_ID } from '@/core/shared/src/swap/modules/trade/constants';
 import { clsx } from '@/core/utils';
 import { useState } from 'react';
 import { CalcSwapAsset } from '../../../../hooks/use-swap-balance';
 import { TradeHref } from './components/trade-href';
 import { Size } from '@/components/constants';
+import { useCopyTradingSwapStore } from '@/store/copytrading-swap';
 
 export const Desktop = ({
   data = [],
   isSwapU,
+  wallet,
   onOpenTransferModal,
   onOpenWalletFormModal,
 }: {
   data?: CalcSwapAsset[];
   isSwapU: boolean;
+  wallet: WalletKey;
   onOpenTransferModal?: any;
   onOpenWalletFormModal?: any;
 }) => {
   const [shows, setShows] = useState<any>(false);
   const unit = Swap.Info.getPriceUnitText(isSwapU);
+  const isCopyTrader = useCopyTradingSwapStore.use.isCopyTrader();
 
   return (
     <>
@@ -45,7 +49,7 @@ export const Desktop = ({
           </div>
           <div>{LANG('操作')}</div>
         </div>
-        {data.map((v, i) => {
+        {data.filter(item => !isSwapU || item.wallet === wallet).map((v, i) => {
           const code = isSwapU ? DEFAULT_QUOTE_ID.SWAP_U : DEFAULT_QUOTE_ID.SWAP;
           let accb = v.accb;
           let totalMargin = v.totalMargin.add(v.unrealisedPNL);
@@ -84,7 +88,11 @@ export const Desktop = ({
                       {(href) => (
                         <div
                           onClick={() => {
-                            Swap.Info.setWalletId(isSwapU, v.wallet || '');
+                            if (v.wallet === WalletKey.COPY) {
+                              Swap.Info.setWalletId(isSwapU, isCopyTrader ? WalletKey.COPY : WalletKey.SWAP_U);
+                            } else {
+                              Swap.Info.setWalletId(isSwapU, v.wallet || '');
+                            }
                             window.location.href = href;
                           }}
                         >
@@ -141,12 +149,12 @@ export const Desktop = ({
       </div>
       <style jsx>{`
         .all-asset-swap-desktop {
-          color: var(--text-primary);
+          color: var(--text_1);
           padding: 0 24px 16px;
           .header {
             height: 40px;
             font-size: 14px;
-            color: var(--text-tertiary);
+            color: var(--text_3);
             display: flex;
             align-items: center;
             > div {

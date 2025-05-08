@@ -8,12 +8,12 @@ const { className, styles } = css.resolve`
     padding: 0px 16px;
     align-items: center;
     gap: 8px;
-    color: var(--text-primary);
+    color: var(--text_1);
     text-align: center;
     font-size: 14px;
     font-weight: 500;
     border-radius: 8px;
-    background: var(--fill-3);
+    background: var(--fill_3);
     justify-content: center;
     width:120px;
     cursor:pointer;

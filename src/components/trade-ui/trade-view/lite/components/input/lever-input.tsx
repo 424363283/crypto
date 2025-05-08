@@ -100,8 +100,8 @@ const styles = css`
   .input-wrap {
     position: relative;
     input {
-      background: var(--fill-3);
-      color: var(--text-primary);
+      background: var(--fill_3);
+      color: var(--text_1);
       width: 100%;
       padding: 0 16px;
       height: 36px;
@@ -115,7 +115,7 @@ const styles = css`
       outline: none;
     }
     .symbol {
-      color: var(--text-primary);
+      color: var(--text_1);
       position: absolute;
       font-size: 14px;
       pointer-events: none;

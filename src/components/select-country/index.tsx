@@ -266,12 +266,12 @@ const styles = css`
     padding: 16px;
     align-items: center;
     border-radius: 16px;
-    background-color: var(--fill-3);
+    background-color: var(--fill_3);
     border: 1px solid transparent;
     box-sizing: border-box;
     &:hover {
       border-color: var(--brand);
-      background-color: var(--bg-1);
+      background-color: var(--fill_bg_1);
     }
     &.focus {
       box-shadow: var(--skin-focus-shadow-1);
@@ -284,7 +284,7 @@ const styles = css`
       display: flex;
       align-items: center;
       position: relative;
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 14px;
       width: 100%;
       height: 40px;
@@ -359,15 +359,15 @@ const styles = css`
         width: 40px;
       }
       :global(.emulate-input) {
-        background-color: var(--fill-3);
+        background-color: var(--fill_3);
         margin: 0 auto;
         text-indent: 32px;
         height: 32px;
-        color: var(--text-primary);
+        color: var(--text_1);
         border: 1px solid var(--brand);
         border-radius: 16px;
         &::placeholder {
-          color: var(--text-secondary);
+          color: var(--text_2);
         }
       }
     }

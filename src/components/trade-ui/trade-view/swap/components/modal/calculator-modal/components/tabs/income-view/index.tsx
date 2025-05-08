@@ -116,7 +116,7 @@ const styles = css`
   .income-view {
     .input-item {
       > .label {
-        color: var(--text-tertiary);
+        color: var(--text_3);
         font-size: 14px;
         font-weight: 500;
         margin-bottom: 16px;

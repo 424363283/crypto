@@ -1,76 +1,110 @@
 $sm: 768px;
+
 .copySettingBox {
   display: flex;
+
   .copySettingContainer {
     display: flex;
     flex: 1;
   }
+
   .all24 {
     padding: 24px;
     border-radius: 24px;
-    border: 1px solid var(--line-2);
+    border: 1px solid var(--fill_line_2);
   }
+
   .gap4 {
     gap: 4px;
   }
+
   .copySettingLeft {
     flex: 1;
+
     @media (max-width: $sm) {
-     border: none;
+      border: none;
     }
   }
+
   .ml4 {
     margin-left: 4px;
   }
+
   .copySettingRight {
     margin-left: 24px;
     width: 480px;
-    height: 554px;
+    height: fit-content;
   }
+
   .setTitle {
-    color: var(--text-primary);
+    color: var(--text_1);
     font-family: 'HarmonyOS Sans SC';
     font-size: 24px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
   }
+
   .subTitle {
-    color: var(--text-primary);
+    color: var(--text_1);
     font-family: 'HarmonyOS Sans SC';
     font-size: 20px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
     margin-bottom: 16px;
-
   }
+
   .textEllipsis {
     max-width: 400px;
-    white-space: nowrap; /* 禁止换行 */
-    overflow: hidden; /* 隐藏溢出内容 */
-    text-overflow: ellipsis; /* 显示省略号 */
+    white-space: nowrap;
+    /* 禁止换行 */
+    overflow: hidden;
+    /* 隐藏溢出内容 */
+    text-overflow: ellipsis;
+    /* 显示省略号 */
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
-    @media (max-width: $sm)  {
+
+    @media (max-width: $sm) {
       width: 200px;
     }
   }
+
+  .selectContract {
+    font-family: HarmonyOS Sans SC;
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--text_3);
+    display: flex;
+    align-items: center;
+  }
+
+  .modify {
+    font-family: HarmonyOS Sans SC;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    color: var(--text_2);
+  }
+
   .followStyle {
     margin-top: 24px;
     margin-bottom: 14px;
   }
+
   .copyTabBox {
     border-radius: 8px;
-    background: var(--fill-3);
+    background: var(--fill_3);
     height: 44px;
   }
+
   .tabItem {
     display: flex;
     flex: 0.5;
     align-items: center;
     justify-content: center;
-    color: var(--text-secondary);
+    color: var(--text_2);
     font-family: 'HarmonyOS Sans SC';
     font-size: 16px;
     font-style: normal;
@@ -78,88 +112,130 @@ $sm: 768px;
     line-height: normal;
     cursor: pointer;
   }
+
   .tabItemActive {
     border-radius: 8px;
     background: var(--brand);
     color: white;
   }
 }
+
 .setFollow {
   display: flex;
   flex-direction: column;
   gap: 40px;
-  color: var(--text-primary);
+  color: var(--text_1);
+
+  &.gap24 {
+    gap: 24px;
+  }
+
+  .more {
+    color: var(--text_2);
+    font-family: HarmonyOS Sans SC;
+    font-weight: 400;
+    font-size: 16px;
+
+    &.closeMore {
+      margin-top: 16px;
+
+    }
+  }
 }
+
+.textDashed {
+  display: inline;
+  border-bottom: 1px dashed var(--text_3);
+}
+
 .inputBox {
   width: 100%;
   box-sizing: border-box;
-  background: var(--fill-3);
+  background: var(--fill_3);
   height: 48px;
   border-radius: 12px;
-  padding: 0 16px;
-  :global(.container) {
+
+  .container {
     .input-wrapper {
       border: none;
       width: 100%;
       height: 100%;
     }
   }
+
   input {
     width: 100%;
     border: none;
     height: 48px;
-    background: var(--fill-3);
+    background: var(--fill_3);
   }
 }
+
 .textBrand {
-  color: var(--text-brand);
+  color: var(--text_brand);
 }
+
 .flexCenter {
   display: flex;
   align-items: center;
 }
+
 .flexSpace {
   display: flex;
   justify-content: space-between;
 }
+
 .tips {
-  color: var(--text-tertiary);
+  color: var(--text_3);
   font-family: 'HarmonyOS Sans SC';
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
 }
+
 .tips14 {
   font-size: 14px;
 }
+
 .tipsLine {
   padding-bottom: 24px;
-  border-bottom: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--fill_line_2);
   margin-bottom: 24px;
 }
+
+.greenLine {
+  padding-top: 24px;
+  border-top: 1px solid var(--fill_line_2);
+}
+
 .my24 {
   margin: 24px 0;
 }
+
 .balance {
-  color: var(--text-primary);
+  color: var(--text_1);
   font-family: 'HarmonyOS Sans SC';
   font-size: 28px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
 }
+
 .gap16 {
   gap: 16px;
 }
+
 .mt24 {
   margin-top: 24px;
 }
+
 .mt8 {
   margin-top: 8px;
 }
+
 .chargeBox {
-  color: var(--text-brand);
+  color: var(--text_brand);
   font-family: 'HarmonyOS Sans SC';
   font-size: 14px;
   font-style: normal;
@@ -168,7 +244,7 @@ $sm: 768px;
 }
 
 .incomeBox {
-  color: var(--text-tertiary);
+  color: var(--text_3);
   font-family: 'HarmonyOS Sans SC';
   font-size: 14px;
   font-style: normal;
@@ -177,18 +253,21 @@ $sm: 768px;
   display: flex;
   flex-direction: column;
   gap: 24px;
+
   span {
-    color: var(--text-primary);
+    color: var(--text_1);
+    font-weight: 500;
   }
 }
+
 .symbolIcon {
   width: 24px;
   height: 8px;
   border-radius: 8px;
 }
+
 .preferenceBox {
- 
-  color: var(--text-primary);
+  color: var(--text_1);
   font-family: 'HarmonyOS Sans SC';
   font-size: 14px;
   font-style: normal;
@@ -199,42 +278,48 @@ $sm: 768px;
   grid-column-gap: 24px;
   margin-bottom: 24px;
   flex: 1;
+
   .symbol {
     margin-left: 16px;
     margin-right: 24px;
     width: 64px;
   }
 }
+
 .tradePreferencePie {
   .preferenTitle {
-    color: var(--text-primary);
-      font-family: "HarmonyOS Sans SC";
-      font-size: 14px;
-      font-style: normal;
-      font-weight: 500;
-      line-height: normal;
-      margin-bottom: 24px;
+    color: var(--text_1);
+    font-family: "HarmonyOS Sans SC";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-bottom: 24px;
   }
+
   margin: 24px 0;
   padding-top: 24px;
-  border-bottom: 1px solid var(--line-2);
-  border-top: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--fill_line_2);
+  border-top: 1px solid var(--fill_line_2);
 }
+
 .copySettingItem {
-  color: var(--text-secondary);
+  color: var(--text_2);
   font-family: 'HarmonyOS Sans SC';
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+
   .avatar {
     width: 40px;
     height: 40px;
     border-radius: 100%;
     margin-right: 8px;
   }
+
   .copyName {
-    color: var(--text-primary);
+    color: var(--text_1);
     font-family: 'HarmonyOS Sans SC';
     font-size: 16px;
     font-style: normal;
@@ -242,19 +327,24 @@ $sm: 768px;
     line-height: normal;
     margin-bottom: 4px;
   }
+
   .currentAmount {
-    color: var(--text-primary);
+    color: var(--text_1);
   }
 }
+
 .gap24 {
   gap: 24px;
 }
+
 .pointer {
   cursor: pointer;
 }
+
 .rotate180 {
   transform: rotate(180deg);
 }
+
 .h24 {
   height: 24px;
 }

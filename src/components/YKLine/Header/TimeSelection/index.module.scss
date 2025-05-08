@@ -6,7 +6,7 @@
     .leftTitle {
       flex: 1;
       font-size: 14px;
-      color: var(--text-primary);
+      color: var(--text_1);
       font-style: normal;
       font-weight: 500;
     }
@@ -27,7 +27,7 @@
     border-radius: 8px;
     cursor: pointer;
     position: relative;
-    color: var(--text-secondary);
+    color: var(--text_2);
     box-sizing: border-box;
     min-width: 48px;
     &:hover {
@@ -41,19 +41,20 @@
 
 .selectTimeBtn {
   border-radius: 8px;
-  border: 1px solid var(--text-secondary);
+  border: 1px solid var(--text_2);
   // color: var(--brand) !important;
-  // background: var(--bg-1, #f4f5f6);
+  // background: var(--fill_bg_1, #f4f5f6);
 }
 
 .timeBtnContent {
   width: 248px;
-  background-color: var(--bg-1);
+  background-color: var(--fill_bg_1);
   border-radius: 16px;
+ 
   :global {
     .ant-popover-inner {
       padding: 16px !important;
-      background: var(--fill-3);
+      background: var(--fill_3);
       bottom: 0;
       border-radius: 16px;
     }
@@ -61,6 +62,13 @@
     .ant-popover-content {
       background-color: transparent;
       border-radius: 16px;
+    }
+  }
+  &.dark {
+    :global {
+      .ant-popover-inner {
+        background: var(--fill_3);
+      }
     }
   }
 }

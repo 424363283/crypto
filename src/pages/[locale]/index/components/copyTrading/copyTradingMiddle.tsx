@@ -75,8 +75,8 @@ export default function CopyTradingMiddle({ imgUrl, roe, name, desc, isShowLine 
           showLine={false}
           style={{ width: 396, height: 80 }}
           lineWidth={1.5}
-          areaColor={true ? 'var(--text-true)' : 'var(--text-error)'}
-          lineColor={true ? 'var(--text-true)' : 'var(--text-error)'}
+          areaColor={true ? 'var(--text_green)' : 'var(--text_red)'}
+          lineColor={true ? 'var(--text_green)' : 'var(--text_red)'}
           areaColorOpacity={50}
         /> : null
         }
@@ -103,7 +103,7 @@ const styles = css`
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-      background: var(--fill-1);
+      background: var(--fill_1);
       border-radius: 24px;
       gap:20px;
     }
@@ -122,12 +122,12 @@ const styles = css`
       }
 
       .trade-name{
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 16px;
         font-weight: 500;
       }
       .trade-desc{
-        color: var(--text-tertiary);
+        color: var(--text_3);
         font-size: 12px;
         font-weight: 400;
       }
@@ -146,12 +146,12 @@ const styles = css`
       align-self: stretch;
     }
     .label{
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-size: 14px;
       font-weight: 400;
     }
     .value{
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 14px;
       font-weight: 400;
     }
@@ -168,12 +168,12 @@ const styles = css`
       &-left{
         font-size:20px;
         h5{
-          color: var(--text-tertiary);
+          color: var(--text_3);
           font-size: 14px;
           font-weight: 400;
         }
         p{
-          color: var(--text-true);
+          color: var(--text_green);
           font-size: 24px;
           font-weight: 700;
         }

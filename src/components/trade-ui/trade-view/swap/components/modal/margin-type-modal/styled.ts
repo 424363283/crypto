@@ -9,7 +9,7 @@ const { className, styles: _styles } = css.resolve`
     gap: 40px;
     align-self: stretch;
     .margin-type-title {
-      color: var(--text-secondary);
+      color: var(--text_2);
       font-size: 14px;
       font-style: normal;
       font-weight: 400;
@@ -27,7 +27,7 @@ const { className, styles: _styles } = css.resolve`
         gap: 16px;
         align-self: stretch;
         border-radius: 16px;
-        border: 1px solid var(--line-3);
+        border: 1px solid var(--fill_line_3);
         cursor: pointer;
         &:hover {
           border: 1px solid var(--brand);
@@ -40,14 +40,14 @@ const { className, styles: _styles } = css.resolve`
           gap: 8px;
           flex: 1 0 0;
           .header {
-            color: var(--text-secondary);
+            color: var(--text_2);
             font-size: 16px;
             font-style: normal;
             font-weight: 400;
             line-height: normal;
           }
           .info {
-            color: var(--text-secondary);
+            color: var(--text_2);
             font-size: 12px;
             font-style: normal;
             font-weight: 400;
@@ -57,7 +57,7 @@ const { className, styles: _styles } = css.resolve`
           border: 1px solid var(--brand);
         }
         &.active .left .header {
-          color: var(--text-primary);
+          color: var(--text_1);
         }
       }
     }

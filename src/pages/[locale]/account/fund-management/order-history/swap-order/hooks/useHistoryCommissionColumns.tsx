@@ -9,6 +9,7 @@ import { checkIsUsdtType } from '../../../assets-overview/helper';
 import { SWAP_HISTORY_ORDER_STATUS, SWAP_HISTORY_ORDER_TYPES } from '../constants';
 
 import ClipboardItem from '@/components/clipboard-item';
+import { WalletName } from '@/components/order-list/swap/media/desktop/components/wallet-name';
 export const useHistoryCommissionColumns = () => {
   const isUsdtType = checkIsUsdtType();
   useEffect(() => {
@@ -16,16 +17,6 @@ export const useHistoryCommissionColumns = () => {
   }, []);
   Swap.Assets.getWallet({ usdt: isUsdtType });
   const columns = [
-    {
-      title: LANG('时间'),
-      dataIndex: 'ctime',
-      render: (time: number) => (
-        <div className='ctime'>
-          <div className='date'>{dayjs(time).format('YYYY-MM-DD')}</div>
-          <div className='time'>{dayjs(time).format('HH:mm:ss')}</div>
-        </div>
-      ),
-    },
     {
       title: LANG('合约'),
       dataIndex: 'code',
@@ -44,19 +35,16 @@ export const useHistoryCommissionColumns = () => {
         );
       },
     },
-    // {
-    //   title: LANG('子钱包账户'),
-    //   dataIndex: 'subWallet',
-    //   render: (v: string, item: any) => {
-    //     return (
-    //       <span>
-    //         {_isSwapDemo
-    //           ? LANG('模拟交易账户')
-    //           : item?.alias || Swap.Assets.getWallet({ walletId: v, usdt: isUsdtType, withHooks: false })?.alias}
-    //       </span>
-    //     );
-    //   },
-    // },
+    {
+      title: LANG('账户'),
+      dataIndex: 'subWallet',
+      render: (v: any, item: any) => {
+        const walletData = Swap.Assets.getWallet({ walletId: item.subWallet, usdt: isUsdtType, withHooks: false });
+        return (
+          <WalletName> {LANG(walletData?.alias)} </WalletName>
+        );
+      },
+    },
     {
       title: LANG('类型'),
       dataIndex: 'type',
@@ -133,9 +121,15 @@ export const useHistoryCommissionColumns = () => {
         if (orderType !== 2) {
           return '--';
         }
-        return `${item.priceType === '1' ? LANG('市场价格') : LANG('标记价格')} ${
-          item.direction === '1' ? '≥' : '≤'
-        } ${Number(item.triggerPrice).toFixed(4)}`;
+        return `${item.priceType === '1' ? LANG('市场价格') : LANG('标记价格')} ${item.direction === '1' ? '≥' : '≤'
+          } ${Number(item.triggerPrice).toFixed(4)}`;
+      },
+    },
+    {
+      title: LANG('状态'),
+      dataIndex: 'status',
+      render: (status: string) => {
+        return SWAP_HISTORY_ORDER_STATUS[status];
       },
     },
     {
@@ -146,13 +140,16 @@ export const useHistoryCommissionColumns = () => {
       }
     },
     {
-      title: LANG('状态'),
-      dataIndex: 'status',
+      title: LANG('委托时间'),
+      dataIndex: 'ctime',
       align: 'right',
-      render: (status: string) => {
-        return SWAP_HISTORY_ORDER_STATUS[status];
-      },
-    },
+      render: (time: number) => (
+        <div className='ctime'>
+          <div className='date'>{dayjs(time).format('YYYY-MM-DD')}</div>
+          <div className='time'>{dayjs(time).format('HH:mm:ss')}</div>
+        </div>
+      ),
+    }
   ];
 
   return columns;

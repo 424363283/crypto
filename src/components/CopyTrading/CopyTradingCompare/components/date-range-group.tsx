@@ -15,10 +15,10 @@ export default function DateRangeGroup({
   onSelect: (value: number) => void,
 }) {
   const dateOptions = [
-    { value: 7, label: LANG('{number}天', { number: 7 }) },
-    { value: 30, label: LANG('{number}天', { number: 30 }) },
-    { value: 90, label: LANG('{number}天', { number: 90 }) },
-    { value: 180, label: LANG('{number}天', { number: 180 }) },
+    { value: 7, label: LANG('{days}日', { days: 7 }) },
+    { value: 30, label: LANG('{days}日', { days: 30 }) },
+    { value: 90, label: LANG('{days}日', { days: 90 }) },
+    { value: 180, label: LANG('{days}日', { days: 180 }) },
   ];
 
   return (

@@ -202,17 +202,17 @@ const styles = css`
       /* background: var(--theme-background-color-3-2); */
       font-size: 14px;
       font-weight: 500;
-      color: var(--text-secondary);
+      color: var(--text_2);
       display: flex;
       align-items: center;
       padding: 0 15px;
       min-width: 96px;
       cursor: pointer;
       border-radius: 8px;
-border: 1px solid var(--line-3, #34343B);
+border: 1px solid var(--fill_line_3, #34343B);
 
       &.active {
-        color: var(--text-primary);
+        color: var(--text_1);
         background: var(--skin-primary-color);
         border: none;
       }

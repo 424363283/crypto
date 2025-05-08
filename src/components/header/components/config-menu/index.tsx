@@ -235,7 +235,7 @@ const styles = css`
       font-size: 14px;
       font-style: normal;
       font-weight: 400;
-      color: var(--text-secondary);
+      color: var(--text_2);
     }
   }
   .restore-item {
@@ -303,13 +303,13 @@ const styles = css`
         margin-bottom: 1.5rem;
       }
       .title {
-        color: var(--text-secondary);
+        color: var(--text_2);
       }
       .right-txt {
         display: flex;
         align-items: center;
         .selected-time {
-          color: var(--text-primary);
+          color: var(--text_1);
           margin-right: 10px;
           font-size: 14px;
           font-weight: 400;

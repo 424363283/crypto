@@ -38,7 +38,7 @@ const styles = css`
     flex-direction: column;
     align-items: flex-start;
     align-self: stretch;
-    background: var(--fill-3);
+    background: var(--fill_3);
     border-radius: 16px;
     flex: 1 0 0;
     .result-content {
@@ -49,7 +49,7 @@ const styles = css`
       flex: 1 0 0;
       gap: 24px;
       .title {
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 16px;
         font-style: normal;
         font-weight: 500;
@@ -64,9 +64,9 @@ const styles = css`
           font-size: 14px;
           line-height: 14px;
           font-weight: 400;
-          color: var(--text-secondary);
+          color: var(--text_2);
           &:nth-child(2) {
-            color: var(--text-primary);
+            color: var(--text_1);
           }
         }
       }

@@ -17,7 +17,7 @@ function PnlAnalysis() {
     return <SwapAnalysis />;
   };
   return (
-    <UniversalLayout bgColor='var(--theme-background-color-2)' headerBgColor='var(--fill-2)'>
+    <UniversalLayout bgColor='var(--theme-background-color-2)' headerBgColor='var(--fill_2)'>
       { <Nav title={LANG('盈亏分析详情')} /> }
       <div className='pnl-analysis-container'>{renderSpecificCard()}</div>
       <style jsx>{styles}</style>

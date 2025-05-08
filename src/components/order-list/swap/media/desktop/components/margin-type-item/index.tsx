@@ -27,8 +27,8 @@ export const MarginTypeItem = ({
             justify-content: center;
             align-items: center;
             border-radius: 4px;
-            background: var(--fill-pop);
-            color: var(--text-secondary);
+            background: var(--fill_pop);
+            color: var(--text_2);
             font-size: 10px;
             font-weight: 400;
           }

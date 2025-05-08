@@ -30,13 +30,13 @@ const styles = css`
       margin-right: 8px;
       overflow-x: auto;
       overflow-y: hidden;
-      background-color: var(--bg-1);
+      background-color: var(--fill_bg_1);
     }
     
     @media ${MediaInfo.mobileOrTablet} {
       // box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.05);
       margin:auto;
-      background-color: var(--bg-1);
+      background-color: var(--fill_bg_1);
       padding: 12px;
       width: calc( 100% - 24px );
     }

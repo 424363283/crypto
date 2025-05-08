@@ -15,13 +15,13 @@ const { className, styles } = css.resolve`
       font-weight: 400;
       color: var(--theme-trade-text-color-3);
       @media ${MediaInfo.mobile} {
-        color: var(--text-secondary);
+        color: var(--text_2);
       }
     }
     .input {
       background-color: var(--theme-trade-modal-input-bg);
       @media ${MediaInfo.mobile} {
-        background-color: var(--fill-3);
+        background-color: var(--fill_3);
       }
       padding: 0 12px;
       padding-right: 4px;
@@ -107,7 +107,7 @@ const { className, styles } = css.resolve`
       .tab {
         font-size: 14px;
         font-weight: 500;
-        color: var(--text-secondary);
+        color: var(--text_2);
         &.active {
           color: var(--brand);
         }
@@ -124,7 +124,7 @@ const { className, styles } = css.resolve`
           width: 8px;
           height: 8px;
           &::after {
-            box-shadow: 0 0 0 2px var(--text-brand) !important;
+            box-shadow: 0 0 0 2px var(--text_brand) !important;
           }
           &::before {
             width: 8px;

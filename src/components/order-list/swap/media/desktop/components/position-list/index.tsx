@@ -1,4 +1,6 @@
 import YIcon from '@/components/YIcons';
+import CommonIcon from '@/components/common-icon';
+
 import InputPrice from '@/components/trade-ui/order-list/swap/components/modal/stop-profit-stop-loss-modal/components/input-price';
 import { linkClassName, linkStyles } from '@/components/link';
 import { OrderShare } from '@/components/order-list/components/order-share/export';
@@ -46,11 +48,17 @@ import IncomeTips from './components/income-tips';
 import { clsx, styles } from '@/components/order-list/swap/media/desktop/components/position-list/styled.ts';
 import LiquidationInputPrice from './components/liquidation-input-price';
 import { setPositionTpSlFun } from '@/store/kline';
+import { MARGIN_TYPE } from '@/core/shared/src/swap/modules/trade/constants';
+import { SWAP_DEFAULT_WALLET_KEY, WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
+import { WalletName } from '../wallet-name';
+import { useCopyTradingSwapStore } from '@/store/copytrading-swap';
 
 export const PositionList = ({
+  wallet,
   assetsPage,
   onWalletClick
 }: {
+  wallet?: WalletKey;
   assetsPage?: boolean;
   onWalletClick?: (walletData?: any) => any;
 }) => {
@@ -58,7 +66,7 @@ export const PositionList = ({
   const { setting } = kHeaderStore(qty);
   const { isUsdtType, quoteId } = Swap.Trade.base;
   const walletId = Swap.Info.getWalletId(isUsdtType);
-
+  const isCopyTrader = useCopyTradingSwapStore.use.isCopyTrader();
   const { onReverse } = usePositionActions();
   const {
     liquidationModalProps,
@@ -81,7 +89,16 @@ export const PositionList = ({
     usdt: isUsdtType,
     data: Swap.Order.getPosition(isUsdtType),
     twoWayMode: Swap.Trade.twoWayMode
-  }).list;
+  // }).list?.filter(item => !wallet || item.subWallet === wallet);
+  }).list?.filter(item => {
+    if(wallet) {
+      return item.subWallet === wallet;
+
+    } else {
+      return isCopyTrader || item.subWallet !== WalletKey.COPY;
+    }
+
+  });
   const storePositions = useListByStore(positions);
   let list = useSortData(assetsPage ? positions : storePositions);
   if (!useAppContext().isLogin) {
@@ -175,11 +192,17 @@ export const PositionList = ({
             return `${rate.toFixed(2)}%`;
           };
 
+// console.log("获取当前的时间戳",list)
+// debugger
+
           kChartEmitter.emit(
             kChartEmitter.K_CHART_POSITION_UPDATE,
             list
               .filter((e: { subWallet: string }) => e?.subWallet === walletId)
               .map((item: any) => {
+
+                // console.log("item===========",item)
+
                 return {
                   symbolId: item.symbol,
                   avgPrice: item.avgCostPrice,
@@ -189,7 +212,7 @@ export const PositionList = ({
                   side: item.side,
                   tpSlList: item.orders,
                   liquidationPrice: item.liquidationPrice,
-
+                  ctime:item,
                   sideText: item.side === '1' ? LANG('多') : LANG('空'),
                   openPrice: formatNumber2Ceil(
                     item.avgCostPrice,
@@ -231,10 +254,12 @@ export const PositionList = ({
     <>
       <div className={clsx('position-list')}>
         <RecordList
-          renderRowKey={v => `${v.side} ${v.subWallet} ${v.symbol}}`}
+          // renderRowKey={v => `${v.side} ${v.subWallet} ${v.symbol}}`}
+          renderRowKey={v => `${v.positionId}}`}
           data={list}
           loading={Swap.Order.getPositionLoading(isUsdtType)}
           columns={useColumns({
+            wallet,
             assetsPage,
             isUsdtType,
             quoteId,
@@ -286,6 +311,7 @@ export const PositionList = ({
           <OrderShare
             visible={!!modalItem}
             title={LANG('分享')}
+            symbol={modalItem.symbol}
             settleCoin={Swap.Info.getCryptoData(modalItem.symbol, { withHooks: false })?.settleCoin}
             code={Swap.Info.getCryptoData(modalItem.symbol, { withHooks: false }).name}
             onClose={() => setModalItem(undefined)}
@@ -338,6 +364,7 @@ export const PositionList = ({
 };
 
 const useColumns = ({
+  wallet,
   isUsdtType,
   quoteId,
   assetsPage = false,
@@ -371,7 +398,7 @@ const useColumns = ({
     onWalletClick ||
     ((walletData: any) => Swap.Trade.setModal({ walletFormVisible: true, walletFormData: { data: walletData } }));
   if (isDemo) {
-    onWalletClick = () => {};
+    onWalletClick = () => { };
   }
 
   const volumeTitle = (
@@ -387,11 +414,11 @@ const useColumns = ({
           title={
             isUsdtType
               ? LANG(
-                  'U本位合约交易单位为BTC等币单位时，显示的持仓数量为根据实际张数换算而来的，数值随着最新价格变动而变动。'
-                )
+                'U本位合约交易单位为BTC等币单位时，显示的持仓数量为根据实际张数换算而来的，数值随着最新价格变动而变动。'
+              )
               : LANG(
-                  '币本位合约交易单位为BTC等币单位时，显示的持仓数量为根据实际张数换算而来的，数值随着最新价格变动而变动。'
-                )
+                '币本位合约交易单位为BTC等币单位时，显示的持仓数量为根据实际张数换算而来的，数值随着最新价格变动而变动。'
+              )
           }
         >
           <InfoHover componnet="span">{LANG('持仓量')}</InfoHover>
@@ -413,8 +440,7 @@ const useColumns = ({
     <Tooltip
       placement="top"
       title={LANG(
-        '合约的实时标记价格。此标记价格将用于计算盈亏及保证金，可能与合约最新成交价格有所偏差，以避免价格操纵。标记价格的计算是基于指数价格，指数价格是从主流现货交易所提取的总价格，由其相对交易量加权。当前指数价格是{price}。',
-        { price: indexPrice }
+        '合约的实时标记价格。此标记价格将用于计算盈亏及保证金，可能与合约最新成交价格有所偏差，以避免价格操纵。标记价格的计算是基于指数价格，指数价格是从主流现货交易所提取的总价格，由其相对交易量加权。'
       )}
       className={clsx('custom-tooltip')}
       arrow={false}
@@ -468,6 +494,9 @@ const useColumns = ({
       className: clsx('code-col'),
       render: (v: any, item: any) => {
         const leverage = item?.leverage;
+        const walletData = Swap.Assets.getWallet({ walletId: item.subWallet, usdt: isUsdtType, withHooks: false });
+        const canAdjustLeverage = !assetsPage && item.subWallet === SWAP_DEFAULT_WALLET_KEY;
+
         return (
           <TradeLink id={item.symbol.toUpperCase()}>
             <div className={clsx('code', item.side === '1' ? 'buy' : 'sell')}>
@@ -489,21 +518,62 @@ const useColumns = ({
                           e.stopPropagation();
                           Swap.Trade.setModal({
                             leverVisible: true,
-                            leverData: { lever: leverage, symbol: item.symbol.toUpperCase(), wallet: item.subWallet }
+                            leverData: { lever: leverage, symbol: item.symbol.toUpperCase(), wallet: item.subWallet, side: item.side, pid: item.positionId }
                           });
                         }}
                       >
                         <LeverItem lever={leverage}></LeverItem>
-                        {!assetsPage && <YIcon.positionEdit className={clsx('editIcon')} />}
+                        {canAdjustLeverage && <YIcon.positionEdit className={clsx('editIcon')} />}
                       </div>
                     ) : (
                       ''
                     )}
                   </div>
                 </div>
+                {/* <div className={clsx('nowrap')}>
+                  <div className={clsx()}>
+                    <div
+                      className={clsx('wallet')}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (walletData?.edit) {
+                          onWalletClick(walletData);
+                        }
+                      }}
+                    >
+                      <WalletAvatar type={!isDemo ? walletData?.pic : null} size={16} walletData={walletData} />
+                      <div className={clsx('text', isDemo && 'active')}>
+                        {!isDemo ? walletData?.alias : LANG('模拟交易账户')}
+                      </div>
+                      {!isDemo && walletData?.edit && (
+                        <CommonIcon
+                          name='common-small-edit-0'
+                          width={12}
+                          height={13}
+                          className={clsx('icon')}
+                          enableSkin
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div> */}
+
               </div>
             </div>
           </TradeLink>
+        );
+      }
+    },
+    {
+      title: LANG('账户'),
+      dataIndex: 'subWallet',
+      minWidth: 100,
+      visible: !assetsPage,
+      render: (v: any, item: any) => {
+        const walletData = Swap.Assets.getWallet({ walletId: item.subWallet, usdt: isUsdtType, withHooks: false });
+        return (
+          <WalletName> {LANG(walletData?.alias)} </WalletName>
         );
       }
     },
@@ -555,7 +625,7 @@ const useColumns = ({
       minWidth: 100,
       render: (v: any, item: any) => {
         const { settleCoin } = Swap.Info.getCryptoData(item.symbol, { withHooks: false });
-        const canAdd = item.marginType === 2;
+        const canAdd = item.marginType === MARGIN_TYPE.ISOLATED && item.subWallet === SWAP_DEFAULT_WALLET_KEY;
 
         const handleMargin = isUsdtType
           ? FORMULAS.SWAP.usdt.calculateFreezeClosingFee
@@ -658,7 +728,6 @@ const useColumns = ({
       render: (v: any, item: any) => {
         const code = item.symbol.toUpperCase();
         const { settleCoin } = Swap.Info.getCryptoData(code, { withHooks: false });
-
         const income = Swap.Calculate.income({
           usdt: isUsdtType,
           code: code,
@@ -914,6 +983,7 @@ const useColumns = ({
       align: 'right',
       width: 300,
       fixed: 'right',
+      hidden: wallet === WalletKey.COPY,
       render: (v: any, item: any) => {
         return (
           <LiquidationInputPrice

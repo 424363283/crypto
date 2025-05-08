@@ -28,7 +28,7 @@ const styles = css`
     flex-direction: row;
     height: 40px;
     border-radius: 8px;
-    background-color: var(--fill-3);
+    background-color: var(--fill_3);
     padding: 2px;
     div {
       cursor: pointer;
@@ -36,13 +36,13 @@ const styles = css`
       line-height: 28px;
       font-size: 14px;
       font-weight: 400;
-      color: var(--text-secondary);
+      color: var(--text_2);
       text-align: center;
       display: flex;
       justify-content: center;
       align-items: center;
       &.active {
-        color: var(--text-white);
+        color: var(--text_white);
         border-color: transparent;
         border-radius: 8px;
       }

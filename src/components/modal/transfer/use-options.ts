@@ -1,6 +1,8 @@
 import { useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { ACCOUNT_CAN_TRANSFER_TYPES, ACCOUNT_TYPE } from './types';
+import { SWAP_COPY_WALLET_KEY } from '@/core/shared/src/swap/modules/assets/constants';
+import { Swap } from '@/core/shared';
 
 export const useOptions = ({
   positiveTransfer,
@@ -12,6 +14,8 @@ export const useOptions = ({
   const enableLite = process.env.NEXT_PUBLIC_LITE_ENABLE === 'true';
   const { isDark } = useTheme();
   const getIconPath = (subPath: string) => `/static/images/common/modal/${subPath}`;
+  const walletCopy = Swap.Assets.getWallet({ usdt: true, walletId: SWAP_COPY_WALLET_KEY });
+  const enableCopy = !!walletCopy;
   const options = [
     {
       label: LANG('现货账户'),
@@ -24,8 +28,13 @@ export const useOptions = ({
     //   icon: isDark ? getIconPath('pp_crypto.png') : getIconPath('pp_crypto_light.png'),
     // },
     {
-      label: LANG('U本位合约账户'),
+      label: LANG('U本位合约'),
       value: ACCOUNT_TYPE.SWAP_U,
+      icon: isDark ? getIconPath('pp_usdt.png') : getIconPath('pp_usdt_light.png'),
+    },
+    {
+      label: LANG('跟单账户'),
+      value: ACCOUNT_TYPE.COPY,
       icon: isDark ? getIconPath('pp_usdt.png') : getIconPath('pp_usdt_light.png'),
     },
     // {
@@ -36,6 +45,9 @@ export const useOptions = ({
   ].filter((item) => {
     if (item.value === ACCOUNT_TYPE.LITE) {
       return enableLite;
+    }
+    if(item.value === ACCOUNT_TYPE.COPY) {
+      return enableCopy;
     }
     return true;
   });

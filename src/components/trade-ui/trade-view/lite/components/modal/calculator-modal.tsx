@@ -197,7 +197,7 @@ const CalculatorModal = ({ open, onClose }: Props) => {
           />
           <div className={'slider-container'}>
             <Slider
-              railBgColor="var(--fill-3)"
+              railBgColor="var(--fill_3)"
               percent={percent}
               isDark={isDark}
               grid={state.leverRange.length - 1 > 0 ? state.leverRange.length - 1 : 0}
@@ -349,7 +349,7 @@ const CalculatorModal = ({ open, onClose }: Props) => {
               />
               <div className={'slider-container'}>
                 <Slider
-                  railBgColor="var(--fill-3)"
+                  railBgColor="var(--fill_3)"
                   percent={percent}
                   isDark={isDark}
                   grid={state.leverRange.length - 1 > 0 ? state.leverRange.length - 1 : 0}
@@ -546,7 +546,7 @@ const styles = css`
             flex-shrink: 0;
             gap: 24px;
             .unit {
-              color: var(--text-secondary);
+              color: var(--text_2);
               text-align: right;
               font-size: 12px;
               font-style: normal;
@@ -556,7 +556,7 @@ const styles = css`
             .new {
               user-select: none;
               cursor: pointer;
-              color: var(--text-brand);
+              color: var(--text_brand);
               text-align: right;
               font-size: 12px;
               font-style: normal;

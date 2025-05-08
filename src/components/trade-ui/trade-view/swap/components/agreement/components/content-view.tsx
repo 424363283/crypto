@@ -36,7 +36,7 @@ export const ContentView = ({ title = LANG('开通合约账户'), onArgee }: { t
           align-items: flex-start;
           gap: 24px;
           .title {
-            color: var(--text-primary);
+            color: var(--text_1);
             font-size: 24px;
             font-style: normal;
             font-weight: 500;
@@ -54,7 +54,7 @@ export const ContentView = ({ title = LANG('开通合约账户'), onArgee }: { t
             line-height: normal;
           }
           .info-content {
-            color: var(--text-secondary);
+            color: var(--text_2);
             font-size: 14px;
             font-style: normal;
             font-weight: 400;

@@ -25,14 +25,14 @@ export default function Trade() {
           </div>
           <h2>{LANG('随时交易, 轻松高效')}</h2>
           {isLogin ? (
-            <Button rounded width={200} size={Size.XL} style={{ background: 'var(--text-white)' }}>
-              <TrLink href={`/swap/btc-usdt`} style={{ color: 'var(--text-brand)' }}>
+            <Button rounded width={200} size={Size.XL} style={{ background: 'var(--text_white)' }}>
+              <TrLink href={`/swap/btc-usdt`} style={{ color: 'var(--text_brand)' }}>
                 {LANG('去交易')}
               </TrLink>
             </Button>
           ) : (
-            <Button rounded width={200} size={Size.XL} style={{ background: 'var(--text-white)' }}>
-              <TrLink href={`/register`} style={{ color: 'var(--text-brand)' }}>
+            <Button rounded width={200} size={Size.XL} style={{ background: 'var(--text_white)' }}>
+              <TrLink href={`/register`} style={{ color: 'var(--text_brand)' }}>
                 {LANG('注册')}
               </TrLink>
             </Button>
@@ -55,8 +55,12 @@ export default function Trade() {
             padding: 60px 0 0;
             box-sizing: border-box;
             @media ${MediaInfo.mobile} {
+              display: flex;
+              flex-direction: center;
+              align-items: center;
               width: 100%;
               background: none;
+              padding: 0 30px;
             }
           }
           .download {
@@ -77,7 +81,7 @@ export default function Trade() {
               align-items: center;
               border-radius: 40px;
               background: #fff;
-              color: var(--text-brand);
+              color: var(--text_brand);
               text-align: center;
               font-size: 18px;
               font-weight: 500;
@@ -90,19 +94,19 @@ export default function Trade() {
           .logo {
             width: 104px;
             height: 104px;
-            background: var(--text-white);
+            background: var(--text_white);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
           }
           h2 {
-            color: var(--text-white);
+            color: var(--text_white);
             font-size: 48px;
             font-weight: 900;
             @media ${MediaInfo.mobile} {
               font-size: 32px;
-              padding: 0 60px;
+              padding: 0 auto;
             }
           }
         }

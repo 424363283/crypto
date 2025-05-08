@@ -67,13 +67,13 @@ export const SwapMobileLayout = ({
             // height: 70px;
             width: auto;
             padding: 8px 1rem;
-            background: var(--fill-1);
-            box-shadow: 0px -4px 8px 0px var(--fill-1, #fff);
+            background: var(--fill_1);
+            box-shadow: 0px -4px 8px 0px var(--fill_1, #fff);
           }
         }
 
         .bg {
-          background-color: var(--bg-1);
+          background-color: var(--fill_bg_1);
         }
         .order-bg {
           background-color: var(--theme-trade-bg-color-3);
@@ -91,7 +91,6 @@ export const SwapMobileLayout = ({
         }
         :global(.mobile-header) {
           overflow-x: auto;
-         
         }
       `}</style>
     </>

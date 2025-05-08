@@ -57,7 +57,7 @@ const { className, styles } = css.resolve`
     }
   }
   .spsl-advanced {
-    color: var(--text-brand);
+    color: var(--text_brand);
     font-size: 12px;
     font-weight: 400;
     cursor: pointer;

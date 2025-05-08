@@ -119,6 +119,7 @@ class Account {
     const res = await loginApi(data);
     if (res.code === 200 && !res.data.next) {
       Account.setLoginStatus(true);
+      Account.refreshUserInfo();
     }
     return res;
   }

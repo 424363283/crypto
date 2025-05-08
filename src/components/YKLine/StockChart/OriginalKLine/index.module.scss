@@ -16,7 +16,7 @@
   z-index: 1000;
   border-radius: 4px 0px 0px 4px;
   background: var(--brand);
-  color: var(--text-primary);
+  color: var(--text_1);
   text-align: center;
   font-family: 'HarmonyOS Sans SC';
   font-size: 10px;
@@ -24,4 +24,5 @@
   font-weight: 500;
   line-height: normal;
   white-space: nowrap;
+  left: -100px;
 }

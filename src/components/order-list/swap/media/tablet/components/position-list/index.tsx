@@ -2,7 +2,7 @@ import { Loading } from '@/components/loading';
 import { AlertFunction } from '@/components/modal/alert-function';
 import ShareModal from '@/components/order-list/lite/components/share-modal';
 import { store as orderListStore, useListByStore } from '@/components/order-list/swap/store';
-import { useModalProps, usePositionActions } from '@/components/order-list/swap/stores/position-list';
+import { useModalProps, usePositionActions, useSortData } from '@/components/order-list/swap/stores/position-list';
 import {
   LiquidationModal,
   ModifyMarginModal,
@@ -18,6 +18,13 @@ import { useState } from 'react';
 import { ListBar } from '../list-bar';
 import { ListView } from '../list-view';
 import { PositionItem } from './components/position-item';
+
+import { Mobile } from '@/components/responsive';
+import CheckboxItem from '@/components/trade-ui/trade-view/swap/components/checkbox-item';
+
+import CommonIcon from '@/components/common-icon';
+import YIcon from '@/components/YIcons';
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
 // import CommonIcon from '@/components/common-icon';
 // import CheckboxItem from '@/components/trade-ui/trade-view/swap/components/checkbox-item';
 // import { useLocalStorage } from '@/core/hooks';
@@ -56,7 +63,7 @@ import { PositionItem } from './components/position-item';
 //           gap: 1rem;
 //           font-size: 14px;
 //           font-weight: 400;
-//           color: var(--text-secondary);
+//           color: var(--text_2);
 //           .hint {
 //             display: flex;
 //             align-items: center;
@@ -68,7 +75,7 @@ import { PositionItem } from './components/position-item';
 //           .line {
 //             width: 100%;
 //             height: 1px;
-//             background: var(--line-1);
+//             background: var(--fill_line_1);
 //           }
 //         }
 //       `}</style>
@@ -78,13 +85,16 @@ import { PositionItem } from './components/position-item';
 
 export const PositionList = ({
   onWalletClick,
-  assetsPage
+  assetsPage,
+  wallet
 }: {
   onWalletClick?: (walletData?: any) => any;
   assetsPage?: boolean;
+  wallet?: WalletKey;
 }) => {
   const { isUsdtType, quoteId } = Swap.Trade.base;
   const [_modalItem, setModalItem] = useState<any>(undefined);
+  const [dontShouldAgain, setDontShouldAgain] = useState<boolean>(false);
   const {
     liquidationModalProps,
     onVisibleLiquidationModal,
@@ -103,13 +113,13 @@ export const PositionList = ({
     onVisibleReverseModal
   } = useModalProps();
   Swap.Info.getIsVolUnit(isUsdtType);
-  let list = useListByStore(
-    Swap.Calculate.positionData({
-      usdt: isUsdtType,
-      data: Swap.Order.getPosition(isUsdtType),
-      twoWayMode: Swap.Trade.twoWayMode
-    }).list
-  );
+  const positions = Swap.Calculate.positionData({
+    usdt: isUsdtType,
+    data: Swap.Order.getPosition(isUsdtType),
+    twoWayMode: Swap.Trade.twoWayMode
+  }).list?.filter(item => !wallet || item.subWallet === wallet);
+  const storePositions = useListByStore(positions);
+  let list = useSortData(assetsPage ? positions : storePositions);
   if (!useAppContext().isLogin) {
     list = [];
   }
@@ -128,9 +138,11 @@ export const PositionList = ({
     onVisibleLiquidationModal(item, false);
   };
   const onCloseAll = (item: any) => {
+    const coinName = Swap.Info.getCryptoData(item.symbol).name;
     AlertFunction({
       v4: true,
       title: LANG('市价全平'),
+      className: 'reverse-modal',
       onOk: async () => {
         Loading.start();
         try {
@@ -150,7 +162,28 @@ export const PositionList = ({
           Loading.end();
         }
       },
-      content: LANG('全部仓位将以市价委托方式进行平仓，请确认是否市价全平？')
+      content: (
+        <div className="modal-content-desc">
+          <p>
+            {LANG('确认对 {0} 永续 {1} {2}x 仓位进行市价全平？')
+              .replace('{0}', coinName)
+              .replace('{1}', item.positionSide === 'LONG' ? LANG('多') : LANG('空'))
+              .replace('{2}', item.leverage)}
+          </p>
+          <div className="hint">
+            <YIcon.tipsIcon />
+            <span>{LANG('如果存在平仓挂单（限价或止盈止损委托），将会在全平前被撤单。')}</span>
+          </div>
+          <div className="divider"></div>
+          <Mobile>
+            <CheckboxItem
+              label={LANG('不再展示，您可在【偏好设置】中重新设置。')}
+              value={dontShouldAgain}
+              onChange={value => setDontShouldAgain(value)}
+            />
+          </Mobile>
+        </div>
+      )
       // content:  <CloseAllContent item={item} />
     });
   };
@@ -217,6 +250,27 @@ export const PositionList = ({
         data={list.find((v: any) => v.positionId === (spslModalProps.data as any)?.positionId) || spslModalProps.data}
         onClose={onCloseSpslModal}
       />
+
+      <style jsx>{`
+        :global(.reverse-modal) {
+          :global(.divider) {
+            border-top: 1px solid var(--fill_line_1);
+            margin: 0 0 12px;
+          }
+        }
+        :global(.hint) {
+          padding: 16px 0;
+          display: flex;
+          align-items: center;
+          gap: 2px;
+          font-size: 12px;
+          color: var(--yellow);
+          font-size: 12px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 150%; /* 18px */
+        }
+      `}</style>
     </div>
   );
 };

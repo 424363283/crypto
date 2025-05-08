@@ -8,6 +8,7 @@ import YIcon from '@/components/YIcons';
 import { useTabConfig } from './use-tab-config';
 import TopOptions from '@/pages/[locale]/markets/components/markets-view/components/top-option';
 import { useResponsive } from '@/core/hooks';
+import { Desktop } from '@/components/responsive';
 const Tabs = (props: { tab?: string; setTab?: (tab: string) => void; onSearch: (tab: string) => void }) => {
   const { tab, setTab, onSearch } = props;
   const { HEADER_TABS_CONFIG } = useTabConfig();
@@ -31,28 +32,17 @@ const Tabs = (props: { tab?: string; setTab?: (tab: string) => void; onSearch: (
         </li>
       </ul> */}
       <TopOptions external={false} />
-      <div className={clsx('search-box')}>
-        {isMobile ? (
-          // <YIcon.h5HomePagesearchIcon />
-          <div className="search-box-wrap">
-            <Input
-              placeholder=""
-              prefix={<YIcon.homePagesearchIcon />}
-              onChange={({ target: { value } }) => {
-                onSearch?.(value);
-              }}
-            />
-          </div>
-        ) : (
+      <Desktop>
+        <div className={clsx('search-box')}>
           <Input
-            placeholder=""
+            placeholder=''
             prefix={<YIcon.homePagesearchIcon />}
             onChange={({ target: { value } }) => {
               onSearch?.(value);
             }}
           />
-        )}
-      </div>
+        </div>
+      </Desktop>
       <style jsx>{styles}</style>
     </div>
   );
@@ -106,18 +96,28 @@ const styles = css`
       width: 200px;
       height: 40px;
       align-items: center;
-      gap: 8px;
+      padding: 0 24px;
       flex-shrink: 0;
       @media ${MediaInfo.mobile} {
         width: 100px;
       }
     }
     :global(.ant-input-affix-wrapper) {
+      :global(.ant-input-prefix, ant-input-suffix) {
+        display: flex ;
+        flex: none;
+        align-items: center;
+      }
+      :global(.ant-input-prefix) {
+        ant-input-prefix: 8px;
+      }
     }
     :global(input) {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 14px;
       font-weight: 400;
+      border: none;
+      background: transparent;
     }
     :global(svg) {
       fill: #000000;

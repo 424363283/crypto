@@ -51,14 +51,14 @@ const PendingTypeTab = ({
             align-items: center;
             gap: 10px;
             border-radius: 6px;
-            border: 1px solid var(--line-3);
+            border: 1px solid var(--fill_line_3);
             font-size: 12px;
             font-weight: 400;
-            color: var(--text-secondary);
+            color: var(--text_2);
             &.active {
-              background: var(--fill-3);
+              background: var(--fill_3);
               border: 0;
-              color: var(--text-primary);
+              color: var(--text_1);
             }
           }
         }

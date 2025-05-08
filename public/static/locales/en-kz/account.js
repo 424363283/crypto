@@ -733,5 +733,8 @@ var appLang = {
     "It is used for security verification when logging in, withdrawing currency, retrieving passwords, modifying security settings, and managing APIs.",
   显示个人信息: "Show information",
   隐藏个人信息: "Hide information",
-"未绑定身份验证器，无法提币和转账，请先绑定后再操作。" : "You cannot withdraw or transfer without binding the authenticator. Please bind it first.",
+  "未绑定身份验证器，无法提币和转账，请先绑定后再操作。" : "You cannot withdraw or transfer without binding the authenticator. Please bind it first.",
+  "永续{source}转现货": "Perpetual {source} to spot",
+  "现货转永续{target}": "Spot to perpetual {target}",
+  "永续{source}转入永续{target}": "Perpetual {source} to perpetual {target}",
 };

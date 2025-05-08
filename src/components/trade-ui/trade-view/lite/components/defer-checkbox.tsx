@@ -45,7 +45,7 @@ const DeferCheckbox = ({ style, checked: initialChecked = false, onChange }: Pro
               <p>{LANG('{symbol}递延费率：{deferFee}%', { symbol: name, deferFee: deferFee.mul(100) })}</p>
             </>
           )}>
-            <InfoHover style={{ fontSize: 12, color: 'var(--text-primary)', ...style }} >{LANG('是否递延')}</InfoHover>
+            <InfoHover style={{ fontSize: 12, color: 'var(--text_1)', ...style }} >{LANG('是否递延')}</InfoHover>
           </Tooltip>
         }
         checked={checked}

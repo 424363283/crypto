@@ -30,6 +30,7 @@ import { CoinName } from "./coin-name";
 import { GuideMenu } from "./guide-menu";
 import { Swap } from '@/core/shared';
 import CommonIcon from "@/components/common-icon";
+import TradeSettingIcon from "@/components/header/components/icon/trade-setting-icon";
 
 
 export const KlineSwap = () => {
@@ -186,9 +187,8 @@ export const KlineSwap = () => {
                   {LANG("24H 成交量")}({data?.coin})
                 </span>
                 <span>
-                  {data !== undefined
-                    ? calcVol(data, swapTradeItem, indexPrice)
-                    : "--"}
+                  {data?.volume?.toFormatUnit()}
+                  {/* data !== undefined ? calcVol(data, swapTradeItem, indexPrice) : "--" */}
                 </span>
               </div>
               <div className="k-header-left-item">
@@ -226,6 +226,14 @@ export const KlineSwap = () => {
           </GradienScrollRow>
         </div>
         <div className="k-header-right">
+          <div className="swap-setting">
+            <CommonIcon
+              name="swap-calculator-0"
+              size={24}
+              onClick={() => Swap.Trade.setModal({ calculatorVisible: true })}
+            />
+            <TradeSettingIcon size={24} />
+          </div>
           <GuideMenu />
           {/* <ThemeBtn /> */}
         </div>
@@ -274,7 +282,7 @@ export const KlineSwap = () => {
                   top: 2px;
                   width: 2px;
                   height: 100%;
-                  background-color: var(--line-1);
+                  background-color: var(--fill_line_1);
                 }
               }
             }
@@ -303,11 +311,11 @@ export const KlineSwap = () => {
                 }
                 > :global(.info-hover), > :global(span:nth-child(1)) , > :global(*:nth-child(1)){
                   white-space: nowrap;
-                  color: var(--text-tertiary);
+                  color: var(--text_3);
                   margin-bottom: 8px;
                 }
                 > span:nth-child(2) {
-                  color: var(--text-primary);
+                  color: var(--text_1);
                   font-weight: 400;
                   white-space: nowrap;
                 }
@@ -330,6 +338,13 @@ export const KlineSwap = () => {
               align-items: center;
               padding-right: 10px;
               flex-shrink: 0;
+              gap: 24px;
+              .swap-setting {
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 24px;
+              }
             }
           }
         `}
@@ -338,3 +353,4 @@ export const KlineSwap = () => {
   );
 };
 export default KlineSwap;
+

@@ -1,9 +1,13 @@
-'use client';
+import { ACCOUNT_TYPE, TransferModal } from '@/components/modal';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useResponsive, useRouter } from '@/core/hooks';
-import styles from '@/components/CopyTrading/Components/userInformation.module.scss';
-import CopyBtn from '@/components/CopyTrading/CopyTradingDetail/Components/copyBtn';
-import { useCopyState } from '@/core/hooks/src/use-copy-state';
+import Tooltip from '@/components/trade-ui/common/tooltip';
+// import styles from '@/components/CopyTrading/Components/userInformation.module.scss';
+import clsx from 'clsx';
+import css from 'styled-jsx/css';
+import { formatNumber2Ceil } from '@/core/utils';
+import { Popover } from 'antd';
+import { Polling, MediaInfo } from '@/core/utils';
 import { CopyTradeType, CopyTradeSetting } from '@/components/CopyTrading/CopyTradingDetail/Components/types';
 import { Svg } from '@/components/svg';
 import CancelModalSetting from './cancelModalSetting';
@@ -17,31 +21,156 @@ import dayjs from 'dayjs';
 import { COPY_ACCOUNT_ASSET } from '@/core/shared/src/copy/types';
 import { Loading } from '@/components/loading';
 import { message } from '@/core/utils';
+import { CalibrateValue } from '@/core/shared/src/copy/utils';
+import { CopyShare } from '@/components/CopyTrading/copy-share/export';
+import { Size } from '@/components/constants';
+import { useWs1050 } from '@/core/network';
+
 //我的带单-合约
 export default function UserInformationPage() {
+  const setUnrealisedPNLObj = useCopyTradingSwapStore.use.setUnrealisedPNLObj();
+  const setPositionUnrealisedPNLObj = useCopyTradingSwapStore.use.setPositionUnrealisedPNLObj();
+  const setMarketObj = useCopyTradingSwapStore.use.setMarketObj();
+  const noQueryPostion = useCopyTradingSwapStore(state => state.noQueryPostion);
+  const positionList = useCopyTradingSwapStore(state => state.positionList);
   const router = useRouter();
   const { isMobile } = useResponsive();
-  const fetchShareTrader = useCopyTradingSwapStore.use.fetchShareTrader();
+  const setFetchRefresh = useCopyTradingSwapStore.use.setFetchRefresh();
   const isCopyTrader = useCopyTradingSwapStore.use.isCopyTrader();
-  const { copyUserType, copyUserId, copyActiveType } = useCopyState();
+  const isFetchCopyTrader = useCopyTradingSwapStore.use.isFetchCopyTrader();
   const [cancelShow, setCancelShow] = useState<boolean>(false);
+  const [showMore, setShowMore] = useState<boolean>(true);
+  const [copyTraderConfig, setCopyTraderConfig] = useState({
+    followStatus: null,
+    userInfo: {}
+  });
+  const { userType, copyActiveType, id } = router.query;
+  const fetchCopyTraderConfig = async () => {
+    if (!Copy.isLogin()) return;
+    const user = await Copy.getUserInfo();
+    const res = await Copy.fetchCopyTraderConfigDetail({
+      lUid: id,
+      fUid: user?.uid
+    });
+    if (res?.code === 200) {
+      setCopyTraderConfig({
+        ...copyTraderConfig,
+        ...res.data,
+        userInfo: user
+      });
+    }
+  };
+  const getMarketPrice = (item: any) => {
+    const toUpperSymbol = item.symbol?.toUpperCase();
+    return marketObj[toUpperSymbol]?.currentPrice
+  };
+  const calIncome = (item, flagPrice: any) => {
+    const incomeType = 0;
+    const income = Copy.income({
+      usdt: true,
+      code: item.symbol?.toUpperCase(),
+      isBuy: item.side === '1',
+      avgCostPrice: item.avgCostPrice,
+      volume: item.currentPosition,
+      flagPrice: incomeType === 0 ? flagPrice : getMarketPrice(item)
+    });
+    const scale = Copy.isUsdtType ? 4 : Number(item.basePrecision);
+    const myIncome = formatNumber2Ceil(income, scale, false).toFixed(scale);
+    return income || 0;
+  };
+
+  const profitRadio = (item: any) => {
+    // avgCostPrice 开仓均价
+    // 未实现利率计算
+    const incomeRate = Copy.newPositionROE(item);
+    return incomeRate?.toFixed(Copy.copyFixed);
+  };
+  const calPrice = (item, data) => {
+    const toUpperSymbol = item.symbol?.toUpperCase();
+    const flagPrice: any = data[toUpperSymbol]?.currentPrice || item.markPrice;
+    const scale = Copy.isUsdtType ? 2 : Number(item.basePrecision);
+    const income = calIncome(item, flagPrice);
+    // 未实现利率计算
+    const myIncome = formatNumber2Ceil(income, scale, false).toFixed(scale);
+    const incomeRate = Copy.positionROE({
+      usdt: Copy.isUsdtType,
+      data: item,
+      income: Number(myIncome),
+      isAutoMargin: true,
+      flagPrice: Number(flagPrice)
+    });
+    return {
+      incomeRate: incomeRate.toFixed(scale),
+      myIncome: myIncome,
+      flagPrice: flagPrice
+    }
+  }
+  useWs1050(
+    data => {
+      const positon = noQueryPostion.length > 0 && JSON.parse(noQueryPostion || '');
+      // 分组
+      let result = {}
+      result = positon.length > 0 && positon.reduce((acc, item) => {
+        const { shared, symbol, margin, price } = item;
+        const { myIncome, incomeRate, flagPrice } = calPrice(item, data)
+        if (!acc[shared]) {
+          acc[shared] = { shared, symbol, myIncome: 0, incomeRate: 0, flagPrice: item.markPrice, totalMargin: 0, totalPrice: 0 };
+        }
+        acc[shared].totalMargin = acc[shared].totalMargin.add(margin)
+        acc[shared].myIncome = acc[shared].myIncome?.add(myIncome)
+        acc[shared].incomeRate = incomeRate.toFixed(Copy.copyFixed)
+        acc[shared].flagPrice = flagPrice
+        // acc[symbol].totalPrice += price * quantity; // 计算总金额
+        return acc;
+      }, {});
+      const positionUnrealised = {}
+      if (positionList && positionList.length > 0) {
+        positionList.forEach((item) => {
+          const { myIncome, incomeRate, flagPrice } = calPrice(item, data)
+          positionUnrealised[item.positionId] = {
+            myIncome: myIncome,
+            incomeRate: incomeRate,
+            flagPrice: flagPrice
+          }
+        })
+      }
+      setPositionUnrealisedPNLObj({
+        ...positionUnrealised
+      })
+      if (result) {
+        setUnrealisedPNLObj(JSON.stringify(result))
+        setMarketObj({
+          ...data
+        });
+      } else {
+        setUnrealisedPNLObj(JSON.stringify({}))
+      }
+    },
+    undefined,
+    [noQueryPostion]
+  );
   const detailInfo = useMemo(() => {
-    switch (copyUserType) {
+    // 在跟单中
+    const isFollowed = copyTraderConfig.followStatus === 0;
+    switch (userType) {
       case CopyTradeType.myFllow:
         if (copyActiveType === CopyTradeSetting.followDetial) {
           return {
             title: LANG('我的跟单'),
             subTitle: LANG('跟单详情'),
+            titleLink: `/copyTrade/${copyTraderConfig?.userInfo?.uid || id}?userType=${userType}`,
             isShowAsset: false,
             isMarginShow: true,
             isShowInfo: true,
             isShowIncome: false,
             isJoinDay: false,
-            isShowUnfllow: true
+            isShowUnfllow: isFollowed, // 取消跟单
+            isShowFollowBtn: !isFollowed // 跟单
           };
         }
         return {
           title: LANG('我的跟单'),
+          titleLink: `/copyTrade/${id}?userType=${userType}`,
           isShowAsset: false,
           isShowInfo: false,
           isShowIncome: true,
@@ -51,7 +180,8 @@ export default function UserInformationPage() {
       case CopyTradeType.traderDetail:
         if (copyActiveType === CopyTradeSetting.futures) {
           return {
-            title: LANG('交易者详情'),
+            title: LANG('交易员详情'),
+            titleLink: `/copyTrade/${id}?userType=${userType}`,
             subTitle: LANG('合约跟单设置'),
             isShowInfo: true,
             isShowAsset: false,
@@ -60,12 +190,14 @@ export default function UserInformationPage() {
           };
         }
         return {
-          title: LANG('交易者详情'),
+          title: LANG('交易员详情'),
+          titleLink: `/copyTrade/${id}?userType=${userType}`,
           isShowInfo: true,
           isShowAsset: false,
           isJoinDay: true,
           isShowRemark: true,
-          isShowFollowBtn: true,
+          isShowUnfllow: isFollowed, // 取消跟单
+          isShowFollowBtn: !isFollowed, // 跟单
           showShare: true
         };
       case CopyTradeType.myBring:
@@ -73,6 +205,7 @@ export default function UserInformationPage() {
           return {
             title: LANG('我的带单'),
             subTitle: LANG('带单设置'),
+            titleLink: `/copyTrade/${id}?userType=${userType}`,
             isShowAsset: false,
             isShowInfo: true,
             isShowIncome: false,
@@ -81,6 +214,7 @@ export default function UserInformationPage() {
         }
         return {
           title: LANG('我的带单'),
+          titleLink: `/copyTrade/${id}?userType=${userType}`,
           isShowInfo: true,
           isShowAsset: true,
           isJoinDay: true,
@@ -94,17 +228,9 @@ export default function UserInformationPage() {
       isShowAsset: false,
       isJoinDay: true
     };
-  }, [copyUserType, copyUserId, copyActiveType]);
+  }, [userType, id, copyActiveType, copyTraderConfig.followStatus, isCopyTrader]);
   const [traderInfo, setTradeInfo] = useState({} as any);
 
-  const PreIcon = () => {
-    return <Svg src={'/static/images/common/transfer_square.svg'} width="16" height="16" />;
-  };
-
-  const user = useMemo(() => {
-    const userInfo: any = Copy.getUserInfo();
-    return userInfo;
-  }, []);
   const tagList = [LANG('高回报率'), LANG('稳健'), LANG('高收益额')];
 
   const hanldeRecharge = () => {
@@ -112,113 +238,233 @@ export default function UserInformationPage() {
       pathname: '/account/fund-management/asset-account/recharge'
     });
   };
+
+  const [followAsset, setfollowAsset] = useState({} as COPY_ACCOUNT_ASSET);
+  const getAsset = async () => {
+    if (!Copy.isLogin) return;
+    const summaryParams = {
+      cycle: 7,
+      uid: id
+    };
+    if (copyActiveType === CopyTradeSetting.followDetial) {
+      const user = await Copy.getUserInfo();
+      summaryParams.uid = user?.uid;
+    }
+    const statisticsParams = {};
+    if (copyActiveType === CopyTradeSetting.followDetial) {
+      statisticsParams.lUid = id;
+    }
+    const [asset, statis, follow] = await Promise.all([
+      Copy.fetchPerpetualUAsset(),
+      Copy.fetchCopyTradeuserStatisticsSummary(summaryParams),
+      Copy.fetchFollowStatistics(statisticsParams)
+    ]);
+    const assetFilter = asset?.data?.find((item: any) => item.wallet == 'COPY');
+    setfollowAsset(prev => ({
+      ...prev,
+      ...assetFilter?.accounts?.USDT,
+      netCopyTradingProfit: follow?.data?.netCopyTradingProfit || 0,
+      dailyProfit: follow?.data?.dailyProfit || 0,
+      profitAmount: statis?.data?.profitAmount
+    }));
+  };
+  useEffect(() => {
+    const checkIdentify = async () => {
+      // 未登录情况下 使用 进入我的跟单或我的带单跳转到登录页
+      if (!Copy.isLogin() && (userType === CopyTradeType.myFllow || userType === CopyTradeType.myBring)) {
+        router.replace('/login');
+        return;
+      }
+      const user = await Copy.getUserInfo();
+      if (
+        Copy.isLogin() &&
+        user?.uid !== id &&
+        (userType === CopyTradeType.myFllow || userType === CopyTradeType.myBring)
+      ) {
+        if (isFetchCopyTrader && isCopyTrader && copyActiveType === CopyTradeSetting.futures) {
+          router.replace({
+            pathname: `/copyTrade/${id}`,
+            query: {
+              userType: CopyTradeType.traderDetail
+            }
+          });
+        }
+      }
+      if (
+        Copy.isLogin() &&
+        user?.uid === id &&
+        userType === CopyTradeType.myFllow &&
+        isFetchCopyTrader &&
+        isCopyTrader
+      ) {
+        router.replace({
+          pathname: `/copyTrade/${id}`,
+          query: {
+            userType: CopyTradeType.myBring
+          }
+        });
+      }
+      if (
+        Copy.isLogin() &&
+        user?.uid === id &&
+        (userType === CopyTradeType.myBring || userType === CopyTradeType.traderDetail) &&
+        isFetchCopyTrader &&
+        !isCopyTrader
+      ) {
+        router.replace({
+          pathname: `/copyTrade/${id}`,
+          query: {
+            userType: CopyTradeType.myFllow
+          }
+        });
+      }
+    };
+    checkIdentify();
+  }, [userType, id, copyActiveType, isFetchCopyTrader, isCopyTrader]);
+  useEffect(() => {
+    getAsset();
+  }, []);
   const FollowIncome = () => {
-    const { id } = router.query;
-    const [followAsset, setfollowAsset] = useState({} as COPY_ACCOUNT_ASSET);
-    const getAsset = async () => {
-      if (!Copy.isLogin) return;
-      Copy.fetchPerpetualUAsset().then(res => {
-        if (res?.code === 200) {
-          const asset = res?.data?.find((item: any) => item.wallet == 'COPY');
-          setfollowAsset(prev => ({
-            ...prev,
-            ...asset.accounts.USDT
-          }));
-        }
-      });
-      Copy.fetchCopyTradeuserStatisticsSummary({ cycle: 7, uid: id }).then(statis => {
-        if (statis?.code === 200) {
-          setfollowAsset(prev => ({
-            ...prev,
-            profitRate: statis.data.profitRate,
-            profitAmount: statis.data.profitRate
-          }));
-        }
+    const [transferModalVisible, setTransferModalVisible] = useState(false);
+    const onTransferDone = e => {
+      getFollowAsset();
+    };
+    const [myFollow, setMyFollow] = useState({} as COPY_ACCOUNT_ASSET);
+    const getFollowAsset = async () => {
+      const asset = await Copy.fetchPerpetualUAsset();
+      const assetFilter = asset?.data?.find((item: any) => item.wallet == 'COPY');
+      setMyFollow({
+        ...assetFilter?.accounts?.USDT
       });
     };
     useEffect(() => {
-      getAsset();
-    }, []);
+      if (!router.isReady || userType !== CopyTradeType.myFllow) return;
+      const polling = new Polling({
+        interval: 2000 * 2,
+        callback: () => {
+          getFollowAsset();
+        }
+      });
+      polling.start();
+      return () => polling?.stop();
+    }, [userType, router.isReady]);
+    const UnrealisePNLCom = () => {
+      const unrealisedPNLObj = useCopyTradingSwapStore.use.unrealisedPNLObj();
+      // console.log(unrealisedPNLObj,'unrealisedPNLObj------')
+      const unrealised = useMemo(() => {
+        const objUnrealise = unrealisedPNLObj && JSON.parse(unrealisedPNLObj)
+        let total = 0
+        Object.values(objUnrealise).map((item: any) => {
+          total = item.myIncome.add(total)
+        })
+        return total;
+      }, [unrealisedPNLObj]);
+      return (
+        <>
+          <div>
+            <Tooltip title={<p>{LANG('跟单交易总盈亏-手续费-资金费用-冻结分润+分润返还')}</p>}>
+              <p className={`${clsx('net', 'textDashed')}`}>{LANG('跟单净收益')}(USDT) </p>
+            </Tooltip>
+            <p
+              className={clsx('incomTotal')}
+              style={CalibrateValue(followAsset?.netCopyTradingProfit?.add(unrealised)).color}
+            >
+              {CalibrateValue(followAsset.netCopyTradingProfit?.add(unrealised), Copy.copyFixed).value}
+            </p>
+            <p className={clsx('todayIncome')}>
+              <Tooltip title={<p>{LANG('今日收益=今日平仓盈亏+手续费+资金费用+未实现盈亏-冻结分润+分润返还')}</p>}>
+                <div className={clsx('pointer')}>
+                  <p className={`${clsx('textDashed', 'todayNet')}`}>{LANG('今日收益')}</p>
+                </div>
+              </Tooltip>
+              <span style={CalibrateValue(followAsset?.dailyProfit?.add(unrealised)).color}>
+                {CalibrateValue(followAsset?.dailyProfit?.add(unrealised), Copy.copyFixed).value}
+              </span>
+            </p>
+          </div>
+          <style jsx>{styles}</style>
+        </>
+      );
+    };
     return (
       <>
-        {detailInfo.isShowIncome && (
-          <div className={styles.incomeBox}>
-            <div className={`${!isMobile && styles.flexSpan}`}>
-              <div className={styles.incomeLeft}>
-                <div>
-                  <p className={`${styles.net} ${styles.textDashed}`}>{LANG('跟单净收益')}(USDT) </p>
-                  <p className={styles.incomTotal}>{followAsset.accb}</p>
-                  <p className={styles.todayIncome}>
-                    {LANG('今天收益')}
-                    <span className={`${followAsset.profitAmount > 0 ? styles.profix : styles.loss}`}>
-                      {followAsset.profitAmount}
-                    </span>
-                  </p>
+        <div className={clsx('incomeBox')}>
+          <div className={`${!isMobile && clsx('flexSpan')}`}>
+            <div className={clsx('incomeLeft')}>
+              <UnrealisePNLCom />
+            </div>
+            <div className={`${clsx('incomeRight')} ${!isMobile && clsx('flexSpan')}`}>
+              <div className={`${clsx('girdRow')}`}>
+                <div className={clsx('rowLine', isMobile && 'mb16')}>
+                  <p className={clsx(!isMobile && 'mb16')}>{LANG('保证金余额')}(USDT)</p>
+                  <p className={clsx('incomeValue')}>{myFollow?.equity?.toFormat(Copy.copyFixed)}</p>
+                </div>
+                <div className={clsx('rowLine', isMobile && 'mb16')}>
+                  <p className={clsx(!isMobile && 'mb16')}>{LANG('钱包余额')}(USDT)</p>
+                  <p className={clsx('incomeValue')}>{myFollow?.accb?.toFormat(Copy.copyFixed)}</p>
+                </div>
+                <div className={clsx('rowLine', isMobile && 'mb16')}>
+                  <p className={clsx(!isMobile && 'mb16')}>{LANG('可用保证金')}(USDT)</p>
+                  <p className={clsx('incomeValue')}>{myFollow?.availableBalance?.toFormat(Copy.copyFixed)}</p>
                 </div>
               </div>
-              <div className={`${styles.incomeRight} ${!isMobile && styles.flexSpan}`}>
-                <div className={`${styles.girdRow}`}>
-                  <div className={styles.rowLine}>
-                    <p className={styles.mb16}>{LANG('保证金余额')}(USDT)</p>
-                    <p className={styles.incomeValue}>{followAsset?.equity}</p>
-                  </div>
-                  <div className={styles.rowLine}>
-                    <p className={styles.mb16}>{LANG('钱包余额')}(USDT)</p>
-                    <p className={styles.incomeValue}>{followAsset.accb}</p>
-                  </div>
-                  <div className={styles.rowLine}>
-                    <p className={styles.mb16}>{LANG('可用保证金')}(USDT)</p>
-                    <p className={styles.incomeValue}>{followAsset.availableBalance}</p>
-                  </div>
+              <div className={clsx('rowLine', isMobile && clsx('mt24'))}>
+                <div className={`${!isMobile && clsx('mb16')} `}>
+                  <Button type="primary" rounded width={136} onClick={hanldeRecharge}>
+                    {LANG('充值')}
+                  </Button>
                 </div>
-                <div className={styles.rowLine}>
-                  <div className={`${!isMobile && styles.mb16}`}>
-                    <Button type="primary" rounded width={136} onClick={hanldeRecharge}>
-                      {LANG('充值')}
-                    </Button>
-                  </div>
-                  <CopyBtn btnTxt={LANG('划转')} width={136} preIcon={<PreIcon />} btnType="border" />
-                </div>
+                <Button type="brand" rounded width={136} onClick={() => setTransferModalVisible(true)}>
+                  {LANG('划转')}
+                </Button>
+                {transferModalVisible && (
+                  <TransferModal
+                    defaultSourceAccount={ACCOUNT_TYPE.SPOT}
+                    defaultTargetAccount={ACCOUNT_TYPE.COPY}
+                    open={transferModalVisible}
+                    onCancel={() => setTransferModalVisible(false)}
+                    onTransferDone={onTransferDone}
+                  />
+                )}
               </div>
             </div>
           </div>
-        )}
+        </div>
+        <style jsx>{styles}</style>
       </>
     );
   };
 
   const ShareModule = () => {
+    const [shareShow, setShareShow] = useState(false);
     return (
       <>
         {detailInfo.showShare && (
           <>
-            <div className={styles.centerfuturesPK}>
-              <TrLink href={`/copyTrade/compare/${copyUserId}`}>
+            <div className={clsx('centerfuturesPK')}>
+              <TrLink href={`/copyTrade/compare/${id}`}>
                 <CommonIcon name="common-compare-pk" size={48} />
               </TrLink>
             </div>
-            <div className={styles.centerfuturesShare}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
-                <path
-                  d="M30.4625 16.908C29.8025 16.932 29.2865 17.49 29.3105 18.156C29.4365 21.33 28.2245 24.438 25.9805 26.682C23.8265 28.836 20.9645 30.024 17.9165 30.024C14.8685 30.024 12.0065 28.836 9.85852 26.682C5.41252 22.236 5.41252 15.006 9.85852 10.56C12.0125 8.40599 14.8745 7.21799 17.9165 7.21799C18.5765 7.21799 19.1165 6.67799 19.1165 6.01799C19.1165 5.35799 18.5765 4.81799 17.9165 4.81799C14.2325 4.81799 10.7645 6.25199 8.16052 8.86199C2.77852 14.244 2.77852 22.998 8.16052 28.38C10.7645 30.984 14.2325 32.424 17.9165 32.424C21.6005 32.424 25.0685 30.99 27.6725 28.38C29.019 27.0314 30.0722 25.4191 30.7661 23.6442C31.4599 21.8694 31.7794 19.9702 31.7045 18.066C31.6865 17.4 31.1345 16.89 30.4625 16.908Z"
-                  fill="#2B2F33"
-                />
-                <path
-                  d="M30.5879 4.86601H24.7259C24.0659 4.86601 23.5259 5.40601 23.5259 6.06601C23.5259 6.72601 24.0659 7.26601 24.7259 7.26601H27.7979L19.1699 15.888C19.0022 16.0559 18.888 16.2698 18.8416 16.5025C18.7952 16.7352 18.8187 16.9765 18.9091 17.1959C18.9996 17.4153 19.153 17.6031 19.3499 17.7355C19.5469 17.8679 19.7786 17.9391 20.0159 17.94C20.3219 17.94 20.6279 17.82 20.8619 17.586L29.3819 9.06601V11.922C29.3819 12.582 29.9219 13.122 30.5819 13.122C31.2419 13.122 31.7819 12.582 31.7819 11.922V6.06001C31.7879 5.40001 31.2479 4.86601 30.5879 4.86601Z"
-                  fill="#2B2F33"
-                />
-              </svg>
+            <div className={clsx('centerfuturesShare')} onClick={() => setShareShow(true)}>
+              <CommonIcon name="common-compare-share" size={36} />
             </div>
           </>
         )}
+        {shareShow && (
+          <CopyShare visible={shareShow} items={traderInfo} onClose={() => setShareShow(false)} title={LANG('分享')} />
+        )}
+        <style jsx>{styles}</style>
       </>
     );
   };
   // 获取我的带单 资产
   const AssetModule = () => {
     const [copyAsset, setCopyAsset] = useState({} as COPY_ACCOUNT_ASSET);
+    const [transferModalVisible, setTransferModalVisible] = useState(false);
     const getAsset = async () => {
       if (!Copy.isLogin) return;
+      const user = await Copy.getUserInfo();
       Copy.fetchPerpetualUAsset().then(res => {
         if (res?.code === 200) {
           const asset = res?.data?.find((item: any) => item.wallet == 'COPY');
@@ -228,103 +474,156 @@ export default function UserInformationPage() {
           }));
         }
       });
-      Copy.fetchCopyTradeuserStatisticsSummary({ cycle: 7, uid: user?.user?.uid }).then(statis => {
+      Copy.fetchCopyTradeuserStatisticsSummary({ cycle: 7, uid: user?.uid }).then(statis => {
         if (statis?.code === 200) {
           setCopyAsset(prev => ({
             ...prev,
             profitRate: statis.data.profitRate,
-            profitAmount: statis.data.profitRate
+            profitAmount: statis.data.profitAmount
           }));
         }
       });
     };
+
     useEffect(() => {
-      getAsset();
+      const polling = new Polling({
+        interval: 2000,
+        callback: () => {
+          getAsset();
+        }
+      });
+      polling.start();
+      return () => polling?.stop();
     }, []);
+    const onTransferDone = () => {
+      getAsset();
+    };
+    const unrealisedPNLObj = useCopyTradingSwapStore.use.unrealisedPNLObj();
+    const unrealised = useMemo(() => {
+      const objUnrealise = unrealisedPNLObj && JSON.parse(unrealisedPNLObj)
+      let total = 0
+      Object.values(objUnrealise).map((item: any) => {
+        total = item.myIncome.add(total)
+      })
+      return total;
+    }, [unrealisedPNLObj]);
     return (
       <>
-        {detailInfo.isShowAsset && (
-          <div className={styles.centerfuturesUserAmount}>
-            <div className={styles.centerAmountListOne}>
-              <div className={styles.AmountAvbTitle}>{LANG('保证金余额')}(USDT)</div>
-              <div className={styles.AmountAvb}>{copyAsset?.equity}</div>
-              <div className={styles.lastProfitAndLoss}>
-                {LANG('今日盈亏')}{' '}
-                <span className={styles.profitAndLoss}>
-                  {copyAsset?.profitAmount}（{copyAsset.profitRate?.mul(100)}%）
-                </span>
-              </div>
-            </div>
-            <div className={styles.centerfuturesUserList}>
-              <p className={styles.centerfuturesUserListTitle}>{LANG('钱包余额')}(USDT)</p>
-              <span>{copyAsset.accb}</span>
-            </div>
-            <div className={styles.centerfuturesUserList}>
-              <p className={styles.centerfuturesUserListTitle}>{LANG('未实现盈亏')}(USDT)</p>
-              <span className={styles.centerfuturesUserListProfit}>{copyAsset?.unrealisedPNL}</span>
-            </div>
-            <div className={styles.centerfuturesUserList}>
-              <p className={styles.centerfuturesUserListTitle}>{LANG('可用保证金')}(USDT)</p>
-              <span className={styles.centerfuturesUserListProfit}>{copyAsset.availableBalance}</span>
-            </div>
-            <div className={styles.centerfuturesUserList}>
-              <div className={styles.depositBtn} onClick={hanldeRecharge}>
-                {LANG('充值')}
-              </div>
-              <div className={styles.TransferBtn}>{LANG('划转')}</div>
+        <div className={clsx('centerfuturesUserAmount')}>
+          <div className={clsx('centerAmountListOne')}>
+            <div className={clsx('AmountAvbTitle')}>{LANG('保证金余额')}(USDT)</div>
+            <div className={clsx('AmountAvb')}>{copyAsset?.equity?.toFormat(Copy.copyFixed)}</div>
+            <div className={clsx('todayProfit')}>
+              {LANG('今日盈亏')}
+              <span className={clsx('ml-4')} style={CalibrateValue(copyAsset?.profitAmount?.add(unrealised)).color}>
+                {CalibrateValue(copyAsset?.profitAmount?.add(unrealised), Copy.copyFixed).value}（
+                {CalibrateValue(copyAsset.profitRate?.mul(100)).value}%）
+              </span>
             </div>
           </div>
+          <div className={clsx('centerfuturesUserList')}>
+            <p className={clsx('centerfuturesUserListTitle')}>{LANG('钱包余额')}(USDT)</p>
+            <span>{copyAsset?.accb?.toFormat(Copy.copyFixed)}</span>
+          </div>
+          <div className={clsx('centerfuturesUserList')}>
+            <p className={clsx('centerfuturesUserListTitle')}>{LANG('未实现盈亏')}(USDT)</p>
+            <span style={CalibrateValue(unrealised).color}>
+              {CalibrateValue(formatNumber2Ceil(unrealised, Copy.copyFixed, false).toFixed(Copy.copyFixed)).value?.toFormat(Copy.copyFixed)}
+            </span>
+          </div>
+          <div className={clsx('centerfuturesUserList')}>
+            <p className={clsx('centerfuturesUserListTitle')}>{LANG('可用保证金')}(USDT)</p>
+            <span>{copyAsset.availableBalance?.toFormat(Copy.copyFixed)}</span>
+          </div>
+          <div className={clsx('centerfuturesUserList')}>
+            <Button
+              height={40}
+              type={'primary'}
+              onClick={hanldeRecharge}
+              width={136}
+              style={{ height: '40px' }}
+              rounded
+            >
+              {LANG('充值')}
+            </Button>
+            <Button
+              height={40}
+              type={'brand'}
+              width={136}
+              onClick={() => {
+                if (!Copy.isLogin()) {
+                  router.push(`/login`);
+                  return;
+                }
+                setTransferModalVisible(true);
+              }}
+              style={{ height: '40px', marginTop: !isMobile ? '16px' : '' }}
+              rounded
+            >
+              {LANG('划转')}
+            </Button>
+          </div>
+        </div>
+        {transferModalVisible && (
+          <TransferModal
+            defaultSourceAccount={ACCOUNT_TYPE.SPOT}
+            defaultTargetAccount={ACCOUNT_TYPE.COPY}
+            open={transferModalVisible}
+            onCancel={() => setTransferModalVisible(false)}
+            onTransferDone={onTransferDone}
+          />
         )}
+        <style jsx>{styles}</style>
       </>
     );
   };
 
   const FollowMarginModule = () => {
-    const [followAsset, setFollowAsset] = useState({})
-    const user = Copy.getUserInfo();
-    const fetchFollow = async () => {
-      const res = await Copy.fetchCopyTraderConfigDetail({
-        lUid: copyUserId,
-        fUid: user?.user.uid
-      });
-      if (res?.code === 200) {
-        setFollowAsset({
-          ...res.data
-        })
+    const unrealisedPNLObj = useCopyTradingSwapStore.use.unrealisedPNLObj();
+    const calMargin = useMemo(() => {
+      const luid = id
+      const unrealisedPNL: any = unrealisedPNLObj && JSON.parse(unrealisedPNLObj)
+      const currentMargin = unrealisedPNL[luid]?.totalMargin || 0
+      const currentProfit = unrealisedPNL[luid]?.myIncome || 0
+      return {
+        marginValue: currentMargin.toFixed(Copy.copyFixed),
+        profitValue: followAsset?.netCopyTradingProfit?.add(currentProfit).toFixed(Copy.copyFixed),
+        todayProfit: followAsset.dailyProfit?.add(currentProfit)?.toFixed(Copy.copyFixed)
       }
-    };
-    useEffect(() => {
-      fetchFollow();
-    }, []);
-
+    }, [unrealisedPNLObj])
     return (
-      <div className={`${styles.incomeBox} ${!isMobile ? styles.mt40 : ''}`}>
-        {detailInfo.isMarginShow && (
-          <div className={`${styles.incomeRight} ${!isMobile && styles.flexSpan}`}>
-            <div className={`${styles.girdRow5}`}>
-              <div className={styles.rowLine}>
-                <p className={styles.mb16}>{LANG('跟单保证金占用')}(USDT)</p>
-                <p className={styles.incomeValue}>{followAsset?.totalMargin}</p>
-              </div>
-              <div className={styles.rowLine}>
-                <p className={styles.mb16}>{LANG('预估净收益')}(USDT)</p>
-                <p className={styles.incomeValue}>{followAsset?.totalProfit}</p>
-              </div>
-              <div className={styles.rowLine}>
-                <p className={styles.mb16}>{LANG('今日收益')}(USDT)</p>
-                <p className={styles.incomeValue}>{followAsset?.profit}</p>
-              </div>
-              <div className={styles.rowLine}>
-                <p className={styles.mb16}>{LANG('分润比例')}</p>
-                <p className={styles.incomeValue}>{followAsset?.shareRoyaltyRatio?.mul(100)}%</p>
-              </div>
-              <div className={styles.rowLine}>
-                <p className={styles.mb16}>{LANG('跟单时间')}</p>
-                <p className={styles.incomeValue}>{followAsset.ctime && dayjs(followAsset.ctime).format('YYYY-MM-DD HH:mm:ss')}</p>
-              </div>
+      <div className={`${clsx('incomeBox')} ${!isMobile ? clsx('mt40') : ''}`}>
+        <div className={`${clsx('incomeRight')} ${!isMobile && clsx('flexSpan')}`}>
+          <div className={clsx('girdRow5')}>
+            <div className={clsx('rowLine')}>
+              <p className={clsx('mb16')}>{LANG('跟单保证金占用')}(USDT)</p>
+              <p className={clsx('incomeValue')}>{calMargin.marginValue}</p>
+            </div>
+            <div className={clsx('rowLine')}>
+              <p className={clsx('mb16')}>{LANG('预估净收益')}(USDT)</p>
+              <p className={`${clsx('incomeValue')}`} style={CalibrateValue(calMargin?.profitValue).color}>
+                {CalibrateValue(calMargin?.profitValue).value}
+              </p>
+            </div>
+            <div className={clsx('rowLine')}>
+              <p className={clsx('mb16')}>{LANG('今日收益')}(USDT)</p>
+              <p className={`${clsx('incomeValue')}`} style={CalibrateValue(calMargin?.todayProfit).color}>
+                {CalibrateValue(calMargin?.todayProfit).value}
+              </p>
+            </div>
+            <div className={clsx('rowLine')}>
+              <p className={clsx('mb16')}>{LANG('分润比例')}</p>
+              <p className={clsx('incomeValue')}>{traderInfo?.shareRoyaltyRatio?.mul(100)}%</p>
+            </div>
+            <div className={clsx('rowLine')}>
+              <p className={clsx('mb16')}>{LANG('跟单时间')}</p>
+              <p className={clsx('incomeValue')}>
+                {copyTraderConfig.copyTime && dayjs(copyTraderConfig.copyTime).format('YYYY-MM-DD HH:mm:ss')}
+              </p>
             </div>
           </div>
-        )}
+        </div>
+        <style jsx>{styles}</style>
       </div>
     );
   };
@@ -332,29 +631,70 @@ export default function UserInformationPage() {
     return (
       <>
         {detailInfo.isShowSetting && (
-          <TrLink
-            href={`/copyTrade/setting/${copyUserId}`}
-            className={styles.centerfuturesSetting}
-            query={{ userType: copyUserType, copyActiveType: CopyTradeSetting.bringSetting }}
+          <Button
+            type="primary"
+            rounded
+            size={Size.MD}
+            style={{ minWidth: 200 }}
+            onClick={() => {
+              router.push(
+                `/copyTrade/setting/${id}?userType=${userType}&copyActiveType=${CopyTradeSetting.bringSetting}`
+              );
+            }}
           >
             {LANG('设置')}
-          </TrLink>
+          </Button>
+          // <TrLink
+          //   href={`/copyTrade/setting/${id}`}
+          //   query={{ userType: userType, copyActiveType: CopyTradeSetting.bringSetting }}
+          // >
+          //   <div className={clsx('centerfuturesSetting')}>{LANG('设置')}</div>
+          // </TrLink>
         )}
+        <style jsx>
+          {`
+            .centerfuturesSetting {
+              padding: 13px 0;
+              border-radius: 24px;
+              background: var(--brand);
+              min-width: 200px;
+              font-size: 18px;
+              font-weight: 500;
+              text-align: center;
+              color: var(--text-white);
+              margin-left: 32px;
+              cursor: pointer;
+
+              @media ${MediaInfo.mobile} {
+                margin-left: 0;
+              }
+            }
+          `}
+        </style>
       </>
     );
   };
-
+  const isFulled = useMemo(() => {
+    return traderInfo.currentCopyTraderCount >= traderInfo.maxCopyTraderCount;
+  }, [traderInfo.currentCopyTraderCount, traderInfo.maxCopyTraderCount]);
   const ShowFollowBtnModule = () => {
     return (
       <>
         {detailInfo.isShowFollowBtn && (
-          <TrLink
-            href={`/copyTrade/setting/${copyUserId}`}
-            className={styles.centerfuturesSetting}
-            query={{ userType: copyUserType, copyActiveType: CopyTradeSetting.futures }}
+          <Button
+            rounded
+            height={48}
+            width={200}
+            size={Size.MD}
+            type={'primary'}
+            disabled={isFulled}
+            onClick={() => {
+              if (isFulled) return;
+              router.push(`/copyTrade/setting/${id}?userType=${userType}&copyActiveType=${CopyTradeSetting.futures}`);
+            }}
           >
-            {LANG('跟单')}
-          </TrLink>
+            {isFulled ? LANG('已满员') : LANG('跟单')}
+          </Button>
         )}
       </>
     );
@@ -364,14 +704,17 @@ export default function UserInformationPage() {
     return (
       <>
         {detailInfo.isShowUnfllow && (
-          <CopyBtn
+          <Button
             onClick={() => {
               setCancelShow(true);
             }}
-            btnTxt={LANG('取消跟单')}
-            btnType="gracyLabel"
+            type={'brandLabel'}
+            height={48}
+            size={Size.MD}
             width={!isMobile ? 160 : '100%'}
-          />
+          >
+            {LANG('取消跟单')}
+          </Button>
         )}
       </>
     );
@@ -382,59 +725,81 @@ export default function UserInformationPage() {
     const { id } = router.query || {};
     if (id) {
       const res = await Copy.fetchShareTraderDetail({ lUid: id });
-      if (res.code === 200) {
+      if (res?.code === 200) {
         const result = res.data;
-        const currentTimestamp = Date.now();
-        // 计算入驻时间
-        const entryDiff = dayjs(currentTimestamp).diff(dayjs(result.ctime), 'day');
-        setTradeInfo({
-          ...result,
-          entryDays: entryDiff
-        });
+        const base = await Copy.fetchCopyTradeuserBase({ uid: id });
+        if (base.code === 200) {
+          setTradeInfo({
+            ...result,
+            ...base.data
+          });
+        } else {
+          setTradeInfo({
+            ...result
+          });
+        }
       }
     }
   };
   useEffect(() => {
     getTraderDetail();
-    fetchShareTrader();
+    fetchCopyTraderConfig();
   }, []);
 
   const cancelFollow = async () => {
     Loading.start();
     const { id } = router.query;
-    const res = await Copy.fetchCopyApplyStatus({ lUid: id, followStatus: FollowOptionStatus.cancel });
+    const res = await Copy.fetchCopyCancelStatus({ lUid: id });
     Loading.end();
-    if (res.code === 200) {
+    if (res?.code === 200) {
       message.success(LANG('取消成功'));
       setCancelShow(false);
+      router.push(`/copyTrade/${id}?userType=${userType}`);
+      setFetchRefresh(true);
+      fetchCopyTraderConfig();
     } else {
       message.error(res.message);
     }
   };
+  const handleToLink = (link: string) => {
+    router.push(link);
+  };
   return (
-    <div className={`${styles.centerfuturesContent} ${!detailInfo.isShowAsset && !isMobile && styles.mb80}`}>
-      <div className={styles.centerfuturesUserBox}>
-        <div className={styles.centerfuturesHeader}>
-          <span>{LANG('合约跟单')}</span>
-          <span className={styles.centerfuturesinterval}>/</span>
-          <span className={`${!detailInfo.subTitle ? styles.centerfuturesActive : styles.centerfuturesInActive}`}>
+    <div className={`${clsx('centerfuturesContent')} ${!detailInfo.isShowAsset && !isMobile && clsx('mb80')}`}>
+      <div className={clsx('centerfuturesUserBox')}>
+        <div className={clsx('centerfuturesHeader')}>
+          <span
+            className={clsx('centerHoverTitle')}
+            onClick={() => {
+              handleToLink(`/copyTrade`);
+            }}
+          >
+            {LANG('合约跟单')}
+          </span>
+          <span className={clsx('centerfuturesinterval')}>/</span>
+          <span
+            className={`${!detailInfo.subTitle ? clsx('centerfuturesActive') : clsx('centerfuturesInActive', 'centerHoverTitle')
+              } 
+            `}
+            onClick={() => handleToLink(detailInfo.titleLink)}
+          >
             {detailInfo.title}
           </span>
           {detailInfo.subTitle && (
             <>
-              <span className={styles.centerfuturesinterval}>/</span>
-              <span className={styles.centerfuturesActive}>{detailInfo.subTitle}</span>
+              <span className={clsx('centerfuturesinterval')}>/</span>
+              <span className={clsx('centerfuturesActive')}>{detailInfo.subTitle}</span>
             </>
           )}
         </div>
         {detailInfo.isShowInfo && (
-          <div className={styles.centerfuturesUser}>
-            <div className={styles.centerfuturesLeft}>
-              <div className={styles.centerfuturesUserImg}>
-                <img src={'/static/images/copy/copy-logo-default.svg'} alt="avatar" className={styles.avatar} />
+          <div className={clsx('centerfuturesUser')}>
+            <div className={clsx('centerfuturesLeft')}>
+              <div className={clsx('centerfuturesUserImg')}>
+                <img src={'/static/images/copy/copy-logo-default.svg'} alt="avatar" className={clsx('avatar')} />
               </div>
-              <div className={styles.enterFuturesUserName}>
-                <p className={styles.enterFuturesNickName}>{traderInfo.nickname}</p>
+              <div className={clsx('enterFuturesUserName')}>
+                <p className={clsx('enterFuturesNickName')}>{traderInfo.nickname}</p>
                 {detailInfo.isJoinDay && (
                   <span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
@@ -443,26 +808,42 @@ export default function UserInformationPage() {
                         fill="#9FA1A6"
                       />
                     </svg>
-                    {LANG('已入驻')} {traderInfo.entryDays} {LANG('天')}
+                    {LANG('已入驻')} {traderInfo?.settledDays} {LANG('天')}
                   </span>
                 )}
                 {detailInfo.isShowRemark && (
-                  <>
-                    <span className={styles.remark}>{traderInfo.description}</span>
-                    {/* <div className={styles.tagsBox}>
+                  <div className={clsx('descriptionBox')}>
+                    <p
+                      className={`${clsx('description')} ${traderInfo?.description?.length >= 200 && showMore && clsx('descriptionDellipsis')
+                        }`}
+                    >
+                      {traderInfo?.description}
+                    </p>
+                    {traderInfo?.description?.length >= 200 && (
+                      <CommonIcon
+                        className={clsx('arrowDown')}
+                        onClick={() => {
+                          setShowMore(!showMore);
+                        }}
+                        name="common-arrow-right-0"
+                        size={16}
+                      />
+                    )}
+
+                    {/* <div className={clsx('tagsBox')}>
                       {tagList.map(item => {
                         return (
-                          <span className={styles.tagItem} key={item}>
+                          <span className={clsx('tagItem')} key={item}>
                             {item}
                           </span>
                         );
                       })}
                     </div> */}
-                  </>
+                  </div>
                 )}
               </div>
             </div>
-            <div className={styles.centerfuturesRight}>
+            <div className={clsx('centerfuturesRight')}>
               <ShareModule />
               {!isCopyTrader && <ShowFollowBtnModule />}
               {isCopyTrader && <ShowSettingModule />}
@@ -471,11 +852,447 @@ export default function UserInformationPage() {
           </div>
         )}
       </div>
-      <FollowMarginModule />
-      <AssetModule />
-      <FollowIncome />
-      <CancelModalSetting isOpen={cancelShow} close={() => setCancelShow(false)} confrimPlan={() => cancelFollow()} />
+      {detailInfo.isMarginShow && <FollowMarginModule />}
+      {detailInfo.isShowAsset && <AssetModule />}
+      {detailInfo.isShowIncome && <FollowIncome />}
+      {/* <CancelModalSetting isOpen={cancelShow} close={() => setCancelShow(false)} confrimPlan={() => cancelFollow()} /> */}
       {/* <CopyTradingTraders /> */}
+      <style jsx>{styles}</style>
     </div>
   );
 }
+const styles = css`
+  .centerfuturesContent {
+    width: 1200px;
+    margin: 24px auto;
+
+    @media ${MediaInfo.mobile} {
+      width: 100%;
+      border-bottom:1px solid var(--fill_line_1);
+      margin-bottom: 0;
+    }
+
+    .centerfuturesUserBox {
+      @media ${MediaInfo.mobile} {
+        padding: 0 24px;
+      }
+    }
+  }
+
+  .mb80 {
+    margin-bottom: 80px;
+  }
+
+  .mt24 { 
+    margin-top: 24px;
+  }
+  .centerfuturesHeader {
+    width: 100%;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    color: var(--text_3);
+  }
+
+  .centerfuturesinterval {
+    margin: auto 8px;
+  }
+  .centerHoverTitle {
+    &:hover {
+      color: var(--text_1);
+      cursor: pointer;
+    }
+  }
+
+  .centerfuturesActive {
+    color: var(--text_1);
+  }
+
+  .centerfuturesInActive {
+    color: var(--text_3);
+  }
+
+  .centerfuturesUser {
+    margin-top: 44px;
+    display: flex;
+    justify-content: space-between;
+
+    @media ${MediaInfo.mobile} {
+      flex-direction: column;
+      margin-top: 24px;
+    }
+
+    .centerfuturesUserImg {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+
+      @media ${MediaInfo.mobile} {
+        width: 80px;
+        height: 80px;
+      }
+
+      img {
+        height: 100%;
+        border-radius: 50%;
+      }
+    }
+
+    .enterFuturesUserName {
+      margin: 0 24px;
+      color: var(--text_3);
+
+      @media ${MediaInfo.mobile} {
+        margin-left: 0;
+      }
+
+      p {
+        font-size: 40px;
+        font-style: normal;
+        font-weight: 700;
+        color: var(--text_1);
+      }
+
+      span {
+        display: flex;
+        align-items: center;
+      }
+
+      .description {
+        font-family: HarmonyOS Sans SC;
+        font-weight: 400;
+        font-size: 14px;
+        color: var(--text_3);
+        display: inline-block;
+        display: -webkit-inline-box;
+        line-height: 1.5;
+      }
+      .descriptionDellipsis {
+        word-break: break-word;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2; /* 这里是超出几行省略 */
+      }
+      svg {
+        margin-right: 8px;
+      }
+    }
+    .descriptionBox {
+      margin: 8px 0 16px;
+      display: flex;
+      align-items: end;
+      .arrowDown {
+        cursor: pointer;
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  .enterFuturesNickName {
+    margin-bottom: 8px;
+    @media ${MediaInfo.mobile} {
+      margin-top: 16px;
+    }
+  }
+
+  .centerfuturesLeft {
+    display: flex;
+    align-items: center;
+
+    @media ${MediaInfo.mobile} {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  .centerfuturesRight {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    @media ${MediaInfo.mobile} {
+      justify-content: space-between;
+      flex-direction: row-reverse;
+    }
+
+    .centerfuturesPK {
+      cursor: pointer;
+    }
+
+    .centerfuturesShare {
+      cursor: pointer;
+    }
+  }
+
+  .centerfuturesUserAmount {
+    margin-top: 40px;
+    padding: 40px;
+    background: var(--fill_2);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+
+    @media ${MediaInfo.mobile} {
+      flex-direction: column;
+      gap: 0;
+      padding: 24px;
+      margin: 24px;
+      align-items: flex-start;
+      width: auto;
+    }
+
+    .centerAmountListOne {
+      .AmountAvbTitle {
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 500;
+        color: var(--text_1);
+        line-height: 23px;
+        margin-bottom: 10px;
+      }
+
+      .AmountAvb {
+        font-size: 40px;
+        font-style: normal;
+        font-weight: 700;
+        color: var(--text_1);
+        line-height: 47px;
+        margin-bottom: 16px;
+      }
+      .todayProfit {
+        color: var(--text_1);
+      }
+      .ml-4 {
+        margin-left: 4px;
+      }
+
+      .lastProfitAndLoss {
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        color: var(--text_1);
+      }
+    }
+
+    .centerfuturesUserList {
+      color: var(--text_1);
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 500;
+
+      @media ${MediaInfo.mobile} {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 24px;
+        gap: 24px;
+      }
+      .mt16 {
+        margin-top: 16px;
+      }
+
+      .centerfuturesUserListTitle {
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        color: var(--text_2);
+        margin-bottom: 16px;
+
+        @media ${MediaInfo.mobile} {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .depositBtn {
+      font-size: 16px;
+      font-style: normal;
+      width: 136px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 500;
+      border-radius: 24px;
+      border: 1px solid var(--brand);
+      background-color: (var(--brand));
+      color: var(--text-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      @media ${MediaInfo.mobile} {
+        margin-top: 0;
+        flex: 1;
+      }
+
+      cursor: pointer;
+    }
+
+    .TransferBtn {
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 500;
+      width: 136px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 24px;
+      color: var(--brand);
+      border: 1px solid var(--brand);
+      margin-top: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      @media ${MediaInfo.mobile} {
+        margin-top: 0;
+        flex: 1;
+      }
+    }
+  }
+
+  .incomeBox {
+    color: var(--text_2);
+    font-family: 'HarmonyOS Sans SC';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin-top: 40px;
+    @media ${MediaInfo.mobile} {
+      margin: 24px;
+    }
+    .flexSpan {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .girdRow {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-column-gap: 80px;
+      @media ${MediaInfo.mobile} {
+        grid-template-columns: repeat(1, 1fr);
+      }
+    }
+    .girdRow5 {
+      display: grid;
+      grid-template-columns: repeat(5, 224px);
+      @media ${MediaInfo.mobile} {
+        grid-template-columns: repeat(1, 1fr);
+      }
+    }
+
+    .mb16 {
+      margin-bottom: 16px;
+    }
+
+    .incomeLeft {
+      width: 364px;
+      color: var(--text_1);
+      font-family: 'HarmonyOS Sans SC';
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+
+      .net {
+        font-size: 20px;
+        font-weight: 500;
+      }
+      .todayNet {
+        margin-right: 4px;
+      }
+
+      .profix {
+        color: var(--text_green);
+      }
+
+      .loss {
+        color: var(--text_red);
+        font-weight: 500;
+      }
+
+      .todayIncome {
+        font-weight: 400;
+        display: flex;
+        gap: 4px;
+      }
+    }
+
+    .incomeRight {
+      border-radius: 24px;
+      background: var(--fill_2);
+      padding: 21px 40px;
+      flex: 1;
+      @media ${MediaInfo.mobile} {
+        padding: 24px;
+        margin-top: 24px;
+        .rowLine {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+      }
+    }
+
+    .incomTotal {
+      font-family: 'HarmonyOS Sans SC';
+      font-size: 40px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 100%;
+      margin-top: 8px;
+      margin-bottom: 16px;
+    }
+
+    .incomeValue {
+      color: var(--text_1);
+      font-family: 'HarmonyOS Sans SC';
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+    }
+  }
+
+  .mt40 {
+    margin-top: 40px;
+  }
+  .gap16 {
+    gap: 16px;
+  }
+
+  .remark {
+    margin-top: 10px;
+    margin-bottom: 16px;
+  }
+
+  .tagsBox {
+    display: flex;
+
+    .tagItem {
+      padding: 8px 16px;
+      color: var(--text_1);
+      text-align: center;
+      font-family: 'HarmonyOS Sans SC';
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      border-radius: 6px;
+      background: var(--fill_3);
+      margin-right: 8px;
+    }
+  }
+  .textDashed {
+    display: inline;
+    border-bottom: 1px dashed var(--fill_line_2);
+    cursor: pointer;
+  }
+`;

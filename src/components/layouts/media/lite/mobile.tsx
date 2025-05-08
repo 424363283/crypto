@@ -54,18 +54,18 @@ export const LiteMobileLayout = ({
           .lite-body {
             height: 415px;
             border-radius: var(--theme-trade-layout-radius);
-            background: var(--bg-1);
+            background: var(--fill_bg_1);
             margin-top: var(--theme-trade-layout-gap);
           }
           .bg {
-            background-color: var(--bg-1);
+            background-color: var(--fill_bg_1);
             overflow: hidden;
           }
           .lite-footer {
             min-height: 375px;
             overflow: auto;
             border-radius: var(--theme-trade-layout-radius);
-            background: var(--bg-1);
+            background: var(--fill_bg_1);
             margin-top: var(--theme-trade-layout-gap);
             padding-bottom: 70px;
           }

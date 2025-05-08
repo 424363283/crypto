@@ -759,7 +759,7 @@ var commonAppLang = {
   等待撤单: 'Pending cancellation',
   全部撤单: 'Canceled',
   委托失败: 'Failed',
-  委托时间: 'Date',
+  委托时间: 'Time',
   限价: 'Limit',
   市价: 'Market',
   委托类型: 'Type',
@@ -889,8 +889,8 @@ var commonAppLang = {
     'When the COIN-M trading unit is currency units such as BTC, the number of positions displayed is converted from the actual number of contracts and the value changes as the most recent price changes.',
   '持仓的平均买入/卖出成交价格': 'Average executed buy/sell price for your current long/short position.',
   开仓价格: 'Entry Price',
-  '合约的实时标记价格。此标记价格将用于计算盈亏及保证金，可能与合约最新成交价格有所偏差，以避免价格操纵。标记价格的计算是基于指数价格，指数价格是从主流现货交易所提取的总价格，由其相对交易量加权。当前指数价格是{price}。':
-    'Latest mark price for this contract. To prevent price manipulation, the mark price is used for unrealized PNL and margin calculations, and may differ from the last price.Mark Price is calculated based on the index price. The Price Index is a bucket of prices from the major Spot market exchanges, weighted by their relative volume. The latest index price is {price}.',
+  '合约的实时标记价格。此标记价格将用于计算盈亏及保证金，可能与合约最新成交价格有所偏差，以避免价格操纵。标记价格的计算是基于指数价格，指数价格是从主流现货交易所提取的总价格，由其相对交易量加权。':
+    'Latest mark price for this contract. To prevent price manipulation, the mark price is used for unrealized PNL and margin calculations, and may differ from the last price.Mark Price is calculated based on the index price. The Price Index is a bucket of prices from the major Spot market exchanges, weighted by their relative volume.',
   '若多仓的标记价格低于此强平价格，或是空仓的标记价格高于此强平价格，你的持仓将被强平。 {more}':
     'If the mark price of the long position is lower than the liquidation price, or the mark price of the short position is higher than the liquidation price, your position will be liquidated. {more}',
   强平价格: 'Liq.Price',
@@ -1319,5 +1319,17 @@ var commonAppLang = {
   递延费: 'Deferred Fees',
   冻结保证金: 'Freeze Margin',
   最新价: 'Price',
-  '{days}日': `{days} days`
+  '{days}日': `{days}D`,
+  跟单账户: 'Copy Trading',
+  '如果存在平仓挂单（限价或止盈止损委托），将会在全平前被撤单':
+    'If there is a pending order to close a position (limit order or stop profit or stop loss order), it will be cancelled before the full liquidation',
+  切换账户: 'Switch account',
+  U本位账户仓位模式: 'USDT-M Position Mode',
+  历史仓位: 'Position History',
+  账户: 'Account',
+  快捷下单: 'Quick Order',
+  关于: 'About',
+  选择日期: 'Select Date',
+  选择12个月内的时间范围: 'Select a time frame within 12 months',
+  创建交易: 'Create Trade'
 };

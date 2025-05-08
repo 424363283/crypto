@@ -345,7 +345,7 @@ const LimitTrade = ({
             suffix={() => (
               <div className={clsx('price-suffix ')}>
                 <div
-                  style={{ color: 'var(--text-brand)', cursor: 'pointer', userSelect: 'none', whiteSpace:'nowrap' }}
+                  style={{ color: 'var(--text_brand)', cursor: 'pointer', userSelect: 'none', whiteSpace:'nowrap' }}
                   className={clsx('newest')}
                   onClick={() => {
                     setState((draft) => {

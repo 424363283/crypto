@@ -72,15 +72,15 @@ const styles = css`
             border: none;
             .num {
               background-color: var(--brand);
-              color: var(--text-white);
+              color: var(--text_white);
             }
             .step-text {
-              color: var(--text-primary);
+              color: var(--text_1);
             }
           }
 
           .num {
-            background-color: var(--fill-3);
+            background-color: var(--fill_3);
             width: 24px;
             height: 24px;
             border-radius: 50%;
@@ -95,11 +95,11 @@ const styles = css`
             font-weight: 400;
             line-height: 14px; /* 100% */
 
-            color: var(--text-tertiary);
+            color: var(--text_3);
           }
           .step-text {
             padding: 12px 0 0;
-            color: var(--text-tertiary);
+            color: var(--text_3);
             font-family: 'HarmonyOS Sans SC';
             font-size: 12px;
             font-style: normal;
@@ -122,7 +122,7 @@ const styles = css`
       top: 50%;
       width: 100%;
       height: 1px;
-      background: var(--line-1);
+      background: var(--fill_line_1);
       top: 12px;
     }
   }

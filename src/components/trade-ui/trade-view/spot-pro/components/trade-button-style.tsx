@@ -7,7 +7,7 @@ export const TradeButtonStyle = () => {
             .priceWrapper {
               width: 100%;
               &.disabled {
-                background: var(--fill-2);
+                background: var(--fill_2);
               }
             }
             .label-wrapper {
@@ -23,7 +23,7 @@ export const TradeButtonStyle = () => {
                 margin: 0;
               }
               .label {
-                color: var(--text-tertiary);
+                color: var(--text_3);
                 font-size: 12px;
                 font-style: normal;
                 font-weight: 400;
@@ -33,11 +33,11 @@ export const TradeButtonStyle = () => {
             .login-btn {
               display: flex;
               width: 100%;
-              background: var(--text-primary);
-              color: var(--text-quarterary);
+              background: var(--text_1);
+              color: var(--text_4);
               &:hover {
-                background: var(--text-primary);
-                color: var(--text-quarterary);
+                background: var(--text_1);
+                color: var(--text_4);
               }
 
             }
@@ -47,7 +47,7 @@ export const TradeButtonStyle = () => {
               font-style: normal;
               font-weight: 500;
               line-height: normal;
-              color: var(--text-white);
+              color: var(--text_white);
               &.btn-red {
                 background: var(--color-red);
               }

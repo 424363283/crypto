@@ -3,14 +3,18 @@ import { useRouter } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import css from 'styled-jsx/css';
 import { WalletType } from '../types';
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
+import { getUrlQueryParams } from '@/core/utils';
 
-export const PnlNavButton = ({ type }: { type: WalletType }) => {
+export const PnlNavButton = ({ type, wallet }: { type: WalletType }) => {
+  const account = getUrlQueryParams('account');
   const router = useRouter();
   const onNavClick = () => {
     router.push({
       pathname: '/account/fund-management/assets-overview/pnl-analysis',
       query: {
         type: type,
+        ...account && { account }
       },
     });
   };
@@ -32,7 +36,7 @@ const styles = css`
     padding: 2px 4px;
     .name {
       margin-left: 5px;
-      color: var(--text-secondary);
+      color: var(--text_2);
       font-size: 14px;
     }
     :global(.right-arrow) {

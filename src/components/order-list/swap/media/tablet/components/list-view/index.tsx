@@ -1,5 +1,6 @@
 import { EmptyComponent } from '@/components/empty';
 import { Loading } from '@/components/loading';
+import { MediaInfo } from '@/core/utils';
 
 export const ListView = ({
   data,
@@ -36,7 +37,7 @@ export const ListView = ({
           }
         }
         .list-view {
-          height:auto;
+          height: auto;
           display: flex;
           flex-direction: column;
           padding: 8px 1rem;
@@ -44,6 +45,10 @@ export const ListView = ({
           gap: 1rem;
           margin-top: 12px;
           // overflow-y: auto;
+          @media ${MediaInfo.mobile} {
+            margin-top: 0;
+            padding-top: 12px;
+          }
         }
       `}</style>
     </>

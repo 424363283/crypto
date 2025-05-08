@@ -21,7 +21,7 @@ import {
 // import type { OverlayEvent, OverlayTemplate } from "klinecharts"
 import { calcTextWidth } from '../../common/utils/canvas';
 import { checkCoordinateOnText } from '../../common/utils/checkEventOn';
-
+import { LANG } from '@/core/i18n';
 const takeProfitOverlay: OverlayTemplate = {
   name: 'takeProfitOverlay',
   totalStep: 2,
@@ -40,13 +40,13 @@ const takeProfitOverlay: OverlayTemplate = {
 
     const btnSpace = 10;
     // const text = '止盈:' + yAxis?.convertFromPixel(coordinates[0].y).toFixed(2);
-    const text = 'TP';
-
+    const text = LANG('止盈');
     const marginLeft =
       positonExtendData.positionBtnFigure.styles.width +
       positonExtendData.changeBtnFigure.styles.width +
       positonExtendData.closePositionBtnFigure.styles.width +
-      btnSpace;
+      btnSpace +
+      80;
     const figures = [];
     const lineFigure = {
       type: 'line',
@@ -82,9 +82,9 @@ const takeProfitOverlay: OverlayTemplate = {
         // 颜色
         color: '#07828B',
         // 尺寸
-        size: 12,
+        size: 10,
         // 字体
-        family: 'Helvetica Neue',
+        family: 'HarmonyOS Sans SC',
         // 粗细
         weight: 'normal',
         // 左内边距
@@ -99,16 +99,17 @@ const takeProfitOverlay: OverlayTemplate = {
         borderStyle: 'solid',
         // 边框颜色
         borderColor: '#07828B',
-      
+
         // 边框尺寸
         borderSize: 1,
         // 边框虚线参数
         borderDashedValue: [2, 2],
         // 边框圆角值
-        borderRadius: 2,
+        borderRadius: 4,
         // 背景色
-          backgroundColor: '#121212'
-      }
+        backgroundColor: '#121212'
+      },
+      zLevel: 100
     };
 
     const takeProfitBtnWidth =
@@ -178,7 +179,7 @@ const takeProfitOverlay: OverlayTemplate = {
       textFigure?.prototype.checkEventOnImp(
         { x: e.x, y: e.y },
         takeProfitExtendData.takeProfitBtnFigure.option.attrs,
-        takeProfitExtendData.takeProfitBtnFigure.styles
+        takeProfitExtendData.takeProfitBtnFigure.option.styles
       )
     ) {
       takeProfitExtendData.takeProfitBtnFigure.onClick(e);
@@ -187,7 +188,7 @@ const takeProfitOverlay: OverlayTemplate = {
       textFigure?.prototype.checkEventOnImp(
         { x: e.x, y: e.y },
         takeProfitExtendData.addBtnFigure.option.attrs,
-        takeProfitExtendData.addBtnFigure.styles
+        takeProfitExtendData.addBtnFigure.option.styles
       )
     ) {
       takeProfitExtendData.addBtnFigure.onClick(e);
@@ -207,7 +208,7 @@ const takeProfitOverlay: OverlayTemplate = {
       textFigure?.prototype.checkEventOnImp(
         { x: e.x, y: e.y },
         takeProfitExtendData.takeProfitBtnFigure.option.attrs,
-        takeProfitExtendData.takeProfitBtnFigure.styles
+        takeProfitExtendData.takeProfitBtnFigure.option.styles
       )
     ) {
       takeProfitExtendData.takeProfitBtnFigure.onPressedMoveEnd(e);
@@ -216,7 +217,7 @@ const takeProfitOverlay: OverlayTemplate = {
       textFigure?.prototype.checkEventOnImp(
         { x: e.x, y: e.y },
         takeProfitExtendData.addBtnFigure.option.attrs,
-        takeProfitExtendData.addBtnFigure.styles
+        takeProfitExtendData.addBtnFigure.option.styles
       )
     ) {
       takeProfitExtendData.addBtnFigure.onPressedMoveEnd(e);
@@ -226,4 +227,3 @@ const takeProfitOverlay: OverlayTemplate = {
 };
 
 export default takeProfitOverlay;
-

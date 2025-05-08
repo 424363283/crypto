@@ -55,10 +55,10 @@ const styles = css`
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--line-1);
+      border-bottom: 1px solid var(--fill_line_1);
       padding-bottom: 16px;
       .label {
-        color: var(--text-secondary);
+        color: var(--text_2);
         font-size: 12px;
         border-bottom: 1px dashed var(--theme-font-color-placeholder);
       }

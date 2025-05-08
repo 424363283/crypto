@@ -24,23 +24,23 @@ const { className, styles } = css.resolve`
       > :global(*):first-child {
         font-size: 14px;
         font-weight: 400;
-        color: var(--text-secondary);
+        color: var(--text_2);
         &.code {
           font-size: 16px;
-          color: var(--text-primary);
+          color: var(--text_1);
         }
       }
       > :global(*):last-child {
         font-size: 14px;
         font-weight: 400;
-        color: var(--text-primary);
+        color: var(--text_1);
         &.side {
           font-size: 16px;
         }
       }
     }
     .danger {
-      color: var(--text-error);
+      color: var(--text_red);
       font-size: 12px;
       font-weight: 400;
       line-height: 12px;
@@ -66,7 +66,7 @@ const { className, styles } = css.resolve`
         font-size: 14px;
         line-height: 12px;
         font-weight: 400;
-        color: var(--text-secondary);
+        color: var(--text_2);
       }
     }
   }
@@ -108,7 +108,7 @@ const { className, styles } = css.resolve`
   .line {
     width: 100%;
     height: 1px;
-    background-color: var(--line-3);
+    background-color: var(--fill_line_3);
     margin: 23px 0;
   }
   @media ${MediaInfo.mobile} {

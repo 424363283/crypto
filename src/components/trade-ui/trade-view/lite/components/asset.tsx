@@ -126,7 +126,7 @@ const styles = css`
   :global(.asset) {
     display: flex;
     flex-direction: column;
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     padding: 16px;
     margin-top: var(--theme-trade-layout-spacing);
     flex: 1;
@@ -146,7 +146,7 @@ const styles = css`
       line-height: 16px;
       font-size: 14px;
       font-weight: 500;
-      color: var(--text-primary);
+      color: var(--text_1);
       .operate {
         display: flex;
         align-items: center;
@@ -159,7 +159,7 @@ const styles = css`
           align-items: center;
           gap: 4px;
           cursor: pointer;
-          color: var(--text-brand);
+          color: var(--text_brand);
         }
       }
     }
@@ -185,7 +185,7 @@ const styles = css`
         flex-direction: column;
         justify-content: center;
         align-self: stretch;
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 14px;
         font-style: normal;
         font-weight: 500;
@@ -205,12 +205,12 @@ const styles = css`
           font-weight: 400;
           > :global(*) {
             &:nth-child(1) {
-              color: var(--text-tertiary);
+              color: var(--text_3);
             }
             &:nth-child(2) {
               flex: 1 0 0;
               text-align: right;
-              color: var(--text-primary);
+              color: var(--text_1);
             }
           }
         }

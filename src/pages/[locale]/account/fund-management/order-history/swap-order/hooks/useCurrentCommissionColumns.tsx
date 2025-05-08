@@ -11,6 +11,7 @@ import { checkIsUsdtType } from '../../../assets-overview/helper';
 
 import { isSwapDemo } from '@/core/utils/src/is';
 import ClipboardItem from '@/components/clipboard-item';
+import { WalletName } from '@/components/order-list/swap/media/desktop/components/wallet-name';
 const _isSwapDemo = isSwapDemo();
 export const useCurrentCommissionColumns = ({ onRefresh }: { onRefresh: any }) => {
   const isUsdtType = checkIsUsdtType();
@@ -58,16 +59,7 @@ export const useCurrentCommissionColumns = ({ onRefresh }: { onRefresh: any }) =
   };
 
   const columns = [
-    {
-      title: LANG('时间'),
-      dataIndex: 'ctime',
-      render: (time: string) => (
-        <div className='ctime'>
-          <div className='date'>{dayjs(time).format('YYYY-MM-DD')}</div>
-          <div className='time'>{dayjs(time).format('HH:mm:ss')}</div>
-        </div>
-      ),
-    },
+
     {
       title: LANG('合约'),
       dataIndex: 'code',
@@ -86,19 +78,16 @@ export const useCurrentCommissionColumns = ({ onRefresh }: { onRefresh: any }) =
         );
       },
     },
-    // {
-    //   title: LANG('子钱包账户'),
-    //   dataIndex: 'subWallet',
-    //   render: (v: string, item: any) => {
-    //     return (
-    //       <span>
-    //         {_isSwapDemo
-    //           ? LANG('模拟交易账户')
-    //           : item?.alias || Swap.Assets.getWallet({ walletId: v, usdt: isUsdtType, withHooks: false })?.alias}
-    //       </span>
-    //     );
-    //   },
-    // },
+    {
+      title: LANG('账户'),
+      dataIndex: 'subWallet',
+      render: (v: any, item: any) => {
+        const walletData = Swap.Assets.getWallet({ walletId: item.subWallet, usdt: isUsdtType, withHooks: false });
+        return (
+          <WalletName> {LANG(walletData?.alias)} </WalletName>
+        );
+      },
+    },
     {
       title: LANG('类型'),
       dataIndex: 'type',
@@ -158,9 +147,8 @@ export const useCurrentCommissionColumns = ({ onRefresh }: { onRefresh: any }) =
         if (!triggerPrice) {
           return '--';
         }
-        return `${item.priceType === '1' ? LANG('市场价格') : LANG('标记价格')} ${
-          item.direction === '1' ? '≥' : '≤'
-        } ${Number(triggerPrice).toFixed(Number(item.baseShowPrecision))}`;
+        return `${item.priceType === '1' ? LANG('市场价格') : LANG('标记价格')} ${item.direction === '1' ? '≥' : '≤'
+          } ${Number(triggerPrice).toFixed(Number(item.baseShowPrecision))}`;
       },
     },
     {
@@ -180,6 +168,16 @@ export const useCurrentCommissionColumns = ({ onRefresh }: { onRefresh: any }) =
       render: (orderId: any, item: any) => {
         return <ClipboardItem text={orderId} />
       }
+    },
+    {
+      title: LANG('委托时间'),
+      dataIndex: 'ctime',
+      render: (time: string) => (
+        <div className='ctime'>
+          <div className='date'>{dayjs(time).format('YYYY-MM-DD')}</div>
+          <div className='time'>{dayjs(time).format('HH:mm:ss')}</div>
+        </div>
+      ),
     },
     {
       title: LANG('操作'),

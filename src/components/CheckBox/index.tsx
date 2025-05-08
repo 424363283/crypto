@@ -49,7 +49,7 @@ export default function CheckBox(props: {
   & span {
     white-space: nowrap;
     margin-left: 8px;
-    color: var(--text-primary);
+    color: var(--text_1);
     font-size: 12px;
     font-weight: 500;
   }

@@ -4,24 +4,21 @@ type kLineStore = {
   KineData: any;
   disableKlinePointEvent: any;
   OrderBookList: any;
-  isHoverTPSL:false;
-  TpSlInfo:any;
-  positionTpSLInfo:any
-
+  isHoverTPSL: false;
+  TpSlInfo: any;
+  positionTpSLInfo: any;
+  dragOverlayData: any;
 };
 
 const kLineStore: UseBoundStore<StoreApi<kLineStore>> = create(() => {
   return {
     OrderBookList: {},
     disableKlinePointEvent: false, //k线内拖拽快捷下单
-    isHoverTPSL:{
-      
-    },
-    TpSlInfo:{
-
-    },
-    positionTpSLInfo:[], //当前币对的持仓止盈止损信息
-    KineData: []
+    isHoverTPSL: {},
+    TpSlInfo: {},
+    positionTpSLInfo: [], //当前币对的持仓止盈止损信息
+    KineData: [],
+    dragOverlayData: {}
   };
 });
 
@@ -71,8 +68,18 @@ export function setPositionTpSLInfoFun(TpSlInfo: any) {
   }));
 }
 
-
-
+//设置十字线数据
+export function setDragOverlayDataFun(dragOverlayData: any) {
+  const { pageX, pageY } = dragOverlayData;
+  kLineStore.setState(state => ({
+    ...state,
+    dragOverlayData: {
+      pageX,
+      pageY,
+      volume: dragOverlayData.overlay._prevPressedPoint.value
+    }
+  }));
+}
 export function getKineState() {
   return kLineStore.getState();
 }

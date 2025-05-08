@@ -3,20 +3,23 @@ $sm: 768px;
 .all24 {
   padding: 24px;
   border-radius: 24px;
-  border: 1px solid var(--line-2);
+  border: 1px solid var(--fill_line_2);
 }
 .flexCol {
   display: flex;
   flex-direction: column;
 }
 .gap4 {
-  gap:4px;
+  gap: 4px;
+}
+.gap2 {
+  gap: 2px;
 }
 .gap16 {
-  gap:16px;
+  gap: 16px;
 }
 .performanceTitle {
-  color: var(--text-primary);
+  color: var(--text_1);
   font-family: 'HarmonyOS Sans SC';
   font-size: 24px;
   font-style: normal;
@@ -25,7 +28,7 @@ $sm: 768px;
 }
 
 .incomeCount {
-  color: var(--text-primary);
+  color: var(--text_1);
   text-align: right;
   font-family: 'HarmonyOS Sans SC';
   font-size: 28px;
@@ -40,6 +43,9 @@ $sm: 768px;
   gap: 24px;
 }
 
+.gap8 {
+  gap: 8px;
+}
 .mt8 {
   margin-top: 8px;
 }
@@ -61,24 +67,24 @@ $sm: 768px;
 }
 
 .incomeBox {
-  border-bottom: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--fill_line_2);
   padding-bottom: 24px;
 }
 
 .textDashed {
-  border-bottom: 1px dashed var(--line-2);
+  border-bottom: 1px dashed var(--fill_line_2);
 }
 
 .textTrue {
-  color: var(--text-true);
+  color: var(--text_green);
 }
 
 .textError {
-  color: var(--text-error);
+  color: var(--text_red);
 }
 
 .textPrimary {
-  color: var(--text-primary);
+  color: var(--text_1);
 }
 
 .textWhite {
@@ -98,8 +104,9 @@ $sm: 768px;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
   overflow: hidden;
-  font-size: 14px;
+  font-size: 16px;
   margin-top: 16px;
+  font-weight: 500;
 }
 .textOverflow {
   width: 200px;
@@ -190,7 +197,7 @@ $sm: 768px;
 }
 
 .followerContainer {
-  color: var(--text-primary);
+  color: var(--text_1);
   font-family: 'HarmonyOS Sans SC';
   font-size: 14px;
   font-style: normal;
@@ -223,7 +230,7 @@ $sm: 768px;
 }
 
 .preferenceBox {
-  color: var(--text-primary);
+  color: var(--text_1);
   font-family: 'HarmonyOS Sans SC';
   font-size: 14px;
   font-style: normal;
@@ -264,7 +271,7 @@ $sm: 768px;
   }
 
   .tradeHeader {
-    color: var(--text-tertiary);
+    color: var(--text_3);
     font-family: 'HarmonyOS Sans SC';
     font-size: 14px;
     font-style: normal;
@@ -273,7 +280,7 @@ $sm: 768px;
   }
 
   .tradeContainer {
-    color: var(--text-primary);
+    color: var(--text_1);
     font-family: 'HarmonyOS Sans SC';
     font-size: 14px;
     font-style: normal;
@@ -283,6 +290,10 @@ $sm: 768px;
     .avatar {
       margin-left: 24px;
       margin-right: 16px;
+    }
+    .avatarLeft {
+      margin-right: 16px;
+      margin-left: 0;
     }
   }
 
@@ -294,7 +305,7 @@ $sm: 768px;
 .mpTradeContainer {
   .mpRow {
     padding: 24px;
-    border-bottom: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--fill_line_2);
     font-family: 'HarmonyOS Sans SC';
     font-weight: 500;
     font-size: 14px;
@@ -315,7 +326,7 @@ $sm: 768px;
   }
 
   .mpTitle {
-    color: var(--text-tertiary);
+    color: var(--text_3);
   }
 }
 
@@ -323,7 +334,7 @@ $sm: 768px;
   .historyBox {
     padding-bottom: 40px;
     margin-bottom: 40px;
-    border-bottom: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--fill_line_2);
   }
 
   .currentItem {
@@ -343,15 +354,14 @@ $sm: 768px;
 
   .tradeRow3 {
     display: grid;
-    grid-template-columns: 140px repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     grid-column-gap: 2px;
     grid-row-gap: 16px;
     margin-bottom: 16px;
   }
 
-
   .label {
-    color: var(--text-tertiary);
+    color: var(--text_3);
     font-family: 'HarmonyOS Sans SC';
     font-size: 14px;
     font-style: normal;
@@ -374,7 +384,7 @@ $sm: 768px;
   }
 
   .symbolBox {
-    color: var(--text-primary);
+    color: var(--text_1);
     font-family: 'HarmonyOS Sans SC';
     font-size: 20px;
     font-style: normal;
@@ -404,34 +414,36 @@ $sm: 768px;
   }
 
   .coinName {
-    color: var(--text-secondary);
-    background: var(--fill-3);
+    color: var(--text_2);
+    background: var(--fill_3);
   }
 
   .buyBox {
-    background: var(--red_light);
-    color: var(--text-error);
+    background: var(--gree_10);
+    color: var(--text_green);
   }
 
   .sellBox {
-    background: var(--green_light);
-    color: var(--text-true);
+ 
+    background: var(--red_10);
+    color: var(--text_red);
   }
 
   .historyContainer {
     .label {
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-family: 'HarmonyOS Sans SC';
       font-size: 14px;
       font-style: normal;
       font-weight: 500;
       line-height: normal;
-      width: 80px;
+      min-width: 86px;
+      margin-right: 8px;
       display: inline-block;
     }
 
     .value {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-family: 'HarmonyOS Sans SC';
       font-size: 14px;
       font-style: normal;
@@ -444,11 +456,11 @@ $sm: 768px;
     }
 
     .textTrue {
-      color: var(--text-true);
+      color: var(--text_green);
     }
 
     .textError {
-      color: var(--text-error);
+      color: var(--text_red);
     }
   }
 }
@@ -478,8 +490,8 @@ $sm: 768px;
   justify-content: center;
   align-items: center;
   border-radius: 24px;
-  background: var(--text-brand);
-  color: var(--text-white);
+  background: var(--text_brand);
+  color: var(--text_white);
   font-family: 'HarmonyOS Sans SC';
   font-size: 16px;
   font-style: normal;
@@ -496,7 +508,7 @@ $sm: 768px;
 }
 
 .bringSettingBox {
-  color: var(--text-primary, #2b2f33);
+  color: var(--text_1);
   font-family: 'HarmonyOS Sans SC';
   font-size: 16px;
   font-style: normal;
@@ -508,12 +520,31 @@ $sm: 768px;
   }
 
   .remark {
-    color: var(--text-tertiary);
+    color: var(--text_3);
     font-family: 'HarmonyOS Sans SC';
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+  }
+  :global(.ant-switch) {
+    height: 24px;
+    line-height: 24px;
+    min-width: 38px;
+    :global(.ant-switch-checked) {
+      :global(.ant-switch-inner ) {
+        background-color: var(--text_brand);
+      }
+    }
+    :global(.ant-switch-inner) {
+      background-color: var(--text_2);
+    }
+    :global(.ant-switch-handle) {
+      top:3px;
+    }
+  }
+  :global(.ant-switch.ant-switch-checked .ant-switch-inner) {
+    background-color: var(--brand);
   }
 
   .tradeRow {
@@ -548,10 +579,10 @@ $sm: 768px;
 
 .settingTrade {
   @media (max-width: $sm) {
-   margin: 0 24px;
+    margin: 0 24px;
   }
   label {
-    color: var(--text-tertiary);
+    color: var(--text_3);
     font-family: 'HarmonyOS Sans SC';
     font-size: 16px;
     font-style: normal;
@@ -561,7 +592,7 @@ $sm: 768px;
   }
 
   .title {
-    color: var(--text-primary);
+    color: var(--text_1);
     font-family: 'HarmonyOS Sans SC';
     font-size: 16px;
     font-style: normal;
@@ -573,7 +604,7 @@ $sm: 768px;
 
   .tradeRow {
     span {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-family: 'HarmonyOS Sans SC';
       font-size: 14px;
       font-style: normal;
@@ -585,3 +616,16 @@ $sm: 768px;
     }
   }
 }
+.nickNameTips {
+  font-family: 'HarmonyOS Sans SC';
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--text_red);
+}
+
+.ant-tooltip-inner,
+.ant-tooltip-arrow:before {
+    background: var(--fill_pop)!important;
+    color: var(--text_1) !important;
+  }

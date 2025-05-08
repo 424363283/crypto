@@ -38,12 +38,12 @@ const styles = css`
     justify-content: space-between;
     font-size: 14px;
     .name {
-      border-bottom: 1px dashed var(--line-3);
-      color: var(--text-secondary);
+      border-bottom: 1px dashed var(--fill_line_3);
+      color: var(--text_2);
       padding-bottom: 4px;
     }
     .value {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 14px;
       font-weight: 500;
     }
@@ -51,7 +51,7 @@ const styles = css`
       color: var(-text-true);
     }
     .red {
-      color: var(--text-error);
+      color: var(--text_red);
     }
   }
 `;

@@ -233,7 +233,7 @@ export class Calculate {
         ? currentPosition.mul(contractFactor).mul(avgCostPrice)
         : currentPosition.mul(contractFactor).div(avgCostPrice); // 持仓价值
 
-      const scale = _usdt ? 2 : Number(item.basePrecision);
+      const scale = _usdt ? 8 : Number(item.basePrecision);
       let income = this.income({
         usdt: _usdt,
         code: code,

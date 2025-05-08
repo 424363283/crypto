@@ -453,7 +453,7 @@ const styles = css`
       padding: 0;
       :global(.ant-modal-title) {
         text-align: left !important;
-        color: var(--text-primary, #2b2f33);
+        color: var(--text_1);
         font-size: 16px;
         font-weight: 500;
       }
@@ -477,28 +477,28 @@ const styles = css`
       gap: 4px;
     }
     .symbolName {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 16px;
       font-weight: 500;
       padding: 0 4px 0 0;
     }
     .leverage {
       border-radius: 4px;
-      background: var(--fill-3);
+      background: var(--fill_3);
       min-width: 48px;
       height: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--text-secondary);
+      color: var(--text_2);
     }
 
     .row {
-      color: var(--text-secondary);
+      color: var(--text_2);
       font-size: 14px;
       font-weight: 400;
       span {
-        color: var(--text-primary);
+        color: var(--text_1);
         font-weight: 500;
       }
     }
@@ -506,12 +506,12 @@ const styles = css`
     .form-line {
       margin: 24px 0;
       width: 100%;
-      border-top: 1px solid var(--line-1);
+      border-top: 1px solid var(--fill_line_1);
     }
 
     .position-side {
       border-radius: 4px;
-      background: var(--green_light);
+      background: var(--gree_10);
       min-width: 48px;
       height: 20px;
       display: flex;
@@ -526,14 +526,14 @@ const styles = css`
 
     .setting-modal-header {
       padding: 24px 0;
-      border-bottom: 1px solid var(--line-1);
+      border-bottom: 1px solid var(--fill_line_1);
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       align-self: stretch;
     }
     .item-info {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 14px;
       font-style: normal;
       font-weight: 400;
@@ -544,7 +544,7 @@ const styles = css`
     .row {
       display: flex;
       justify-content: space-between;
-      color: var(--text-secondary);
+      color: var(--text_2);
       font-size: 14px;
       font-weight: 400;
       &.price {
@@ -562,13 +562,13 @@ const styles = css`
       .tabs {
         text-align: center;
         cursor: pointer;
-        color: var(--text-secondary);
+        color: var(--text_2);
         text-align: center;
         font-size: 16px;
         font-weight: 500;
 
         &.active {
-          color: var(--text-brand) !important;
+          color: var(--text_brand) !important;
           position: relative;
         }
       }
@@ -588,8 +588,8 @@ const styles = css`
           height: 26px;
           line-height: 26px;
           border-radius: 4px;
-          background: var(--fill-3);
-          color: var(--text-secondary);
+          background: var(--fill_3);
+          color: var(--text_2);
           &:first-child {
             margin-left: 0;
           }

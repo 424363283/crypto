@@ -94,7 +94,7 @@ const styles = css`
         padding: 0 24px;
       }
       h2 {
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 32px;
         font-weight: 700;
         @media ${MediaInfo.mobile} {
@@ -102,7 +102,7 @@ const styles = css`
         }
       }
       p {
-        color: var(--text-tertiary);
+        color: var(--text_3);
         font-size: 16px;
         font-weight: 400;
         text-align: center;
@@ -125,7 +125,7 @@ const styles = css`
       &-line {
         width: 160px;
         height: 1px;
-        border-bottom: 1px dashed var(--line-3);
+        border-bottom: 1px dashed var(--fill_line_3);
       }
     }
     .advantages-item {
@@ -138,6 +138,7 @@ const styles = css`
       flex: 1 0 0;
       border-radius: 24px;
       margin: 24px 0 0;
+      background: var(--fill_2);
 
       position: relative;
       @media ${MediaInfo.mobile} {
@@ -150,7 +151,7 @@ const styles = css`
         margin: 48px 0 0;
       }
       h5 {
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 24px;
         font-weight: 700;
         @media ${MediaInfo.mobile} {
@@ -159,7 +160,7 @@ const styles = css`
         }
       }
       p {
-        color: var(--text-tertiary);
+        color: var(--text_3);
         text-align: justify;
         font-size: 14px;
         font-weight: 400;
@@ -174,7 +175,7 @@ const styles = css`
     }
     .advantages-list-mb {
       margin: 24px;
-      background: var(--fill-2);
+      background: var(--fill_2);
       border-radius: 24px;
       :global(.ant-carousel) {
         :global(.slick-dots-bottom) {
@@ -183,7 +184,7 @@ const styles = css`
         :global(.slick-dots) {
           :global(li) {
             border-radius: 4px;
-            background: var(--fill-3);
+            background: var(--fill_3);
             width: 16px;
             height: 4px;
             transition: none;

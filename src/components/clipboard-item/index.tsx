@@ -16,7 +16,7 @@ const ClipboardItem = ({ text, children, style }: { text: string; children?: Rea
         {children || (
           <p className="copy-content" style={style}>
             {hiddenTxt(text, 3, 4, 3)}
-            <CommonIcon size={isMobileOrTablet ? 14 : 12} name={`common-copy${isMobileOrTablet ? '-2-grey' : ''}`} />
+            <CommonIcon size={14} name={`common-copy${isMobileOrTablet ? '-2-grey' : ''}`} />
           </p>
         )}
       </CopyToClipboard>

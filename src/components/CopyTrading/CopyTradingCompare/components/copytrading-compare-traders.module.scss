@@ -1,6 +1,7 @@
+$sm: 768px;
 .copyTradingCompareBox {
   display: flex;
-  border: 1px solid var(--line-2);
+  border: 1px solid var(--fill_line_2);
   border-bottom: none;
 
   .compareBoxItem {
@@ -8,10 +9,19 @@
     align-items: center;
     justify-content: center;
     width: 20%;
-    height: 195px;
-
+    height: 147px;
     &:not(:last-child) {
-      border-right: 1px solid var(--line-2);
+      border-right: 1px solid var(--fill_line_2);
+    }
+    :global(.icon-radio) {
+      @media (max-width: $sm) {
+        flex-direction: column;
+         gap: 8px;
+        :global(.icon-span) {
+          font-size: 12px!important;
+          width: 50px;
+        }
+      }
     }
   }
 }

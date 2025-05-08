@@ -1,3 +1,4 @@
+import { MediaInfo } from '@/core/utils';
 import clsx from 'clsx';
 import css from 'styled-jsx/css';
 
@@ -21,9 +22,18 @@ const styles = css`
     position: relative;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     :global(.bottom-pagination) {
       padding: 15px 10px;
+    }
+    @media ${MediaInfo.mobile} {
+      :global(.ant-pagination-item:hover),
+      :global(.ant-pagination-item:focus),
+      :global(.ant-pagination-item-active) {
+        background: var(--brand);
+        color: var(--text-white);
+        font-weight: 500;
+      }
     }
   }
 `;

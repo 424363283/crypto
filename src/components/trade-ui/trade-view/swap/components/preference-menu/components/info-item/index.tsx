@@ -68,13 +68,13 @@ export const InfoItem = ({
             align-items: center;
             font-size: 14px;
             font-weight: 400;
-            color: var(--text-secondary);
+            color: var(--text_2);
           }
           :global(.value) {
             display: flex;
             align-items: center;
             font-size: 14px;
-            color: var(--text-primary);
+            color: var(--text_1);
             line-height: 12px;
           }
           :global(.icon) {

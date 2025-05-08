@@ -284,7 +284,7 @@ const styles = css`
     flex-direction: column;
     height: 100%;
     .body {
-      background: var(--bg-1);
+      background: var(--fill_bg_1);
     }
     .body {
       padding: 16px 16px 24px 16px;
@@ -299,7 +299,7 @@ const styles = css`
       }
       :global(.rate) {
         margin-top: 16px;
-        background-color: var(--bg-1);
+        background-color: var(--fill_bg_1);
         padding: 4px 10px;
         border-radius: 5px;
         color: var(--skin-main-font-color);

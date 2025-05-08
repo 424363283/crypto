@@ -82,9 +82,9 @@ export const DepthConfig = ({
           justify-content: space-between;
           align-items: center;
           border-radius: 4px;
-          background: var(--fill-3, #26262b);
+          background: var(--fill_3, #26262b);
           position: relative;
-          color: var(--text-primary);
+          color: var(--text_1);
           :global(.arrow) {
             /* position: absolute;
             top: 50%;
@@ -92,7 +92,7 @@ export const DepthConfig = ({
             transform: translateY(-50%); */
             svg {
               path {
-                fill: var(--text-primary);
+                fill: var(--text_1);
               }
             }
           }

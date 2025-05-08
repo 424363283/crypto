@@ -94,14 +94,15 @@ const TopOptions = memo(({ external = true }: { external?: boolean }) => {
             <ExternalLink href="https://www.coingecko.com/en/exchanges">
               <CommonIcon name="external-coingecko-filled-0" className="icon" size={32} />
             </ExternalLink>
-          </Desktop>
-          <Input
+            <Input
             value={value}
             className="search-input"
             placeholder={LANG('搜索')}
             prefix={<CommonIcon size={20} className="prefix-icon" name="common-search-0" />}
             onChange={handleSearchChange}
           />
+          </Desktop>
+        
         </div>
       )}
       <style jsx>{styles}</style>
@@ -147,7 +148,7 @@ const styles = css`
       align-items: center;
       gap: 40px;
       flex: 1 0 0;
-      color: var(--text-tertiary);
+      color: var(--text_3);
       @media ${MediaInfo.mobileOrTablet} {
         margin-top: 20px;
         gap: 20px;
@@ -160,7 +161,7 @@ const styles = css`
           font-size: 16px;
           white-space: nowrap;
         }
-        color: var(--text-tertiary);
+        color: var(--text_3);
         font-size: 20px;
         font-style: normal;
         font-weight: 500;
@@ -170,7 +171,7 @@ const styles = css`
       :global(.active) {
         font-weight: 500;
         position: relative;
-        color: var(--text-brand);
+        color: var(--text_brand);
       }
     }
     .option-right {
@@ -193,7 +194,7 @@ const styles = css`
       :global(.search-input) {
         height: 40px;
         width: 200px;
-        background-color: var(--fill-3);
+        background-color: var(--fill_3);
         transition: none;
         padding: 0 24px;
         border: none;
@@ -202,13 +203,13 @@ const styles = css`
           margin-inline-end: 8px;
         }
         :global(.ant-input) {
-          color: var(--text-primary);
-          background-color: var(--fill-3);
+          color: var(--text_1);
+          background-color: var(--fill_3);
           border: none;
           transition: none;
         }
         :global(input::placeholder) {
-          color: var(--text-tertiary);
+          color: var(--text_3);
         }
         &:hover {
           box-shadow: 0 0 0 1px var(--brand);

@@ -11,16 +11,14 @@ import { Size } from '@/components/constants';
 import { MediaInfo } from '@/core/utils';
 import YIcon from '@/components/YIcons';
 
-
 interface GuideProps {
-  showCardPop:() => void;
-  kycState:any;
+  showCardPop: () => void;
+  kycState: any;
 }
 
-
-const Guide = (props:GuideProps) => {
-  const kycState = props?.kycState
-  const { kyc,last } = kycState;
+const Guide = (props: GuideProps) => {
+  const kycState = props?.kycState;
+  const { kyc, last } = kycState;
   const [step, setStep] = useState(1);
   const router = useRouter();
   const { user } = useLoginUser();
@@ -31,9 +29,8 @@ const Guide = (props:GuideProps) => {
   const onIdCardClick = (evt: any) => {
     evt.preventDefault();
     evt.stopPropagation();
-    props?.showCardPop()
+    props?.showCardPop();
   };
-
 
   useEffect(() => {
     const { bindGoogle } = user || {};
@@ -72,26 +69,38 @@ const Guide = (props:GuideProps) => {
         <div className="title">{LANG('账户流程')}</div>
         <div className="step-box">
           <div className={`stepContainer stepOne ${isDark ? 'isDark' : ''}`}>
-            <div className='stepWrap'>
-              <CommonIcon size={16} className="" name="common-done-0" />
+            <div className="stepWrap">
+              {!isMobile && <CommonIcon size={16} className="" name="common-done-0" />}
               <span>1.{LANG('注册')}</span>
             </div>
           </div>
-          <div className={`stepContainer stepTwo  ${isDark ? 'isDark' : ''} ${step == 2 ? 'active' : ''} ${step < 2 ? 'gray' : ''}`}>
-            <div className='stepWrap'>
-              {step > 2 && <CommonIcon size={16} className="" name="common-done-0" />}
+          <div
+            className={`stepContainer stepTwo  ${isDark ? 'isDark' : ''} ${step == 2 ? 'active' : ''} ${
+              step < 2 ? 'gray' : ''
+            }`}
+          >
+            <div className="stepWrap">
+              {!isMobile && step > 2 && <CommonIcon size={16} className="" name="common-done-0" />}
               <span>2.{LANG('KYC认证')}</span>
             </div>
           </div>
-          <div className={`stepContainer stepTwo  ${isDark ? 'isDark' : ''} ${step == 3 ? 'active' : ''} ${step < 3 ? 'gray' : ''}`}>
-            <div className='stepWrap'>
-              {step > 3 && <CommonIcon size={16} className="" name="common-done-0" />}
+          <div
+            className={`stepContainer stepTwo  ${isDark ? 'isDark' : ''} ${step == 3 ? 'active' : ''} ${
+              step < 3 ? 'gray' : ''
+            }`}
+          >
+            <div className="stepWrap">
+              {!isMobile && step > 3 && <CommonIcon size={16} className="" name="common-done-0" />}
               <span>3.{LANG('身份验证器')}</span>
             </div>
           </div>
-          <div className={`stepContainer stepThree ${isDark ? 'isDark' : ''} ${step == 4 ? 'active' : ''} ${step < 4 ? 'gray' : ''}`}>
+          <div
+            className={`stepContainer stepThree ${isDark ? 'isDark' : ''} ${step == 4 ? 'active' : ''} ${
+              step < 4 ? 'gray' : ''
+            }`}
+          >
             {/* <CommonIcon size={14} className='' name='common-done-0' /> */}
-            <div className='stepWrap'>
+            <div className="stepWrap">
               <span>4.{LANG('充币')}</span>
             </div>
           </div>
@@ -106,11 +115,10 @@ const Guide = (props:GuideProps) => {
                     {LANG('仅需 1 分钟，完成实名认证，即刻解锁 YMEX 的充值、提现和交易等全方位服务。')}
                   </div>
 
-                  {!isMobile ?
+                  {!isMobile ? (
                     <div className="btn">
                       <div className="kyc-status">
                         <div className="kyc-status-icon">
-                         
                           {kyc == 2 ? <YIcon.errorIcon /> : null}
                           {kyc == 2 ? kycString[kyc] || '--' : ''}
                         </div>
@@ -121,41 +129,43 @@ const Guide = (props:GuideProps) => {
                         </Button>
                       ) : null}
                     </div>
-                    :""
-                  }
+                  ) : (
+                    ''
+                  )}
                 </div>
                 <div className="requirement-item">
                   <div className="requirement-kyc">
                     {LANG('LV1认证要求')}:
-                    <div className='requirement-condition-list'>
-                    <div className="requirement-condition">
-                      <YIcon.worldIcon />
-                      {LANG('国家地区')}
-                    </div>
-                    <div className="requirement-condition">
-                      <YIcon.userIcon /> {LANG('真实姓名')}
-                    </div>
+                    <div className="requirement-condition-list">
+                      <div className="requirement-condition">
+                        <YIcon.worldIcon />
+                        {LANG('国家地区')}
+                      </div>
+                      <div className="requirement-condition">
+                        <YIcon.userIcon /> {LANG('真实姓名')}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
               <div>
-              {isMobile ?
-                    <div className="btn">
-                      <div className="kyc-status">
-                        <div className="kyc-status-icon">
-                          {kyc == 2 ? <YIcon.errorIcon /> : null}
-                          {kyc == 2 ? kycString[kyc] || '--' : ''}
-                        </div>
+                {isMobile ? (
+                  <div className="btn">
+                    <div className="kyc-status">
+                      <div className="kyc-status-icon">
+                        {kyc == 2 ? <YIcon.errorIcon /> : null}
+                        {kyc == 2 ? kycString[kyc] || '--' : ''}
                       </div>
-                      {kyc == 0 || kyc == 2 ? (
-                        <Button type="primary" size={Size.SM} rounded onClick={onIdCardClick}>
-                          {LANG(kyc == 2 ? '重新认证' : '去认证')}
-                        </Button>
-                      ) : null}
                     </div>
-                    :""
-                  }
+                    {kyc == 0 || kyc == 2 ? (
+                      <Button type="primary" size={Size.SM} rounded onClick={onIdCardClick}>
+                        {LANG(kyc == 2 ? '重新认证' : '去认证')}
+                      </Button>
+                    ) : null}
+                  </div>
+                ) : (
+                  ''
+                )}
               </div>
             </div>
           )}
@@ -169,7 +179,7 @@ const Guide = (props:GuideProps) => {
                       src={`/static/icons/primary/common/ga.svg`}
                       width={isMobile ? 30 : 20}
                       height={isMobile ? 30 : 20}
-                      color={'var(--text-primary)'}
+                      color={'var(--text_1)'}
                     />
                   </div>
                   <div className="des">
@@ -195,7 +205,7 @@ const Guide = (props:GuideProps) => {
                       src={`/static/icons/primary/common/deposit-coin.svg`}
                       width={isMobile ? 30 : 20}
                       height={isMobile ? 30 : 20}
-                      color={'var(--text-primary)'}
+                      color={'var(--text_1)'}
                     />
                   </div>
                   <div className="des">
@@ -223,17 +233,17 @@ const guideStyle = css`
     flex: 1;
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--fill-3);
+    border: 1px solid var(--fill_3);
     border-radius: 8px;
     padding: 20px;
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     @media ${MediaInfo.mobileOrTablet} {
       padding: 10px;
     }
     .title {
       font-size: 16px;
       font-weight: 600;
-      color: var(--text-primary);
+      color: var(--text_1);
     }
     .step-box {
       display: flex;
@@ -252,10 +262,14 @@ const guideStyle = css`
         &.stepOne {
           height: 80px;
           position: relative;
-          background-color: var(--fill-3);
-          color: var(--text-primary);
+          background-color: var(--fill_3);
+          color: var(--text_1);
           border-radius: 8px 0 0 8px;
           clip-path: polygon(0 0, calc(100% - 13.44px) 0, 100% 50%, calc(100% - 13.44px) 100%, 0 100%, 0 0);
+          @media ${MediaInfo.mobileOrTablet} {
+            height: 50px;
+            margin: 0;
+          }
         }
 
         &.stepTwo {
@@ -268,8 +282,8 @@ const guideStyle = css`
           display: -webkit-box;
           display: flex;
           flex: 1 1;
-          background: var(--fill-3);
-          color: var(--text-primary);
+          background: var(--fill_3);
+          color: var(--text_1);
           &.active {
             background-color: var(--brand);
             span {
@@ -277,11 +291,15 @@ const guideStyle = css`
             }
           }
           &.gray {
-            color: var(--text-tertiary);
+            color: var(--text_3);
             font-size: 16px;
             font-style: normal;
             font-weight: 500;
             line-height: 16px; /* 100% */
+          }
+          @media ${MediaInfo.mobileOrTablet} {
+            height: 50px;
+            margin: 0;
           }
         }
 
@@ -293,8 +311,8 @@ const guideStyle = css`
           clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 10% 50%);
           display: flex;
           flex: 1 1;
-          background: var(--fill-3);
-          color: var(--text-primary);
+          background: var(--fill_3);
+          color: var(--text_1);
           &.active {
             background-color: var(--brand);
             span {
@@ -302,21 +320,28 @@ const guideStyle = css`
             }
           }
           &.gray {
-            color: var(--text-tertiary);
+            color: var(--text_3);
             font-size: 16px;
             font-style: normal;
             font-weight: 500;
             line-height: 16px; /* 100% */
           }
+          @media ${MediaInfo.mobileOrTablet} {
+            height: 50px;
+            margin: 0;
+          }
         }
         &:last-child {
           margin: 0;
         }
-        .stepWrap{
+        .stepWrap {
           max-width: 80%;
           display: inline-flex;
           align-items: center;
           justify-content: center;
+           @media ${MediaInfo.mobile} {
+            max-width: 100%;
+           }
           span {
             overflow: hidden;
             text-overflow: ellipsis;
@@ -334,11 +359,15 @@ const guideStyle = css`
           @media ${MediaInfo.mobileOrTablet} {
             font-size: 12px;
           }
+          @media ${MediaInfo.mobile} {
+            font-size: 12px;
+            font-weight:500;
+          }
         }
       }
     }
     .step-detail-box {
-      border: 1px solid var(--fill-3);
+      border: 1px solid var(--fill_3);
       border-radius: 8px;
       flex: 1;
       padding: 20px;
@@ -360,7 +389,7 @@ const guideStyle = css`
             .icon {
               width: 32px;
               height: 32px;
-              background-color: var(--fill-3);
+              background-color: var(--fill_3);
               border-radius: 4px;
               padding: 6px;
               margin-right: 15px;
@@ -368,10 +397,10 @@ const guideStyle = css`
             .des {
               display: flex;
               flex-direction: column;
-              color: var(--text-primary);
+              color: var(--text_1);
               gap: 4px;
               div:first-child {
-                color: var(--text-primary);
+                color: var(--text_1);
                 font-size: 14px;
                 font-style: normal;
                 font-weight: 500;
@@ -410,8 +439,8 @@ const guideStyle = css`
         align-items: center;
         @media ${MediaInfo.mobileOrTablet} {
           &:last-child{
-            border-top: 1px solid var(--line-1);
-            border-bottom: 1px solid var(--line-1);
+            border-top: 1px solid var(--fill_line_1);
+            border-bottom: 1px solid var(--fill_line_1);
             padding: 10px 0;
           }
         }
@@ -420,41 +449,41 @@ const guideStyle = css`
         display: flex;
         flex-direction: row;
         gap: 24px;
-        color: var(--text-tertiary);
+        color: var(--text_3);
         font-size: 14px;
         font-style: normal;
         font-weight: 400;
         line-height: 14px; /* 100% */
         @media ${MediaInfo.mobileOrTablet} {
-            flex-direction: column;
-            gap: 8px;
-            width: 100%;
+          flex-direction: column;
+          gap: 8px;
+          width: 100%;
         }
       }
-      .requirement-condition-list{
+      .requirement-condition-list {
         display: flex;
         flex-direction: row;
         align-items: center;
-        gap:24px;
+        gap: 24px;
         @media ${MediaInfo.mobileOrTablet} {
-            width: 100%;
+          width: 100%;
         }
       }
       &-condition {
         display: flex;
         align-items: center;
         gap: 8px;
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 14px;
         font-style: normal;
         font-weight: 500;
         line-height: 14px; /* 100% */
         @media ${MediaInfo.mobileOrTablet} {
-            width: 100%;
+          width: 100%;
         }
       }
       .desc {
-        color: var(--text-secondary);
+        color: var(--text_2);
         font-size: 14px;
         font-style: normal;
         font-weight: 400;
@@ -478,10 +507,10 @@ const guideStyle = css`
       gap: 8px;
 
       @media ${MediaInfo.mobileOrTablet} {
-         position: inherit;
-         top: inherit;
-         right: inherit;
-         order: 2;
+        position: inherit;
+        top: inherit;
+        right: inherit;
+        order: 2;
       }
       &-icon {
         display: flex;

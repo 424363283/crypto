@@ -2,10 +2,11 @@ import { clsx } from '@/core/utils';
 import { ChangeEvent, useState } from 'react';
 import css from 'styled-jsx/css';
 export type NS = number | string;
+import CommonIcon from '@/components/common-icon';
 interface Props {
   value: number | string;
   decimal?: number;
-  unit?: string;
+  unit?: any;
   max?: NS;
   min?: NS;
   onChange: (value: string) => void;
@@ -17,9 +18,11 @@ interface Props {
   showError?: boolean;
   errorText?: string | (() => string);
   allowEmpty?: boolean;
+  clearable?: boolean;
 }
 
 const copySettingInput = ({
+  clearable = false,
   unit,
   min,
   max,
@@ -94,11 +97,26 @@ const copySettingInput = ({
   };
 
   const _onFocus = () => {
-    setIsFocus(true);
-    onFocus && onFocus();
+    // setIsFocus(true);
+    // onFocus && onFocus();
   };
-
+  const handleClear = () => {
+    onChange('');
+    _onFocus();
+  };
   const hasError = typeof errorText === 'string' ? errorText !== '' : errorText() !== '';
+  const CloseIcon = () => {
+    return (
+      <span onClick={() => onChange('')}>
+        <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M4.47561 3.254L6.26761 0.733999H7.87761L5.23161 4.346L7.87761 8H6.16961L4.40561 5.48L2.61361 8H0.975609L3.63561 4.402L0.975609 0.733999H2.71161L4.47561 3.254Z"
+            fill="#2B2F33"
+          />
+        </svg>
+      </span>
+    );
+  };
 
   return (
     <>
@@ -116,6 +134,11 @@ const copySettingInput = ({
             disabled={disabled}
           />
           <span className="unit">{unit}</span>
+          {clearable && value && (
+            <p className="clear">
+              <CloseIcon />
+            </p>
+          )}
         </div>
         {((value !== '' && hasError) || allowEmpty) && (
           <div className="error">{typeof errorText === 'string' ? errorText : errorText()}</div>
@@ -133,55 +156,62 @@ const styles = css`
     &:has(.error) {
       .input-wrapper {
         > input {
-          border-color: var(--text-error);
+          border-color: var(--text_red);
         }
       }
     }
     &.show-error {
       .input-wrapper {
-        border-color: var(--text-error);
+        border-color: var(--text_red);
       }
     }
     .input-wrapper {
-    width:100%;
+      padding: 0 16px;
+      width: 100%;
       border-radius: 8px;
       display: flex;
       align-items: center;
       border-radius: 4px;
       .label {
-        color: var(--text-secondary);
+        color: var(--text_2);
         white-space: nowrap;
       }
       input {
         width: 100%;
-        color: var(--text-primary);
+        color: var(--text_1);
         text-align: center;
         font-family: 'HarmonyOS Sans SC';
-        font-size: 12px;
+        font-size: 14px;
         font-style: normal;
         font-weight: 500;
         border: 0;
         line-height: normal;
         text-align: left;
         margin-right: 6px;
-        color: var(--text-primary);
+        color: var(--text_1);
         &:disabled {
-          color: var(--text-tertiary);
+          color: var(--text_3);
+        }
+        &::placeholder {
+          color: var(--text_2);
         }
       }
       .unit {
-        color: var(--text-primary);
+        color: var(--text_1);
         font-family: 'HarmonyOS Sans SC';
-        font-size: 12px;
+        font-size: 14px;
         font-style: normal;
         font-weight: 500;
         line-height: normal;
-        padding-right: 8px;
+      }
+      .clear {
+        cursor: pointer;
+        padding: 6px 8px;
       }
     }
     .error {
       margin-top: 5px;
-      color: var(--text-error);
+      color: var(--text_red);
     }
   }
 `;

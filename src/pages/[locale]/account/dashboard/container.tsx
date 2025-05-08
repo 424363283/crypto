@@ -34,16 +34,16 @@ export default function DashboardContainer() {
             flex-direction: row;
             height: 100%;
             min-height: calc(100vh - 64px);
-            background-color: var(--bg-1);
+            background-color: var(--fill_bg_1);
             @media ${MediaInfo.mobileOrTablet} {
               flex-direction: column;
-              background: var(--fill-3);
+              background: var(--fill_3);
             }
             .left-column {
               z-index: 1;
               height: 100%;
               width: 308px;
-              position:sticky;
+              position: sticky;
               top: 56px;
               border-left: 2px solid var(--theme-border-left);
             }
@@ -53,11 +53,14 @@ export default function DashboardContainer() {
               padding: 8px;
               overflow-x: hidden;
               overflow-y: auto;
+              &.no-margin {
+                margin: 0;
+              }
               @media ${MediaInfo.mobileOrTablet} {
                 margin: 0;
               }
-              &.no-margin {
-                margin: 0;
+              @media ${MediaInfo.mobile} {
+                padding: 0;
               }
             }
           }

@@ -24,19 +24,25 @@ $sm: 768px;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  color: var(--text-tertiary);
+  color: var(--text_3);
 }
 
 .centerfuturesinterval {
   margin: auto 8px;
 }
+.centerHoverTitle {
+  &:hover {
+    color: var(--text_1);
+    cursor: pointer;
+  }
+}
 
 .centerfuturesActive {
-  color: var(--text-primary);
+  color: var(--text_1);
 }
 
 .centerfuturesInActive {
-  color: var(--text-tertiary);
+  color: var(--text_3);
 }
 
 .centerfuturesUser {
@@ -50,8 +56,8 @@ $sm: 768px;
   }
 
   .centerfuturesUserImg {
-    width: 120px;
-    height: 120px;
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
 
     @media (max-width: $sm) {
@@ -60,15 +66,15 @@ $sm: 768px;
     }
 
     img {
-      width: 100%;
       height: 100%;
       border-radius: 50%;
     }
+   
   }
-
+ 
   .enterFuturesUserName {
-    margin-left: 24px;
-    color: var(--text-tertiary);
+    margin: 0 24px;
+    color: var(--text_3);
 
     @media (max-width: $sm) {
       margin-left: 0;
@@ -78,7 +84,7 @@ $sm: 768px;
       font-size: 40px;
       font-style: normal;
       font-weight: 700;
-      color: var(--text-primary);
+      color: var(--text_1);
       margin-bottom: 10px;
     }
 
@@ -87,8 +93,32 @@ $sm: 768px;
       align-items: center;
     }
 
+    .description {
+      font-family: HarmonyOS Sans SC;
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--text_3);
+      display: inline-block;
+      display: -webkit-inline-box;
+    }
+    .descriptionDellipsis {
+      word-break: break-word;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2; /* 这里是超出几行省略 */
+     }
     svg {
       margin-right: 8px;
+    }
+  }
+  .descriptionBox {
+    margin: 8px 0 16px;
+    display: flex;
+    align-items: center;
+    .arrowDown {
+      cursor: pointer;
+      transform: rotate(90deg)
     }
   }
 }
@@ -112,6 +142,7 @@ $sm: 768px;
 .centerfuturesRight {
   display: flex;
   align-items: center;
+  gap: 32px;
   @media (max-width: $sm) {
     justify-content: space-between;
     flex-direction: row-reverse;
@@ -119,19 +150,11 @@ $sm: 768px;
   }
 
   .centerfuturesPK {
-    margin-right: 32px;
     cursor: pointer;
   }
 
   .centerfuturesShare {
-    width: 32px;
-    height: 32px;
     cursor: pointer;
-
-    svg {
-      width: 32px;
-      height: 32px;
-    }
   }
 
   .centerfuturesSetting {
@@ -142,7 +165,7 @@ $sm: 768px;
     font-size: 18px;
     font-weight: 500;
     text-align: center;
-    color: var(--text-white);
+    color: var(--text_white);
     margin-left: 32px;
     cursor: pointer;
 
@@ -155,13 +178,14 @@ $sm: 768px;
 .centerfuturesUserAmount {
   margin-top: 40px;
   padding: 40px;
-  background: var(--fill-2);
+  background: var(--fill_2);
   border-radius: 24px;
   display: flex;
   align-items: center;
   gap: 92px;
 
   @media (max-width: $sm) {
+    width: auto;
     flex-direction: column;
     gap: 0;
     padding: 24px;
@@ -174,7 +198,7 @@ $sm: 768px;
       font-size: 20px;
       font-style: normal;
       font-weight: 500;
-      color: var(--text-primary);
+      color: var(--text_1);
       line-height: 23px;
       margin-bottom: 10px;
     }
@@ -183,7 +207,7 @@ $sm: 768px;
       font-size: 40px;
       font-style: normal;
       font-weight: 700;
-      color: var(--text-primary);
+      color: var(--text_1);
       line-height: 47px;
       margin-bottom: 16px;
     }
@@ -192,16 +216,12 @@ $sm: 768px;
       font-size: 16px;
       font-style: normal;
       font-weight: 400;
-      color: var(--text-primary);
-    }
-
-    .profitAndLoss {
-      color: var(--color-green) !important;
+      color: var(--text_1);
     }
   }
 
   .centerfuturesUserList {
-    color: var(--text-primary);
+    color: var(--text_1);
     font-size: 20px;
     font-style: normal;
     font-weight: 500;
@@ -218,16 +238,12 @@ $sm: 768px;
       font-size: 16px;
       font-style: normal;
       font-weight: 400;
-      color: var(--text-secondary);
+      color: var(--text_2);
       margin-bottom: 16px;
 
       @media (max-width: $sm) {
         margin-bottom: 0;
       }
-    }
-
-    .centerfuturesUserListProfit {
-      color: var(--color-green) !important;
     }
   }
 
@@ -243,7 +259,7 @@ $sm: 768px;
     border-radius: 24px;
     border: 1px solid var(--brand);
     background-color: (var(--brand));
-    color: var(--text-white);
+    color: var(--text_white);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -281,7 +297,7 @@ $sm: 768px;
 }
 
 .incomeBox {
-  color: var(--text-secondary);
+  color: var(--text_2);
   font-family: 'HarmonyOS Sans SC';
   font-size: 16px;
   font-style: normal;
@@ -298,7 +314,7 @@ $sm: 768px;
 
   .girdRow {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grs: repeat(3, 1fr);
     grid-column-gap: 80px;
     @media (max-width: $sm) {
       grid-template-columns: repeat(1, 1fr);
@@ -306,7 +322,7 @@ $sm: 768px;
   }
   .girdRow5 {
     display: grid;
-    grid-template-columns: repeat(5,224px);
+    grid-template-columns: repeat(5, 224px);
     @media (max-width: $sm) {
       grid-template-columns: repeat(1, 1fr);
     }
@@ -318,7 +334,7 @@ $sm: 768px;
 
   .incomeLeft {
     width: 364px;
-    color: var(--text-primary);
+    color: var(--text_1);
     font-family: 'HarmonyOS Sans SC';
     font-size: 16px;
     font-style: normal;
@@ -331,22 +347,24 @@ $sm: 768px;
     }
 
     .profix {
-      color: var(--text-true);
+      color: var(--text_green);
     }
 
     .loss {
-      color: var(--text-error);
+      color: var(--text_red);
       font-weight: 500;
     }
 
     .todayIncome {
       font-weight: 400;
+      display: flex;
+      gap: 4px;
     }
   }
 
   .incomeRight {
     border-radius: 24px;
-    background: var(--fill-2);
+    background: var(--fill_2);
     padding: 40px;
     flex: 1;
     @media (max-width: $sm) {
@@ -361,7 +379,6 @@ $sm: 768px;
   }
 
   .incomTotal {
-    color: var(--text-true, #2ab26c);
     font-family: 'HarmonyOS Sans SC';
     font-size: 40px;
     font-style: normal;
@@ -372,7 +389,7 @@ $sm: 768px;
   }
 
   .incomeValue {
-    color: var(--text-primary);
+    color: var(--text_1);
     font-family: 'HarmonyOS Sans SC';
     font-size: 20px;
     font-style: normal;
@@ -398,7 +415,7 @@ $sm: 768px;
 
   .tagItem {
     padding: 8px 16px;
-    color: var(--text-primary);
+    color: var(--text_1);
     text-align: center;
     font-family: 'HarmonyOS Sans SC';
     font-size: 14px;
@@ -406,11 +423,11 @@ $sm: 768px;
     font-weight: 400;
     line-height: normal;
     border-radius: 6px;
-    background: var(--fill-3);
+    background: var(--fill_3);
     margin-right: 8px;
   }
 }
 .textDashed {
   display: inline;
-  border-bottom: 1px dashed var(--line-2);
+  border-bottom: 1px dashed var(--fill_line_2);
 }

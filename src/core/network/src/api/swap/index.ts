@@ -2,6 +2,7 @@
  * 永续合约交易相关的接口合集
  */
 
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
 import { http } from '../../http/request';
 import { paths } from '../paths';
 import { SwapAssetsTransactionProps, SwapHistoryDealProps, SwapHistoryOrderProps } from './types';
@@ -59,7 +60,7 @@ export function getSwapTradeListApi() {
   return http.get(paths['swap_trade_list']);
 }
 /** U本位盈亏报表 */
-export function getSwapUProfitsReportsApi(data: { beginDate: number; endDate: number; userId?: string }) {
+export function getSwapUProfitsReportsApi(data: { beginDate: number; endDate: number; userId?: string, subWallet: WalletKey }) {
   return http.get(`${paths['swap_feature_profits_reports']}`, {
     params: data,
   });
@@ -71,9 +72,9 @@ export function getSwapProfitsReportsApi(data: { beginDate: number; endDate: num
   });
 }
 /** U本位合约盈亏汇总 */
-export function getSwapUTotalProfitsApi(data?: { userId?: string }) {
+export function getSwapUTotalProfitsApi(data?: { userId?: string, subWallet: WalletKey }) {
   return http.get(`${paths['swap_feature_total_profits']}`, {
-    params: data,
+    params: data
   });
 }
 
@@ -100,7 +101,12 @@ export function postSwapUpdateUnitApi(usdt: boolean, value: number) {
 export function getSwapContractDetailApi(id: string) {
   return http.get(paths['swap_contract_contractDetail'].replace('{id}', id));
 }
-/** 永续 仓位历史 */
+/** 永续 历史平仓盈亏记录 */
+export function getSwapPositionPnlHistoryApi(data: any, usdt: boolean) {
+  return http.get(`${paths[usdt ? 'swap_private_future_trade_positionPnlHistory' : 'swap_private_delivery_trade_positionPnlHistory']}`, { params: data });
+}
+
+/** 永续 历史仓位 */
 export function getSwapPositionHistoryApi(data: any, usdt: boolean) {
   return http.get(`${paths[usdt ? 'swap_private_future_trade_positionHistory' : 'swap_private_delivery_trade_positionHistory']}`, { params: data });
 }
@@ -168,7 +174,7 @@ export function postSwapPriceProtectApi(data: any, usdt: boolean) {
   });
 }
 /** 更新币对杠杆 */
-export function postSwapUpdateLeverApi(usdt: boolean, data: { symbol: string; userLeverage: number; subWallet?: string }) {
+export function postSwapUpdateLeverApi(usdt: boolean, data: { symbol: string; userLeverage: number; subWallet?: string, positionId?: string }) {
   return http.post(`${paths[usdt ? 'swap_future_leverage_update' : 'swap_delivery_leverage_update']}/${data.symbol}`, {}, { params: data });
 }
 

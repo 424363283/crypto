@@ -474,8 +474,8 @@ const positionLine: OverlayTemplate = {
     //     showStopProfitLoss: false
     //   }
     // })
-    return false
-  },
+    return false;
+  }
   // onClickL
 };
 

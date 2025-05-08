@@ -100,7 +100,7 @@ const { className, styles } = css.resolve`
     cursor: pointer;
     font-size: 12px;
     font-weight: 400;
-    color: var(--text-secondary);
+    color: var(--text_2);
     padding-right: 14px;
     line-height: 20px;
     @media ${MediaInfo.mobile} {
@@ -122,7 +122,7 @@ const { className, styles } = css.resolve`
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
-    background: var(--fill-3);
+    background: var(--fill_3);
     top: 100%;
     border-radius: 4px;
     right: 0;
@@ -133,7 +133,7 @@ const { className, styles } = css.resolve`
     overflow: auto;
     .menu {
       cursor: pointer;
-      color: var(--text-secondary);
+      color: var(--text_2);
       font-size: 12px;
       font-style: normal;
       font-weight: 500;
@@ -144,18 +144,18 @@ const { className, styles } = css.resolve`
       align-items: center;
       width: 100%;
       &.active {
-        color: var(--text-brand) !important;
+        color: var(--text_brand) !important;
       }
       &:hover {
         background: transparent !important;
-        color: var(--text-brand) !important;
+        color: var(--text_brand) !important;
       }
     }
   }
   @media ${MediaInfo.mobile} {
     .menus {
-      background: var(--fill-pop);
-      box-shadow: 0px 0px 8px 0px var(--fill-projection);
+      background: var(--fill_pop);
+      box-shadow: 0px 0px 8px 0px var(--fill_shadow);
       min-width: 5rem;
       border-radius: 8px;
       .menu {

@@ -83,8 +83,8 @@ const BottomLoginLog = () => {
 };
 const styles = css`
   .bottom-login-record {
-    background: var(--bg-1);
-    border:1px solid var(--fill-3);
+    background: var(--fill_bg_1);
+    border:1px solid var(--fill_3);
     border-radius: 8px;
     padding: 0 15px;
     margin-top: 8px;
@@ -96,13 +96,13 @@ const styles = css`
     .title {
       font-size: 16px;
       font-weight: 600;
-      color: var(--text-primary);
+      color: var(--text_1);
       @media ${MediaInfo.mobile} {
         font-weight: 500;
       }
     }
     :global(.login-title-time) {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 14px;
       @media ${MediaInfo.mobile} {
         display: flex;
@@ -115,7 +115,7 @@ const styles = css`
         padding:24px 0;
         :global(.mobile-card-item) {
           :global(.card-item-title){
-              color: var(--text-secondary);
+              color: var(--text_2);
           }
           &:last-child{
             margin:0;
@@ -126,14 +126,14 @@ const styles = css`
         :global(.ant-table-cell) {
           font-weight: normal;
           padding-left: 0;
-          color: var(--text-tertiary);
+          color: var(--text_3);
           font-size: 12px;
           padding-bottom: 0;
         }
       }
       :global(.ant-table-tbody) {
         :global(.ant-table-row:nth-child(2n)) {
-          // background: var(--label) !important;
+          // background: var(--brand_20) !important;
           :global(td:first-child) {
             border-top-left-radius: 5px;
             border-bottom-left-radius: 5px;
@@ -151,7 +151,7 @@ const styles = css`
           padding-right: 5px;
           font-weight: 400;
           &:nth-child(2) {
-            color: var(--text-primary);
+            color: var(--text_1);
           }
         }
       }

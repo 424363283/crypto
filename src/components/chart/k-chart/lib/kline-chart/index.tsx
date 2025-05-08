@@ -243,7 +243,7 @@ const KlineChartUI = ({
       <style jsx>{`
         #${elementId + qty} {
           flex: 1;
-          background-color: var(--bg-1);
+          background-color: var(--fill_bg_1);
           /* background-image: url('/static/images/trade/kline/logo.svg'); */
           background-repeat: no-repeat;
           background-position: center;

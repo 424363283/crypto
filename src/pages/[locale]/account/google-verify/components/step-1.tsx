@@ -30,13 +30,13 @@ const styles = css`
       flex-direction:column;
       align-items: center;
       justify-content: center;
-      color:var(--text-tertiary);
+      color:var(--text_3);
       .google-log{
         margin-bottom:45px;
       }
     }
     :global(.next-btn) {
-      width: calc(100% - 32px);
+      width: 100%;
       height: 56px;
       line-height: 56px;
       border-radius:28px;

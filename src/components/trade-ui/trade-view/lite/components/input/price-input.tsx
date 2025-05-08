@@ -191,7 +191,7 @@ const styles = css`
     align-items: flex-start;
     gap: 8px;
     .label {
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-size: 12px;
       font-style: normal;
       font-weight: 400;
@@ -204,10 +204,10 @@ const styles = css`
       padding: 0 8px;
       display: flex;
       align-items: center;
-      background: var(--fill-3);
+      background: var(--fill_3);
       input {
         flex: 1;
-        color: var(--text-primary);
+        color: var(--text_1);
         padding: 0 8px;
         font-size: 14px;
         font-weight: 500;
@@ -215,12 +215,12 @@ const styles = css`
         border: 0;
         width: 100%;
         text-align: center;
-        background: var(--fill-3);
+        background: var(--fill_3);
         &::placeholder,
         input::placeholder,
         input::-webkit-input-placeholder,
         &::-webkit-input-placeholder {
-          color: var(--text-tertiary);
+          color: var(--text_3);
         }
         &:disabled {
           background: transparent;
@@ -249,7 +249,7 @@ const styles = css`
           cursor: pointer;
           padding: 0 8px;
           span {
-            color: var(--text-tertiary);
+            color: var(--text_3);
             text-align: center;
             font-size: 20px;
             font-style: normal;
@@ -263,7 +263,7 @@ const styles = css`
         cursor: pointer;
         display: flex;
         align-items: center;
-        color: var(--text-primary);
+        color: var(--text_1);
         &:after {
           content: '';
           display: inline-block;

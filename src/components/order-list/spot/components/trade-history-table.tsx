@@ -183,17 +183,17 @@ const styles = css`
     .spot_optionsListLable {
       padding: 8px 16px;
       border-radius: 6px;
-      border: 1px solid var(--fill-3);
+      border: 1px solid var(--fill_3);
       margin-right: 16px;
-      color: var(--text-secondary);
+      color: var(--text_2);
       font-size: 12px;
       font-style: normal;
       font-weight: 400;
       cursor: pointer;
     }
     .spot_optionsListLableActive {
-      background: var(--fill-3);
-      color: var(--text-primary);
+      background: var(--fill_3);
+      color: var(--text_1);
       border: none;
     }
     .title {

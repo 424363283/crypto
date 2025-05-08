@@ -3,7 +3,7 @@ import { LANG } from '@/core/i18n';
 import { clsx, MediaInfo } from '@/core/utils';
 import { InputHTMLAttributes, useState } from 'react';
 import css from 'styled-jsx/css';
-import { DecimalInput } from '../numeric-input';  
+import { DecimalInput } from '../numeric-input';
 import { Size } from '../constants';
 export interface AmountInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -61,8 +61,8 @@ export const AmountInput = (props: AmountInputProps) => {
 
   const [focus, setFocus] = useState(false);
   return (
-    <div className='amount-input-wrapper'>
-      {label ? <h3 className='label'>{label}</h3> : null}
+    <div className="amount-input-wrapper">
+      {label ? <h3 className="label">{label}</h3> : null}
       <div
         className={clsx(
           'input-container',
@@ -72,7 +72,7 @@ export const AmountInput = (props: AmountInputProps) => {
       >
         <DecimalInput
           className={clsx('basic-input')}
-          style={{height:isMobile? '40px': '56px'}}
+          style={{ height: isMobile ? '40px' : '56px' }}
           placeholder={placeholder}
           onChange={handleInputChange}
           onFocus={() => setFocus(true)}
@@ -83,11 +83,11 @@ export const AmountInput = (props: AmountInputProps) => {
           digit={digit || scale}
           value={value}
           max={max}
-          type='number'
+          type="number"
           {...rest}
         />
         {showBtn && (
-          <span className='all-btn' onClick={onClickFillAllAmount}>
+          <span className="all-btn" onClick={onClickFillAllAmount}>
             {LANG('全部')}
           </span>
         )}
@@ -99,8 +99,8 @@ export const AmountInput = (props: AmountInputProps) => {
 const styles = css`
   .amount-input-wrapper {
     margin-top: 30px;
-    @media ${MediaInfo.mobile}{
-      margin-top:0;
+    @media ${MediaInfo.mobile} {
+      margin-top: 0;
     }
     .label {
       display: flex;
@@ -126,20 +126,26 @@ const styles = css`
     }
     .basic-input-bordered {
       border-radius: 16px;
-      background: var(--fill-3);
+      background: var(--fill_3);
       @media ${MediaInfo.mobile}{
         border-radius: 8px;
       }
       :global(.basic-input) {
         border-radius: 16px;
         padding: 0 20px;
-        background: var(--fill-3);
+        background: var(--fill_3);
+        @media ${MediaInfo.mobile} {
+          font-size: 14px;
+        }
       }
       .all-btn {
         margin-right: 20px;
         flex-shrink: 0;
-        color: var(--text-brand);
+        color: var(--text_brand);
         cursor: pointer;
+        @media ${MediaInfo.mobile} {
+          font-size: 12px;
+        }
       }
     }
     .none-bordered {

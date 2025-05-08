@@ -13,8 +13,9 @@ const { className, styles: _styles } = css.resolve`
     margin: 10px 0;
     font-size: 14px;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--text_1);
     cursor: text;
+    border: 1px solid transparent !important;
     :global(> *:not(input)) {
       flex-shrink: 0;
     }
@@ -30,7 +31,7 @@ const { className, styles: _styles } = css.resolve`
         text-align: center;
         height: 16px;
         margin: 0 16px;
-        background: var(--line-3);
+        background: var(--fill_line_3);
         @media ${MediaInfo.mobile} {
           margin-right: 0;
           margin-left: 1rem;
@@ -59,7 +60,7 @@ const { className, styles: _styles } = css.resolve`
       text-indent: 0px;
       font-size: 14px;
       font-weight: 500;
-      color: var(--text-primary);
+      color: var(--text_1);
       background: transparent;
       outline: none;
 
@@ -68,10 +69,10 @@ const { className, styles: _styles } = css.resolve`
         ime-mode: disabled;
       }
       &::placeholder {
-        color: var(--text-secondary) !important;
+        color: var(--text_2) !important;
       }
       &::-webkit-input-placeholder {
-        color: var(--text-secondary) !important;
+        color: var(--text_2) !important;
       }
     }
     .controller {
@@ -111,7 +112,7 @@ const { className, styles: _styles } = css.resolve`
           align-items: center;
           line-height: 14px;
           font-size: 12px;
-          color: var(--text-secondary) !important;
+          color: var(--text_2) !important;
         }
       }
       .add {

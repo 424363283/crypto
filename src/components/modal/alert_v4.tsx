@@ -66,7 +66,7 @@ const { className: cssClassName, styles } = css.resolve`
     }
     :global(.ant-modal-close) {
       top: 16px;
-      color: var(--text-secondary);
+      color: var(--text_2);
     }
     :global(.alert-icon) {
       text-align: center;
@@ -88,7 +88,7 @@ const { className: cssClassName, styles } = css.resolve`
         margin-bottom: 1px;
       }
       :global(.alert-description) {
-        color: var(--text-secondary);
+        color: var(--text_2);
         font-size: 14px;
         font-weight: 400;
         line-height: 150%; /* 21px */
@@ -105,14 +105,14 @@ const { className: cssClassName, styles } = css.resolve`
       }
     }
     :global(.ant-modal-header) {
-      color: var(--text-primary);
+      color: var(--text_1);
       background: var(--common-modal-bg);
       @media ${MediaInfo.mobile} {
-        background: var(--fill-1);
+        background: var(--fill_1);
       }
       margin-bottom: 0;
       :global(.ant-modal-title) {
-        color: var(--text-primary);
+        color: var(--text_1);
         text-align: justify;
         font-size: 16px;
         font-weight: 500;
@@ -162,9 +162,9 @@ const { className: cssClassName, styles } = css.resolve`
     :global(.ant-modal-content),
     :global(.ant-modal-body) {
       background: var(--common-modal-bg);
-      color: var(--text-secondary);
+      color: var(--text_2);
       @media ${MediaInfo.mobile} {
-        background: var(--fill-1);
+        background: var(--fill_1);
       }
     }
     :global(.ant-modal-content) {
@@ -174,7 +174,7 @@ const { className: cssClassName, styles } = css.resolve`
     :global(.ant-modal-footer) {
       background: var(--common-modal-bg);
       @media ${MediaInfo.mobile} {
-        background: var(--fill-1);
+        background: var(--fill_1);
       }
     }
   }

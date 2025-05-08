@@ -48,7 +48,7 @@ const styles = css`
   .info-card {
     display: flex;
     flex-direction: column;
-    border-right: 1px solid var(--line-1);
+    border-right: 1px solid var(--fill_line_1);
     flex-grow: 1;
     text-align: center;
     align-items: center;
@@ -86,7 +86,7 @@ const styles = css`
     .title {
       font-size: 14px;
       font-weight: 400;
-      color: var(--text-secondary);
+      color: var(--text_2);
       margin-bottom: 16px;
       @media ${MediaInfo.mobile} {
         font-size: 12px;
@@ -94,14 +94,14 @@ const styles = css`
       }
       .text-tips {
         cursor: pointer;
-        border-bottom: 1px dashed var(--text-secondary);
+        border-bottom: 1px dashed var(--text_2);
       }
     }
     .money-row {
       word-break: break-all;
       display: flex;
       align-items: center;
-      color: var(--text-primary);
+      color: var(--text_1);
       gap: 8px;
       @media ${MediaInfo.desktop} {
         flex-direction: column;
@@ -118,7 +118,7 @@ const styles = css`
       .value {
         font-size: 14px;
         font-weight: 500;
-        color: var(--text-tertiary);
+        color: var(--text_3);
         @media ${MediaInfo.mobile} {
           font-size: 12px;
         }

@@ -29,7 +29,7 @@ const { className, styles } = css.resolve`
       justify-content: space-between;
       align-items: center;
       align-self: stretch;
-      border-top: 1px solid var(--line-3);
+      border-top: 1px solid var(--fill_line_3);
       padding:24px 0 0;
       :global(.share-item) {
         cursor: pointer;
@@ -39,7 +39,7 @@ const { className, styles } = css.resolve`
         align-items: center;
         gap: 16px;
         :global(.name) {
-          color: var(--text-secondary);
+          color: var(--text_2);
           font-size: 14px;
           font-weight: 400;
         }
@@ -244,7 +244,7 @@ const { className, styles } = css.resolve`
         &-info{
           display:flex;
           flex-direction:row;
-          color: var(--text-white);
+          color: var(--text_white);
           font-size: 12px;
           font-weight: 400;
         }
@@ -285,18 +285,18 @@ const { className, styles } = css.resolve`
       justify-content: space-between;
       align-items: center;
       border-radius: 0px 0px 24px 24px;
-      background: var(--fill-3);
+      background: var(--fill_3);
       position:relative;
       z-index:3;
       .left {
         :global(div) {
           &:first-child {
-            color: var(--text-primary);
+            color: var(--text_1);
             font-size: 24px;
             font-weight: 500;
           }
           &:last-child {
-            color: var(--text-tertiary);
+            color: var(--text_3);
             font-size: 14px;
             font-weight: 400;
           }

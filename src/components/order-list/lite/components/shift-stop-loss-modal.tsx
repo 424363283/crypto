@@ -110,7 +110,7 @@ const styles = css`
     :global(.ant-modal-content){
       padding: 24px !important;
       border-radius: 24px !important;
-      background: var(--fill-1) !important;
+      background: var(--fill_1) !important;
     }
     :global(.ant-modal-header){
       border-bottom:none;
@@ -118,7 +118,7 @@ const styles = css`
       padding:0;
       :global(.ant-modal-title){
         text-align:left !important;
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 16px;
         font-weight: 500;
       }
@@ -137,12 +137,12 @@ const styles = css`
     .labelWrapper {
       display: flex;
       justify-content: space-between;
-      color: var(--text-secondary);
+      color: var(--text_2);
       font-size: 14px;
       font-weight: 400;
   
       button {
-        color: var(--text-brand);
+        color: var(--text_brand);
         border: none;
         outline: none;
         background: transparent;
@@ -150,7 +150,7 @@ const styles = css`
       }
     }
     .tips {
-      color: var(--text-secondary);
+      color: var(--text_2);
       font-family: "HarmonyOS Sans SC";
       font-size: 14px;
       font-style: normal;
@@ -158,7 +158,7 @@ const styles = css`
       line-height: 150%; /* 21px */
       padding:24px 0;
       :global(span){
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 14px;
         font-weight: 500;
         padding:0 3px;

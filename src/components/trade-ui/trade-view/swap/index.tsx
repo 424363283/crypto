@@ -228,7 +228,7 @@ const { className, styles } = css.resolve`
     @media ${MediaInfo.mobile} {
       margin: 0;
       padding-bottom: 1rem;
-      border-bottom: 1px solid var(--line-1);
+      border-bottom: 1px solid var(--fill_line_1);
     }
   }
 `;

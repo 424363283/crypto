@@ -9,49 +9,57 @@ import { Button } from '@/components/button';
 import { Copy } from '@/core/shared';
 import { message } from '@/core/utils/src/message';
 import { Loading } from '@/components/loading';
+import { Size } from '@/components/constants';
 interface CancelSettingProps {
   isOpen: boolean;
+  type?: string;
   close: Function;
-  contractSetting:string,
-  type?:string
+  contractSetting: any; // 合约设置的列表
+  contractList: any; // 合约列表
+  contractShowList?: string; // 合约需要显示的列表
+  title?: string; // 标题
 }
 const BringContractModal = (props: CancelSettingProps) => {
   const { isMobile } = useResponsive();
-  const { isOpen, close,type } = props;
+  const { isOpen, close, type, contractSetting, contractList, contractShowList, title } = props;
   const [checkedContract, setCheckedContract] = useState([]);
   const [contractLen, setContractLen] = useState(0);
-  const handleSelect = (list:any,len?:number) => {
-    setCheckedContract(list)
-    setContractLen(len||0)
-  }
-  const confrimContract = async() => {
+  const handleSelect = (list: any, len?: number) => {
+    setCheckedContract(list);
+    setContractLen(len || 0);
+  };
+  const confrimContract = async () => {
     if (type === 'bring') {
-      Loading.start()
-      const user: any = Copy.getUserInfo();
+      if (!checkedContract?.length) {
+        message.error(LANG('请选择合约'));
+        return;
+      }
+      Loading.start();
+      const user: any = await Copy.getUserInfo();
       const result: Record<number, string> = checkedContract.reduce((obj, item, index) => {
-        obj[index] = item.id;
+        obj[index] = item.symbol;
         return obj;
       }, {} as Record<number, string>);
       const res = await Copy.fetchUpdateShareConfig({
-        uid: user?.user.uid,
-        contractInfo: JSON.stringify(result)
-      })
-      Loading.end()
-      if( res.code === 200) {
-        close(true)
+        uid: user?.uid,
+        contractInfo: checkedContract.length > 0 ? JSON.stringify(result) : ''
+      });
+      Loading.end();
+      if (res?.code === 200) {
+        close(true);
       } else {
-        message.error(res.message)
+        message.error(res.message);
       }
     } else {
-      close(checkedContract,contractLen)
+      close(checkedContract, contractLen);
     }
-  }
+  };
   return (
     <>
       {!isMobile && (
         <BasicModal
           open={isOpen}
-          title={LANG('带单合约')}
+          title={title || LANG('合约')}
           width={640}
           onCancel={() => close()}
           onOk={() => confrimContract()}
@@ -61,16 +69,37 @@ const BringContractModal = (props: CancelSettingProps) => {
           destroyOnClose
         >
           <div className="copy-modal-container">
-            <CopyTradingContract selectPositon="bottom"  selectContract={handleSelect}/>
+            <CopyTradingContract
+              type={type}
+              selectPositon="bottom"
+              contractSetting={contractSetting}
+              contractList={contractList}
+              contractShowList={contractShowList}
+              selectContract={handleSelect}
+            />
           </div>
         </BasicModal>
       )}
       {isMobile && (
-        <MobileDrawer open={isOpen} title={'带单合约'} direction="bottom" height={454} width={'100%'} onClose={() => close()}>
+        <MobileDrawer
+          open={isOpen}
+          title={'带单合约'}
+          direction="bottom"
+          height={454}
+          width={'100%'}
+          onClose={() => close()}
+        >
           <div className="copy-modal-container">
-            <CopyTradingContract selectPositon="bottom" selectContract={handleSelect} />
+            <CopyTradingContract
+              selectPositon="bottom"
+              type={type}
+              contractSetting={contractSetting}
+              contractList={contractList}
+              contractShowList={contractShowList}
+              selectContract={handleSelect}
+            />
             <div className="handle-btn">
-              <Button type="primary" rounded height={48} width={'100%'} onClick={confrimContract}>
+              <Button type="primary" rounded size={Size.MD} width={'100%'} onClick={confrimContract}>
                 {'确定'}
               </Button>
             </div>
@@ -89,6 +118,16 @@ const copyCancelStyle = css`
       display: flex;
       align-items: center;
     }
+
+    :global(.ant-modal-content) {
+      padding: 24px 0;
+      :global(.basic-content) {
+        padding: 8px 24px;
+      }
+      :global(.ant-modal-title) {
+        padding-bottom: 8px!important;
+      }
+    }
     .flexSpan {
       display: flex;
       justify-content: space-between;
@@ -100,6 +139,12 @@ const copyCancelStyle = css`
   :global(.handle-btn) {
     margin: 24px 0;
   }
+    :global(.ant-modal-footer) {
+         :global(.ant-btn) {
+         font-size: 16px;
+      }
+    }
+  
 `;
 
 export default BringContractModal;

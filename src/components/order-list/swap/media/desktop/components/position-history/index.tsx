@@ -13,6 +13,8 @@ import { CodeSelectTitle } from '../code-select-title';
 import { LeverItem } from '../lever-item';
 import { WalletName } from '../wallet-name';
 import { clsx, styles } from './styled';
+import CommonIcon from '@/components/common-icon';
+import YIcon from '@/components/YIcons';
 
 export const PositionHistory = ({ active }: { active: boolean }) => {
   const { isUsdtType } = Swap.Trade.base;
@@ -92,14 +94,20 @@ const useColumns = ({ isUsdtType, data, onShare }: any) => {
                 </div>
                 <div>
                   {item.marginType === 1 ? LANG('全仓') : LANG('逐仓')}{' '}
-                  <WalletName>
-                    {item?.alias ||
-                      Swap.Assets.getWallet({ walletId: item.subWallet, usdt: isUsdtType, withHooks: false })?.alias}
-                  </WalletName>
                 </div>
               </div>
             </div>
           </TradeLink>
+        );
+      },
+    },
+    {
+      title: LANG('账户'),
+      dataIndex: 'subWallet',
+      render: (v: any, item: any) => {
+        const walletData = Swap.Assets.getWallet({ walletId: item.subWallet, usdt: isUsdtType, withHooks: false });
+        return (
+          <WalletName> {LANG(walletData?.alias)} </WalletName>
         );
       },
     },
@@ -152,28 +160,30 @@ const useColumns = ({ isUsdtType, data, onShare }: any) => {
             <div className={clsx()}>
               {value} {settleCoin}
             </div>
-            <ImageHover
-              src='common-share-round-0'
-              className={clsx('share')}
-              width={20}
-              height={20}
-              hoverSrc='common-share-round-active-0'
+            <YIcon.share
+              className={clsx('editIcon')}
               onClick={() => {
                 onShare({ ...item, income: value });
               }}
-              enableSkin
             />
           </div>
         );
       },
     },
     {
-      title: LANG('平仓时间'),
+      title: LANG('开仓时间'),
       dataIndex: 'ctime',
-      // width: 110,
+      width: 180,
+      render: (time: any) => dayjs(time).format('YYYY-MM-DD HH:mm:ss'),
+    },
+    {
+      title: LANG('平仓时间'),
+      dataIndex: 'mtime',
+      width: 180,
       render: (time: any) => dayjs(time).format('YYYY-MM-DD HH:mm:ss'),
     },
   ];
   return columns;
 };
 export default PositionHistory;
+

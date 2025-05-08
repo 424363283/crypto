@@ -40,7 +40,7 @@ import historyOrderMark, { HistoryOrderMarkArrowDirection } from './extension/hi
 
 //新版持仓线
 
-import positionOverlay from './extension/overlays/positionOverlay';
+import positionOverlay, { cacheTPSLineFigureKey } from './extension/overlays/positionOverlay';
 import takeProfitOverlay from './extension/overlays/takeProfitOverlay';
 import stopLossOverlay from './extension/overlays/stopLossOverlay';
 import addOverlay from './extension/overlays/addOverlay';
@@ -95,6 +95,9 @@ export interface HistoryOrderMarkOptions {
   tooltipColor: string;
 }
 
+const cachePositionLineData: any = {};
+let prevPositionIds: number[] = [];
+
 // 修改新版本k线
 const drawOverlay = (index: number, positoinData: any, chart: any, positionOverlayConfig: any, orginalItem: any) => {
   /** 
@@ -117,13 +120,27 @@ const drawOverlay = (index: number, positoinData: any, chart: any, positionOverl
   //   onCloseSpslModal
   // } = useModalProps();
   const overlayViewConfig = JSON.parse(JSON.stringify(positionOverlayConfig));
+
+  let stopProfit = '';
+  let stopLoss = '';
+
+  positoinData.orginalItem.orders.forEach((o: any) => {
+    if (o.strategyType === '1') stopProfit = Number(o.triggerPrice);
+    if (o.strategyType === '2') stopLoss = Number(o.triggerPrice);
+  });
+  const positionIds = positoinData.positionIds;
   const positionData: any = {
     timestamp: positoinData.timestamp,
     value: positoinData.price,
-    direction: positoinData.direction
+    direction: positoinData.direction,
+    positionId: positoinData?.orginalItem?.positionId,
+    stopProfit,
+    stopLoss,
+    dialogVisible: positoinData.dialogVisible
   };
   // console.log('仓位数据', positionData);
   overlayViewConfig.positionOverlay.positionData = positionData;
+
   overlayViewConfig.chart = chart;
 
   // 注册事件
@@ -172,30 +189,90 @@ const drawOverlay = (index: number, positoinData: any, chart: any, positionOverl
       positionId: data.overlay?.extendData?.extendsConfig?.positionId
     });
   };
-  const positionOverlayId = chart?.createOverlay({
-    name: 'positionOverlay',
-    paneId: 'candle_pane',
-    visible: true,
-    lock: true,
-    mode: OverlayMode.Normal,
-    points: [{ timestamp: positionData.timestamp, value: positionData.value }],
-    extendData: overlayViewConfig,
-    onclick: (data: any) => {
-      debugger;
-    }
-  });
-  overlayViewConfig.positionOverlay.id = positionOverlayId;
 
-  // 创建加号覆盖物
-  // const addOverlayId = chart?.createOverlay({
-  //   name: 'addOverlay',
-  //   paneId: 'candle_pane',
-  //   visible: true,
-  //   lock: true,
-  //   mode: OverlayMode.Normal,
-  //   points: [{ dataIndex: positionData.index, timestamp: positionData.timestamp, value: positionData.value }],
-  //   extendData: addBtnOverlayConfig
-  // })
+  // 判断positiobIds是否发生变化 发生变化则说明有订单更新
+  const hasPositionIdsChanged = JSON.stringify(prevPositionIds) !== JSON.stringify(positionIds);
+  if (!positionIds.length) {
+    return chart?.removeOverlay({ name: 'positionOverlay' });
+  }
+
+  // 已有的止盈止损 需要清除TP/SL
+  const positionId = positoinData?.orginalItem?.positionId;
+  const tpslLine = positionId ? cacheTPSLineFigureKey[positionId] : null;
+  const removeOverlayIfExists = overlayId => {
+    if (overlayId) {
+      chart?.removeOverlay({ id: overlayId });
+      Object.assign(cacheTPSLineFigureKey, {
+        takeProfitOverlayId: null,
+        stopLossOverlayId: null,
+        id: null,
+        [positionId]: null
+      });
+    }
+  };
+  (stopLoss || positionData.dialogVisible) && removeOverlayIfExists(tpslLine?.stopLossOverlayId);
+  (stopProfit || positionData.dialogVisible) && removeOverlayIfExists(tpslLine?.takeProfitOverlayId);
+  tpslLine?.stopLossOverlayId &&
+    chart &&
+    chart?.updateOverlay &&
+    chart?.updateOverlay({
+      name: 'stopLossOverlay',
+      id: tpslLine?.stopLossOverlayId,
+      points: [
+        {
+          value: positionData.value // 只更新value值
+        }
+      ]
+    });
+
+  tpslLine?.takeProfitOverlayId &&
+    chart &&
+    chart?.updateOverlay &&
+    chart?.overrideOverlay({
+      name: 'takeProfitOverlay',
+      id: tpslLine?.takeProfitOverlayId,
+      extendData: overlayViewConfig,
+      points: [
+        {
+          value: positionData.value // 只更新value值
+        }
+      ]
+    });
+
+  if (hasPositionIdsChanged) {
+    // 清理不存在的持仓线
+    Object.keys(cachePositionLineData).forEach(cachedId => {
+      if (!positionIds.includes(Number(cachedId))) {
+        chart?.removeOverlay({ id: cachePositionLineData[cachedId] });
+        delete cachePositionLineData[cachedId];
+      }
+    });
+
+    prevPositionIds = [...positionIds];
+  }
+
+  // 缓存持仓线 避免重复创建
+  if (!cachePositionLineData[positoinData.orginalItem?.positionId]) {
+    const positionOverlayId = chart?.createOverlay({
+      name: 'positionOverlay',
+      paneId: 'candle_pane',
+      visible: true,
+      lock: true,
+      mode: OverlayMode.Normal,
+      points: [{ timestamp: positionData.timestamp, value: positionData.value }],
+      extendData: overlayViewConfig,
+      onclick: (data: any) => {}
+    });
+    overlayViewConfig.positionOverlay.id = positionOverlayId;
+    cachePositionLineData[positoinData.orginalItem?.positionId] = positionOverlayId;
+  } else {
+    // 更新已存在的overlay数据
+    chart?.overrideOverlay({
+      name: 'positionOverlay',
+      id: cachePositionLineData[positoinData.orginalItem?.positionId],
+      extendData: overlayViewConfig
+    });
+  }
 };
 
 const addBtnOverlayConfig = {
@@ -218,7 +295,7 @@ export default class Widget {
   private _historyMarkCountMap: Record<string, number> = {};
 
   private _paneIds: Record<string, string> = {};
-
+  private _tpslOverlayCache: Record<string, any> = {};
   constructor(options: WidgetOptions) {
     // 新版本持仓线
 
@@ -631,6 +708,10 @@ export default class Widget {
     const count = this._positionLineCountMap[key] ?? 0;
 
     // console.log("position=======",position)
+    // this._chart?.removeOverlay({
+    //   name: 'positionOverlay'
+    // });
+
     drawOverlay(position.timestamp, position, this._chart, position.positionOverlayConfig);
 
     // const positionOverlayId = this._chart?.createOverlay({
@@ -721,6 +802,11 @@ export default class Widget {
     this._positionLineCountMap = {};
     this._chart?.removeOverlay({ name: 'positionLine' });
   }
+  removeNewPositionLine() {
+    this._chart?.removeOverlay({
+      name: 'positionOverlay'
+    });
+  }
   //创建历史成交标记
   createHistoryOrderMark(orderMark: HistoryOrderMarkOptions) {
     const dataList = this._chart?.getDataList() ?? [];
@@ -802,6 +888,7 @@ export default class Widget {
   createPositionTPSLLine(position: any) {
     const key = `${position.price}`;
     const count = this._positionLineCountMap[key] ?? 0;
+
     this._chart?.createOverlay({
       name: 'positionTPTLLine',
       points: [{ value: position.price }],
@@ -823,7 +910,7 @@ export default class Widget {
         offsetLeft: 2 + count * 40
       },
       onClick: event => {
-        switch (event.figure.key) {
+        switch (event.figureKey) {
           case PositionTPSLLineFigureKey.Close: {
             position?.onCloseClick();
             break;
@@ -883,10 +970,14 @@ export default class Widget {
       },
       onPressedMoveEnd: event => {
         // console.log("按住拖动结束回调事件", event)
+        if (event.figureKey.key === PositionTPSLLineFigureKey.Close) {
+          return;
+        }
         position.onOrderdragEnd?.(event);
         // return true;
       }
     });
+
     this._positionLineCountMap[key] = (this._positionLineCountMap[key] ?? 0) + 1;
   }
   //移除止盈止损线
@@ -944,7 +1035,7 @@ export default class Widget {
         offsetLeft: 2 + count * 40
       },
       onClick: event => {
-        switch (event.figure.key) {
+        switch (event.figureKey) {
           case PositionEntrustineFigureKey.Close: {
             position?.onCloseClick();
             break;
@@ -957,7 +1048,7 @@ export default class Widget {
         return true;
       },
       onMouseEnter: event => {
-        switch (event.figure.key) {
+        switch (event.figureKey) {
           case PositionEntrustineFigureKey.Close: {
             this._chart?.overrideOverlay({
               id: event.overlay.id,
@@ -1004,6 +1095,12 @@ export default class Widget {
       },
       onPressedMoveEnd: event => {
         console.log('按住拖动结束回调事件', event);
+        if (
+          event.figure.key === PositionEntrustineFigureKey.Close ||
+          event.figure.key === PositionEntrustineFigureKey.Reverse
+        ) {
+          return;
+        }
         position.onOrderdrag(event);
         return true;
       }

@@ -95,8 +95,8 @@ const styles = css`
     align-items: center;
     gap: 4px;
     border-radius:0 0 8px 8px;
-    background: var(--fill-pop);
-    box-shadow: 0px 0px 4px 0px var(--fill-projection);
+    background: var(--fill_pop);
+    box-shadow: 0px 0px 4px 0px var(--fill_shadow);
     padding: 4px 0;
     max-height: 250px;
     overflow: scroll;
@@ -105,7 +105,7 @@ const styles = css`
       line-height: 1.5rem;
       font-size: 12px;
       font-weight: 500;
-      color: var(--text-secondary);
+      color: var(--text_2);
       &.active {
         color: var(--brand);
       }
@@ -133,8 +133,8 @@ const styles = css`
       gap: 8px;
       font-size: 12px;
       min-width: 4.375rem;
-      background: var(--fill-3);
-      color: var(--text-primary);
+      background: var(--fill_3);
+      color: var(--text_1);
       &::after {
         content: '';
         display: block;
@@ -146,7 +146,7 @@ const styles = css`
         height: 0;
         border-left: 4px solid transparent;
         border-right: 4px solid transparent;
-        border-top: 5px solid var(--text-tertiary);
+        border-top: 5px solid var(--text_3);
       }
     }
   }

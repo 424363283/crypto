@@ -42,7 +42,7 @@ export const BaseStyle = () => {
           margin: 0;
           font-size: 14px;
           color: rgba(0, 0, 0, 0.65);
-          background: var(--bg-1);
+          background: var(--fill_bg_1);
   font-family: 'HarmonyOS_Sans_SC' !important;
 
           overflow: overlay; /*滚动条会覆盖在页面之上*/
@@ -141,10 +141,10 @@ export const BaseStyle = () => {
         }
         /** dropdown button */
         :global(.ant-dropdown .ant-dropdown-menu-vertical) {
-          background-color: var(--dropdown-select-bg-color);
+          background-color: var(--fill_3);
         }
         :global(.ant-dropdown .ant-dropdown-menu-vertical .ant-dropdown-menu-item) {
-          color: var(--text-secondary);
+          color: var(--text_2);
           background: transparent !important;
         }
         :global(.ant-dropdown .ant-dropdown-menu-vertical .ant-dropdown-menu-item.ant-dropdown-menu-item-active) {
@@ -177,6 +177,17 @@ export const BaseStyle = () => {
             opacity: 0.54;
           }
         }
+
+        input:-webkit-autofill {
+          -webkit-transition: color 99999s ease-in-out 0s, background-color 99999s ease-in-out 0s;
+          transition: color 99999s ease-in-out 0s, background-color 99999s ease-in-out 0s;
+          -webkit-text-fill-color: var(--text_1);
+        }
+
+        input:-webkit-autofill, input:-webkit-autofill:active, input:-webkit-autofill:focus, input:-webkit-autofill:hover {
+          -webkit-background-clip: text;
+        }
+
         .text-ellipsis {
           white-space: nowrap;
           text-overflow: ellipsis;

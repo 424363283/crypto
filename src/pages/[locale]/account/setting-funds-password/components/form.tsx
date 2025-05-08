@@ -107,13 +107,13 @@ const styles = css`
     .title{
      margin:50px 0 30px 0;
      font-size:20px;
-     color:var(--text-primary);
+     color:var(--text_1);
      font-weight:700;
     }
      :global(.basic-input-container){
       :global(.label){
         font-size:14px;
-        color:var(--text-tertiary);
+        color:var(--text_3);
       }
      }
    

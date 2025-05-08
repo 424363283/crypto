@@ -40,7 +40,7 @@ const styles = css`
       
       }
       :global(th) {
-        color: var(--text-tertiary) !important;
+        color: var(--text_3) !important;
       }
       :global(tr),
       :global(th),

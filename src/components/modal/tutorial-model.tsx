@@ -206,7 +206,7 @@ const TutorialModel = ({ type = 'spot', ...props }: any) => {
 
 const styles = css`
 .TransferButton{
-  background: var(--fill-projection);
+  background: var(--fill_shadow);
 }
   .box {
     display: flex;
@@ -223,7 +223,7 @@ const styles = css`
         }
  
         .title {
-          color: var(--text-secondary);
+          color: var(--text_2);
           font-size: 14px;
           font-style: normal;
           font-weight: 500;
@@ -232,7 +232,7 @@ const styles = css`
          
         }
         .text {
-          color: var(--text-secondary);
+          color: var(--text_2);
           font-size: 12px;
           font-style: normal;
           font-weight: 400;
@@ -245,7 +245,7 @@ const styles = css`
         .prompt {
           font-size: 14px;
           font-weight: 400;
-          color: var(--text-error);
+          color: var(--text_red);
         }
         & > :global(div) {
           display: none;
@@ -253,7 +253,7 @@ const styles = css`
         &.active {
            padding: 16px; 
           .title {
-            color: var(--text-primary);
+            color: var(--text_1);
             font-size: 14px;
             font-style: normal;
             font-weight: 500;
@@ -280,14 +280,14 @@ const styles = css`
               font-weight: 500;
               color: #fff;
               &:nth-child(2) {
-                background: var(--fill-pop);
-                color: var(--text-primary);
+                background: var(--fill_pop);
+                color: var(--text_1);
               }
             }
           }
           &.bg {
             border-radius: 8px;
-            background: var(--fill-3);
+            background: var(--fill_3);
           }
         }
         :global(.btn) {

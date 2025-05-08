@@ -6,12 +6,12 @@ export const HistoricalTableStyle = () => {
           .ant-table-tbody .ant-table-row td {
             font-size: 14px!important;
             font-weight: 500!important;
-            color: var(--text-primary)!important;
+            color: var(--text_1)!important;
           }
           .ant-table-thead {
             th.ant-table-cell {
               font-weight: normal!important;
-              color: var(--text-tertiary)!important;
+              color: var(--text_3)!important;
               font-size: 14px!important;
               padding-bottom: 0!important;
             }

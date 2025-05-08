@@ -96,7 +96,7 @@ const styles = css`
   :global(.footer) {
     display: flex;
     flex-direction: column;
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     padding: 16px;
     margin-top: var(--theme-trade-layout-spacing);
     flex: 1;
@@ -144,12 +144,12 @@ const styles = css`
           flex-direction: column;
           font-size: 14px;
           font-weight: 500;
-          color: var(--text-primary);
+          color: var(--text_1);
           gap: 8px;
           > div:last-child {
             font-size: 12px;
             font-weight: 400;
-            color: var(--text-tertiary);
+            color: var(--text_3);
           }
         }
         .money {

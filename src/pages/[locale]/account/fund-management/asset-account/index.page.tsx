@@ -130,7 +130,7 @@ function AssetAccount() {
   console.log(tableData, 111);
   
   return (
-    <UniversalLayout className='asset-count-container' bgColor='var(--fill-2)' headerBgColor='var(--fill-2)'>
+    <UniversalLayout className='asset-count-container' bgColor='var(--fill_2)' headerBgColor='var(--fill_2)'>
       <div className='asset-account-header'>
         <Nav title={NAV_TITLE_MAP[curTab]} />
       </div>
@@ -168,7 +168,7 @@ const styles = css`
     :global(table) {
       padding: 0;
     }
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     @media ${MediaInfo.mobile} {
       padding: 0 12px;
       background-color: transparent;

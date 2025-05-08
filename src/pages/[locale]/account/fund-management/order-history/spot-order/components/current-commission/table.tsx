@@ -10,14 +10,18 @@ import { Loading } from '@/components/loading';
 import { LoadingType, Spot } from '@/core/shared';
 import { closeSpotOrderApi, getSpotPositionListApi } from '@/core/api';
 import { LANG } from '@/core/i18n';
+import { ORDER_HISTORY_TYPE } from '@/pages/[locale]/account/fund-management/order-history/types';
+import { SPOT_HISTORY_TAB_KEY } from '../../types';
+import { useResponsive } from '@/core/hooks';
 
 export const SpotCurrentCommissionTable = () => {
+  const { isMobile } = useResponsive();
   const [state, setState] = useImmer({
     page: 1,
     data: [] as any,
     loading: false,
     isOCO: false,
-    searchParam: {} as any,
+    searchParam: {} as any
   });
   const { page, data, loading, searchParam } = state;
   const fetchSpotPosition = async ({
@@ -25,7 +29,7 @@ export const SpotCurrentCommissionTable = () => {
     side,
     type,
     commodity,
-    page = 1,
+    page = 1
   }: {
     commodity: string;
     symbol: string;
@@ -33,7 +37,7 @@ export const SpotCurrentCommissionTable = () => {
     type: string;
     page?: number;
   }) => {
-    setState((draft) => {
+    setState(draft => {
       draft.loading = true;
       draft.page = page;
       draft.searchParam = {
@@ -41,13 +45,13 @@ export const SpotCurrentCommissionTable = () => {
         side,
         type,
         commodity,
-        page,
+        page
       };
     });
     const params: any = {
       orderTypes: '0,2',
-      rows: 13,
-      page,
+      rows: isMobile ? 10 : 13,
+      page
     };
     if (commodity) {
       params['commodity'] = commodity;
@@ -65,19 +69,19 @@ export const SpotCurrentCommissionTable = () => {
     }
     const res = await getSpotPositionApi(params);
     if (res.code === 200) {
-      setState((draft) => {
+      setState(draft => {
         draft.data = res.data;
       });
     } else {
       message.error(res.message);
     }
-    setState((draft) => {
+    setState(draft => {
       draft.loading = false;
     });
   };
 
   const onChangePagination = (page: number) => {
-    setState((draft) => {
+    setState(draft => {
       draft.page = page;
     });
     fetchSpotPosition({ ...searchParam, page: page });
@@ -99,14 +103,13 @@ export const SpotCurrentCommissionTable = () => {
 
   useEffect(() => {
     const iter = setInterval(() => {
-      fetchSpotPosition({ ...searchParam, page: page })
+      fetchSpotPosition({ ...searchParam, page: page });
     }, 2000);
 
     return () => {
       clearInterval(iter);
     };
-
-  }, [page, searchParam])
+  }, [page, searchParam]);
   return (
     <>
       <SpotFilterBar onSearch={fetchSpotPosition} filterData={filterList} />
@@ -117,10 +120,13 @@ export const SpotCurrentCommissionTable = () => {
         columns={columns0}
         showTabletTable
         showMobileTable
+        isHistoryList
+        historyType={SPOT_HISTORY_TAB_KEY.CURRENT_COMMISSION}
+        orderType={ORDER_HISTORY_TYPE.SPOT_ORDER}
         pagination={{
           current: page,
           pageSize: 13,
-          onChange: onChangePagination,
+          onChange: onChangePagination
         }}
       />
       <TableStyle />

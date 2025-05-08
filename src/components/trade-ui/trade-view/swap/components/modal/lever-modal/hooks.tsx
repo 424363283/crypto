@@ -26,7 +26,7 @@ const formatLeverList = ({ leverageConfig, maxLever }: { leverageConfig: any; ma
 };
 export const useLeverModal = ({ visible }: { visible: boolean }) => {
   const { isDark } = useTheme();
-  const { lever, symbol } = Swap.Trade.store.modal.leverData;
+  const { lever, symbol, side, pid } = Swap.Trade.store.modal.leverData;
   const cryptoData = Swap.Info.getCryptoData(symbol);
   const riskList = Swap.Info.getRiskListData(symbol);
   const { isMobile } = useResponsive();
@@ -61,7 +61,7 @@ export const useLeverModal = ({ visible }: { visible: boolean }) => {
     if (lever === value) return onClose();
     Loading.start();
     try {
-      const result = await Swap.Info.updateLever(Swap.Trade.base.isUsdtType, { id: symbol, lever: value });
+      const result = await Swap.Info.updateLever(Swap.Trade.base.isUsdtType, { id: symbol, lever: value, side: side, pid });
       Swap.Trade.initQuote();
       if (result.code === 200) {
         Swap.Order.fetchPosition(Swap.Trade.base.isUsdtType);
@@ -148,5 +148,5 @@ export const useLeverModal = ({ visible }: { visible: boolean }) => {
     </>
   );
 
-  return { content, lever, value, onClose, footerContent, onConfirm: _onConfirm };
+  return { content, side, lever, value, onClose, footerContent, onConfirm: _onConfirm };
 };

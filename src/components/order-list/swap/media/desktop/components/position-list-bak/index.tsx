@@ -270,6 +270,7 @@ export const PositionList = ({
           <OrderShare
             visible={!!modalItem}
             title={LANG('当前仓位')}
+            symbol={modalItem.symbol}
             code={Swap.Info.getCryptoData(modalItem.symbol, { withHooks: false }).name}
             onClose={() => setModalItem(undefined)}
             rate={Swap.Calculate.positionROE({
@@ -389,7 +390,7 @@ const useColumns = ({
     <Tooltip
       placement='top'
       title={LANG(
-        '合约的实时标记价格。此标记价格将用于计算盈亏及保证金，可能与合约最新成交价格有所偏差，以避免价格操纵。标记价格的计算是基于指数价格，指数价格是从主流现货交易所提取的总价格，由其相对交易量加权。当前指数价格是{price}。',
+        '合约的实时标记价格。此标记价格将用于计算盈亏及保证金，可能与合约最新成交价格有所偏差，以避免价格操纵。标记价格的计算是基于指数价格，指数价格是从主流现货交易所提取的总价格，由其相对交易量加权。',
         { price: indexPrice }
       )}
     >

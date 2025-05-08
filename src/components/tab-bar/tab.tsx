@@ -33,7 +33,7 @@ const styles = css`
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    color: var(--text-secondary);
+    color: var(--text_2);
     height: 40px;
     font-size: 14px;
     &.xs {
@@ -68,7 +68,7 @@ const styles = css`
     }
     &.active {
       > div {
-        color: var(--text-brand);
+        color: var(--text_brand);
       }
     }
     &.line.active {
@@ -80,7 +80,7 @@ const styles = css`
           bottom: 0;
           width: 37.5%;
           height: 3px;
-          background: var(--text-brand);
+          background: var(--text_brand);
           @media ${MediaInfo.mobile} {
             bottom: -5px;
           }
@@ -91,22 +91,22 @@ const styles = css`
       > div{
         padding: 8px 16px;
         border-radius: 6px;
-        border: 1px solid var(--line-3);
+        border: 1px solid var(--fill_line_3);
         @media ${MediaInfo.mobile} {
            padding: 5px 8px;
            border: none;
-           background: var(--fill-3);
+           background: var(--fill_3);
         }
       }
     }
     &.card.active {
       > div {
-        color: var(--text-primary);
-        background: var(--fill-3);
-        border: 1px solid var(--fill-3);
+        color: var(--text_1);
+        background: var(--fill_3);
+        border: 1px solid var(--fill_3);
         @media ${MediaInfo.mobile} {
           color: var(--brand);
-          background: var(--fill-3);
+          background: var(--fill_3);
           border: 1px solid var(--brand);
         }
       }

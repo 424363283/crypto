@@ -4,7 +4,7 @@ import css from 'styled-jsx/css';
 const { className, styles } = css.resolve`
   .picker-content {
     display: flex;
-    background: var(--fill-3);
+    background: var(--fill_3);
     border-radius: 5px;
     align-items: center;
     padding: 0 16px;
@@ -78,19 +78,19 @@ const { className, styles } = css.resolve`
       background: rgba(121, 130, 150, 0.1);
     }
     :global(.ant-picker-panel-container) {
-      background: var(--fill-3);
+      background: var(--fill_3);
     }
     :global(.ant-picker-cell) :global(.ant-picker-cell-inner),
     :global(.ant-picker-cell-in-view) :global(.ant-picker-cell-inner),
     :global(.ant-picker-content) :global(th),
     :global(.ant-picker-header-view) :global(button),
     :global(.ant-picker-header button) {
-      color: var(--text-primary);
+      color: var(--text_1);
     }
     :global(.ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single)::before),
     :global(.ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single)::before),
     :global(.ant-picker-cell-in-view.ant-picker-cell-in-range::before) {
-      background: var(--label);
+      background: var(--brand_20);
     }
     :global(.ant-picker-cell-in-vie.ant-picker-cell-selected::before) {
       background: var(--theme-primary-color);
@@ -102,11 +102,11 @@ const { className, styles } = css.resolve`
       color: var(--theme-font-color-1);
     }
     :global(.ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-disabled) .ant-picker-cell-inner) {
-      background: var(--text-brand);
+      background: var(--text_brand);
     }
     :global(.ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-disabled) .ant-picker-cell-inner) {
-      color: var(--text-white);
-      background: var(--text-brand);
+      color: var(--text_white);
+      background: var(--text_brand);
     }
     :global(.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before) {
       border: 1px solid var(--brand);

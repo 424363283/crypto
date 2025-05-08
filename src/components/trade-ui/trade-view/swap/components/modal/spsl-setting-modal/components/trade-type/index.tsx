@@ -22,7 +22,7 @@ const TradeType = ({ isBuy, onChange }: { isBuy: boolean; onChange: Function }) 
             flex-direction: row;
             justify-content: space-between;
             border-radius: 8px;
-            background: var(--fill-3);
+            background: var(--fill_3);
             @media ${MediaInfo.mobile} {
               padding: 0;
               margin: 0 0.5rem;
@@ -34,7 +34,7 @@ const TradeType = ({ isBuy, onChange }: { isBuy: boolean; onChange: Function }) 
               display: flex;
               justify-content: center;
               align-items: center;
-              color: var(--text-secondary);
+              color: var(--text_2);
               background-size: cover;
               &:nth-child(1) {
                 border-right: 0;
@@ -48,12 +48,12 @@ const TradeType = ({ isBuy, onChange }: { isBuy: boolean; onChange: Function }) 
               }
               &.active.green {
                 border-radius: 8px;
-                color: var(--text-white);
+                color: var(--text_white);
                 background: var(--color-green);
               }
               &.active.red {
                 border-radius: 8px;
-                color: var(--text-white);
+                color: var(--text_white);
                 background: var(--color-red);
               }
             }

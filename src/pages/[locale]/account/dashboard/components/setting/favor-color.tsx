@@ -116,7 +116,7 @@ const favorColorStyle = css`
             padding: 0;
             margin:0;
             .items{
-                border: 1px solid var(--line-1);
+                border: 1px solid var(--fill_line_1);
                 border-radius: 8px;
                 padding: 10px 15px;
                 margin-bottom: 10px;

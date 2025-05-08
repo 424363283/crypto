@@ -31,7 +31,7 @@ const styles = css`
     flex-direction: row;
     align-items: center;
     padding: 0 10px;
-    background: var(--fill-3);
+    background: var(--fill_3);
   
     &:hover {
       border-color: var(--skin-primary-color);
@@ -52,8 +52,8 @@ const styles = css`
       height: 32px;
       border: none;
       flex: 1;
-      background: var(--fill-3);
-      color: var(--text-primary);
+      background: var(--fill_3);
+      color: var(--text_1);
       
     }
   }

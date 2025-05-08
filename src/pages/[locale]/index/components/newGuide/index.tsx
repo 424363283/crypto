@@ -40,7 +40,7 @@ export default function NewGuide() {
 const styles = css`
   .new-guide {
     padding: 80px 0;
-    background: var(--fill-2);
+    background: var(--fill_2);
     @media ${MediaInfo.mobile} {
       padding: 40px 0;
     }
@@ -61,7 +61,7 @@ const styles = css`
       }
 
       h2 {
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 32px;
         font-weight: 700;
         @media ${MediaInfo.mobile} {
@@ -69,7 +69,7 @@ const styles = css`
         }
       }
       p {
-        color: var(--text-tertiary);
+        color: var(--text_3);
         font-size: 16px;
         font-weight: 400;
       }
@@ -94,7 +94,7 @@ const styles = css`
       align-items: center;
       gap: 16px;
       h5 {
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 24px;
         font-weight: 700;
         @media ${MediaInfo.mobile} {
@@ -102,7 +102,7 @@ const styles = css`
         }
       }
       p {
-        color: var(--text-secondary);
+        color: var(--text_2);
         font-size: 14px;
         font-weight: 400;
         line-height: 150%;

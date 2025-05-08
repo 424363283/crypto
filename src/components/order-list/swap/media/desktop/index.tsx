@@ -9,7 +9,10 @@ import { usePageListener } from '../../hooks/use-page-listener';
 import { PositionHistory } from './components/position-history';
 import { clsx, styles } from './styled';
 import { kChartEmitter } from '@/core/events';
-
+import { useCopyTradingSwapStore } from '@/store/copytrading-swap';
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
+import { useEffect } from 'react';
+import { Swap } from '@/core/shared';
 const PositionList = dynamic(() => import('./components/position-list'), { ssr: false, loading: () => <div /> });
 const PendingList = dynamic(() => import('./components/pending-list'), { ssr: false, loading: () => <div /> });
 const HistoryList = dynamic(() => import('./components/history-list'), { ssr: false, loading: () => <div /> });
@@ -18,12 +21,23 @@ const FinishedList = dynamic(() => import('./components/finished-list'), { ssr: 
 const HeaderRight = dynamic(() => import('./components/header-right'), { ssr: false, loading: () => <div /> });
 
 export const Index = () => {
+  const fetchShareTrader = useCopyTradingSwapStore.use.fetchShareTrader();
+  const isCopyTrader = useCopyTradingSwapStore.use.isCopyTrader();
   const { tabIndex, hide, showAllOrders } = store;
   const { positions, pending } = useOrderData({ hide });
+  const filterPositions = positions.filter(item => isCopyTrader || item.subWallet !== WalletKey.COPY); 
   const isLogin = Account.isLogin;
-  const tabs = useListTabs({ positions, pending });
+  const tabs = useListTabs({ positions: filterPositions, pending });
 
   usePageListener();
+  useEffect(() => {
+    fetchShareTrader();
+  }, []);
+
+
+  useEffect(() => {
+    Swap.Info.setIsShareTrader(isCopyTrader)
+  }, [isCopyTrader]);
 
   return (
     <>
@@ -41,7 +55,7 @@ export const Index = () => {
           </div>
           {isLogin && (
             <HeaderRight
-              positions={positions}
+              positions={filterPositions}
               pending={pending}
               tabIndex={tabIndex}
               showAllOrders={showAllOrders}
@@ -64,8 +78,8 @@ const ListContent = ({ tabIndex }: { tabIndex: number }) => {
     <PendingList key='2' />, //listRef={_pendingListRef}
     <HistoryList key='3' active={tabIndex === 2} />,
     <FinishedList key='4' active={tabIndex === 3} />,
-    // <PositionHistory key='5' active={tabIndex === 4} />, TODO
-    <FundsList key='5' active={tabIndex === 4} />,
+    <PositionHistory key='5' active={tabIndex === 4} />, 
+    <FundsList key='5' active={tabIndex === 5} />,
   ];
 
   return (

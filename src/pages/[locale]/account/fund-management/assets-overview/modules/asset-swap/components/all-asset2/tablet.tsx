@@ -5,7 +5,7 @@ import { WalletAvatar } from '@/components/wallet-avatar';
 import { useResponsive } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
-import { SWAP_BOUNS_WALLET_KEY } from '@/core/shared/src/swap/modules/assets/constants';
+import { SWAP_BOUNS_WALLET_KEY, WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
 import { DEFAULT_QUOTE_ID } from '@/core/shared/src/swap/modules/trade/constants';
 import { clsx, MediaInfo } from '@/core/utils';
 import { useState } from 'react';
@@ -13,6 +13,7 @@ import { CalcSwapAsset } from '../../../../hooks/use-swap-balance';
 import { AssetListModal } from './components/asset-list-modal';
 import { TradeHref } from './components/trade-href';
 import { Size } from '@/components/constants';
+import { useCopyTradingSwapStore } from '@/store/copytrading-swap';
 export const Tablet = ({
   data = [],
   isSwapU,
@@ -28,6 +29,7 @@ export const Tablet = ({
   const [listData, setListData] = useState<any>([]);
   const { isMobile } = useResponsive();
   const unit = Swap.Info.getPriceUnitText(isSwapU);
+  const isCopyTrader = useCopyTradingSwapStore.use.isCopyTrader();
   return (
     <>
       <div className='all-asset-swap-tablet'>
@@ -109,7 +111,11 @@ export const Tablet = ({
                           {(href) => (
                             <div
                               onClick={() => {
-                                Swap.Info.setWalletId(isSwapU, v.wallet || '');
+                                if (v.wallet === WalletKey.COPY) {
+                                  Swap.Info.setWalletId(isSwapU, isCopyTrader ? WalletKey.COPY : WalletKey.SWAP_U);
+                                } else {
+                                  Swap.Info.setWalletId(isSwapU, v.wallet || '');
+                                }
                                 window.location.href = href;
                               }}
                             >
@@ -133,13 +139,13 @@ export const Tablet = ({
       <style jsx>{`
         .all-asset-swap-tablet {
           font-size: 12px;
-          color: var(--text-primary);
+          color: var(--text_1);
           padding: 10px;
           .item-wrapper {
             margin-bottom: 10px;
             &:not(:last-child) {
               .item {
-                border-bottom: 1px solid var(--line-3);
+                border-bottom: 1px solid var(--fill_line_3);
               }
             }
           }
@@ -182,7 +188,7 @@ export const Tablet = ({
               display: flex;
               align-items: center;
               justify-content: space-between;
-              border-bottom: 1px solid var(--line-1);
+              border-bottom: 1px solid var(--fill_line_1);
 
               .income {
                 display: flex;
@@ -212,7 +218,7 @@ export const Tablet = ({
                 font-size: 14px;
                 > div {
                   &:first-child {
-                    color: var(--text-tertiary);
+                    color: var(--text_3);
                   }
                   &:last-child {
                     font-weight: 500;
@@ -231,7 +237,7 @@ export const Tablet = ({
                   &:first-child {
                     height: 40px;
                     cursor: pointer;
-                    color: var(--text-brand);
+                    color: var(--text_brand);
                   }
                 }
                 .action-btns {

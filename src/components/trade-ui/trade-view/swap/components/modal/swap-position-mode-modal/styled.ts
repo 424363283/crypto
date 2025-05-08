@@ -13,11 +13,11 @@ const { className, styles: _styles } = css.resolve`
       font-size: 14px;
       font-weight: 400;
       line-height: 20px;
-      color: var(--text-secondary);
+      color: var(--text_2);
       margin-bottom: 40px;
     }
     .item {
-      border: 1px solid var(--line-3);
+      border: 1px solid var(--fill_line_3);
       border-radius: 16px;
       display: flex;
       flex-direction: row;
@@ -36,7 +36,7 @@ const { className, styles: _styles } = css.resolve`
         align-items: flex-start;
         gap: 8px;
         flex: 1 0 0;
-        color: var(--text-secondary);
+        color: var(--text_2);
       }
       .caption > div {
         &:first-child {
@@ -48,13 +48,13 @@ const { className, styles: _styles } = css.resolve`
           font-size: 12px;
           font-weight: 400;
           line-height: 16px;
-          color: var(--text-secondary);
+          color: var(--text_2);
         }
       }
       &.active {
         border: 1px solid var(--brand);
         .caption {
-          color: var(--text-primary);
+          color: var(--text_1);
         }
       }
       &:hover {

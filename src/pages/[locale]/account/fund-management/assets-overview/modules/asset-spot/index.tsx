@@ -60,7 +60,7 @@ const styles = css`
       display: flex;
       flex-direction: column;
       flex: 1 auto;
-      background-color: var(--bg-1);
+      background-color: var(--fill_bg_1);
       z-index: 0;
       position: relative;
       overflow: hidden;

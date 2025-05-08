@@ -9,6 +9,7 @@ import { AssetsBottomTitle } from '../../../components/assets-bottom-title';
 import { AssetItem } from './asset-item';
 const PieChart = dynamic(() => import('@/components/chart/pie-chart'), { ssr: false });
 import { Desktop } from '@/components/responsive';
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
 
 
 interface AssetsProps {
@@ -24,14 +25,18 @@ export const AssetContent: React.FC<AssetsProps> = React.memo(({ color }) => {
   const { spotTotalBalance } = spotAssetsStore;
   const p2pTotalBalance = 0;
   const { assets, occupiedBalance, floatProfit } = liteAssetsStore;
-  const swapUBalance = useCalcSwapAssets({ isSwapU: true }).total.totalMargin2;
+  // const swapUBalance = useCalcSwapAssets({ isSwapU: true }).total.totalMargin2;
+  const { wallets, total: calcTotal } = useCalcSwapAssets({ isSwapU: true });
+  const swapUBalance = wallets.find(item => item.wallet === WalletKey.SWAP_U)?.totalMargin2 || 0;
+  const swapCopyBalance = wallets.find(item => item.wallet === WalletKey.COPY)?.totalMargin2 || 0;
   const swapBalance = useCalcSwapAssets({ isSwapU: false }).total.totalMargin2;
+
 
   const liteBalance = enableLite ? occupiedBalance.add(assets.money).add(floatProfit || 0) : '0';
   const _spotTotalBalance = Number(spotTotalBalance) < 0 ? 0 : +spotTotalBalance || 0;
   const totalBalance = enableP2p
-    ? _spotTotalBalance.add(swapBalance).add(swapUBalance).add(p2pTotalBalance)
-    : _spotTotalBalance.add(swapBalance).add(swapUBalance);
+    ? _spotTotalBalance.add(swapBalance).add(swapUBalance).add(swapCopyBalance).add(p2pTotalBalance)
+    : _spotTotalBalance.add(swapBalance).add(swapUBalance).add(swapCopyBalance);
 
   return (
     <div className='assets-bottom-card'>
@@ -42,6 +47,7 @@ export const AssetContent: React.FC<AssetsProps> = React.memo(({ color }) => {
         <PieChart
           contractuBalance={+swapUBalance}
           contractBalance={+swapBalance}
+          contractCopyBalance={+swapCopyBalance}
           spotBalance={_spotTotalBalance}
           p2pBalance={+p2pTotalBalance}
         />
@@ -58,6 +64,12 @@ export const AssetContent: React.FC<AssetsProps> = React.memo(({ color }) => {
             amount={swapUBalance}
             color='var(--yellow)'
             percent={swapUBalance.div(totalBalance)}
+          />
+          <AssetItem
+            title={LANG('跟单账户')}
+            amount={swapCopyBalance}
+            color='#396FD9'
+            percent={swapCopyBalance.div(totalBalance)}
           />
           { 
           // <AssetItem
@@ -87,7 +99,7 @@ const styles = css`
     flex-direction: column;
     flex: 1 auto;
     overflow: hidden;
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     border: 1px solid var(--line);
     @media ${MediaInfo.mobile} {
       margin-top: 10px;
@@ -99,7 +111,7 @@ const styles = css`
     }
     .asset-card-list {
       overflow: hidden;
-      background: var(--bg-1);
+      background: var(--fill_bg_1);
       position: relative;
       width: 100%;
       display: flex;

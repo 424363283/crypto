@@ -10,7 +10,8 @@ import { Size } from '@/components/constants';
 import FollowButton from './follow-btn';
 interface CopyItem {
   id: number;
-  name: string;
+  traderType:number;
+  nickname: string;
   url: string;
   leverType: number;
   currentCount: number;
@@ -28,11 +29,11 @@ const LeadTraderAvator = (props: { copyItem: CopyItem, children: ReactNode }) =>
   return (
     <>
       <div className={styles.leadTraderAvator}>
-        <img src={item.url} alt="avatar" className={styles.avatar} />
+        <img src={'/static/images/copy/copy-logo-default.svg'} alt="avatar" className={styles.avatar} />
         <div>
           <div className={styles.copyName}>
-            <span>{item.name}</span>
-            <Svg src={`/static/icons/primary/common/copy-lever-${item.leverType}.svg`} width={16} height={16} />
+            <span>{item.nickname}</span>
+            {/* <Svg src={`/static/icons/primary/common/copy-lever-${item.traderType}.svg`} width={16} height={16} /> */}
           </div>
         </div>
         {children}

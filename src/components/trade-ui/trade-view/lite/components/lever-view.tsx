@@ -149,7 +149,7 @@ const styles = css`
       align-items: center;
       justify-content: space-between;
       .title {
-        color: var(--text-primary);
+        color: var(--text_1);
         leading-trim: both;
         text-edge: cap;
         font-size: 12px;
@@ -162,7 +162,7 @@ const styles = css`
         align-items: center;
         gap: 8px;
         span {
-          color: var(--text-primary);
+          color: var(--text_1);
           leading-trim: both;
           text-edge: cap;
           font-size: 12px;

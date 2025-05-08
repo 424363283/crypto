@@ -1,5 +1,11 @@
 import { LANG } from '@/core/i18n';
 
+//仓位模式 1=单向持仓 2=双向持仓
+export enum POSITION_TYPE {
+  ONE = 1,
+  TWO = 2,
+};
+
 // 永续当前委托 状态
 export const SWAP_PENDING_ORDER_STATUS = () => ({
   1: LANG('限价'),
@@ -82,7 +88,8 @@ export const SWAP_FUNDS_RECORD_TYPE: () => { [key: string]: string } = () => ({
   deductible_recovery: LANG('回收抵扣金'),
   transfer_refund: LANG('划转回退'),
   experience_tf_recovery: LANG('划转回收体验金'),
-  transferPerpToPerp: LANG('永续转永续'),
+  transferPerpetualIn: LANG('永续转永续'),
+  transferPerpetualOut: LANG('永续转永续'),
   risk_close: LANG('风险保障金注入'),
 });
 export const SWAP_FUNDS_RECORD_FUNDS_TYPE = () => ({

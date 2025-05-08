@@ -325,6 +325,18 @@ export default function createWidget(options: WidgetOptions<TradingView.Resoluti
      * 获取缓存的图形
      * @returns 
      */
+    private _removeAllVolumeStudies() {
+      const chart = this.activeChart();
+      const studies = chart.getAllStudies();
+      console.log('获取成交量的指标', studies);
+
+      studies.forEach(study => {
+        if (study.name === 'Volume') {
+          // 使用 removeStudy 来确保移除指标
+          chart.removeStudy(study.id);
+        }
+      });
+    }
     private _getCacheShapes() {
       let shapes: Record<string, StudyShapeInfo[]> = {};
       try {
@@ -340,31 +352,33 @@ export default function createWidget(options: WidgetOptions<TradingView.Resoluti
         const studies = this._getCacheStudies();
         const studyList: StudyShapeInfo[] = studies[symbol];
 
+        // 先移除所有的 Volume 指标
+        this._removeAllVolumeStudies();
+
+        // 如果没有缓存的 Volume 指标，添加一个新的 Volume 指标
         if (studyList) {
-          chart.removeAllStudies();
+          studyList.forEach(study => {
+            const { name, forceOverlay, lock, inputs, overrides, options } = study;
+            if (name === 'Volume') {
+              // @ts-expect-error
+              delete inputs['symbol'];
+            }
+            chart.createStudy(name, forceOverlay, lock, inputs, overrides, options);
+          });
         } else {
-          chart.createStudy(
-            'Volume',
-            false,
-            false,
-            {
+          // 使用 setTimeout 延迟添加 Volume 指标，确保移除操作完成
+          setTimeout(() => {
+            chart.createStudy('Volume', false, false, {
               col_prev_close: false,
               length: 20,
               showMA: false,
               smoothingLength: 9,
-              smoothingLine: 'SMA'
-            }
-          );
+              smoothingLine: 'SMA',
+            });
+          }, 100); // 延迟100ms后添加
         }
-        studyList.forEach(study => {
-          const { name, forceOverlay, lock, inputs, overrides, options } = study;
-          if (name === 'Volume') {
-            // @ts-expect-error
-            delete inputs['symbol'];
-          }
-          chart.createStudy(name, forceOverlay, lock, inputs, overrides, options);
-        });
-      } catch {
+      } catch (error) {
+        console.error('Error restoring studies', error);
       }
     }
 

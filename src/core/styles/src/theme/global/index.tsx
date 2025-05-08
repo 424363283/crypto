@@ -30,19 +30,19 @@ export const GlobalThemeStyle = ({ children }: any) => {
             ${getThemeColors(colorMap, 'dark')}
             ${getThemeColors(specColorMap, 'dark')}
             ${getThemeColors(specColorRgbMap, 'dark')}
-            --common-modal-bg: ${colorMap['--fill-pop'].dark};
-            --common-line-color: ${colorMap['--line-3'].dark};
-            --dropdown-select-bg-color: ${colorMap['--fill-pop'].dark};
-            --dropdown-select-shadow-color: ${colorMap['--fill-projection'].dark};
+            --common-modal-bg: ${colorMap['--fill_pop'].dark};
+            --common-line-color: ${colorMap['--fill_line_3'].dark};
+            --dropdown-select-bg-color: ${colorMap['--fill_pop'].dark};
+            --dropdown-select-shadow-color: ${colorMap['--fill_shadow'].dark};
           }
           :root[theme='light'] {
             ${getThemeColors(colorMap, 'light')}
             ${getThemeColors(specColorMap, 'light')}
             ${getThemeColors(specColorRgbMap, 'light')}
-            --common-modal-bg: ${colorMap['--fill-pop'].light};
-            --common-line-color: ${colorMap['--line-1'].light};
-            --dropdown-select-bg-color: ${colorMap['--fill-pop'].light};
-            --dropdown-select-shadow-color: ${colorMap['--fill-projection'].light};
+            --common-modal-bg: ${colorMap['--fill_pop'].light};
+            --common-line-color: ${colorMap['--fill_line_1'].light};
+            --dropdown-select-bg-color: ${colorMap['--fill_pop'].light};
+            --dropdown-select-shadow-color: ${colorMap['--fill_shadow'].light};
           }
           .main-fall {
             color: var(--color-red);

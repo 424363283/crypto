@@ -32,7 +32,7 @@ const Select = (props: Props) => {
     width = 160,
     height = 40,
     icon,
-    bgColor = 'var(--fill-3)',
+    bgColor = 'var(--fill_3)',
     borderColor,
     ...rest
   } = props;
@@ -77,7 +77,7 @@ const Select = (props: Props) => {
             border: 1px solid ${borderColor || bgColor} !important;
             &:hover,
             &:focus {
-              border-color: var(--line-3) !important;
+              border-color: var(--fill_line_3) !important;
             }
             .dropdown-wrapper {
               border-radius: 8px;
@@ -162,20 +162,20 @@ const Select = (props: Props) => {
                   }
                 }
                 :global(.react-dropdown-select-item) {
-                  color: var(--text-secondary);
+                  color: var(--text_2);
                   font-size: 14px;
                   font-weight: 500;
                   margin-bottom: 20px;
                   border-bottom: 0;
                   white-space: nowrap;
                   &:hover {
-                    color: var(--text-brand);
+                    color: var(--text_brand);
                     background-color: transparent;
                     border-radius: 8px;
                   }
                 }
                 :global(.react-dropdown-select-item-selected) {
-                  color: var(--text-brand);
+                  color: var(--text_brand);
                   background-color: transparent;
                 }
               }

@@ -142,7 +142,7 @@ const styles = css`
       font-size: 40px;
       line-height: 46.88px;
       text-align: center;
-      color: var(--text-primary);
+      color: var(--text_1);
       @media ${MediaInfo.mobile} {
         font-size: 32px;
       }
@@ -165,7 +165,7 @@ const styles = css`
       flex-direction: column;
     }
     .benefit-apply {
-      border: 1px solid var(--line-2);
+      border: 1px solid var(--fill_line_2);
       padding: 40px 24px;
       border-radius: 24px;
       flex: 1;
@@ -183,7 +183,7 @@ const styles = css`
         font-weight: 500;
         font-size: 24px;
         line-height: 36px;
-        color: var(--text-primary);
+        color: var(--text_1);
       }
     }
     .benefit-tips {
@@ -191,9 +191,9 @@ const styles = css`
       font-weight: 500;
       font-size: 16px;
       line-height: 24px;
-      color: var(--text-secondary);
+      color: var(--text_2);
       margin-top: 24px;
-      border: 1px solide var(--line-2);
+      border: 1px solide var(--fill_line_2);
     }
     .benefit-tips-item {
       gap: 8px;
@@ -202,7 +202,7 @@ const styles = css`
         width: 6px;
         height: 6px;
         transform: rotate(45deg);
-        background: var(--text-secondary);
+        background: var(--text_2);
         display: inline-block;
         margin-right: 6px;
       }

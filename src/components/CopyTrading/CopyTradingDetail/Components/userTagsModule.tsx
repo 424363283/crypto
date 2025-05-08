@@ -28,19 +28,19 @@ const copyCancelStyle = css`
       font-family: HarmonyOS Sans SC;
       font-size: 12px;
       font-weight: 400;
-      border: 0.5px solid var(--line-3);
+      border: 0.5px solid var(--fill_line_3);
       border-radius: 8px;
       cursor: pointer;
       &.item-active {
-        color: var(--text-brand);
-        border: 1px solid var(--text-brand);
+        color: var(--text_brand);
+        border: 1px solid var(--text_brand);
       }
     }
     .tips {
       font-family: HarmonyOS Sans SC;
       font-size: 12px;
       font-weight: 400;
-      color: var(--text-tertiary);
+      color: var(--text_3);
       margin-bottom: 24px;
     }
     .grid-4 {

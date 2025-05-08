@@ -23,9 +23,9 @@ export const DEFAULT_SPSL_VALUE = {
   stopLossRoe: '',
   isBuy: true, //是否开多
   stopProfitLimitPrice: '', // 止盈限价
-  stopProfitLimitPriceType: false,// 止盈限价类型[限价|市价]
+  stopProfitLimitPriceType: false, // 止盈限价类型[限价|市价]
   stopLossLimitPrice: '', //止损限价
-  stopLossLimitPriceType: false, // 止损价格类型[限价|市价]
+  stopLossLimitPriceType: false // 止损价格类型[限价|市价]
 };
 
 type StoreType = Store<{
@@ -84,14 +84,14 @@ type StoreType = Store<{
     stopLossPrice: string; // 下单止损价格
     stopProfitPriceType: string; // 止盈价格类型 0 标记 1最新
     stopLossPriceType: string; // 止损价格类型 0 标记 1最新
-    stopLossRoe: string,
-    stopProfitRoe: string,
+    stopLossRoe: string;
+    stopProfitRoe: string;
     isBuy: boolean; //是否开多
 
-    stopProfitLimitPrice: string, // 止盈限价
-    stopLossLimitPrice: string, //止损限价
-    stopProfitLimitPriceType: boolean,// 止盈限价类型[限价|市价]
-    stopLossLimitPriceType: boolean, // 止损价格类型[限价|市价]
+    stopProfitLimitPrice: string; // 止盈限价
+    stopLossLimitPrice: string; //止损限价
+    stopProfitLimitPriceType: boolean; // 止盈限价类型[限价|市价]
+    stopLossLimitPriceType: boolean; // 止损价格类型[限价|市价]
   };
   // 下单时间类型
   effectiveTime: number;
@@ -120,7 +120,13 @@ export class TradeField {
       isUsdtType = usdtTypeByNotId;
     }
     const priceUnitText = Info.getPriceUnitText(isUsdtType);
-    return { quoteId, quoteName: Info.getCryptoData(quoteId).name, isUsdtType, isCoinType: isUsdtType === false, priceUnitText };
+    return {
+      quoteId,
+      quoteName: Info.getCryptoData(quoteId).name,
+      isUsdtType,
+      isCoinType: isUsdtType === false,
+      priceUnitText
+    };
   }
   get buyMaxVolume() {
     return this.getMaxVolume({ isBuy: true });
@@ -135,10 +141,12 @@ export class TradeField {
   get buyMaxVolumeNumber() {
     let orderPrice = undefined;
     const { isUsdtType, quoteId } = this.base;
+    const { marginType } = Info.getLeverFindData(quoteId);
     const { buyPosition } = Order.getTwoWayPosition({
       usdt: isUsdtType,
       openPosition: false,
       code: quoteId,
+      marginType
     });
     const twoWayMode = this.twoWayMode;
     const isOpenPositionMode = this.isOpenPositionMode;
@@ -151,10 +159,12 @@ export class TradeField {
   get sellMaxVolumeNumber() {
     let orderPrice = undefined;
     const { isUsdtType, quoteId } = this.base;
+    const { marginType } = Info.getLeverFindData(quoteId);
     const { sellPosition } = Order.getTwoWayPosition({
       usdt: isUsdtType,
       openPosition: false,
       code: quoteId,
+      marginType
     });
     const twoWayMode = this.twoWayMode;
     const isOpenPositionMode = this.isOpenPositionMode;
@@ -190,20 +200,41 @@ export class TradeField {
     this.store.usdtTypeByNotId = value;
   }
 
-  getMaxVolume({ isBuy: _isBuy, onlyOpenPosition }: { isBuy: boolean; onlyOpenPosition?: boolean }) {
+  getMaxVolume({
+    isBuy: _isBuy,
+    onlyOpenPosition,
+    direct
+  }: {
+    isBuy: boolean;
+    onlyOpenPosition?: boolean;
+    direct?: boolean;
+  }) {
     const { isUsdtType, quoteId } = this.base;
     const flagPrice = Socket.getFlagPrice(quoteId);
     const isOpenPosition = this.isOpenPositionMode;
-    const { buyPosition, sellPosition } = Order.getTwoWayPosition({ usdt: isUsdtType, openPosition: isOpenPosition, code: quoteId });
+    const { leverageLevel, leverageLevelBuy, leverageLevelSell, marginType } = Info.getLeverFindData(quoteId);
+    const { buyPosition, sellPosition } = Order.getTwoWayPosition({
+      usdt: isUsdtType,
+      openPosition: isOpenPosition,
+      code: quoteId,
+      marginType
+    });
     const twoWayMode = this.twoWayMode;
     const storeIsBuy = this.store.isBuy;
     const isBuy = _isBuy === undefined ? storeIsBuy : _isBuy;
     const depthData = Info.store.depth;
-    const lever = Info.getLeverFindData(quoteId).leverageLevel;
-    const riskDetail = Info.getRiskDetailData(quoteId, lever);
+    const lever = twoWayMode ? (isBuy ? leverageLevelBuy : leverageLevelSell) : leverageLevel;
+    // 当前未开放风险限额等级(默认等级1)
+    const riskLeverageLevel = Info.getLeverFindData(quoteId).leverageLevel;
+    const riskDetail = Info.getRiskDetailData(quoteId, riskLeverageLevel);
     const positionData = Order.getPosition(isUsdtType);
     const walletId = Info.getWalletId(isUsdtType);
-    const calcPositionData = Calculate.positionData({ usdt: isUsdtType, data: positionData, symbol: quoteId, twoWayMode: twoWayMode });
+    const calcPositionData = Calculate.positionData({
+      usdt: isUsdtType,
+      data: positionData,
+      symbol: quoteId,
+      twoWayMode: twoWayMode
+    });
     const { buyPositionValue, sellPositionValue, allCrossIncomeLoss } = calcPositionData.wallets[walletId] || {};
     const item = calcPositionData.wallets?.[walletId]?.data?.[quoteId];
     const calcPendingData = Calculate.pendingData(Order.getPending(isUsdtType));
@@ -215,7 +246,7 @@ export class TradeField {
       code: quoteId,
       isBuy,
       isLimitType: this.orderTradeType.isLimit,
-      inputPrice: Number(this.store.price || 0),
+      inputPrice: direct ? flagPrice : Number(this.store.price || 0),
       flagPrice,
       sell1Price: depthData.sell1Price,
       buy1Price: depthData.buy1Price,
@@ -227,7 +258,7 @@ export class TradeField {
       balanceData: Assets.getBalanceData({ code: quoteId, walletId: Info.getWalletId(isUsdtType) }),
       crossIncome: Number(isUsdtType ? allCrossIncomeLoss : item?.crossIncomeLoss),
       lever: lever,
-      twoWayMode: twoWayMode,
+      twoWayMode: twoWayMode
     });
 
     if (onlyOpenPosition) {
@@ -251,8 +282,8 @@ export class TradeField {
     //
     //     return itemBuy == isBuy ? 0 : Number(item?.currentPosition || 0);
     //   }
-    // } else 
-    if (!isOpenPosition) {
+    // } else
+    if (!isOpenPosition && !direct) {
       if (isBuy) {
         vol = Number(buyPosition?.availPosition || 0);
       } else {
@@ -265,16 +296,24 @@ export class TradeField {
     return vol;
   }
 
-  getCommissionCost({ isBuy: _isBuy, positionMode, fixed }: { isBuy?: boolean; positionMode?: boolean; fixed?: any } = {}) {
+  getCommissionCost({
+    isBuy: _isBuy,
+    positionMode,
+    fixed
+  }: { isBuy?: boolean; positionMode?: boolean; fixed?: any } = {}) {
     const { isUsdtType, quoteId } = this.base;
     const flagPrice = Socket.getFlagPrice(quoteId);
     const storeIsBuy = this.store.isBuy;
     const inputPrice = this.store.price;
     const isBuy = _isBuy === undefined ? storeIsBuy : _isBuy;
-    const lever = Info.getLeverFindData(quoteId).leverageLevel;
+    const twoWayMode = this.twoWayMode;
+    const { leverageLevel, leverageLevelBuy, leverageLevelSell } = Info.getLeverFindData(quoteId);
+    const lever = twoWayMode ? (isBuy ? leverageLevelBuy : leverageLevelSell) : leverageLevel;
+    // 当前未开放风险限额等级(默认等级1)
+    const riskLeverageLevel = Info.getLeverFindData(quoteId).leverageLevel;
     const depthData = Info.store.depth;
     const maxVolume = this.getMaxVolume({ isBuy });
-    const riskDetail = Info.getRiskDetailData(quoteId, lever);
+    const riskDetail = Info.getRiskDetailData(quoteId, riskLeverageLevel);
     const cryptoData = Info.getCryptoData(quoteId);
     const isMarketType = !this.orderTradeType.limit;
     const marketPrice = Info.getMarketPrice(isBuy);
@@ -287,20 +326,20 @@ export class TradeField {
       inputVolume <= 0
         ? 0
         : Calculate.commissionCost({
-          usdt: isUsdtType,
-          code: quoteId,
-          isBuy,
-          isLimitType: isLimitType,
-          lever,
-          flagPrice,
-          sell1Price: depthData.sell1Price,
-          buy1Price: depthData.buy1Price,
-          inputPrice: Number(price || 0),
-          inputVolume,
-          initMargins: riskDetail.initMargins,
-          maxVolume,
-          positionMode: positionMode,
-        });
+            usdt: isUsdtType,
+            code: quoteId,
+            isBuy,
+            isLimitType: isLimitType,
+            lever,
+            flagPrice,
+            sell1Price: depthData.sell1Price,
+            buy1Price: depthData.buy1Price,
+            inputPrice: Number(price || 0),
+            inputVolume,
+            initMargins: riskDetail.initMargins,
+            maxVolume,
+            positionMode: positionMode
+          });
 
     if (fixed) {
       return margin?.toFixed(Number(fixed));
@@ -318,7 +357,7 @@ export class TradeField {
       symbol,
       volume: LANG('张'),
       isVolUnit: false,
-      withHooks,
+      withHooks
     });
   }
   // 只减仓修改
@@ -336,21 +375,31 @@ export class TradeField {
     this.onChangeOnlyReducePosition(false);
   }
 
-  getInputVolume = ({ isBuy, flagPrice, inputVolume: _inputVolume }: { isBuy: boolean; flagPrice?: number; inputVolume?: any }) => {
+  getInputVolume = ({
+    isBuy,
+    flagPrice,
+    inputVolume: _inputVolume
+  }: {
+    isBuy: boolean;
+    flagPrice?: number;
+    inputVolume?: any;
+  }) => {
     const isExternalValue = _inputVolume !== undefined;
     const inputPrice = Number(this.store.price || 0);
     const inputVolume = !isExternalValue ? this.store.volume : Number(_inputVolume);
     const inputSellVolume = this.store.volume;
-    const percentVolume = 0;//输入端已将比例转成数量，这里就不再用比例进行计算了
+    const percentVolume = 0; //输入端已将比例转成数量，这里就不再用比例进行计算了
     // const percentVolume = this.store.percentVolume;
     const { isUsdtType, quoteId } = this.base;
     const twoWayMode = this.twoWayMode;
     const isOpenPositionMode = this.isOpenPositionMode;
     const isClosePosMode = twoWayMode && !isOpenPositionMode;
+    const { marginType } = Info.getLeverFindData(quoteId);
     const { buyPosition, sellPosition } = Order.getTwoWayPosition({
       usdt: isUsdtType,
       openPosition: false,
       code: quoteId,
+      marginType
     });
     const position = isBuy ? buyPosition : sellPosition;
     const openPosPrice = Number(position?.avgCostPrice || 0);
@@ -403,7 +452,35 @@ export class TradeField {
     return type === PRICE_TYPE.FLAG;
   }
 
-  setModal(next: { selectUnitVisible?: boolean; welcomeDemoVisible?: boolean; rechargeVisible?: boolean; marginTypeVisible?: boolean; walletFormVisible?: boolean; walletFormData?: any; leverVisible?: boolean; leverData?: any; effectiveTimeVisible?: boolean; calculatorVisible?: boolean; calculatorData?: any; spslVisible?: boolean; orderConfirmVisible?: boolean; orderConfirmData?: any; ruleVisible?: boolean; transferVisible?: boolean; transferData?: any; walletSelectVisible?: boolean; walletSelectData?: any; preferenceMenuVisible?: boolean; paintOrderVisible?: boolean; paintOrderData?: any; paintOrderOptionsVisible?: boolean; paintOrderOptionsData?: any; openContractVisible: boolean }) {
+  setModal(next: {
+    selectUnitVisible?: boolean;
+    welcomeDemoVisible?: boolean;
+    rechargeVisible?: boolean;
+    marginTypeVisible?: boolean;
+    walletFormVisible?: boolean;
+    walletFormData?: any;
+    leverVisible?: boolean;
+    leverData?: any;
+    effectiveTimeVisible?: boolean;
+    calculatorVisible?: boolean;
+    calculatorData?: any;
+    spslVisible?: boolean;
+    orderConfirmVisible?: boolean;
+    orderConfirmData?: any;
+    ruleVisible?: boolean;
+    transferVisible?: boolean;
+    transferData?: any;
+    walletSelectVisible?: boolean;
+    walletSelectData?: any;
+    preferenceMenuVisible?: boolean;
+    paintOrderVisible?: boolean;
+    paintOrderData?: any;
+    paintOrderOptionsVisible?: boolean;
+    paintOrderOptionsData?: any;
+    openContractVisible: boolean;
+    direct?: boolean;
+    inputVolume?: any;
+  }) {
     this.store.modal = { ...this.store.modal, ...next };
   }
 
@@ -438,7 +515,6 @@ export class TradeField {
     // const inputVolume = this.formatPositionNumber(maxVolume * (percent / 100), Info.getVolumeDigit(this.store.quoteId));
     // this.store.volume = `${inputVolume || ''}`.toFixed();
     // this.store.percentVolume = Number(percent);
-
   }
 
   onTriggerPriceChange(price: any) {
@@ -461,7 +537,7 @@ export class TradeField {
   getUnitText = () => {
     return Info.getUnitText({
       symbol: this.base.quoteId,
-      volume: LANG('张'),
+      volume: LANG('张')
     });
   };
 
@@ -480,25 +556,40 @@ export class TradeField {
   };
 
   // 最小下单数量
-  getMinOrderVolume = ({ isBuy, code, costMode }: { isBuy: boolean; code: string; costMode?: boolean }) => {
+  getMinOrderVolume = ({
+    isBuy,
+    code,
+    costMode,
+    direct = false
+  }: {
+    isBuy: boolean;
+    code: string;
+    costMode?: boolean;
+    direct?: boolean;
+  }) => {
     const cryptoData = Info.getCryptoData(code);
-    const isMarketType = !this.orderTradeType.limit;
+    const isMarketType = direct ? true : !this.orderTradeType.limit;
     const isUsdtType = Info.getIsUsdtType(code);
+    const flagPrice = Socket.getFlagPrice(code);
     const twoWayMode = this.twoWayMode;
-    const isOpenPositionMode = this.isOpenPositionMode;
+    const isOpenPositionMode = direct ? direct : this.isOpenPositionMode;
     const isClosePosMode = twoWayMode && !isOpenPositionMode;
+    const { leverageLevel, leverageLevelBuy, leverageLevelSell, marginType } = Info.getLeverFindData(code);
     const { buyPosition, sellPosition } = Order.getTwoWayPosition({
       usdt: isUsdtType,
       openPosition: false,
       code: code,
+      marginType
     });
     const position = isBuy ? buyPosition : sellPosition;
     const openPosPrice = Number(position?.avgCostPrice || 0);
-    const inputPrice = Number(this.store.price || 0);
+    const inputPrice = direct ? flagPrice : Number(this.store.price || 0);
     const marketPrice = Info.getMarketPrice(isBuy);
     const orderPrice = isClosePosMode ? openPosPrice : (isMarketType ? marketPrice : inputPrice) || 0;
-    const lever = Info.getLeverFindData(code).leverageLevel;
-    const riskDetail = Info.getRiskDetailData(code, lever);
+    const lever = twoWayMode ? (isBuy ? leverageLevelBuy : leverageLevelSell) : leverageLevel;
+    // 当前未开放风险限额等级(默认等级1)
+    const riskLeverageLevel = Info.getLeverFindData(code).leverageLevel;
+    const riskDetail = Info.getRiskDetailData(code, riskLeverageLevel);
     const volumeDigit = Info.getVolumeDigit(code);
     let minOrderVol = '0';
     if (Info.getIsMarginUnit(isUsdtType) && costMode) {
@@ -513,12 +604,17 @@ export class TradeField {
         lever,
         // flagPrice: Number(openPrice),
         inputPrice,
-        maxVolume: cryptoData.minDelegateNum,
+        maxVolume: cryptoData.minDelegateNum
         // positionMode: true,
       })}`;
     } else {
       const isRoundUp = !isClosePosMode;
-      minOrderVol = this.formatPositionNumber(isMarketType ? cryptoData.minMarketDelegateNum : cryptoData.minDelegateNum, volumeDigit, orderPrice, isRoundUp);
+      minOrderVol = this.formatPositionNumber(
+        isMarketType ? cryptoData.minMarketDelegateNum : cryptoData.minDelegateNum,
+        volumeDigit,
+        orderPrice,
+        isRoundUp
+      );
     }
     return formatNumber2Ceil(minOrderVol, volumeDigit, true);
   };
@@ -540,7 +636,7 @@ export class TradeField {
       marketSpsl: orderTradeType === ORDER_TRADE_TYPE.MARKET_SPSL,
       isLimit: [ORDER_TRADE_TYPE.LIMIT, ORDER_TRADE_TYPE.LIMIT_SPSL].includes(orderTradeType),
       isMarket: [ORDER_TRADE_TYPE.MARKET, ORDER_TRADE_TYPE.MARKET_SPSL].includes(orderTradeType),
-      isSpsl: [ORDER_TRADE_TYPE.LIMIT_SPSL, ORDER_TRADE_TYPE.MARKET_SPSL].includes(orderTradeType),
+      isSpsl: [ORDER_TRADE_TYPE.LIMIT_SPSL, ORDER_TRADE_TYPE.MARKET_SPSL].includes(orderTradeType)
     };
   }
 }

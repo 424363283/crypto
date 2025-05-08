@@ -148,7 +148,7 @@ const styles = css`
         width: 100%;
         height: 48px;
         border-radius: 8px;
-        background: var(--fill-3);
+        background: var(--fill_3);
         padding: 0;
         :global(.emulate-select-selected) {
           padding: 0 16px;

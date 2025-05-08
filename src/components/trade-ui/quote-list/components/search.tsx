@@ -53,7 +53,7 @@ const QuoteSearch = ({
           align-items: center;
           justify-content: center;
           :global(.basic-input-box) {
-            background: var(--fill-3);
+            background: var(--fill_3);
           }
         }
         @media ${MediaInfo.mobile} {
@@ -63,7 +63,7 @@ const QuoteSearch = ({
             margin-bottom: 1rem;
             :global(.basic-input-box) {
               &:hover {
-                background: var(--fill-1);
+                background: var(--fill_1);
               }
             }
           }

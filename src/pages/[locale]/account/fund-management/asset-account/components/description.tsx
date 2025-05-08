@@ -28,7 +28,7 @@ const styles = css`
     .title {
       font-size: 16px;
       font-weight: 500;
-      color: var(--text-primary);
+      color: var(--text_1);
       @media ${MediaInfo.mobile}{
         font-size: 14px;
         font-weight: 500;

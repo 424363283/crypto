@@ -65,7 +65,7 @@ const styles = css`
         justify-content: center;
         align-items: center;
         min-height: 26px;
-        color: var(--text-secondary);
+        color: var(--text_2);
         font-weight: 500;
         cursor: pointer;
         margin-right: 40px;
@@ -79,12 +79,12 @@ const styles = css`
         }
       }
       :global(.active-tab) {
-        color: var(--text-brand);
+        color: var(--text_brand);
         border-radius: 23px;
         /* border-bottom: 2px solid var(--skin-color-active); */
         @media ${MediaInfo.mobile} {
           background: var(--brand);
-          color: var(--text-white);
+          color: var(--text_white);
         }
       }
     }

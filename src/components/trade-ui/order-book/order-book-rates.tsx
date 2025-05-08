@@ -157,11 +157,11 @@ export const OrderBookRates = ({ data, id = '' }: { data: ListDataType; id?: str
               font-size: 12px;
               padding: 16px;
               font-weight: 400;
-              background-color: var(--fill-pop);
+              background-color: var(--fill_pop);
               color: var(--theme-font-color-1);
             }
             :global(.ant-tooltip-arrow::before) {
-              background: var(--fill-pop);
+              background: var(--fill_pop);
             }
           }
         `}</style>

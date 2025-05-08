@@ -101,6 +101,7 @@ export const PendingItem = ({
             <div className="info">
               <div className={`position-type ${buy ? 'buy' : 'sell'}`}>{LANG(buy ? '买入' : '卖出')}</div>
               <div className="margin-type">{LANG(item.marginType === 1 ? '全仓' : '逐仓')}</div>
+              <div className="wallet">{item.subWallet}</div>
               <span> {leverage}X</span>
             </div>
           </div>
@@ -220,7 +221,7 @@ export const PendingItem = ({
       </div>
       <style jsx>{`
         .pending-item {
-          border-bottom: 1px solid var(--line-1);
+          border-bottom: 1px solid var(--fill_line_1);
           &:last-child {
             border-bottom: 0;
           }
@@ -237,7 +238,7 @@ export const PendingItem = ({
             .code {
               font-size: 16px;
               font-weight: 500;
-              color: var(--text-primary);
+              color: var(--text_1);
             }
             .info {
               display: flex;
@@ -257,7 +258,7 @@ export const PendingItem = ({
                 font-weight: 400;
               }
               .position-type {
-                color: var(--text-white);
+                color: var(--text_white);
                 &.buy {
                   background: var(--color-green);
                 }
@@ -266,12 +267,12 @@ export const PendingItem = ({
                 }
               }
               .margin-type {
-                background: var(--fill-3);
-                color: var(--text-secondary);
+                background: var(--fill_3);
+                color: var(--text_2);
               }
               span {
                 font-size: 12px;
-                color: var(--text-primary);
+                color: var(--text_1);
                 white-space: nowrap;
               }
             }
@@ -286,7 +287,7 @@ export const PendingItem = ({
               background: var(--brand);
               font-size: 12px;
               font-weight: 400;
-              color: var(--text-white);
+              color: var(--text_white);
             }
           }
 
@@ -297,10 +298,10 @@ export const PendingItem = ({
             color: var(--color-red);
           }
           .profit {
-            color: var(--text-true) !important;
+            color: var(--text_green) !important;
           }
           .loss {
-            color: var(--text-error) !important;
+            color: var(--text_red) !important;
           }
           .statistics {
             font-size: 12px;
@@ -342,7 +343,7 @@ export const PendingItem = ({
                     overflow: hidden;
                   }
                   &:first-child {
-                    color: var(--text-tertiary);
+                    color: var(--text_3);
                   }
                   &:last-child {
                     width: 100%;
@@ -350,7 +351,7 @@ export const PendingItem = ({
                     text-overflow: ellipsis;
                     overflow: hidden;
 
-                    color: var(--text-primary);
+                    color: var(--text_1);
                     :global(.icon) {
                       margin-left: 3px;
                     }

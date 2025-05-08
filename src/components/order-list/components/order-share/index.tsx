@@ -15,6 +15,7 @@ import { getLocation } from '@/core/utils/src/get';
 import html2canvas from 'html2canvas';
 import { QRCodeSVG } from 'qrcode.react';
 import { FACE_BOOK_ICON, LINKEDIN_ICON, TELEGRAM_ICON, TWITTER_ICON, SAVEIMAGE_ICON, COPYLINK_ICON } from './icon';
+import CommonIcon from '@/components/common-icon';
 
 const SHARE_ICONS = [
   {
@@ -28,7 +29,8 @@ const SHARE_ICONS = [
     key: 'copy-url',
   },
   {
-    icon: <TWITTER_ICON />,
+    // icon: <TWITTER_ICON />,
+    icon: <CommonIcon name="common-twitter" className="icon" size={40} />,
     name: 'Twitter',
     key: 'twitter',
   },
@@ -50,6 +52,7 @@ const SHARE_ICONS = [
 ];
 const OrderShare = ({
   title,
+  symbol,
   code,
   visible,
   onClose,
@@ -61,6 +64,7 @@ const OrderShare = ({
   settleCoin,
 }: {
   title: string;
+  symbol: string;
   code: string;
   visible: boolean;
   onClose: () => any;
@@ -161,7 +165,8 @@ const OrderShare = ({
               </div>
               <div className={clsx('bottom-info')}>
                 <div className={clsx('bottom-info-label')}>{LANG('最新价格')}：</div>
-                <div className={clsx('bottom-info-value')}>{Swap.Utils.getNewestPrice()}</div>
+                <div className={clsx('bottom-info-value')}>{Swap.Utils.getNewPrice(symbol?.toUpperCase())}</div>
+                
               </div>
               <div className={clsx('bottom-info')}>
                 <div className={clsx('bottom-info-label')}>{LANG('分享时间')}：</div>

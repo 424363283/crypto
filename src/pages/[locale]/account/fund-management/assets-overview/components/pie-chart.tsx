@@ -1,4 +1,4 @@
-import { useTheme } from '@/core/hooks';
+import { useResponsive, useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Account, Rate } from '@/core/shared';
 import { MediaInfo, clsx } from '@/core/utils';
@@ -32,7 +32,9 @@ const PieCharts: React.FC = () => {
   ]);
   const { allSpotAssets, spotTotalBalance } = Account.assets.spotAssetsStore;
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const { isMobile } = useResponsive();
   useEffect(() => {
+
     let item = data[selectedIndex];
     if (item) {
       onMouseMove(selectedIndex, item.name, item.proportion);
@@ -174,7 +176,7 @@ const PieCharts: React.FC = () => {
           balance: item.targetU?.add(item?.lite?.planMargin || 0).add(item?.lite?.positionMargin || 0)
         };
       })
-      ?.filter((item) => item?.proportion > 0);
+      // ?.filter((item) => item?.proportion > 0);
     if (list.length <= 10) {
       return arr;
     } else {
@@ -197,7 +199,8 @@ const PieCharts: React.FC = () => {
           proportion: 100?.sub(previousTotalProportion),
           balance: spotTotalBalance.sub(previousTotalBalance),
         },
-      ].filter((item) => item.proportion > 0);
+      ]
+      // .filter((item) => item.proportion > 0);
     }
   };
   const onMouseMove = (idx: number, name: string, proportion: string) => {
@@ -221,7 +224,7 @@ const PieCharts: React.FC = () => {
         }}
       />
       <div className='pie-chart-legend'>
-        {data?.map(({ name, proportion, balance }, index) => {
+        {data?.filter(v=> isMobile || Number(v.proportion) > 0).map(({ name, proportion, balance }, index) => {
           const active = newIndex === index;
           return (
             <AssetItem
@@ -291,9 +294,9 @@ const styles = css`
         position: absolute;
         width: calc(100% - 48px); /* 外层圆环的宽度 */
         height: calc(100% - 48px); /* 外层圆环的高度 */
-        background-color: var(--bg-1); /* 外层圆环的背景色 */
+        background-color: var(--fill_bg_1); /* 外层圆环的背景色 */
         border-radius: 50%;
-        border: 24px solid var(--fill-3);
+        border: 24px solid var(--fill_3);
         top: -1px;
         left: 0px;
         box-sizing: content-box; /* 使用 content-box 让边框不占用容器的尺寸 */

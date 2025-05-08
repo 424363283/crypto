@@ -13,16 +13,16 @@ export const ColSortTitle = ({
 }) => {
   return (
     <>
-      <div className={'title'}>
+      <div className={'title'} onClick={() => onChange(value === 0 ? 1 : value === 1 ? undefined : 0)}>
         {children}
-        <div className={'sort'} onClick={() => onChange(value === 0 ? 1 : value === 1 ? undefined : 0)}>
+        <div className={'sort'}>
           <Svg
             src={
               [
-                '/static/images/common/sort_arrow.svg',
-                '/static/images/common/sort_arrow2.svg',
-                '/static/images/common/sort_arrow1.svg',
-              ][value ? 0 : (value || 0) + 1]
+                '/static/icons/primary/common/sort-icon.svg',
+                '/static/icons/primary/common/sort-down-active-icon.svg',
+                '/static/icons/primary/common/sort-up-active-icon.svg',
+              ][(value ?? -1) + 1 ]
             }
             width={10}
             height={10}
@@ -36,6 +36,7 @@ export const ColSortTitle = ({
             display: flex;
             align-items: center;
             flex-direction: row;
+            cursor: pointer;
           }
           .sort {
             height: 20px;

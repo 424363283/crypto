@@ -39,7 +39,7 @@ const styles = css`
       margin-right: 5px;
     }
     .text {
-      background-color: var(--green_light);
+      background-color: var(--gree_10);
       font-size: 12px;
       padding: 4px
     }

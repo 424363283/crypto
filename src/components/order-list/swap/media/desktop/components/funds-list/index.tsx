@@ -69,18 +69,19 @@ const useColumns = ({ isUsdtType }: any) => {
         );
       },
     },
-    // {
-    //   title: LANG('资金账户'),
-    //   dataIndex: 'subWallet',
-    //   render: (v: any, item: any) => {
-    //     return (
-    //       <WalletName>
-    //         {item?.alias ||
-    //           Swap.Assets.getWallet({ walletId: item.subWallet, usdt: isUsdtType, withHooks: false })?.alias}
-    //       </WalletName>
-    //     );
-    //   },
-    // },
+    {
+      title: LANG('账户'),
+      dataIndex: 'subWallet',
+      minWidth: 150,
+      render: (v: any, item: any) => {
+        const walletData = Swap.Assets.getWallet({ walletId: item.subWallet, usdt: isUsdtType, withHooks: false });
+        return (
+          <WalletName>
+            {LANG(item?.alias || walletData?.alias)}
+          </WalletName>
+        );
+      },
+    },
     {
       title: () => {
         const types: any = { ...SWAP_FUNDS_RECORD_TYPE() };
@@ -111,7 +112,7 @@ const useColumns = ({ isUsdtType }: any) => {
       minWidth: 150,
       render: (amount: any, item: any) => {
         const formatNum = isUsdtType ? amount : amount.toFixed(Number(item.scale));
-        if(item.type === 'taker_fee' || item.type === 'maker_fee') {
+        if (item.type === 'taker_fee' || item.type === 'maker_fee') {
           return formatNum;
         }
         return <span className={Number(amount) > 0 ? 'positive-text' : 'negative-text'}>

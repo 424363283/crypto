@@ -171,13 +171,13 @@ const styles = css`
       width: 100%;
     }
     .bottom-tips-content {
-      border:1px solid var(--fill-3);
+      border:1px solid var(--fill_3);
       border-radius: 5px;
       padding: 15px;
       .line{
         height: 1px;
         width: 100%;
-        background: var(--fill-3);
+        background: var(--fill_3);
         margin:20px 0;
       }
       .title {
@@ -195,7 +195,7 @@ const styles = css`
     .create-anti-phishing {
       .title{
       font-size:20px;
-      color:var(--text-primary);
+      color:var(--text_1);
       font-weight:700;
       margin: 50px 0 30px 0;
       }

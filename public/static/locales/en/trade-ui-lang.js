@@ -648,5 +648,8 @@ var tradeUiLang = {
 "{symbol}递延最大次数：{deferDays}": "{symbol} Maximum number of deferrals: {deferDays}",
 "{symbol}递延费率：{deferFee}%": "{symbol} Deferred rate: {deferFee}%",
 "不限制递延": "Unlimited",
-"最小": "at least"
+"最小": "at least",
+"确定买入": "Confirm to buy",
+"确定卖出": "Confirm to sell",
+  "仅带单交易员支持跟单账户交易。": "Only copy traders can trade with copy account.",
 };

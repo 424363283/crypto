@@ -98,11 +98,11 @@ const styles = css`
       font-size: 14px;
       font-weight: 400;
       padding: 10px 5px;
-      color: var(--text-secondary);
-      background:var(--fill-3);
+      color: var(--text_2);
+      background:var(--fill_3);
     }
     .active {
-      color: var(--text-brand) !important;
+      color: var(--text_brand) !important;
       font-weight: 500;
     }
   }
@@ -126,9 +126,9 @@ const styles = css`
       height: 40px;
       line-height: 40px;
       font-size: 14px;
-      color: var(--text-primary);
+      color: var(--text_1);
       min-width: 100px;
-      background:var(--fill-3);
+      background:var(--fill_3);
       border-radius: 8px;
 
       &::after {

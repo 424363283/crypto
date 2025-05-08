@@ -7,6 +7,7 @@ export const useSwapMinOrderVolumeState = () => {
   const { twoWayMode, isOpenPositionMode } = Swap.Trade;
   const volumeUnitText = Swap.Trade.getUnitText();
   const { isUsdtType, quoteId } = Swap.Trade.base;
+  const { marginType } = Swap.Info.getLeverFindData(quoteId);
 
   const calcMinOrderVolume = () => {
     if (twoWayMode && !isOpenPositionMode) {
@@ -14,6 +15,7 @@ export const useSwapMinOrderVolumeState = () => {
         usdt: isUsdtType,
         openPosition: false,
         code: quoteId,
+        marginType
       });
 
       if (buyPosition && sellPosition) {

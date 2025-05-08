@@ -38,7 +38,7 @@ const _TradePositionMode = () => {
             align-items: center;
             flex-shrink: 0;
 
-            background: var(--fill-3);
+            background: var(--fill_3);
             margin: 16px 10px 16px;
             @media ${MediaInfo.mobile} {
               margin: 0 0.5rem;
@@ -57,12 +57,12 @@ const _TradePositionMode = () => {
               align-items: center;
               gap: 10px;
               border-radius: 8px;
-              color: var(--text-secondary);
+              color: var(--text_2);
               @media ${MediaInfo.mobile} {
                 padding: 0;
               }
               &[data-active='true'] {
-                color: var(--text-white);
+                color: var(--text_white);
                 border-radius: 8px;
                 &:first-child {
                   background: var(--color-green);

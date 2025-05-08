@@ -12,7 +12,7 @@ export const NavCard:React.FC<{close?:()=>void}> = ({close}) => {
     {
       href: MAIN_NAV_MENU.DASHBOARD,
       query: MAIN_NAV_TYPE.OVERVIEW,
-      title: LANG('总览'),
+      title: LANG('账户总览'),
     },
     {
       href: MAIN_NAV_MENU.DASHBOARD,
@@ -62,7 +62,7 @@ const styles = css`
   .nav-card-container {
     width: 308px;
     height: 100%;
-    background:var(--bg-1);
+    background:var(--fill_bg_1);
     z-index:999;
     .top-nav {
       padding: 0px 30px 30px 20px;
@@ -83,7 +83,7 @@ const styles = css`
         :global(.title) {
           font-size: 16px;
           font-weight: 400;
-          color: var(--text-secondary);
+          color: var(--text_2);
           text-align: left;
           margin-left: 10px;
         }

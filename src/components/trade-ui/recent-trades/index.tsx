@@ -132,7 +132,7 @@ export const RecentTrades = () => {
             padding-top: 1rem;
             padding-bottom: 10px;
             font-size: 10px;
-            color: var(--text-tertiary);
+            color: var(--text_3);
           }
 
           &.small {

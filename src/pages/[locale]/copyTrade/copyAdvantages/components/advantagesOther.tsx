@@ -42,7 +42,7 @@ export default function advantagesOther() {
 }
 const styles = css`
   .other-advantages {
-    background: var(--fill-3);
+    background: var(--fill_3);
   }
   .other-advantages-box {
     width: 1200px;
@@ -57,7 +57,7 @@ const styles = css`
       font-weight: 700;
       font-size: 40px;
       line-height: 46.88px;
-      color: var(--text-primary);
+      color: var(--text_1);
     }
     .other-advantages-content {
       display: grid;
@@ -89,7 +89,7 @@ const styles = css`
         font-weight: 400;
         font-size: 16px;
         line-height: 24px;
-        color: var(--text-tertiary);
+        color: var(--text_3);
       }
     }
   }

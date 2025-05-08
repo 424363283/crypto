@@ -148,7 +148,7 @@ const styles = css`
     margin: 1.5rem 0;
     height: 1px;
     width: 100%;
-    background: var(--line-2);
+    background: var(--fill_line_2);
   }
   .table-card {
     padding-bottom: 1rem;
@@ -160,7 +160,7 @@ const styles = css`
     }
     :global(.ant-table-thead > tr > th) {
       padding: 0;
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-weight: 400;
       font-size: 12px;
       border: 0;
@@ -177,7 +177,7 @@ const styles = css`
     :global(td.ant-table-cell) {
       padding: 0;
       font-size: 12px;
-      color: var(--text-primary);
+      color: var(--text_1);
       font-weight: 500;
       &:last-child {
         text-align: right;
@@ -207,7 +207,7 @@ const styles = css`
         border: none;
         width: 1.25rem;
         min-width: 1.25rem;
-        color: var(--text-primary);
+        color: var(--text_1);
         height: 1.25rem;
         line-height: 1.25rem;
         border-radius: 50%;
@@ -216,7 +216,7 @@ const styles = css`
         font-size: 12px;
         font-weight: 500;
         &:hover {
-          background-color: var(--fill-3);
+          background-color: var(--fill_3);
         }
       }
       :global(.ant-pagination-prev),
@@ -233,7 +233,7 @@ const styles = css`
         width: 1rem;
         height: 1rem !important;
         :global(.ant-pagination-item-link-icon) {
-          color: var(--text-brand) !important;
+          color: var(--text_brand) !important;
           font-size: 10px;
           :global(svg) {
             width: 10px;
@@ -242,7 +242,7 @@ const styles = css`
         }
         :global(.ant-pagination-item-ellipsis) {
           border-radius: 1.25rem;
-          color: var(--text-primary);
+          color: var(--text_1);
           width: 1.25rem;
           height: 1.25rem;
           font-size: 10px;
@@ -250,7 +250,7 @@ const styles = css`
       }
       :global(.ant-pagination-item-active) {
         background: var(--brand);
-        color: var(--text-white);
+        color: var(--text_white);
         font-weight: 500;
       }
     }

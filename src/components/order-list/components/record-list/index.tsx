@@ -15,6 +15,7 @@ import CommonIcon from '@/components/common-icon';
 export { ColSelectTitle } from './components/col-select-title';
 export { ColSortTitle } from './components/col-sort-title';
 import type { TableLayout } from 'antd/';
+import { Swap } from '@/core/shared';
 
 
 const TableArrowBox = memo(({ selector, dataSource }: { selector: string; dataSource: any[] }) => {
@@ -79,6 +80,8 @@ const RecordList = ({
   const [scrollArrowsRoot, setScrollArrowsRoot] = useState<any>(null)
   const [count, setCount] = useState(0);
   const [dataList, setDataList] = useState([]);
+  const { quoteId, isUsdtType } = Swap.Trade.base;
+  const unit = Swap.Info.getUnitText({ symbol: quoteId });
 
   useLayoutEffect(() => {
     const parent = document.getElementsByClassName(`${id}`)?.[0];
@@ -145,7 +148,9 @@ const RecordList = ({
     scrollArrowsRoot?.render(
       <TableArrowBox selector={`.${id} .ant-table-body`} dataSource={list || []} />
     );
-  }, [list]);
+  }, [list,unit]);
+
+
 
   return (
     <>
@@ -249,7 +254,7 @@ const { className, styles } = css.resolve`
       font-size: 12px;
     }
     :global(.ant-table-cell-row-hover){
-      background: var(--bg-1) !important;
+      background: var(--fill_bg_1) !important;
     }
     :global(.ant-table-thead) {
       :global(tr) {
@@ -261,10 +266,10 @@ const { className, styles } = css.resolve`
           padding-top: 8px;
           padding-left: 0px;
           padding-right: 8px;
-          background: var(--bg-1);
+          background: var(--fill_bg_1);
           font-size: 12px;
           font-weight: 400;
-          color: var(--text-tertiary);
+          color: var(--text_3);
           transition: none;
           white-space: nowrap;
         }
@@ -281,7 +286,7 @@ const { className, styles } = css.resolve`
     :global(tr) {
       :global(th),
       :global(td) {
-        // border-bottom: 1px solid var(--line-1);
+        // border-bottom: 1px solid var(--fill_line_1);
         border-bottom: none;
 
         vertical-align: middle;
@@ -306,7 +311,7 @@ const { className, styles } = css.resolve`
         padding: 8px 5px;
         padding-left: 2px;
         font-weight: 500;
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size:12px;
       }
       @media ${MediaInfo.desktop} {
@@ -318,7 +323,7 @@ const { className, styles } = css.resolve`
 
     :global(.ant-table-cell-fix-left),
     :global(.ant-table-cell-fix-right) {
-      background: var(--bg-1);
+      background: var(--fill_bg_1);
     }
     :global(.ant-table-thead)
       > :global(tr.ant-table-row-hover:not(.ant-table-expanded-row):not(.ant-table-row-selected))
@@ -332,7 +337,7 @@ const { className, styles } = css.resolve`
     :global(.ant-table-tbody)
       > :global(tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected))
       > :global(td) {
-      background: var(--fill-1);
+      background: var(--fill_1);
     }
 
     // loading

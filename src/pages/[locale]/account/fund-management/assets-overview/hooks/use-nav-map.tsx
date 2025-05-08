@@ -42,6 +42,16 @@ export const useNavMap = (verifiedDeveloped: boolean) => {
     },
     {
       query: {
+        type: 'swap-u',
+        account: 'copy'
+      },
+      title: LANG('跟单账户'),
+      icon: 'sidebar-copy-nav-0',
+      activeIcon: 'sidebar-copy-nav-active-0',
+      href: '/account/fund-management/assets-overview',
+    },
+    {
+      query: {
         type: 'records',
         tab: 0
       },

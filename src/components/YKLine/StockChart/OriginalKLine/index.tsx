@@ -11,7 +11,6 @@ import {
   memo
 } from 'react';
 import { Loading as YmexLoading } from '@/components/loading';
-
 // import { CandleType, registerLocale } from "klinecharts";
 import { CandleType, registerLocale } from './index.esm';
 
@@ -21,7 +20,7 @@ import Loading from '@/components/Yloading';
 
 import { message } from '@/core/utils';
 import { LANG } from '@/core/i18n';
-import { Swap, Spot, TradeMap } from '@/core/shared';
+import { Swap, Spot, TradeMap, Account } from '@/core/shared';
 
 import Widget, { IndicatorType } from './Widget';
 
@@ -468,6 +467,10 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
   // 绘制持仓线
   useEffect(() => {
     if (widgetRef.current && showPositionLine && isSwapLink) {
+      const positionIds = positions.map(item => item.positionId);
+      if (!positionList.length) {
+        return widgetRef.current.removeNewPositionLine();
+      }
       positionList.forEach(position => {
         if (position?.symbolId === symbolSwapId) {
           let unrealizedPnl = position.unrealizedPnl;
@@ -650,6 +653,8 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
             closeTooltip: LANG('市价平仓'),
             reverseTooltip: LANG('反手'),
             orginalItem: position.orginalItem,
+            dialogVisible: spslModalProps.visible,
+            positionIds,
             onOrderdrag: e => {
               console.log('eeeee', e);
             },
@@ -694,7 +699,7 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
           const isLong = position?.side === '1';
           const direction = isLong ? LANG('多') : LANG('空'); //持仓方向
           const isLongProfit = (isLong && position?.direction != '1') || (!isLong && position?.direction == '1');
-          let profitLoss = isLongProfit ? 'TP' : 'SL';
+          let profitLoss = isLongProfit ? LANG('止盈') : LANG('止损');
 
           let closeTooltip = isLongProfit ? LANG('取消止盈') : LANG('取消止损');
           const profitLossColor = unrealizedPnl >= 0 ? Color.Green : Color.Red;
@@ -747,7 +752,6 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
           let total = isLongProfit
             ? `${LANG('预计止盈')}${isLong ? LANG('平多') : LANG('平空')}(${roe}%)`
             : `${LANG('预计止损')}${isLong ? LANG('平多') : LANG('平空')}(${roe}%)`;
-
           widgetRef.current?.createPositionTPSLLine({
             direction,
             directionColor,
@@ -761,9 +765,13 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
             volume: `${total}`,
             tooltipColor,
             backgroundColor,
+            orginalItem,
             closeTooltip: closeTooltip,
             reverseTooltip: LANG('反手'),
             onOrderdragEnd: async e => {
+              if (e.figureKey === 'close') {
+                return;
+              }
               let stopProfit = '--'; // 止盈价格
               let stopLoss = '--'; // 止损价格
               const price = e.overlay.points[0].value.toFixed(2);
@@ -779,7 +787,7 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
               data.orders.forEach((o: any) => {
                 params.push({
                   priceType: o.priceType,
-                  triggerPrice: o.triggerPrice,
+                  newPrice: o.triggerPrice,
                   strategyType: o.strategyType
                 });
                 if (o.strategyType === '1') stopProfit = Number(o.triggerPrice).toFixed(baseShowPrecision);
@@ -810,6 +818,7 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
                   position.orginalItem.orders = [
                     {
                       positionSide: positionSide,
+                      // newTriggerPrice: price,
                       triggerPrice: price,
                       strategyType: strategyType
                     }
@@ -820,12 +829,14 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
 
                   if (existingOrder) {
                     // 如果存在，更新triggerPrice
+                    // existingOrder.newTriggerPrice = price;
                     existingOrder.triggerPrice = price;
                   } else {
                     // 如果不存在，添加新的订单
                     position.orginalItem.orders.push({
                       positionSide: positionSide,
                       orderType: 2,
+                      // newTriggerPrice: price,
                       triggerPrice: price,
                       priceType: '1',
                       strategyType: strategyType
@@ -1090,6 +1101,7 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
           position.orginalItem.orders = [
             {
               positionSide: positionSide,
+              // newTriggerPrice: price,
               triggerPrice: price,
               strategyType: strategyType
             }
@@ -1100,12 +1112,14 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
 
           if (existingOrder) {
             // 如果存在，更新triggerPrice
+            // existingOrder.newTriggerPrice = price;
             existingOrder.triggerPrice = price;
           } else {
             // 如果不存在，添加新的订单
             position.orginalItem.orders.push({
               positionSide: positionSide,
               orderType: 2,
+              // newTriggerPrice: price,
               triggerPrice: price,
               priceType: '1',
               strategyType: strategyType
@@ -1120,7 +1134,7 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
   }, [TpSlInfo]);
 
   useEffect(() => {
-    if (dragOverlayData) {
+    if (dragOverlayData && Account.isLogin && isSwapLink) {
       const { pageX, pageY } = dragOverlayData;
       setShowCreateOrderModal(true);
     }
@@ -1129,8 +1143,7 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
   return (
     <div ref={rootEl} style={{ height: '100%', position: 'relative' }}>
       <div id={containerId} className={styles.klineChart}></div>
-      {showCreateOrderModal}--showCreateOrderModal
-      {showCreateOrderModal && (
+      {showCreateOrderModal ? (
         <div
           style={{
             left: dragOverlayData.pageX,
@@ -1145,7 +1158,7 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
           <YIcon.addOrderIcon />
           {LANG('创建交易')}
         </div>
-      )}
+      ) : null}
       {loading && <Loading />}
       {indicatorModalVisible && (
         <IndicatorModal

@@ -2,7 +2,7 @@ import { Slider } from 'antd';
 import { MediaInfo } from '@/core/utils';
 
 export default function YSlider(props: any) {
-  const { min, max, onChange, value, marks, railBgColor = 'var(--fill-3)', ...rest } = props;
+  const { min, max, onChange, value, marks, railBgColor = 'var(--fill_3)', ...rest } = props;
   const showMarksLabel = marks && Object.values(marks)[0] !== ' ';
   const newValue = Math.abs(value);
   return (
@@ -10,6 +10,7 @@ export default function YSlider(props: any) {
       <Slider
         className={showMarksLabel && 'slider-with-marks-label'}
         min={min}
+        step={6}
         max={max}
         marks={marks}
         value={newValue}
@@ -28,25 +29,26 @@ export default function YSlider(props: any) {
               margin-bottom: 30px;
             }
             :global(.ant-slider-rail) {
+              width: 100%;
               border-radius: 4px;
               background: ${railBgColor} !important;
             }
             :global(.ant-slider-track) {
-              background: var(--text-brand) !important;
+              background: var(--text_brand) !important;
             }
             :global(.ant-slider-dot) {
-              background-color: var(--fill-1);
-              border: 2px solid var(--line-2);
+              background-color: var(--fill_1);
+              border: 2px solid var(--fill_line_2);
               inset-block-start: -2px !important;
             }
             :global(.ant-slider-dot-active) {
-              background-color: var(--text-white);
+              background-color: var(--text_white);
               border-color: var(--brand);
             }
             :global(.ant-slider-handle) {
               &:after {
-                background-color: var(--text-white) !important;
-                box-shadow: 0 0 0 4px var(--text-brand) !important;
+                background-color: var(--text_white) !important;
+                box-shadow: 0 0 0 4px var(--text_brand) !important;
               }
               &:focus::after {
                 outline: none !important;
@@ -56,7 +58,7 @@ export default function YSlider(props: any) {
               top: 20px !important;
             }
             :global(.ant-slider-mark-text) {
-              color: var(--text-secondary);
+              color: var(--text_2);
               font-size: 10px;
               font-weight: 400;
             }
@@ -72,7 +74,7 @@ export default function YSlider(props: any) {
                   width: 8px;
                   height: 8px;
                   &::after {
-                    box-shadow: 0 0 0 2px var(--text-brand) !important;
+                    box-shadow: 0 0 0 2px var(--text_brand) !important;
                   }
                   &::before {
                     width: 8px;
@@ -97,8 +99,8 @@ export default function YSlider(props: any) {
           :global(.ant-slider-tooltip) {
             :global(.ant-tooltip-content .ant-tooltip-inner),
             :global(.ant-tooltip-arrow:before) {
-              background: var(--fill-pop) !important;
-              color: var(--text-primary) !important;
+              background: var(--fill_pop) !important;
+              color: var(--text_1) !important;
             }
           }
         `}

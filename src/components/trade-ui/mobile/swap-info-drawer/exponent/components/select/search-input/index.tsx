@@ -31,8 +31,8 @@ const styles = css`
     flex-direction: row;
     align-items: center;
     padding: 0 10px;
-    background: var(--fill-pop);
-    box-shadow: 0px 0px 8px 0px var(--fill-projection);
+    background: var(--fill_pop);
+    box-shadow: 0px 0px 8px 0px var(--fill_shadow);
     border-radius: 8px 8px 0 0;
 
     &:hover {
@@ -54,8 +54,8 @@ const styles = css`
       height: 2rem;
       border: none;
       flex: 1;
-      background: var(--fill-pop);
-      color: var(--text-primary);
+      background: var(--fill_pop);
+      color: var(--text_1);
     }
   }
 `;

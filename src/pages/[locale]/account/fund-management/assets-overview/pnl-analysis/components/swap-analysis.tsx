@@ -16,6 +16,7 @@ import { WalletType } from '../../components/types';
 import { HidePrice } from './hide-price';
 import { PnlListItem } from './pnl-list-item';
 import { SwapPnlDetailCard } from './swap-pnl-detail-card';
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
 const SwapOverviewCard = dynamic(() => import('./swap-overview-card'));
 const SwapDetailCard = dynamic(() => import('./swap-detail-card'));
 interface SwapProfits {
@@ -75,6 +76,8 @@ const CommonTabBar = () => {
 
 export default function SwapAnalysis() {
   const type = (getUrlQueryParams('type') as WalletType) || WalletType.ASSET_SWAP_U;
+  const account: keyof typeof WalletKey = getUrlQueryParams('account')?.toUpperCase();
+  const wallet = WalletKey[account] || (type === WalletType.ASSET_SWAP_U ? WalletKey.SWAP_U : '');
 
   const [eyeOpen, setEyeOpen] = useState(true);
   const [state, setState] = useImmer({
@@ -100,6 +103,7 @@ export default function SwapAnalysis() {
     startDate: dayjs(startDate).valueOf(),
     endDate: dayjs(endDate).valueOf(),
     type,
+    wallet
   });
   const symbolUnit = type === WalletType.ASSET_SWAP_U ? 'USDT' : 'USD';
 
@@ -107,7 +111,7 @@ export default function SwapAnalysis() {
     const getSwapProfitData = async () => {
       const PROFITS_REQUESTS: any = {
         [WalletType.ASSET_SWAP]: async () => await getSwapTotalProfitsApi(),
-        [WalletType.ASSET_SWAP_U]: async () => await getSwapUTotalProfitsApi(),
+        [WalletType.ASSET_SWAP_U]: async () => await getSwapUTotalProfitsApi({ subWallet: wallet }),
       };
       if (!PROFITS_REQUESTS.hasOwnProperty(type)) {
         return;
@@ -122,7 +126,7 @@ export default function SwapAnalysis() {
       }
     };
     getSwapProfitData();
-  }, [type]);
+  }, [type, account]);
 
   const onDateRangeChange = ({ startDate, endDate }: { startDate: string; endDate: string }) => {
     setState((draft) => {
@@ -134,6 +138,7 @@ export default function SwapAnalysis() {
     await getSwapPnlReports({
       start: dayjs(startDate).valueOf(),
       end: dayjs(endDate).valueOf(),
+      wallet: wallet
     });
   };
   const PNL_list = [
@@ -268,7 +273,7 @@ const styles = css`
       @media ${MediaInfo.mobileOrTablet} {
         flex-direction: column;
         width: 100%;
-        background: var(--fill-1);
+        background: var(--fill_1);
       }
       .left-column {
         display: flex;
@@ -280,7 +285,7 @@ const styles = css`
         gap: 24px;
         flex-shrink: 0;
         border-radius: 8px;
-        border: 1px solid var(--line-1);
+        border: 1px solid var(--fill_line_1);
         @media ${MediaInfo.mobile} {
           height: auto;
         }
@@ -315,18 +320,18 @@ const styles = css`
             gap: 12px;
             flex: 1 0 0;
             border-radius: 8px;
-            background: var(--fill-2);
+            background: var(--fill_2);
             :global(.title) {
-              color: var(--text-secondary);
+              color: var(--text_2);
               text-align: center;
               font-size: 14px;
               font-weight: 400;
               line-height: 14px;
               padding-bottom: 4px;
-              border-bottom: 1px dashed var(--text-secondary);
+              border-bottom: 1px dashed var(--text_2);
             }
             :global(.value) {
-              color: var(--text-primary);
+              color: var(--text_1);
               text-align: center;
               font-size: 18px;
               font-weight: 500;
@@ -349,7 +354,7 @@ const styles = css`
         align-items: flex-start;
         gap: 24px;
         border-radius: 8px;
-        border: 1px solid var(--line-1);
+        border: 1px solid var(--fill_line_1);
         @media ${MediaInfo.mobile}{
           width:auto;
           padding: 12px;
@@ -361,7 +366,7 @@ const styles = css`
           gap: 8px;
           align-self: stretch;
           border-radius: 30px;
-          background: var(--fill-3);
+          background: var(--fill_3);
           .tab-item {
             display: flex;
             padding: 12px 16px;
@@ -370,7 +375,7 @@ const styles = css`
             gap: 10px;
             flex: 1 0 0;
             border-radius: 8px;
-            color: var(--text-secondary);
+            color: var(--text_2);
             cursor: pointer;
           }
           .tab-item.active {
@@ -382,7 +387,7 @@ const styles = css`
             flex: 1 0 0;
             border-radius: 30px;
             background: var(--brand);
-            color: var(--text-white);
+            color: var(--text_white);
           }
         }
         :global(.bottom-pagination) {

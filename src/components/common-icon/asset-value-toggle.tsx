@@ -34,7 +34,7 @@ export const AssetValueToggleIcon = memo(
       //   width={16}
       //   height={16}
       //   onClick={onEyeIconClick}
-      //   color='var(--text-primary)'
+      //   color='var(--text_1)'
       //   style={{cursor: 'pointer'}}
       // />
       <CommonIcon

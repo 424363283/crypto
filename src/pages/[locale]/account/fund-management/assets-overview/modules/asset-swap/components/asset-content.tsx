@@ -99,7 +99,7 @@ const styles = css`
   .assets-swap-bottom-card {
     border-bottom-right-radius: 15px;
     border-bottom-left-radius: 15px;
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     @media ${MediaInfo.desktop} {
       margin-top: 0px;
     }

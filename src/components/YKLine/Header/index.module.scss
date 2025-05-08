@@ -2,8 +2,8 @@
 // @import '@/styles/AntdReset.module.scss';
 
 .headerContainer {
-  background: var(--bg-1);
-  border-bottom: 1px solid var(--line-1);
+  background: var(--fill_bg_1);
+  border-bottom: 1px solid var(--fill_line_1);
   padding: 0 16px;
   box-sizing: border-box;
   position: relative;
@@ -145,7 +145,7 @@
     font-size: 12px;
 font-style: normal;
 font-weight: 400;
-color: var(--text-tertiary);
+color: var(--text_3);
 
     &:hover {
       color: var(--brand);
@@ -169,16 +169,16 @@ color: var(--text-tertiary);
 .headerLine {
   height: 16px;
   width: 1px;
-  background: var(--line-1);
+  background: var(--fill_line_1);
 }
 
 
 .popoverWrapper {
   min-width: 99px;
-  background-color: var(--fill-3);
+  background-color: var(--fill_3);
   border-radius: 8px;
   .popoverContent {
-    color: var(--text-secondary);
+    color: var(--text_2);
     font-size: 12px;
   }
 
@@ -189,7 +189,7 @@ color: var(--text-tertiary);
     height: 36px;
     fill: #787D83;
     stroke: #787D83;
-    color: var(--text-secondary);
+    color: var(--text_2);
     border-radius: 4px;
     cursor: pointer;
     &:hover, &.selected {
@@ -317,7 +317,7 @@ color: var(--text-tertiary);
 
   :global {
     .ant-select-item {
-      background-color: var(--fill-3);
+      background-color: var(--fill_3);
       padding: 5px 2px !important;
       text-align: center;
       min-height: 28px;
@@ -367,8 +367,8 @@ color: var(--text-tertiary);
   font-size: 12px;
 font-style: normal;
 font-weight: 400;
-color: var(--text-tertiary);
+color: var(--text_3);
 }
 .CheckBoxList{
-  color: var(--text-primary);
+  color: var(--text_1);
 }

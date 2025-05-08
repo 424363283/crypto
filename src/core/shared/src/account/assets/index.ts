@@ -17,6 +17,7 @@ import { resso } from '@/core/resso';
 import { LiteListItem, MarketsMap, PositionSide, Rate } from '@/core/shared';
 import { SWAP_DEFAULT_WALLET_ID } from '@/core/shared/src/swap/modules/info/constants';
 import { ILiteAsset, ISpotAsset, ISwapAsset, ISwapUAsset, SpotItem, SwapItem } from './types';
+import { SWAP_WALLET_ALIAS } from '../../swap/modules/assets/constants';
 
 const SPOT_STORE = resso<ISpotAsset>({
   allSpotAssets: [],
@@ -209,7 +210,7 @@ class Assets {
     SWAP_U_STORE.assets = defaultAsset;
     const formatAssets = perpetualUAsset?.data?.map(v => {
       const { alias, pic, remark, url } = Object.values(v.accounts)[0] as any;
-      return { accounts: v.accounts, wallet: v.wallet, alias: alias || v.wallet, url: url, pic, remark };
+      return { accounts: v.accounts, wallet: v.wallet, alias: SWAP_WALLET_ALIAS[v.wallet] || alias || v.wallet, url: url, pic, remark };
     });
     SWAP_U_STORE.wallets = formatAssets;
     const accounts = defaultAsset.accounts;

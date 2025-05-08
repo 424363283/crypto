@@ -100,7 +100,7 @@ const _FundingRateCountdown = ({ type }: { type: FundingRateType }) => {
 
   return (
     <span>
-      <span style={{ color: 'var(--text-primary)' }}>
+      <span style={{ color: 'var(--text_1)' }}>
         {formatDefaultText(time != '--:--:--' && (Number(myRate) === 0 ? '0'.toFixed(rateDigit) : myRate))}%
       </span>{' '}
       / {time}

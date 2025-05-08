@@ -99,7 +99,7 @@ const styles = css`
       width: 100%;
       height: 100%;
       border-radius: 16px;
-      background: var(--fill-3);
+      background: var(--fill_3);
       display: flex;
       align-items: center;
       cursor: pointer;
@@ -112,7 +112,7 @@ const styles = css`
         box-shadow: 0 0 0 1px var(--brand);
       }
       input {
-        background: var(--fill-3);
+        background: var(--fill_3);
         line-height: 56px;
         width: 100%;
         border-radius: 8px;
@@ -160,7 +160,7 @@ const styles = css`
       top: 62px;
       left: 0;
       width: 100%;
-      background: var(--fill-3);
+      background: var(--fill_3);
       z-index: 99;
       border-radius: 8px;
       box-shadow: 1px 2px 10px 0px rgba(0, 0, 0, 0.08);
@@ -212,7 +212,7 @@ const styles = css`
         }
         .tip {
           border-radius: 5px;
-          color: var(--text-brand);
+          color: var(--text_brand);
           font-size: 12px;
           font-weight: 500;
           padding: 0 10px;

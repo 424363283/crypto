@@ -19,7 +19,7 @@ const { className, styles } = css.resolve`
     }
   }
   .select-list {
-    color: var(--text-secondary);
+    color: var(--text_2);
     :global(.select-item) {
       font-size: 10px;
       font-weight: 500;
@@ -36,8 +36,8 @@ const { className, styles } = css.resolve`
     padding: 8px 0 0;
     width: 100%;
     &-label {
-      color: var(--text-secondary);
-      border-bottom: 1px dashed var(--line-3, #34343b);
+      color: var(--text_2);
+      border-bottom: 1px dashed var(--fill_line_3, #34343b);
       padding: 0 4px 0 0;
     }
     span {
@@ -61,11 +61,11 @@ const { className, styles } = css.resolve`
       align-items: center;
       border-radius: 22px;
       background: var(--brand);
-      color: var(--text-white);
+      color: var(--text_white);
       font-size: 12px;
       font-weight: 400;
       &:hover {
-        color: var(--text-white);
+        color: var(--text_white);
       }
       &:last-child {
         margin-right: 0;
@@ -84,7 +84,7 @@ const { className, styles } = css.resolve`
       .ipt-form:first-child {
         width: 60px;
         :global(input) {
-          background: var(--fill-projection);
+          background: var(--fill_shadow);
         }
       }
     }
@@ -93,26 +93,26 @@ const { className, styles } = css.resolve`
       :global(.liquidation-ipt) {
         :global(input) {
           border-radius: 8px;
-          background: var(--fill-3) !important;
-          color: var(--text-primary);
+          background: var(--fill_3) !important;
+          color: var(--text_1);
           font-size: 10px;
           font-weight: 500;
-          border: 1px solid var(--fill-3) !important;
+          border: 1px solid var(--fill_3) !important;
           height: 26px;
           &:focus {
-            border: 1px solid var(--fill-3) !important;
+            border: 1px solid var(--fill_3) !important;
             box-shadow: none;
           }
         }
         :global(.ant-popover-open) {
-          background: var(--fill-1) !important;
+          background: var(--fill_1) !important;
           border: 1px solid var(--brand) !important;
         }
         :global(.ant-input-group-wrapper-outlined) {
           border-radius: 8px;
           border: 1px solid transparent;
           :global(.ant-popover-open) {
-            background: var(--fill-1) !important;
+            background: var(--fill_1) !important;
             border: 1px solid var(--brand) !important;
           }
         }
@@ -139,7 +139,7 @@ const { className, styles } = css.resolve`
     align-items: center;
     align-content: center;
     :global(.ant-popover-inner) {
-      background: var(--bg-1) !important;
+      background: var(--fill_bg_1) !important;
     }
     :global(.ant-popover-inner) {
       height: 68px !important;

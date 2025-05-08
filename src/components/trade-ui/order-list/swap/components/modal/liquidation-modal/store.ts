@@ -203,7 +203,8 @@ export const submitClosePosition = async ({ isUsdtType, isLimit, value, data, in
       price: isLimit ? Number(inputPrice) : '',
       orderQty: value,
       side: Number(data.side) === 1 ? 1 : 2, // 1 买  2 卖
-      type: !isLimit ? 5 : 4
+      type: !isLimit ? 5 : 4,
+      usingAccountType: data.usingAccountType
       // type: isLimit ? 5 : 4,
     });
     const volumeDigit = Swap.Info.getVolumeDigit(data?.symbol);

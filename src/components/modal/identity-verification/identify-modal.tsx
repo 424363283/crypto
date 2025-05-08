@@ -1,4 +1,4 @@
-import { useKycState, useRouter } from '@/core/hooks';
+import { useKycState, useRouter, useResponsive } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Account } from '@/core/shared';
 import dynamic from 'next/dynamic';
@@ -15,6 +15,7 @@ import { UploadIDInfo } from './components/upload-user-info';
 import { useApiContext } from './context';
 import { useKycResult } from './useKycResult';
 import { MediaInfo } from '@/core/utils';
+import { BottomModal, MobileModal } from '@/components/mobile-modal';
 const InitialInfoModalContent = dynamic(() => import('./components/initial-info-content'), { ssr: false });
 
 // 相当于旧的kyc认证页面
@@ -26,9 +27,11 @@ type IProps = {
 const IdentityVerificationModal = (props: IProps) => {
   const { open, onCancel, onVerifiedDone, remainAmount = 0, unit = 'BTC' } = props;
   const router = useRouter();
-  const { isLoadingKycState, updateKYCAsync, kycState,disabled } = useKycState();
+  const { isLoadingKycState, updateKYCAsync, kycState, disabled } = useKycState();
+  // const
   const { showUploadFile } = useKycResult();
   const { apiState, setApiState } = useApiContext();
+  const { isMobile } = useResponsive();
   const { showUploadPage, pageStep } = apiState;
 
   const { kyc } = kycState;
@@ -65,7 +68,7 @@ const IdentityVerificationModal = (props: IProps) => {
     return null;
   }
 
-  const onCloseModal = (evt: any) => {
+  const onCloseModal = (evt?: any) => {
     setApiState(draft => {
       draft.pageStep = showUploadFile ? 'init' : 'result';
     });
@@ -80,6 +83,20 @@ const IdentityVerificationModal = (props: IProps) => {
     }
     return <ResultCard />;
   };
+  if (isMobile && !showUploadPage) {
+    return (
+      <MobileModal visible={open} onClose={onCloseModal} type="bottom">
+        <BottomModal
+          title={STATUS_TITLE_MAP[kyc]}
+          confirmText={LANG('知道了')}
+          onConfirm={onCloseModal}
+          displayConfirm={kyc !== 2}
+        >
+          <ResultCard />
+        </BottomModal>
+      </MobileModal>
+    );
+  }
 
   return (
     <>
@@ -119,7 +136,7 @@ const styles = css`
       font-size: 14px;
       font-weight: 500;
 
-      color: var(--text-primary);
+      color: var(--text_1);
       text-align: justify;
       font-family: 'HarmonyOS Sans SC';
       font-size: 14px;
@@ -145,7 +162,6 @@ const styles = css`
     }
   }
   :global(.basic-modal.kycStatus) {
-
     :global(.ant-modal-header .ant-modal-title) {
       padding: 0 0 18px;
       font-family: 'HarmonyOS Sans SC';
@@ -157,11 +173,9 @@ const styles = css`
   }
 
   :global(.basic-modal.kycStatus1) {
- 
     :global(.result-box .main .prompt) {
-      background-color: var(--yellow_tips, rgba(240, 186, 48, 0.1)) !important;
+      background-color: var(--yellow_10) !important;
       color: var(--yellow, #f0ba30) !important;
-      
     }
   }
 
@@ -170,7 +184,7 @@ const styles = css`
       padding: 0 !important;
     }
     :global(.result-box .main .prompt) {
-      background: var(--red_light, rgba(239, 69, 74, 0.1)) !important;
+      background: var(--red_10, rgba(239, 69, 74, 0.1)) !important;
       color: var(--red, #f0ba30);
     }
   }
@@ -180,24 +194,17 @@ const styles = css`
       padding: 0 !important;
     }
     :global(.result-box .main .prompt) {
-      background-color: rgba(7,130,139,0.2) !important;
-      color: var(--red-light, #07828B);
+      background-color: rgba(7, 130, 139, 0.2) !important;
+      color: var(--red-light, #07828b);
     }
   }
 
-
-  :global(.custom-bottom-content){
-
+  :global(.custom-bottom-content) {
     :global(.common-button) {
       @media ${MediaInfo.mobileOrTablet} {
-      width: 100%;
+        width: 100%;
       }
     }
   }
-
- 
-
-
-  
 `;
 export default IdentityVerificationModal;

@@ -217,13 +217,13 @@ const styles = css`
           height: 100%;
           flex: 1;
           padding-left: 12px;
-          color: var(--text-secondary)!important;
+          color: var(--text_2)!important;
           .content-wrapper {
             :global(>*:nth-last-child(2)) {
-              color: var(--text-primary);
+              color: var(--text_1);
             }
             :global(>*:nth-child(2)) {
-              color: var(--text-tertiary);
+              color: var(--text_3);
             }
           }
           :global(.icon-logo) {
@@ -254,7 +254,7 @@ const styles = css`
         }
         &:hover {
           :global(.simple-link-wrapper .content-wrapper .name) {
-            color: var(--text-brand);
+            color: var(--text_brand);
           }
         }
       }

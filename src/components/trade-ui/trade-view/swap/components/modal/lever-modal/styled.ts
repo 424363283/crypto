@@ -16,17 +16,17 @@ const { className, styles: _styles } = css.resolve`
       margin: 0 !important;
       align-items: center;
       border-radius: 12px;
-      background: var(--fill-3);
+      background: var(--fill_3);
       font-size: 20px;
       font-weight: 700;
-      color: var(--text-primary);
+      color: var(--text_1);
       &.error {
-        border-color: var(--text-error) !important;
+        border-color: var(--text_red) !important;
       }
       :global(input) {
         font-size: 20px;
         font-weight: 700;
-        color: var(--text-primary);
+        color: var(--text_1);
       }
     }
     .lever-slider {
@@ -51,13 +51,13 @@ const { className, styles: _styles } = css.resolve`
     .max-info {
       display: flex;
       flex-direction: row;
-      color: var(--text-secondary);
+      color: var(--text_2);
       font-size: 14px;
       font-weight: 400;
       line-height: 150%;
       padding: 10px 0 0;
       :global(span) {
-        color: var(--text-primary);
+        color: var(--text_1);
       }
       @media ${MediaInfo.mobile} {
         margin: 1.5rem 0;
@@ -68,7 +68,7 @@ const { className, styles: _styles } = css.resolve`
       margin-top: 5px;
       font-size: 12px;
       font-weight: 400;
-      color: var(--text-error);
+      color: var(--text_red);
       line-height: 18px;
     }
     .danger-info {

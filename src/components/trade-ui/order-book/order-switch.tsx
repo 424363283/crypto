@@ -118,7 +118,7 @@ export const OrderSwitch = ({ value, onChange }: { value: number; onChange: (val
           align-items: center;
           margin-right: 8px;
           cursor: pointer;
-          border: 1px solid var(--line-1);
+          border: 1px solid var(--fill_line_1);
           border-radius: 4px;
         }
       `}</style>

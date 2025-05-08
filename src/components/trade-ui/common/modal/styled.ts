@@ -38,7 +38,7 @@ const { className, styles: _styles } = css.resolve`
       .modal-title-info{
         display:flex;
         align-items:center;
-        color: var(--text-primary);
+        color: var(--text_1);
         text-align: justify;
         font-size: 16px;
         font-weight: 500;
@@ -142,8 +142,8 @@ const { className, styles: _styles } = css.resolve`
         justify-content: center;
         align-items: center;
         border-radius: 40px;
-        background: var(--text-brand);
-        color: var(--text-white);
+        background: var(--text_brand);
+        color: var(--text_white);
         font-size: 16px;
         font-weight: 500;
         &:nth-child(2) {

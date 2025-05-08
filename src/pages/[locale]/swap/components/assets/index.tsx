@@ -155,9 +155,9 @@ export const Assets = ({ showSettleCoin = false }: { showSettleCoin?: boolean })
             : isDark
               ? 'var(--theme-trade-bg-color-8)'
               : '#E5E5E4'};
-            color: var(--text-tertiary);
+            color: var(--text_3);
             padding: 0 16px 24px;
-            border-bottom: 2px solid var(--line-1);
+            border-bottom: 2px solid var(--fill_line_1);
             :global(.margin-rate) {
               padding: 0;
             }
@@ -170,7 +170,7 @@ export const Assets = ({ showSettleCoin = false }: { showSettleCoin?: boolean })
               font-size: 14px;
               font-weight: 500;
               height: 40px;
-              color: var(--text-primary);
+              color: var(--text_1);
               .operate {
                 display: flex;
                 align-items: center;
@@ -183,7 +183,7 @@ export const Assets = ({ showSettleCoin = false }: { showSettleCoin?: boolean })
                   align-items: center;
                   gap: 4px;
                   cursor: pointer;
-                  color: var(--text-brand);
+                  color: var(--text_brand);
                 }
               }
 
@@ -200,7 +200,7 @@ export const Assets = ({ showSettleCoin = false }: { showSettleCoin?: boolean })
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                color: var(--text-primary);
+                color: var(--text_1);
                 .arrow {
                   margin-left: 4px;
                 }
@@ -258,10 +258,10 @@ export const Assets = ({ showSettleCoin = false }: { showSettleCoin?: boolean })
               font-weight: 400;
               > :global(*) {
                 &:nth-child(1) {
-                  color: var(--text-tertiary);
+                  color: var(--text_3);
                 }
                 &:nth-child(2) {
-                  color: var(--text-primary);
+                  color: var(--text_1);
                 }
               }
             }

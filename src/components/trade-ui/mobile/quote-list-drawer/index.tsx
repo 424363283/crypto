@@ -20,7 +20,7 @@ import {
   isSwapSLUsdt,
   isSwapUsdt
 } from '@/core/utils';
-import { Drawer } from 'antd';
+import { Drawer, Dropdown, MenuProps } from 'antd';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import css from 'styled-jsx/css';
 import QuoteSearch from '../../quote-list/components/search';
@@ -32,6 +32,8 @@ enum SORT_TYPE {
   'PRICE' = 'price',
   'CHANGE' = 'change'
 }
+
+const TAB_LIMIT = 5;
 
 interface Props {
   onClose: () => void;
@@ -60,6 +62,26 @@ const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
   // 二级标题
   const [secondaryActiveIndex, setSecondaryActiveIndex] = useState(0);
   const [secondaryTabs, setSecondaryTabs] = useState<string[]>([]);
+  const getTabItemLang = useCallback(
+    (item: string) => {
+      return /^[a-zA-Z0-9]+$/.test(item) ? item : LANG(item);
+    },
+    [secondaryTabs]
+  );
+  const tabs1 = useMemo(() => (secondaryTabs.length > 5 ? secondaryTabs.slice(0, TAB_LIMIT) : tabs), [secondaryTabs]);
+  const tabs2 = useMemo(() => (secondaryTabs.length > 5 ? secondaryTabs.slice(TAB_LIMIT) : tabs), [secondaryTabs]);
+  const dropdownTab = useMemo(
+    () => (secondaryActiveIndex < TAB_LIMIT ? LANG('更多') : getTabItemLang(secondaryTabs[secondaryActiveIndex])),
+    [secondaryActiveIndex]
+  );
+  const items: MenuProps['items'] = tabs2.map(item => {
+    return {
+      key: item,
+      label: (
+        <span className={secondaryTabs[secondaryActiveIndex] === item ? 'active' : ''}>{getTabItemLang(item)}</span>
+      )
+    };
+  });
 
   useEffect(() => {
     getIds();
@@ -248,7 +270,7 @@ const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
                   margin: 0;
                   font-size: 12px;
                   font-weight: 400;
-                  color: var(--text-secondary);
+                  color: var(--text_2);
                 }
               }
               > div:nth-child(1) {
@@ -324,19 +346,25 @@ const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
     [sort, zone, search, isSpotPage]
   );
 
-  const PrevIcon = () => {
-    return (
-      <div className="mobile-arrow">
-        <Svg src="/static/images/header/media/arrow-left.svg" width={14} height={14} />
-      </div>
-    );
-  };
-  const NextIcon = () => {
-    return (
-      <div className="mobile-arrow">
-        <Svg src="/static/images/header/media/arrow-right.svg" width={14} height={14} />
-      </div>
-    );
+  // const PrevIcon = () => {
+  //   return (
+  //     <div className="mobile-arrow">
+  //       <Svg src="/static/images/header/media/arrow-left.svg" width={14} height={14} />
+  //     </div>
+  //   );
+  // };
+  // const NextIcon = () => {
+  //   return (
+  //     <div className="mobile-arrow">
+  //       <Svg src="/static/images/header/media/arrow-right.svg" width={14} height={14} />
+  //     </div>
+  //   );
+  // };
+
+  const onClick: MenuProps['onClick'] = ({ key }) => {
+    const indexInTab2 = tabs2.findIndex(i => i === key);
+    setZone(key);
+    setSecondaryActiveIndex(indexInTab2 + TAB_LIMIT);
   };
 
   return (
@@ -354,17 +382,49 @@ const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
       <div className="tab-wrapper">
         <ul>
           {tabs.map((tab, index) => (
-            <li key={tab} className={getActive(index === activeIndex)} onClick={() => setActiveIndex(index)}>
+            <li
+              key={tab}
+              className={getActive(index === activeIndex)}
+              onClick={() => {
+                setActiveIndex(index);
+                setSecondaryActiveIndex(0);
+                setZone('All');
+              }}
+            >
               {tab}
             </li>
           ))}
         </ul>
       </div>
-      {isSpotPage && (
+      {isSpotPage && activeIndex !== 0 && (
         <div className="type-wrapper">
-          <ScrollXWrap prevIcon={<PrevIcon />} wrapClassName="mobile-list" nextIcon={<NextIcon />}>
-            <div className="type-container">
-              {secondaryTabs.map((item, index) => (
+          <div className="type-container">
+            {tabs1.map((item, index) => (
+              <button
+                key={item}
+                onClick={() => {
+                  setSecondaryActiveIndex(index);
+                  setZone(item);
+                }}
+                className={getActive(index === secondaryActiveIndex)}
+              >
+                {getTabItemLang(item)}
+                {item === 'LVTs' && <span>3X</span>}
+              </button>
+            ))}
+            <Dropdown
+              menu={{ items, onClick }}
+              overlayClassName="spot-list-menu-wrapper"
+              placement="bottomRight"
+              trigger={['click']}
+              getPopupContainer={triggerNode => triggerNode.parentNode}
+            >
+              <button key={dropdownTab} className={clsx('item', activeIndex >= TAB_LIMIT ? 'active' : '')}>
+                {dropdownTab}
+                <CommonIcon className="icon" name="common-tiny-triangle-down-2" size={12} />
+              </button>
+            </Dropdown>
+            {/* {secondaryTabs.map((item, index) => (
                 <button
                   key={item}
                   onClick={() => {
@@ -376,9 +436,10 @@ const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
                   {item}
                   {item === 'LVTs' && <span>3X</span>}
                 </button>
-              ))}
-            </div>
-          </ScrollXWrap>
+              ))} */}
+          </div>
+          {/* <ScrollXWrap prevIcon={<PrevIcon />} wrapClassName="mobile-list" nextIcon={<NextIcon />}>
+          </ScrollXWrap> */}
         </div>
       )}
       {sortData(list[activeIndex])?.length > 0 ? (
@@ -416,7 +477,7 @@ const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
                           )}
                           {/* {isNew && <span className="new">NEW</span>} */}
                         </div>
-                        <div className="price" style={{ color: `var(${item.isUp ? '--color-green' : '--color-red'})` }}>
+                        <div className="price">
                           {formatDefaultText(item.price.toFormat(item.digit))}
                         </div>
                         <div className="rate">
@@ -435,9 +496,9 @@ const QuoteListDrawer = ({ onClose, open, isSpotPage }: Props) => {
       ) : (
         <div className="empty-wrapper">
           <EmptyComponent text={LANG('暂无数据')} active />
-          <div className="add-favor" onClick={() => setActiveIndex(1)}>
+          {/* <div className="add-favor" onClick={() => setActiveIndex(1)}>
             {LANG('添加自选')}
-          </div>
+          </div> */}
         </div>
       )}
       <style jsx>{styles}</style>
@@ -526,35 +587,42 @@ const styles = css`
       }
     }
     .type-wrapper {
-      padding: 0 20px;
-      margin-top: 20px;
+      padding: 0 1.5rem;
+      margin-top: 16px;
       :global(.mobile-list) {
         display: flex;
         align-items: center;
-        .type-container {
-          button {
-            border: none;
-            outline: none;
-            padding: 5px 12px;
-            font-size: 12px;
-            color: var(--theme-font-color-3);
-            background: none;
-            &.active {
-              color: var(--theme-font-color-1);
-              background: var(--theme-sub-button-bg);
-              border-radius: 5px;
-            }
-            span {
-              display: inline-block;
-              margin-left: 2px;
-              height: 14px;
-              padding: 0 4px;
-              border-radius: 4px;
-              background: #f04e3f;
-              line-height: 14px;
-              color: #fff;
-            }
-          }
+      }
+    }
+    .type-container {
+      display: flex;
+      justify-content: space-between;
+      button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        border: none;
+        outline: none;
+        padding: 4px 8px;
+        font-size: 12px;
+        font-weight: 500;
+        border-radius: 4px;
+        color: var(--text_2);
+        background: var(--fill_3);
+        &.active {
+          color: var(--text_brand);
+          background: rgba(7, 130, 139, 0.2);
+        }
+        span {
+          display: inline-block;
+          margin-left: 2px;
+          height: 14px;
+          padding: 0 4px;
+          border-radius: 4px;
+          background: #f04e3f;
+          line-height: 14px;
+          color: #fff;
         }
       }
       :global(.mobile-arrow) {
@@ -595,7 +663,7 @@ const styles = css`
         padding: 0;
       }
       :global(.ant-drawer-content) {
-        background-color: var(--fill-1);
+        background-color: var(--fill_1);
       }
     }
     @media ${MediaInfo.mobile} {
@@ -616,7 +684,7 @@ const styles = css`
           padding: 0;
           padding-bottom: 8px;
           gap: 1.5rem;
-          color: var(--text-secondary);
+          color: var(--text_2);
           li {
             padding: 0;
             height: 1rem;
@@ -640,7 +708,7 @@ const styles = css`
             line-height: normal;
             font-size: 12px;
             font-weight: 400;
-            color: var(--text-primary);
+            color: var(--text_1);
             .name,
             .price,
             .rate {
@@ -694,11 +762,31 @@ const styles = css`
           flex-shrink: 0;
           border-radius: 2.5rem;
           background: var(--brand);
-          color: var(--text-white);
+          color: var(--text_white);
           font-size: 14px;
           font-style: normal;
           font-weight: 400;
           line-height: normal;
+        }
+      }
+    }
+  }
+  :global(.spot-list-menu-wrapper) {
+    z-index: 1031;
+    :global(ul) {
+      height: 280px;
+      overflow-y: scroll;
+      padding: 12px 0;
+      background: var(--dropdown-select-bg-color);
+      :global(li) {
+        color: var(--text_2) !important;
+      }
+      :global(.ant-dropdown-menu-item) {
+        &:hover {
+          color: var(--text_2) !important;
+        }
+        :global(.active) {
+          color: var(--text_brand) !important;
         }
       }
     }

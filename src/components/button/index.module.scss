@@ -47,8 +47,8 @@
 
 @each $intent in $nui-intents {
   .common-button.nui-#{$intent} {
-    @include nui-button-style(var(--text-white),
-      var(--text-white),
+    @include nui-button-style(var(--text_white),
+      var(--text_white),
       map-get($nui-gradient-map, $intent),
       map-get($nui-gradient-hover-map, $intent),
       map-get($nui-border-color-map, $intent),

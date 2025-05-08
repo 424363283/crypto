@@ -67,7 +67,7 @@ export default function CopyTrading() {
 
 const styles = css`
   .copy-trading{
-    background: var(--fill-2);
+    background: var(--fill_2);
     padding:80px 0;
     &-wrap{
       width:1200px;
@@ -81,12 +81,12 @@ const styles = css`
       align-items: center;
       gap: 16px;
       h1{
-        color: var(--text-tertiary);
+        color: var(--text_3);
         font-size: 32px;
         font-weight: 700;
       }
       p{
-        color: var(--text-tertiary);
+        color: var(--text_3);
         font-size: 16px;
         font-weight: 400;
       }

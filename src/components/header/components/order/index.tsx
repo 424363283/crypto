@@ -60,7 +60,7 @@ const styles = css`
       word-break: keep-all;
       font-size: 16px;
       font-weight: 500;
-      color: var(--text-secondary);
+      color: var(--text_2);
       &:hover {
         color: var(--brand);
       }

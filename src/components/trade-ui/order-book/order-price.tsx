@@ -94,7 +94,7 @@ export const OrderPrice = ({ marketDetail }: { marketDetail?: DetailMap }) => {
             .price {
               font-size: 16px;
               display: flex;
-              color: var(--text-secondary, #a5a8ac);
+              color: var(--text_2, #a5a8ac);
               font-weight: 400;
               font-family: 'HarmonyOS Sans SC';
               span {
@@ -107,7 +107,7 @@ export const OrderPrice = ({ marketDetail }: { marketDetail?: DetailMap }) => {
                line-height:24px;
               }
               .price-rate {
-                color: var(--text-secondary);
+                color: var(--text_2);
                 font-size: 16px;
 font-style: normal;
 font-weight: 400;

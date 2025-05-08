@@ -1,61 +1,77 @@
 // @import '@/styles/size-variables.scss';
 $sm: 768px;
-.copyTradingTradingList {
-}
+
 .copyContainer {
   margin-bottom: 120px;
-  background: var(--bg-1);
+  background: var(--fill_bg_1);
 }
+
 .filterContentBox {
-  background: var(--fill-pop) !important;
+  background: var(--fill_pop) !important;
+  &.filterDark {
+    background: #1f1f1f !important;
+  }
   :global(.ant-drawer-body) {
     @media (max-width: $sm) {
       padding: 0;
     }
   }
 }
+
+.selectTips {
+  font-family: HarmonyOS Sans SC;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 100%;
+  color: var(--text_1);
+}
+
 .noLoginBox {
   margin-top: 40px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+
   p {
     font-family: HarmonyOS Sans SC;
     font-weight: 700;
     font-size: 20px;
-    line-height: 23.44px;
-    color: var(--text-primary);
+    color: var(--text_1);
     margin-bottom: 16px;
   }
+
   label {
     font-family: HarmonyOS Sans SC;
     font-weight: 400;
     font-size: 14px;
-    line-height: 16.41px;
-    color: var(--text-secondary);
+    color: var(--text_2);
   }
 }
+
 .closeBox {
   cursor: pointer;
 }
+
 .becomeTrade {
   margin: 16px 24px 24px 24px;
 }
 
 .copyHeader {
   height: 400px;
-  background: var(--label);
+  background: var(--brand_20);
   padding-top: 62px;
   padding-bottom: 63px;
+
   @media (max-width: $sm) {
     padding: 0;
     height: 354px;
   }
+
   .copyApply {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    color: var(--text-primary);
+    color: var(--text_1);
     font-family: 'HarmonyOS Sans SC';
     font-size: 14px;
     font-style: normal;
@@ -70,19 +86,21 @@ $sm: 768px;
 .container {
   width: 1200px;
   margin: 0 auto;
+
   @media (max-width: $sm) {
     width: 100%;
   }
 }
+
 .copyHeaderContainer {
   .title {
-    color: var(---text-black);
+    color: var(--text_black);
     font-family: 'HarmonyOS Sans SC';
     font-size: 40px;
     font-style: normal;
     font-weight: 700;
     line-height: 52px;
-    color: var(--text-primary);
+    color: var(--text_1);
     @media (max-width: $sm) {
       font-size: 32px;
       padding: 32px 24px 0 24px;
@@ -90,6 +108,7 @@ $sm: 768px;
     }
   }
 }
+
 .copyMine {
   display: flex;
   padding: 16px 24px;
@@ -98,39 +117,45 @@ $sm: 768px;
   gap: 32px;
   align-self: stretch;
   border-radius: 24px;
-  background: var(--bg-1);
-  color: var(--text-primary);
+  background: var(--fill_bg_1);
+  color: var(--text_1);
 }
+
 .avatar {
   width: 40px;
   height: 40px;
   border-radius: 100%;
 }
+
 .copyInfo {
   width: 100%;
 }
+
 .myIncome {
   display: flex;
   width: 100%;
   justify-content: space-around;
   align-items: center;
-  color: var(--text-secondary);
+  color: var(--text_2);
   font-family: 'HarmonyOS Sans SC';
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
 }
+
 @media (max-width: $sm) {
   .copyMine {
     border-radius: 0;
   }
 }
+
 .textRight {
   text-align: right;
 }
+
 .myInTitle {
-  color: var(--text-primary);
+  color: var(--text_1);
   font-family: 'HarmonyOS Sans SC';
   font-size: 16px;
   font-style: normal;
@@ -138,11 +163,13 @@ $sm: 768px;
   line-height: normal;
   margin-bottom: 8px;
 }
+
 .searchBox {
   margin-top: 78px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   .title {
     color: var(--brand);
     font-family: 'HarmonyOS Sans SC';
@@ -151,42 +178,63 @@ $sm: 768px;
     font-weight: 500;
     line-height: normal;
   }
+
   @media (max-width: $sm) {
     .title {
       font-size: 18px;
     }
   }
+
   .inputSearch {
     width: 240px;
     height: 40px;
     border: none;
     border-radius: 40px;
-    background: var(--fill-3);
+    background: var(--fill_3);
+
+    &:focus,
+    &:hover,
+    &:focus-within {
+      border-color: var(--text_brand);
+      border: 1px solid var(--text_brand);
+    }
+
     input {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text_1);
+
       &::placeholder {
-        color: var(--text-secondary) !important;
+        color: var(--text_2) !important;
       }
+
       &::-webkit-input-placeholder {
-        color: var(--text-secondary) !important;
+        color: var(--text_2) !important;
       }
     }
-    &.ant-input-affix-wrapper > input.ant-input {
-      color: var(--text-primary);
+
+    :global(.ant-input-affix-wrapper > input.ant-input) {
+      color: var(--text_1);
+      font-size: 12px;
+      font-weight: 400;
     }
   }
 }
+
 @media (max-width: $sm) {
   .searchBox {
     margin-top: 24px;
     padding: 0 16px;
-    border-bottom: 1px solid var(--line-1);
+    border-bottom: 1px solid var(--fill_line_1);
     padding-bottom: 8px;
   }
 }
+
 .tabsBox {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   .tabList {
     display: flex;
     align-items: center;
@@ -194,7 +242,7 @@ $sm: 768px;
     overflow-y: auto;
 
     .tabItem {
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-family: 'HarmonyOS Sans SC';
       font-size: 14px;
       font-style: normal;
@@ -203,17 +251,20 @@ $sm: 768px;
       margin-right: 24px;
       word-break: keep-all;
       cursor: pointer;
+
       &.active {
         color: var(--brand);
       }
     }
   }
+
   @media (max-width: $sm) {
     .tabList {
       padding: 0;
       margin: 0;
     }
   }
+
   .filterBox {
     display: flex;
     width: 80px;
@@ -221,18 +272,20 @@ $sm: 768px;
     justify-content: center;
     align-items: center;
     border-radius: 24px;
-    background: var(--text-brand);
-    color: var(--text-white);
+    background: var(--text_brand);
+    color: var(--text_white);
     font-family: 'HarmonyOS Sans SC';
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
     cursor: pointer;
+
     .filterIcon {
       margin-right: 4px;
     }
   }
+
   @media (max-width: $sm) {
     .filterBox {
       background: transparent;
@@ -241,12 +294,14 @@ $sm: 768px;
     }
   }
 }
+
 @media (max-width: $sm) {
   .tabsBox {
     margin: 0 16px;
     margin-top: 24px;
   }
 }
+
 .copyBox {
   .copyTradingList {
     display: grid;
@@ -254,26 +309,32 @@ $sm: 768px;
     grid-column-gap: 24px;
     grid-row-gap: 24px;
   }
+
   @media (max-width: $sm) {
     margin: 24px 0;
+
     .copyTradingList {
       grid-template-columns: repeat(1, 1fr);
       margin: 0 16px;
     }
   }
 }
+
 .copyItem {
   cursor: pointer;
   padding: 24px;
   border-radius: 24px;
-  border: 1px solid var(--line-2);
-  color: var(--text-secondary);
+  border: 1px solid var(--fill_line_2);
+  color: var(--text_2);
   font-family: 'HarmonyOS Sans SC';
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  height: 424px;
+
+  &:hover {
+    border: 1px solid var(--text_brand);
+  }
 
   .avatar {
     width: 40px;
@@ -281,8 +342,9 @@ $sm: 768px;
     border-radius: 100%;
     margin-right: 8px;
   }
+
   .copyName {
-    color: var(--text-primary);
+    color: var(--text_1);
     font-family: 'HarmonyOS Sans SC';
     font-size: 16px;
     font-style: normal;
@@ -290,11 +352,12 @@ $sm: 768px;
     line-height: normal;
     margin-bottom: 4px;
   }
+
   .currentAmount {
-    color: var(--text-primary);
+    color: var(--text_1);
   }
+
   .copyIncome {
-    color: var(--text-true);
     font-family: 'HarmonyOS Sans SC';
     font-size: 32px;
     font-style: normal;
@@ -302,17 +365,30 @@ $sm: 768px;
     line-height: normal;
     margin-top: 8px;
   }
+
   .copyCount {
-    color: var(--text-primary);
+    color: var(--text_1);
     font-weight: 500;
   }
+
   .copyLine {
     padding-bottom: 24px;
-    border-bottom: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--fill_line_2);
   }
+
   .symbolBox {
     gap: 4px;
+    width: 240px;
+    white-space: nowrap;
+    /* 禁止换行 */
+    overflow: hidden;
+    /* 隐藏溢出内容 */
+    text-overflow: ellipsis;
+    /* 显示省略号 */
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
   }
+
   .copySymbol {
     width: 24px;
     height: 24px;
@@ -322,6 +398,7 @@ $sm: 768px;
     width: 20px;
     height: 20px;
   }
+
   .copyItemSubmit {
     display: flex;
     height: 48px;
@@ -330,7 +407,7 @@ $sm: 768px;
     gap: 10px;
     align-self: stretch;
     border-radius: 40px;
-    color: var(--text-brand);
+    color: var(--text_brand);
     border: 1px solid var(--brand);
     text-align: center;
     font-family: 'HarmonyOS Sans SC';
@@ -339,12 +416,14 @@ $sm: 768px;
     font-weight: 500;
     line-height: normal;
     cursor: pointer;
+
     &:hover {
       background: var(--brand);
-      color: var(--text-white);
+      color: var(--text_white);
     }
   }
 }
+
 @media (max-width: $sm) {
   .copyItem {
     height: auto;
@@ -354,39 +433,49 @@ $sm: 768px;
 .gap4 {
   gap: 4px;
 }
+
 .gap16 {
   gap: 16px;
 }
+
 .flexCenter {
   display: flex;
   align-items: center;
 }
+
 .flexSpan {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
 .flexCol {
   justify-content: flex-start;
   flex-direction: column;
 }
+
 .flexAround {
   display: flex;
   align-items: center;
   justify-content: space-around;
 }
+
 .mt24 {
   margin-top: 24px;
 }
+
 .mb24 {
   margin-bottom: 24px;
 }
+
 .mb32 {
   margin-bottom: 24px;
 }
+
 .my16 {
   margin: 16px 0;
 }
+
 .mb16 {
   margin-bottom: 16px;
 }
@@ -394,6 +483,7 @@ $sm: 768px;
 .pl8 {
   padding-left: 8px;
 }
+
 .amontItem {
   display: flex;
   align-items: center;
@@ -401,38 +491,47 @@ $sm: 768px;
 }
 
 .setBox {
-  color: var(--text-secondary);
+  color: var(--text_2);
   font-family: 'HarmonyOS Sans SC';
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+
   .setHeader {
     margin-bottom: 40px;
+    color: var(--text_1);
+    font-weight: 500;
+    font-size: 16px;
+
     @media (max-width: $sm) {
       padding: 12px 24px;
       margin-bottom: 24px;
-      border-bottom: 1px solid var(--line-1);
+      border-bottom: 1px solid var(--fill_line_1);
     }
   }
+
   .setTitle {
-    color: var(--text-primary);
+    color: var(--text_1);
     font-family: 'HarmonyOS Sans SC';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
   }
+
   .filterSetContent {
     @media (max-width: $sm) {
       padding: 0 24px;
     }
   }
 }
+
 .setMutitle {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
+
   .multipleItem {
     font-family: 'HarmonyOS Sans SC';
     font-size: 12px;
@@ -441,46 +540,75 @@ $sm: 768px;
     line-height: normal;
     cursor: pointer;
     border-radius: 4px;
-    border: 0.5px solid var(--line-3);
+    border: 0.5px solid var(--fill_line_3);
     height: 24px;
     justify-content: center;
-    color: var(--text-primary);
+    color: var(--text_1);
     &.itemSelect {
-      color: var(--text-brand);
-      border: 0.5px solid var(--text-brand);
+      color: var(--text_brand);
+      border: 0.5px solid var(--text_brand);
     }
   }
+
   .usertag {
     height: 32px;
   }
 }
+
 .contractSearch {
-  width: 132px;
+  width: 164px;
   height: 32px;
-  border: 1px solid var(--skin-primary-color);
+  border: 1px solid var(--fill_3);
   border-radius: 40px;
-  background: var(--fill-3);
-  &.ant-input-outlined:focus {
-    border-color: var(--text-brand);
+  background: var(--fill_3);
+  color: var(--text_1);
+
+  &:focus,
+  &:hover,
+  &:focus-within {
+    border-color: var(--text_brand);
+    background: var(--fill_3);
+    border: 1px solid var(--text_brand);
   }
-  &:hover {
-    border-color: var(--text-brand);
+
+  font-size: 12px;
+  font-weight: 400;
+
+  :global(.ant-input) {
+    &::placeholder {
+      color: var(--text_2) !important;
+    }
+
+    &::-webkit-input-placeholder {
+      color: var(--text_2) !important;
+    }
   }
+
   &.w240 {
     width: 240px;
   }
 }
+
 .contractSelect {
   margin-bottom: 16px;
+
   .currencyOpt {
-    color: var(--text-primary);
+    color: var(--text_1);
     margin-left: 16px;
   }
+
+  .icon-radio {
+    span {
+      color: var(--text_1);
+    }
+  }
 }
+
 .copySubmit {
   margin-top: 16px;
   margin-bottom: 51px;
   gap: 16px;
+
   .copyBtn {
     display: flex;
     align-items: center;
@@ -495,12 +623,14 @@ $sm: 768px;
     border-radius: 24px;
     border: 1px solid var(--brand);
   }
+
   .copyReset {
-    color: var(---text-brand);
+    color: var(--text_brand);
     width: 40%;
   }
+
   .copyConfirm {
-    color: var(--text-white);
+    color: var(--text_white);
     background: var(--brand);
     width: 50%;
   }
@@ -510,60 +640,68 @@ $sm: 768px;
   .symbolHeaderItem {
     display: flex;
     align-items: center;
+
     .symbolLogoImg {
       width: 32px;
       height: 32px;
       border-radius: 50%;
       margin-right: 8px;
     }
+
     .symbolName {
       font-size: 20px;
       font-style: normal;
       font-weight: 700;
-      color: var(--text-primary);
+      color: var(--text_1);
     }
+
     .symbolType {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 20px;
       font-style: normal;
       font-weight: 700;
       margin-left: 8px;
     }
+
     .symbolTadingType {
       display: flex;
       padding: 4.5px 16px;
       align-items: center;
       border-radius: 4px;
-      background: var(--fill-3);
-      color: var(--text-secondary);
+      background: var(--fill_3);
+      color: var(--text_2);
       margin-left: 8px;
       font-size: 14px;
       font-style: normal;
       font-weight: 400;
     }
+
     .symbolLeverage {
       display: flex;
       padding: 4.5px 16px;
       align-items: center;
       border-radius: 4px;
-      background: var(--green_light);
+      background: var(--gree_10);
       color: var(--color-green);
       margin-left: 8px;
       font-size: 14px;
       font-style: normal;
       font-weight: 400;
     }
+
     .symbolLeverageUp {
       margin-right: 8px;
     }
+
     .symbolTadingTime {
       font-size: 14px;
       font-style: normal;
       font-weight: 400;
-      color: var(--text-tertiary);
+      color: var(--text_3);
       margin-left: 8px;
     }
   }
+
   .symbolItemContent {
     display: flex;
     align-items: center;
@@ -571,42 +709,50 @@ $sm: 768px;
     flex: 1;
     margin-right: 40px;
   }
+
   .symbolListInfo {
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--text_1);
   }
+
   .symbolListTitle {
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
-    color: var(--text-tertiary);
+    color: var(--text_3);
     margin-bottom: 26px;
+
     &:nth-of-type(2) {
       margin-bottom: 0px;
     }
   }
+
   .symbolListDesc {
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
     margin-bottom: 26px;
+
     &:nth-of-type(2) {
       margin-bottom: 0px;
     }
   }
+
   .symbolListTitleInfo {
     margin-right: 8px;
-    color: var(--text-tertiary);
+    color: var(--text_3);
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
   }
+
   .symbolListware {
     display: flex;
     align-items: flex-start;
   }
+
   .symbolTradingBtn {
     padding: 10px 52px;
     border-radius: 24px;
@@ -614,9 +760,10 @@ $sm: 768px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-white);
+    color: var(--text_white);
     cursor: pointer;
   }
+
   .symbolItem {
     display: flex;
     align-items: center;
@@ -626,8 +773,50 @@ $sm: 768px;
 }
 
 .textPrimary {
-  color: var(--text-primary);
+  color: var(--text_1);
   &:hover {
-    color: var(--text-primary);
+    color: var(--text_1);
+  }
+}
+
+.selectContract {
+  font-family: HarmonyOS Sans SC;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--text_3);
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.SigleSlider {
+  width: 100%;
+
+  :global(.slider) {
+    padding-left: 9px !important;
+    margin: 0;
+
+    :global(.ant-slider-horizontal) {
+      margin: 11px 0 5px;
+    }
+
+    :global(.ant-slider-handle::after) {
+      box-shadow: 0 0 0 3px var(--text_brand) !important;
+      height: 4px;
+      width: 4px;
+      top: 3px;
+    }
+  }
+
+  :global(.ant-slider) {
+    &.cuSlider {
+      :global(.ant-slider-handle::after) {
+        box-shadow: 0 0 0 3px var(--text_brand) !important;
+        height: 4px;
+        width: 4px;
+        top: 3px;
+      }
+    }
   }
 }

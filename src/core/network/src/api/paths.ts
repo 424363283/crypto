@@ -214,8 +214,10 @@ export const paths = {
   swap_private_userWarn_open: '/swap/private/userWarn/open',
   swap_private_userWarn_addMarginNotify: '/swap/private/userWarn/addMarginNotify',
   swap_private_userWarn_addLpNotify: '/swap/private/userWarn/addLpNotify',
-  swap_private_delivery_trade_positionHistory: '/swap/private/delivery/trade/positionHistory',
-  swap_private_future_trade_positionHistory: '/swap/private/future/trade/positionHistory',
+  swap_private_delivery_trade_positionPnlHistory: '/swap/private/delivery/trade/position_pnl_history',
+  swap_private_future_trade_positionPnlHistory: '/swap/private/future/trade/position_pnl_history',
+  swap_private_delivery_trade_positionHistory: '/swap/private/delivery/trade/position_history',
+  swap_private_future_trade_positionHistory: '/swap/private/future/trade/position_history',
   swap_delivery_edit_plan_order: '/swap/private/delivery/edit_plan_order', // 永续编辑止盈止损
   swap_future_edit_plan_order: '/swap/private/future/order/edit_plan_order',
   swap_public_wallet_create_wallet: '/swap/private/wallet/create_wallet',
@@ -296,7 +298,8 @@ export const paths = {
   traderUpload: '/api/copytrade/trader/upload',  // 上传图片
   isOpenCopyWallet: '/swap/share/trade/isOpenCopyWallet',  // 查询是否已开启跟单子钱包
   getCopyTraderList:'/swap/copy/trade/getCopyTraderList', // 查询带单员下的所有跟单员
-  getPageCopyTradePositionHistory:'/swap/copy/trade/getPageCopyTradePositionHistory', //查询带单仓位历史
+  getCopyFollowList:'/swap/copy/trade/getFollowList', // 查询带单员下的所有跟单员
+  getPageCopyTradePositionHistory:'/swap/private/future/trade/position_history', //查询带单仓位历史
   updateCopyConfig:'/swap/copy/trade/updateCopyConfig',// 跟单员修改跟单信息
   isShareTrader:'/swap/share/trade/isShareTrader',//判断是否是带单员
   openCopyWallet:'/swap/share/trade/openCopyWallet', // 开启跟单钱包
@@ -305,7 +308,6 @@ export const paths = {
   copyTradeUserStatistics:'/swap/copy/statistics/copy_tradeuser_statistics', // 查询带单员统计数据
   copyTradeUserBase:'/swap/copy/statistics/copy_tradeuser_base', // 查询带单员统计数据
   copyTradeuserTradProportion:'/swap//copy/statistics/copy_tradeuser_trad_proportion', // 查询7天内交易比例
-  copyApplyStatus:'/swap/copy/trade/copyApplyStatus', // 跟单员申请(取消)跟单
   getShareTradeConfig:'/swap/share/trade/getShareTradeConfig', // 查询带单配置信息
   updateShareConfig:'/swap/share/trade/updateShareConfig', // 带单员设置带单信息
   updateTraderContentAudit:'/swap/share/trade/updateTraderContentAudit', // 交易员说明修改申请
@@ -314,6 +316,14 @@ export const paths = {
   copyTraderConfigDetail:'/swap/copy/trade/copyTraderConfigDetail',//查询跟单员配置信息
   positionByUid:'/swap/private/future/positionByUid', // 根据uid查询用户持仓
   shareChannelStatus:'/swap/share/trade/shareChannelStatus', // 带单员(取消)跟单人员
+  getFollowStatistics:'/swap/copy/trade/getFollowStatistics', // 跟单数据统计
+  updateNickNameAudit :'/swap/share/trade/updateNickNameAudit', //昵称修改
+  getAllNickNameAudits :'/swap/share/trade/getAllNickNameAudits', //获取交易员昵称
+  copyCancelStatus :'/swap/copy/trade/copyCancelStatus', //跟单员取消跟单
+  copyApplyStatus :'/swap/copy/trade/copyApplyStatus', //跟单员申请跟单
+  getAllTraderContentAudits :'/swap/share/trade/getAllTraderContentAudits', //交易员备注状态
+  getUserSettingsByUid :'/swap/private/future/userSettingsByUid', //根据uid查询用户合约账户配置
+
 
   home_bars: '/api/public/home/bars', // 发现页动态tabs
   setting_global: '/api/public/setting/global', // 维护状态接口

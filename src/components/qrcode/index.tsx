@@ -23,7 +23,7 @@ const styles = css`
     height: 122px;
     padding: 4px;
     border-radius: 3px;
-    background-color: var(--text-white);
+    background-color: var(--text_white);
     @media ${MediaInfo.mobile}{
       margin: 0;
       width: auto;

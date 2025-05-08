@@ -43,7 +43,7 @@ const { className, styles } = css.resolve`
         justify-content: space-between;
         align-items: center;
         flex-shrink: 0;
-        background: var(--fill-3);
+        background: var(--fill_3);
         border-radius: 8px;
         margin-bottom: 1.5rem;
         :global(> div) {
@@ -54,10 +54,10 @@ const { className, styles } = css.resolve`
           align-items: center;
           gap: 10px;
           border-radius: 8px;
-          color: var(--text-secondary);
+          color: var(--text_2);
         }
         :global([data-active='true']) {
-          color: var(--text-white);
+          color: var(--text_white);
           border-radius: 8px;
           background: var(--brand);
         }
@@ -74,7 +74,7 @@ const { className, styles } = css.resolve`
       align-items: flex-start;
       gap: 16px;
       align-self: stretch;
-      border-bottom: 1px solid var(--line-1);
+      border-bottom: 1px solid var(--fill_line_1);
       padding: 0 0 24px;
       @media ${MediaInfo.mobile} {
         gap: 1rem;
@@ -85,7 +85,7 @@ const { className, styles } = css.resolve`
         display: flex;
         align-items: center;
         flex-direction: row;
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 16px;
         font-weight: 500;
         flex-direction: row;
@@ -99,7 +99,7 @@ const { className, styles } = css.resolve`
         align-items: center;
         gap: 10px;
         border-radius: 4px;
-        color: var(--text-true);
+        color: var(--text_green);
         font-size: 12px;
         font-weight: 400;
         margin: 0 0 0 4px;
@@ -139,8 +139,8 @@ const { className, styles } = css.resolve`
         justify-content: center;
         align-items: center;
         border-radius: 4px;
-        background: var(--fill-3);
-        color: var(--text-secondary);
+        background: var(--fill_3);
+        color: var(--text_2);
         font-size: 12px;
         font-weight: 400;
         min-width: 48px;
@@ -153,7 +153,7 @@ const { className, styles } = css.resolve`
         display: flex;
         justify-content: space-between;
         width: 100%;
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 14px;
         font-weight: 400;
       }
@@ -219,7 +219,7 @@ const { className, styles } = css.resolve`
         }
       }
       .liquidation-label {
-        color: var(--text-tertiary);
+        color: var(--text_3);
         font-size: 14px;
         font-weight: 500;
       }
@@ -238,22 +238,22 @@ const { className, styles } = css.resolve`
         @media ${MediaInfo.mobile} {
           &.disabled {
             :global(.ant-input) {
-              background: var(--fill-projection) !important;
+              background: var(--fill_shadow) !important;
             }
             :global(.liquidation-switch) {
-              background: var(--fill-projection);
+              background: var(--fill_shadow);
             }
           }
         }
       }
       .market-price-input {
         :global(.ant-input-wrapper) {
-          background: var(--fill-3) !important;
+          background: var(--fill_3) !important;
         }
       }
 
       .tips {
-        color: var(--text-secondary);
+        color: var(--text_2);
         text-align: justify;
         font-size: 12px;
         font-weight: 400;
@@ -268,12 +268,12 @@ const { className, styles } = css.resolve`
           .warning {
             margin-top: 1.5rem;
             padding-top: 1.5rem;
-            border-top: 1px solid var(--line-1);
+            border-top: 1px solid var(--fill_line_1);
             color: var(--yellow);
           }
         }
         :global(.title) {
-          color: var(--text-primary);
+          color: var(--text_1);
         }
       }
 
@@ -302,13 +302,13 @@ const { className, styles } = css.resolve`
         text-align: center;
         font-size: 16px;
         font-weight: 500;
-        color: var(--text-secondary);
+        color: var(--text_2);
         @media ${MediaInfo.mobile} {
           margin-right: 1.5rem;
         }
       }
       :global(div.active) {
-        color: var(--text-brand);
+        color: var(--text_brand);
       }
     }
   }
@@ -360,28 +360,28 @@ const { className, styles } = css.resolve`
   }
   :global(.custom-dropdown) {
     min-width: 50px;
-    background: var(--fill-3);
+    background: var(--fill_3);
 
     :global(.ant-select-item) {
-      color: var(--text-secondary) !important;
+      color: var(--text_2) !important;
       text-align: center;
-      padding: 0 !important;
+      padding: 4 !important;
       height: 24px !important;
       line-height: 24px !important;
       font-size: 12px !important;
     }
     :global(.ant-select-item-option-selected) {
       background: transparent !important;
-      color: var(--text-brand) !important;
+      color: var(--text_brand) !important;
     }
   }
   @media ${MediaInfo.mobile} {
     :global(.custom-dropdown) {
-      background: var(--fill-pop);
+      background: var(--fill_pop);
       padding: 4px 0;
       min-width: 5rem;
       border-radius: 8px;
-      box-shadow: 0px 0px 8px 0px var(--fill-projection);
+      box-shadow: 0px 0px 8px 0px var(--fill_shadow);
       :global(.rc-virtual-list-holder-inner) {
         gap: 4px;
         padding: 4px 0px;

@@ -1,6 +1,6 @@
 import TabBar, { TAB_TYPE } from '@/components/tab-bar';
 import { LANG } from '@/core/i18n';
-import { getUrlQueryParams } from '@/core/utils';
+import { getUrlQueryParams, MediaInfo } from '@/core/utils';
 import { useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
 import AssetTableCard from '../../assets-overview/components/asset-table-card';
@@ -27,7 +27,7 @@ function SpotHistoryOrder({ onTabChange }: { onTabChange: (url: string, { id }: 
     const TAB_CONTENT_MAP: { [key: string]: JSX.Element } = {
       [SPOT_HISTORY_TAB_KEY.CURRENT_COMMISSION]: <SpotCurrentCommissionTable />,
       [SPOT_HISTORY_TAB_KEY.HISTORY_COMMISSION]: <SpotHistoryCommissionTable />,
-      [SPOT_HISTORY_TAB_KEY.HISTORY_TRANSACTION]: <SpotHistoryTransactionTable />,
+      [SPOT_HISTORY_TAB_KEY.HISTORY_TRANSACTION]: <SpotHistoryTransactionTable />
     };
     if (TAB_CONTENT_MAP.hasOwnProperty(curTab)) {
       return TAB_CONTENT_MAP[curTab];
@@ -38,8 +38,8 @@ function SpotHistoryOrder({ onTabChange }: { onTabChange: (url: string, { id }: 
     <CommonContainer>
       <AssetTableCard border={false} rounded={false}>
         <TabBar
-          type ={TAB_TYPE.CARD}
-          size ={Size.XS}
+          type={TAB_TYPE.CARD}
+          size={Size.XS}
           options={[
             { label: LANG('当前委托'), value: SPOT_HISTORY_TAB_KEY.CURRENT_COMMISSION },
             { label: LANG('历史委托'), value: SPOT_HISTORY_TAB_KEY.HISTORY_COMMISSION },
@@ -47,6 +47,7 @@ function SpotHistoryOrder({ onTabChange }: { onTabChange: (url: string, { id }: 
           ]}
           value={curTab}
           onChange={onChange}
+          className="spot-tab"
         />
         {renderTabContent()}
       </AssetTableCard>
@@ -62,6 +63,25 @@ const styles = css`
       z-index: 11;
       box-shadow: rgba(0, 0, 0, 0.05) 0px 2px 8px 0px;
       margin-bottom: 20px;
+    }
+  }
+  @media ${MediaInfo.mobile} {
+    :global(.spot-tab) {
+      width: auto;
+      padding: 0 !important;
+      :global(.tabs) {
+      width:100%;
+        gap: 16px;
+        height: 56px;
+        border-bottom: 1px solid var(--fill_line_1);
+      }
+      :global(.tab) {
+        height: auto !important;
+      }
+      :global(.tab.card > div) {
+        padding: 8px 12px !important;
+        border-radius: 4px !important;
+      }
     }
   }
 `;

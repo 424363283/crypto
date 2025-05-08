@@ -96,7 +96,7 @@ const styles = css`
         li {
           margin-right: 33px;
           :global(a) {
-            color: var(--text-primary);
+            color: var(--text_1);
             font-size: 12px;
             .rate {
               margin-left: 8px;

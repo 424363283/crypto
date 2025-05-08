@@ -35,6 +35,7 @@ const styles = css`
     font-family: HarmonyOS Sans SC;
     font-weight: 500;
     font-size: 16px;
+    color: var(--text_1);
   }
   :global(.customer-mobile-drawer) {
     z-index: 99999;
@@ -61,7 +62,7 @@ const styles = css`
       :global(.ant-drawer-content) {
         border-top-right-radius: 24px;
         border-top-left-radius: 24px;
-        background-color: var(--bg-1);
+        background-color: var(--fill_bg_1);
         padding-top: 16px;
       }
       :global(.ant-drawer-body) {

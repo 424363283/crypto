@@ -38,7 +38,8 @@ const SHARE_ICONS = [
     key: 'copy-url'
   },
   {
-    icon: <TWITTER_ICON />,
+    // icon: <TWITTER_ICON />,
+    icon: <CommonIcon name="common-twitter" className="icon" size={40} />,
     name: 'Twitter',
     key: 'twitter'
   },
@@ -448,7 +449,7 @@ const styles = css`
             align-items: center;
             gap: 8px;
             align-self: stretch;
-            color: var(--text-white);
+            color: var(--text_white);
             font-size: 24px;
             font-weight: 500;
             :global(.label) {
@@ -458,8 +459,8 @@ const styles = css`
               justify-content: center;
               align-items: center;
               border-radius: 4px;
-              background: var(--label);
-              color: var(--text-white);
+              background: var(--brand_20);
+              color: var(--text_white);
               font-size: 12px;
               font-style: normal;
               font-weight: 500;
@@ -484,7 +485,7 @@ const styles = css`
               align-items: flex-start;
               gap: 16px;
               :global(.title) {
-                color: var(--text-secondary);
+                color: var(--text_2);
                 text-align: justify;
                 leading-trim: both;
                 text-edge: cap;
@@ -492,7 +493,7 @@ const styles = css`
                 font-weight: 400;
               }
               :global(.value) {
-                color: var(--text-white);
+                color: var(--text_white);
                 text-align: justify;
                 leading-trim: both;
                 text-edge: cap;
@@ -514,7 +515,7 @@ const styles = css`
             border-bottom-left-radius: 6px;
             border-bottom-right-radius: 6px;
             border-radius: 0px 0px 24px 24px;
-            background: var(--fill-3);
+            background: var(--fill_3);
             :global(.left-content) {
               display: flex;
               flex-direction: column;
@@ -526,7 +527,7 @@ const styles = css`
                 align-items: center;
                 gap: 8px;
                 align-self: stretch;
-                color: var(--text-primary);
+                color: var(--text_1);
                 text-align: justify;
                 leading-trim: both;
                 text-edge: cap;
@@ -536,7 +537,7 @@ const styles = css`
                 line-height: 24px;
               }
               :global(.description) {
-                color: var(--text-tertiary);
+                color: var(--text_3);
                 text-align: justify;
                 leading-trim: both;
                 text-edge: cap;
@@ -549,7 +550,7 @@ const styles = css`
               width: 80px;
               height: 80px;
               padding: 4px;
-              background: var(--text-white);
+              background: var(--text_white);
               flex-shrink: 0;
             }
           }
@@ -629,7 +630,7 @@ const styles = css`
         width: 100%;
         align-self: flex-start;
         :global(.title) {
-          color: var(--text-secondary);
+          color: var(--text_2);
           font-size: 14px;
           font-weight: 400;
           margin-bottom: 8px;
@@ -661,7 +662,7 @@ const styles = css`
             align-self: stretch;
             :global(span) {
               font-size: 14px;
-              color: var(--text-primary);
+              color: var(--text_1);
             }
           }
         }
@@ -669,8 +670,8 @@ const styles = css`
           outline: none;
           border: none;
           width: 100%;
-          background-color: var(--fill-3);
-          color: var(--text-tertiary);
+          background-color: var(--fill_3);
+          color: var(--text_3);
           font-size: 14px;
           font-weight: 400;
           border-radius: 8px;
@@ -681,7 +682,7 @@ const styles = css`
         :global(.line) {
           width: 513px;
           height: 1px;
-          background: var(--line-3);
+          background: var(--fill_line_3);
         }
         :global(.bottom-shares) {
           display: flex;
@@ -696,7 +697,7 @@ const styles = css`
             gap: 16px;
             cursor: pointer;
             :global(.name) {
-              color: var(--text-secondary);
+              color: var(--text_2);
               font-size: 14px;
               font-weight: 400;
               white-space: nowrap;

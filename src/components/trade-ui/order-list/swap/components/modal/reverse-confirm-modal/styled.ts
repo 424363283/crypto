@@ -3,7 +3,7 @@ import css from 'styled-jsx/css';
 
 const { className, styles } = css.resolve`
   .content {
-    color: var(--text-primary);
+    color: var(--text_1);
     font-size: 16px;
     font-weight: 400;
     .title {
@@ -13,7 +13,7 @@ const { className, styles } = css.resolve`
       justify-content: space-between;
     }
     .order-info {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 16px;
       font-weight: 400;
     }
@@ -37,15 +37,15 @@ const { className, styles } = css.resolve`
       font-size: 14px;
       font-weight: 400;
       &-label {
-        color: var(--text-secondary);
+        color: var(--text_2);
       }
       &-value {
-        color: var(--text-primary);
+        color: var(--text_1);
       }
     }
     .card {
       border-radius: 16px;
-      background: var(--fill-2);
+      background: var(--fill_2);
       display: flex;
       padding: 16px;
       margin: 24px 0 0;
@@ -85,18 +85,18 @@ const { className, styles } = css.resolve`
           justify-content: space-between;
           align-items: center;
           &-label {
-            color: var(--text-secondary);
+            color: var(--text_2);
             font-size: 14px;
             font-weight: 400;
           }
 
           &-value {
-            color: var(--text-primary);
+            color: var(--text_1);
             font-size: 14px;
             font-weight: 400;
           }
           &-position {
-            color: var(--text-primary);
+            color: var(--text_1);
             font-size: 16px;
             font-weight: 400;
           }
@@ -157,7 +157,7 @@ const { className, styles } = css.resolve`
         display: block;
         width: 100%;
         height: 1px;
-        background: var(--line-3);
+        background: var(--fill_line_3);
       }
       :global(> div) {
         padding: 0 15px;
@@ -172,7 +172,7 @@ const { className, styles } = css.resolve`
         align-items: center;
         :global(> div:last-child) {
           margin-left: 5px;
-          color: var(--text-primary);
+          color: var(--text_1);
           font-size: 16px;
           font-weight: 400;
         }
@@ -212,7 +212,7 @@ const { className, styles } = css.resolve`
       font-weight: 400;
       line-height: 150%;
       padding: 24px 0;
-      border-bottom: 1px solid var(--line-3);
+      border-bottom: 1px solid var(--fill_line_3);
 
       &.expand {
         display: block;
@@ -271,11 +271,11 @@ const { className, styles } = css.resolve`
       }
       .sell,
       .row-item-sell {
-        color: var(--text-error);
+        color: var(--text_red);
       }
       .buy,
       .row-item-buy {
-        color: var(--text-true);
+        color: var(--text_green);
       }
       .card {
         display: flex;
@@ -286,7 +286,7 @@ const { className, styles } = css.resolve`
         margin: 0;
         padding: 1rem;
         border-radius: 1rem;
-        background: var(--fill-3);
+        background: var(--fill_3);
         &.buy,
         &.sell {
           &::before {

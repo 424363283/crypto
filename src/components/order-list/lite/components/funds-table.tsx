@@ -178,13 +178,13 @@ const styles = css`
     font-size: 12px;
     font-style: normal;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--text_1);
   }
   :global(.liteOrderid) {
     font-size: 12px;
     font-style: normal;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--text_1);
     display: flex;
     align-items: end;
   }
@@ -194,8 +194,8 @@ const styles = css`
       background: transparent !important;
     }
     :global(.ant-table-cell) {
-      color: var(--text-tertiary) !important;
-      border-bottom: 1px solid var(--line-1) !important;
+      color: var(--text_3) !important;
+      border-bottom: 1px solid var(--fill_line_1) !important;
     }
     :global(.ant-table-tbody) {
     }

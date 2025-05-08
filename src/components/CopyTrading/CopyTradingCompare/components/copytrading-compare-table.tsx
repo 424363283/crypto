@@ -14,17 +14,17 @@ const styles = css`
     :global(.ant-table-content)  {
       :global(.ant-table-tbody)  {
         :global(.ant-table-row td) {
-          border-bottom: 1px solid var(--line-2);
+          border-bottom: 1px solid var(--fill_line_2);
         }
       }
     }
     :global(.ant-table.ant-table-bordered ) {
       :global(>.ant-table-container ) {
-        border-inline-start: 1px solid var(--line-2);
-        border-top: 1px solid var(--line-2);
+        border-inline-start: 1px solid var(--fill_line_2);
+        border-top: 1px solid var(--fill_line_2);
       }
       :global(>.ant-table-title) {
-        border: 1px solid var(--line-2);
+        border: 1px solid var(--fill_line_2);
         border-bottom: 0;
       }
     }

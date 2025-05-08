@@ -105,13 +105,13 @@ const styles = css`
     :global(.ant-pagination-item) {
       border: none;
       width: 32px;
-      color: var(--text-primary);
+      color: var(--text_1);
       height: 32px;
       line-height: 32px;
       border-radius: 50%;
       background-color: transparent;
       &:hover {
-        background-color: var(--fill-3);
+        background-color: var(--fill_3);
       }
     }
     :global(.ant-pagination-prev),
@@ -126,7 +126,7 @@ const styles = css`
       width: 28px;
       height: 28px !important;
       :global(.ant-pagination-item-link-icon) {
-        color: var(--text-brand) !important;
+        color: var(--text_brand) !important;
         font-size: 10px;
         :global(svg) {
           width: 10px;
@@ -135,7 +135,7 @@ const styles = css`
       }
       :global(.ant-pagination-item-ellipsis) {
         border-radius: 5px;
-        color: var(--text-primary);
+        color: var(--text_1);
         width: 32px;
         height: 32px;
         font-size: 10px;
@@ -143,7 +143,7 @@ const styles = css`
     }
     :global(.ant-pagination-item-active) {
       background: var(--brand);
-      color: var(--text-white);
+      color: var(--text_white);
       font-weight: 500;
     }
   }

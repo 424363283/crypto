@@ -35,7 +35,7 @@ const Footer = () => {
       </div>
       <style jsx>{`
         .footer {
-          background: ${isHomePage ? 'var(--bg-1)' : 'var(--fill-2)'};
+          background: ${isHomePage ? 'var(--fill_bg_1)' : 'var(--fill_2)'};
           margin: 0;
           z-index: 2;
           position: relative;
@@ -43,6 +43,9 @@ const Footer = () => {
           padding: 80px 0 0;
           @media ${MediaInfo.mobile} {
             padding: 0;
+            :global(.ant-collapse-borderless) {
+              background: var(--fill_bg_1);
+            }
           }
         }
         .footer-box {

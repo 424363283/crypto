@@ -77,7 +77,7 @@ export const NoticesLayout = ({ children, posts, tags }: any) => {
             ) : (
               <>
                   <h1 style={{display:'flex', alignItems:'center'}}>
-                    <Svg src={'/static/icons/primary/common/arrow-left.svg'} color={'var(--text-primary)'} style={{marginRight:'15px'}} onClick={()=>router.back()} />
+                    <Svg src={'/static/icons/primary/common/arrow-left.svg'} color={'var(--text_1)'} style={{marginRight:'15px'}} onClick={()=>router.back()} />
                     <span>{hasTq ? LANG('搜索结果') : LANG('YMEX公告中心')}</span>
                   </h1>
                 {hasTq && <h3 className='search-description'>Result for {tq}</h3>}
@@ -181,7 +181,7 @@ export const NoticesLayout = ({ children, posts, tags }: any) => {
           position: sticky;
           top: 56px;
           z-index: 10;
-          background:var(--fill-2);
+          background:var(--fill_2);
           .title-main{
             max-width:1400px;
             margin:auto;
@@ -198,7 +198,7 @@ export const NoticesLayout = ({ children, posts, tags }: any) => {
           h1 {
             font-size: 20px;
             font-weight: 600;
-            color: var(--text-primary);
+            color: var(--text_1);
             font-family: Inter !important;
             @media ${MediaInfo.tablet} {
               font-size: 32px;
@@ -236,7 +236,7 @@ export const NoticesLayout = ({ children, posts, tags }: any) => {
               flex: 1;
               margin: 15px 0;
               padding: 10px;
-              border: 1px solid var(--fill-3);
+              border: 1px solid var(--fill_3);
               border-radius:10px;
               @media ${MediaInfo.mobile} {
                 padding: 32px 0;
@@ -258,7 +258,7 @@ export const NoticesLayout = ({ children, posts, tags }: any) => {
             .search-wrapper {
               margin-bottom: 20px;
               .container{
-                background-color: var(--fill-2);
+                background-color: var(--fill_2);
               }
             }
             h2 {

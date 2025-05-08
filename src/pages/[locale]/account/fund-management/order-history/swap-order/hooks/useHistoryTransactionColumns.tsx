@@ -9,6 +9,7 @@ import { SWAP_FINISHED_ORDER_TYPES } from '../constants';
 import { isSwapDemo } from '@/core/utils/src/is';
 import { LeverItem } from '@/components/order-list/swap/media/desktop/components/lever-item';
 import { SWAP_ORDER_DIRECTIONS, SWAP_POSITION_MANAGE } from '@/core/shared/src/constants/order';
+import { WalletName } from '@/components/order-list/swap/media/desktop/components/wallet-name';
 const _isSwapDemo = isSwapDemo();
 type SwapHistoryOrderItems = {
   id: number;
@@ -35,16 +36,6 @@ export const useHistoryTransactionColumns = () => {
   Swap.Assets.getWallet({ usdt: isUsdtType });
   return [
     {
-      title: LANG('时间'),
-      dataIndex: 'time',
-      render: (time: number) => (
-        <div className='ctime'>
-          <div className='date'>{dayjs(time).format('YYYY-MM-DD')}</div>
-          <div className='time'>{dayjs(time).format('HH:mm:ss')}</div>
-        </div>
-      ),
-    },
-    {
       title: LANG('合约'),
       dataIndex: 'code',
       render: (v: any, item: any) => {
@@ -58,6 +49,16 @@ export const useHistoryTransactionColumns = () => {
             </div>
             <span>{positionPattern}</span>
           </div>
+        );
+      },
+    },
+    {
+      title: LANG('账户'),
+      dataIndex: 'subWallet',
+      render: (v: any, item: any) => {
+        const walletData = Swap.Assets.getWallet({ walletId: item.subWallet, usdt: isUsdtType, withHooks: false });
+        return (
+          <WalletName> {LANG(walletData?.alias)} </WalletName>
         );
       },
     },
@@ -145,7 +146,6 @@ export const useHistoryTransactionColumns = () => {
     {
       title: LANG('交易量'),
       dataIndex: 'allVol',
-      align: 'right',
       render: (_: string, item: SwapHistoryOrderItems) => {
         // U本位总交易量=成交均价*成交币数量=成交均价*面值*张数
         // 币本位总成交量=面值*张树
@@ -156,5 +156,16 @@ export const useHistoryTransactionColumns = () => {
         return `${value.toFormat(2)} ${Swap.Info.getPriceUnitText(isUsdtType)}`;
       },
     },
+    {
+      title: LANG('时间'),
+      dataIndex: 'time',
+      align: 'right',
+      render: (time: number) => (
+        <div className='ctime'>
+          <div className='date'>{dayjs(time).format('YYYY-MM-DD')}</div>
+          <div className='time'>{dayjs(time).format('HH:mm:ss')}</div>
+        </div>
+      ),
+    }
   ];
 };

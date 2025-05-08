@@ -15,6 +15,7 @@ import { useEffect, useMemo, useState } from 'react';
 import css from 'styled-jsx/css';
 import { FACE_BOOK_ICON, LINKEDIN_ICON, TELEGRAM_ICON, TWITTER_ICON } from '../../components/order-share/icon';
 import YIcon from '@/components/YIcons';
+import CommonIcon from '@/components/common-icon';
 const Position = Lite.Position;
 
 interface Props {
@@ -139,7 +140,8 @@ const ShareModal = ({
       key: 'copy-url'
     },
     {
-      icon: <TWITTER_ICON />,
+      // icon: <TWITTER_ICON />,
+      icon: <CommonIcon name="common-twitter" className="icon" size={40} />,
       name: 'Twitter',
       key: 'twitter'
     },
@@ -268,24 +270,24 @@ const styles = css`
     :global(.ant-modal-content) {
       padding: 24px;
       border-radius: 24px;
-      background: var(--fill-pop);
+      background: var(--fill_pop);
     }
     :global(.ant-modal-header) {
       background: transparent;
     }
     :global(.ant-modal-title) {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 16px;
       font-weight: 500;
     }
     :global(.ant-modal-close) {
-      color: var(--text-secondary);
+      color: var(--text_2);
       width: 24px;
       height: 24px;
       top: 24px;
       right: 24px;
       &:hover {
-        color: var(--text-secondary);
+        color: var(--text_2);
         background: transparent !important;
       }
     }
@@ -347,7 +349,7 @@ const styles = css`
           font-weight: 500;
           em {
             font-style: normal;
-            color: var(--text-secondary);
+            color: var(--text_2);
             padding: 0 6px;
           }
         }
@@ -373,7 +375,7 @@ const styles = css`
         }
         .data {
           .profit {
-            color: var(--text-error);
+            color: var(--text_red);
             font-size: 40px;
             font-weight: 700;
           }
@@ -393,10 +395,10 @@ const styles = css`
         gap: 16px;
         align-self: stretch;
         line-height: normal;
-        color: var(--text-white);
+        color: var(--text_white);
         .data {
           display: flex;
-          color: var(--text-white);
+          color: var(--text_white);
           text-align: justify;
           font-size: 14px;
           font-weight: 400;
@@ -410,7 +412,7 @@ const styles = css`
       align-items: center;
       padding: 16px 24px;
       border-radius: 0px 0px 24px 24px;
-      background: var(--fill-3);
+      background: var(--fill_3);
       .conter {
         display: flex;
         flex-direction: column;
@@ -418,7 +420,7 @@ const styles = css`
         padding: 0 8px;
 
         .user-info {
-          color: var(--text-primary);
+          color: var(--text_1);
           font-size: 16px;
           font-weight: 500;
         }
@@ -456,7 +458,7 @@ const styles = css`
         gap: 16px;
         cursor: pointer;
         :global(.name) {
-          color: var(--text-secondary);
+          color: var(--text_2);
           font-size: 14px;
           font-weight: 400;
           white-space: nowrap;

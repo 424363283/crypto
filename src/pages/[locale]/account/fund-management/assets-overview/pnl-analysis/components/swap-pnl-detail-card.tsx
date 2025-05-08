@@ -111,7 +111,7 @@ const styles = css`
   .pnl-detail-card {
     @media ${MediaInfo.mobile}{
       width: 100%;
-      background: var(--fill-1);
+      background: var(--fill_1);
       border-radius: 8px;
     }
     .pnl-right-card {
@@ -122,7 +122,7 @@ const styles = css`
       justify-content: flex-end;
       align-items: flex-start;
       border-radius: 8px;
-      border: 1px solid var(--line-1);
+      border: 1px solid var(--fill_line_1);
       gap: 24px;
       @media ${MediaInfo.mobile}{
         padding: 12px;
@@ -138,7 +138,7 @@ const styles = css`
           display: flex;
           align-items: center;
           gap: 8px;
-          color: var(--text-primary);
+          color: var(--text_1);
           font-family: "HarmonyOS Sans SC";
           font-size: 16px;
           font-style: normal;
@@ -158,7 +158,7 @@ const styles = css`
         :global(.line.vertical) {
           width: 1px;
           height: 48px;
-          background: var(--line-1);
+          background: var(--fill_line_1);
         }
         :global(.swap-last-two-elements) {
           display: flex;

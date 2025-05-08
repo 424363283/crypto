@@ -33,15 +33,15 @@ export const Input = ({
             input {
               height: 40px;
               border-radius: 5px;
-              background-color: var(--fill-3);
+              background-color: var(--fill_3);
               padding-left: 13px;
               box-shadow: unset;
               border: 0;
               width: 100%;
               font-size: 14px;
-              color: var(--text-primary);
+              color: var(--text_1);
               &::placeholder {
-                color: var(--text-secondary);
+                color: var(--text_2);
               }
             }
           }

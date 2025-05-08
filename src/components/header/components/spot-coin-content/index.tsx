@@ -48,12 +48,12 @@ export default function SpotCoinContent() {
               :global(> a) {
                 display: block;
                 width: 100%;
-                color: var(--text-secondary)!important;
+                color: var(--text_2)!important;
                 :global(>*:nth-last-child(2)) {
-                  color: var(--text-primary);
+                  color: var(--text_1);
                 }
                 :global(>*:nth-child(2)) {
-                  color: var(--text-tertiary);
+                  color: var(--text_3);
                 }
               }
               .description {
@@ -70,7 +70,7 @@ export default function SpotCoinContent() {
               }
               &:hover {
                 .name {
-                  color: var(--text-brand);
+                  color: var(--text_brand);
                 }
                 :global(.icon-arrow) {
                   display: inline-block;

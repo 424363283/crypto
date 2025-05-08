@@ -52,7 +52,7 @@ const styles = css`
   .kline-view-right {
     border-radius: var(--theme-trade-layout-radius);
     display: flex;
-    background-color: var(--fill-1);
+    background-color: var(--fill_1);
     flex-direction: column;
     overflow: hidden;
     height: 100%;
@@ -64,8 +64,8 @@ const styles = css`
   .right-title {
     height: 40px;
     padding: 16px 4px;
-    border-bottom: 1px solid var(--line-1, rgba(31, 33, 36, 1));
-    color: var(--text-secondary);
+    border-bottom: 1px solid var(--fill_line_1, rgba(31, 33, 36, 1));
+    color: var(--text_2);
     display: flex;
     align-items: center;
     &.ru,
@@ -87,7 +87,7 @@ const styles = css`
       font-weight: 500;
 
       &.active {
-        color: var(--text-brand);
+        color: var(--text_brand);
       }
       &:last-child {
         margin-right: 0px;
@@ -100,7 +100,7 @@ const styles = css`
         padding: 0;
         padding-right: 1.25rem;
         font-size: 12px;
-        color: var(--text-secondary);
+        color: var(--text_2);
         &.active {
           color: var(--brand);
         }

@@ -30,7 +30,7 @@ const styles = css`
       justify-content: flex-start;
     }
     :global( .bottom-link ) {
-      color: var(--text-brand);
+      color: var(--text_brand);
     }
   }
 

@@ -158,12 +158,11 @@ const styles = css`
   .crypto-selected-content {
     width: 100%;
     height: 48px;
-    background: var(--fill-3);
-    border-radius: 3px;
+    background: var(--fill_3);
+    border-radius: 8px;
     display: flex;
     align-items: center;
     @media ${MediaInfo.mobile}{
-      height: 40px;
       padding: 0 12px;
       width: calc(100% - 24px);
     }
@@ -227,7 +226,7 @@ const styles = css`
       line-height: 18px;
       font-size: 14px;
       font-weight: 400;
-      color: var(--text-primary);
+      color: var(--text_1);
       margin-right: 4px;
     }
     :global(.subname) {

@@ -354,7 +354,7 @@ const copyLeverStyle = css`
   :global(.copy-cancel-modal) {
     @media ${MediaInfo.mobile} {
       border-radius: 24px 24px 0 0;
-      background-color: var(--bg-1);
+      background-color: var(--fill_bg_1);
     }
     .flexCenter {
       display: flex;
@@ -368,7 +368,7 @@ const copyLeverStyle = css`
         cursor: pointer;
         margin-bottom: 8px;
         display: inline-block;
-        color: var(--text-secondary);
+        color: var(--text_2);
       }
       .mt24 {
         margin-top: 24px;
@@ -378,16 +378,16 @@ const copyLeverStyle = css`
       margin-top: 8px;
     }
     :global(.custom-input) {
-      background: var(--fill-3);
+      background: var(--fill_3);
       border-radius: 12px;
       height: 40px;
-      border-color: var(--fill-3);
-      color: var(--text-primary);
+      border-color: var(--fill_3);
+      color: var(--text_1);
       &::placeholder,
       input::placeholder,
       input::-webkit-input-placeholder,
       &::-webkit-input-placeholder {
-        color: var(--text-secondary);
+        color: var(--text_2);
       }
       input {
         font-weight: 400;
@@ -395,7 +395,7 @@ const copyLeverStyle = css`
       }
     }
     :global(.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled)) {
-      background: var(--fill-3);
+      background: var(--fill_3);
     }
     .w100 {
       width: 100%;
@@ -415,11 +415,11 @@ const copyLeverStyle = css`
     }
   }
   .need-star {
-    color: var(--text-error);
+    color: var(--text_red);
   }
   .error-tips {
     margin-top: 2px;
-    color: var(--text-error);
+    color: var(--text_red);
     font-family: HarmonyOS Sans SC;
     font-size: 12px;
   }
@@ -436,9 +436,9 @@ const copyLeverStyle = css`
     opacity: 0.3;
   }
   :global(.ant-drawer .copy-drawer-mobile) {
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     :global(.ant-drawer-title) {
-      color: var(--text-primary);
+      color: var(--text_1);
     }
   }
 `;

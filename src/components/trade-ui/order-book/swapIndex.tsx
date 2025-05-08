@@ -216,7 +216,7 @@ export const OrderBook = ({ type, layoutH }: { type: ORDER_BOOK_TYPES, layoutH: 
           padding-top:16px;
           font-weight: 400;
           flex-shrink: 0;
-          color: var(--text-tertiary);
+          color: var(--text_3);
           font-size: 10px;
           font-weight: 400;
           @media ${MediaInfo.mobile} {

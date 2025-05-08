@@ -59,7 +59,7 @@ const styles = css`
       font-weight: 700;
       font-size: 48px;
       line-height: 56.26px;
-      color:var(--text-primary);
+      color:var(--text_1);
       @media ${MediaInfo.mobile} {
         font-size: 32px;
       }

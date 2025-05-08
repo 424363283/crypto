@@ -6,6 +6,9 @@ interface IButtonType {
   '': ButtonStyles;
   primary: ButtonStyles;
   brand: ButtonStyles;
+  brandLabel: ButtonStyles;
+  yellow: ButtonStyles;
+  secondary: ButtonStyles;
   'light-2': ButtonStyles;
   'light-2-3': ButtonStyles;
   'light-sub-1': ButtonStyles;
@@ -28,18 +31,18 @@ interface ButtonStyles {
 
 const ButtonType: IButtonType = {
   '': {
-    bgColor: 'var(--fill-3)',
-    color: 'var(--text-primary)',
+    bgColor: 'var(--fill_3)',
+    color: 'var(--text_1)',
     hover: {
-      bgColor: 'var(--fill-pop)'
+      bgColor: 'var(--fill_pop)'
     },
     border: 'none'
   },
   primary: {
     bgColor: 'var(--brand)',
-    color: 'var(--text-white)',
+    color: 'var(--text_white)',
     hover: {
-      bgColor: 'var(--hover)'
+      bgColor: 'var(--btn_brand_hover)'
     },
     border: 'none'
   },
@@ -47,9 +50,33 @@ const ButtonType: IButtonType = {
     bgColor: 'none',
     color: 'var(--brand)',
     hover: {
-      bgColor: 'var(--hover)'
+      bgColor: 'var(--btn_brand_hover)'
     },
     border: '1px solid var(--brand)'
+  },
+  yellow: {
+    bgColor: 'var(--yellow_10)',
+    color: 'var(--yellow)',
+    hover: {
+      bgColor: 'var(--btn_brand_hover)'
+    },
+    border: '1px solid var(--yellow)'
+  },
+  secondary: {
+    bgColor: 'var(--fill_3)',
+    color: 'var(--text_2)',
+    hover: {
+      bgColor: 'var(--btn_brand_hover)'
+    },
+    border: '1px solid var(--fill_3)'
+  },
+  brandLabel: {
+    color: 'var(--text_brand)',
+    bgColor: 'var(--brand_20)',
+    border: 'var(--brand_20)',
+    hover: {
+      color: 'var(--text_brand)'
+    }
   },
   'light-2': {
     bgColor: 'var(--theme-background-color-2)', // Header login button
@@ -107,6 +134,7 @@ const ButtonSizes: { [key in Size]: IButtonHeight } = {
   [Size.SM]: { height: 32, fontSize: '12px', fontWeight: 400 },
   [Size.DEFAULT]: { height: 40, fontSize: '14px', fontWeight: 500 },
   [Size.LG]: { height: 48, fontSize: '14px', fontWeight: 500 },
+  [Size.MD]: { height: 48, fontSize: '16px', fontWeight: 500 },
   [Size.XL]: { height: 56, fontSize: '16px', fontWeight: 500 }
 };
 type ButtonProps = {
@@ -154,8 +182,8 @@ export const Button = (props: ButtonProps) => {
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: var(--fill-3);
-          color: var(--text-tertiary);
+          background-color: var(--fill_3);
+          color: var(--text_3);
           font-size: 14px;
           font-weight: 400;
           white-space: nowrap;
@@ -209,7 +237,52 @@ export const Button = (props: ButtonProps) => {
             color: var(--brand);
             &:hover {
               background: var(--brand);
-              color: var(--text-white);
+              color: var(--text_white);
+            }
+          }
+          &.brandLabel {
+            color: var(--text_brand);
+            font-family: 'HarmonyOS Sans SC';
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+            border-color: var(--brand_20);
+            border-radius: 24px;
+            background: var(--brand_20);
+            &:hover,
+            &:active {
+              color: var(--text_brand);
+              border-color: var(--brand_20);
+            }
+          }
+          &.yellow {
+            color: var(--yellow);
+            font-family: 'HarmonyOS Sans SC';
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+            border-color: var(--yellow_10);
+            border-radius: 24px;
+            background: var(--yellow_10);
+            &:hover,
+            &:active {
+              color: var(--yellow, rgba(240, 186, 48, 0.1));
+              border-color: var(--yellow_10);
+            }
+          }
+          &.secondary {
+            color: var(--text_2);
+            font-family: 'HarmonyOS Sans SC';
+            font-weight: 500;
+            font-size: 14px;
+            line-height: normal;
+            border-color: var(--fill_3);
+            border-radius: 24px;
+            background: var(--fill_3);
+            &:hover,
+            &:active {
+              color: var(--text_1);
+              border-color: var(--secondary);
             }
           }
         }
@@ -217,8 +290,8 @@ export const Button = (props: ButtonProps) => {
         @each $intent in $nui-intents {
           .common-button.nui-#{$intent} {
             @include nui-button-style(
-              var(--text-white),
-              var(--text-white),
+              var(--text_white),
+              var(--text_white),
               map-get($nui-gradient-map, $intent),
               map-get($nui-gradient-hover-map, $intent),
               map-get($nui-border-color-map, $intent),
@@ -227,10 +300,11 @@ export const Button = (props: ButtonProps) => {
           }
         }
         .common-button.disabled {
-          background-color: var(--fill-3);
-          color: var(--text-tertiary);
+          background-color: var(--fill_3);
+          color: var(--text_3);
           cursor: not-allowed;
           pointer-events: none;
+          border-color:var(--fill_3);
         }
       `}</style>
     </button>

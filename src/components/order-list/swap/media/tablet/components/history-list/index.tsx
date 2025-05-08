@@ -5,6 +5,7 @@ import { ListView } from '../list-view';
 import { HistoryItem } from './components/history-item';
 import { LANG } from '@/core/i18n';
 import { MediaInfo } from '@/core/utils';
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
 
 const Order_TYPES = {
   LIMIT: 'limit',
@@ -53,14 +54,14 @@ const OrderTypeTab = ({
             align-items: center;
             gap: 10px;
             border-radius: 6px;
-            border: 1px solid var(--line-3);
+            border: 1px solid var(--fill_line_3);
             font-size: 12px;
             font-weight: 400;
-            color: var(--text-secondary);
+            color: var(--text_2);
             &.active {
-              background: var(--fill-3);
+              background: var(--fill_3);
               border: 0;
-              color: var(--text-primary);
+              color: var(--text_1);
             }
           }
         }
@@ -69,9 +70,9 @@ const OrderTypeTab = ({
   );
 };
 
-export const HistoryList = ({ active }: { active: boolean }) => {
+export const HistoryList = ({ active, wallet }: { active: boolean, wallet?: WalletKey }) => {
   const { isUsdtType } = Swap.Trade.base;
-  const { data, loading, onSubmit, resetParams } = useData({ isUsdtType });
+  const { data: firstFilterList, loading, onSubmit, resetParams } = useData({ isUsdtType });
   const [orderType, setOrderType] = useState(Order_TYPES.LIMIT);
 
   useEffect(() => {
@@ -82,6 +83,7 @@ export const HistoryList = ({ active }: { active: boolean }) => {
     }
   }, [active]);
 
+  const data = firstFilterList.filter(item => !wallet || item.subWallet === wallet);
   const limitList = useMemo(() => {
     return data.filter(item => item.orderType === 1);
   }, [data]);

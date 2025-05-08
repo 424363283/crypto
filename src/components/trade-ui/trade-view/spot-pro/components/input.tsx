@@ -134,13 +134,13 @@ const styles = css`
     &:has(.error) {
       .input-wrapper {
         > input {
-          border-color: var(--text-error);
+          border-color: var(--text_red);
         }
       }
     }
     &.show-error {
       .input-wrapper {
-        border-color: var(--text-error);
+        border-color: var(--text_red);
       }
     }
     .input-wrapper {
@@ -148,10 +148,10 @@ const styles = css`
       border-radius: 8px;
       display: flex;
       align-items: center;
-      background: var(--fill-3);
-      border: 1px solid var(--fill-3);
+      background: var(--fill_3);
+      border: 1px solid var(--fill_3);
       .label {
-        color: var(--text-secondary);
+        color: var(--text_2);
         white-space: nowrap;
       }
       input {
@@ -162,20 +162,20 @@ const styles = css`
         text-align: left;
         margin-right: 6px;
         min-width: 100px;
-        background: var(--fill-3);
-        color: var(--text-primary);
+        background: var(--fill_3);
+        color: var(--text_1);
         &:disabled {
-          color: var(--text-tertiary);
+          color: var(--text_3);
         }
       }
       .unit {
-        color: var(--text-secondary);
+        color: var(--text_2);
         margin-right: 12px;
       }
     }
     .error {
       margin-top: 5px;
-      color: var(--text-error);
+      color: var(--text_red);
     }
   }
 `;

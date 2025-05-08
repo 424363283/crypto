@@ -232,7 +232,7 @@ const TableBox: React.FC<{}> = () => {
       <style jsx>{`
         .box-table {
           position: relative;
-          background-color: var(--bg-1);
+          background-color: var(--fill_bg_1);
           overflow: hidden;
           width: 486px;
           height: 762px;

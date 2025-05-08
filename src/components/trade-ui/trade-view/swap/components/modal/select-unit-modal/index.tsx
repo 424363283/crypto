@@ -102,7 +102,7 @@ export const SelectUnitModal = () => {
           .item {
             cursor: pointer;
             margin-bottom: 24px;
-            border: 1px solid var(--line-3);
+            border: 1px solid var(--fill_line_3);
             border-radius: 16px;
             display: flex;
             padding: 16px;
@@ -116,7 +116,7 @@ export const SelectUnitModal = () => {
             }
             .right {
               flex: 1;
-              color: var(--text-secondary);
+              color: var(--text_2);
               .header {
                 display: flex;
                 align-items: center;
@@ -135,18 +135,18 @@ export const SelectUnitModal = () => {
             .unit {
               font-size: 16px;
               font-weight: 400;
-              color: var(--text-primary);
+              color: var(--text_1);
             }
             &.active {
               .header {
-                color: var(--text-primary);
+                color: var(--text_1);
               }
               border: 1px solid var(--brand);
             }
           }
           .warning {
             margin-top: 15px;
-            color: var(--text-error);
+            color: var(--text_red);
             font-size: 12px;
             font-weight: 400;
           }

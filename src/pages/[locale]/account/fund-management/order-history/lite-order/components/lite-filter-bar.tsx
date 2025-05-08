@@ -356,7 +356,7 @@ export const LiteFilterBar = (props: LiteFilterBarProps) => {
 };
 const styles = css`
   .lite-filter-bar-wrapper {
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     @media ${MediaInfo.mobile} {
       padding: 0 10px;
       overflow-x: auto;
@@ -389,7 +389,7 @@ const styles = css`
       margin-right: 20px;
     }
     :global(.search-button) {
-        color: var(--text-brand);
+        color: var(--text_brand);
         text-align: center;
         font-size: 14px;
         font-style: normal;

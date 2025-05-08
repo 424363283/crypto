@@ -25,7 +25,7 @@ const { className, styles: _styles } = css.resolve`
     }
     &.my-switch-bg3 {
       &.ant-switch {
-        background: var(--text-secondary) !important;
+        background: var(--text_2) !important;
       }
     }
     &.ant-switch :global(.ant-switch-inner) {
@@ -38,7 +38,7 @@ const { className, styles: _styles } = css.resolve`
     }
     :global(.ant-switch-handle) {
       &:before {
-        background-color: var(--text-white);
+        background-color: var(--text_white);
       }
     }
   }

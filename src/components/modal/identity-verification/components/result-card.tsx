@@ -1,12 +1,13 @@
 import { Loading } from '@/components/loading';
 import { useKycState } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
-import { isEmpty } from '@/core/utils';
+import { isEmpty, MediaInfo } from '@/core/utils';
 import Image from 'next/image';
 import { useEffect } from 'react';
 import css from 'styled-jsx/css';
 import { useApiContext } from '../context';
 import { GoVerifyBtn } from './go-verify-btn';
+import { clsx } from '@/core/utils';
 
 const logoArr = [
   '/static/images/account/kyc/0.png',
@@ -23,6 +24,7 @@ const ResultCard = () => {
     LANG('您提交的信息审核已通过'),
     LANG('您提交的信息审核未通过，请重新认证！')
   ];
+  const promptBgArr = ['verify', 'success', 'fail'];
   useEffect(() => {
     if (kycState.isLoadingKycState) {
       Loading.start();
@@ -44,7 +46,7 @@ const ResultCard = () => {
     <div className="result-box">
       <div className="main">
         {logoArr[state] ? (
-          <div className="prompt">
+          <div className={clsx('prompt', promptBgArr[state])}>
             <Image src={logoArr[state]} className="img" alt="" width={12} height={12} />
             <span>{promptArr[state]}</span>
           </div>
@@ -102,6 +104,23 @@ const styles = css`
         :global(.img) {
           margin-right: 8px;
         }
+        @media ${MediaInfo.mobile} {
+          border-radius: 4px;
+          padding: 12px 8px;
+          margin-bottom: 24px;
+          &.verify {
+            background: rgba(240, 186, 48, 0.1);
+            color: var(--yellow);
+          }
+          &.success {
+            background: rgba(7, 130, 139, 0.2);
+            color: var(--brand);
+          }
+          &.fail {
+            background: rgba(239, 69, 74, 0.1);
+            color: var(--red);
+          }
+        }
       }
       :global(.kyc-info) {
         display: flex;
@@ -130,6 +149,19 @@ const styles = css`
             white-space: normal;
             overflow-wrap: break-word;
           }
+        }
+      }
+    }
+    @media ${MediaInfo.mobile} {
+      width: auto;
+      padding: 8px;
+      :global(.footer-button) {
+        margin-top: 24px;
+
+        :global(button) {
+          width: 100%;
+          border-radius: 40px;
+          height: 48px;
         }
       }
     }

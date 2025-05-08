@@ -29,6 +29,7 @@ import { BottomModal, MobileModal } from '@/components/mobile-modal';
 import { Zendesk } from '@/components/zendesk';
 import SwapInfoDrawer from '../swap-info-drawer';
 import GuideModal from './guide';
+import SpotGuideModal from './spot-guide';
 
 export const Header = ({ isSpot = false }: { isSpot?: boolean }) => {
   const [data, setData] = useState<DetailMap>();
@@ -36,6 +37,7 @@ export const Header = ({ isSpot = false }: { isSpot?: boolean }) => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [helpVisible, setHelpVisible] = useState(false);
   const [guideVisible, setGuideVisible] = useState(false);
+  const [spotGuideVisible, setSpotGuideVisible] = useState(false);
   const [guide, setGuide] = useState({ show: false, index: 0 });
   const id = useRouter().query?.id as string;
 
@@ -47,7 +49,7 @@ export const Header = ({ isSpot = false }: { isSpot?: boolean }) => {
 
   const guideList = [
     [LANG('指南'), isUsdtType ? '/sections/11320601264783' : '/sections/11320601264783', -1],
-    [LANG('新手引导'), () => { }, -1],
+    [LANG('新手引导'), () => {}, -1],
     // [LANG('交易规则'), _handleRuleModalVisible],
     [LANG('实时资金费率'), '', 0],
     [LANG('资金费率历史'), '', 1],
@@ -75,8 +77,9 @@ export const Header = ({ isSpot = false }: { isSpot?: boolean }) => {
       if (isSpotEtf(id)) {
         const resultEtfCommodityInfo = await getCommonEtfCommodityApi(id);
         const { lever, isBuy } = getEtfCryptoInfo(id);
-        const etfTitle = `${formatDefaultText(resultEtfCommodityInfo?.data?.currency)} ${formatDefaultText(lever)}X ${isBuy ? LANG('多') : LANG('空')
-          }`;
+        const etfTitle = `${formatDefaultText(resultEtfCommodityInfo?.data?.currency)} ${formatDefaultText(lever)}X ${
+          isBuy ? LANG('多') : LANG('空')
+        }`;
 
         item.etfTitle = etfTitle;
       }
@@ -85,8 +88,8 @@ export const Header = ({ isSpot = false }: { isSpot?: boolean }) => {
       const description = (!isDemoSwap ? isSwapUsdt : isSwapSLUsdt)(id)
         ? LANG('永续U本位')
         : (!isDemoSwap ? isSwapCoin : isSwapSLCoin)(id)
-          ? LANG('永续币本位')
-          : 'unknown';
+        ? LANG('永续币本位')
+        : 'unknown';
       item.description = description;
     }
     setQuoteInfo(item);
@@ -116,35 +119,46 @@ export const Header = ({ isSpot = false }: { isSpot?: boolean }) => {
               onClick={() => setDrawerVisible(true)}
             />
             <div className="quoteInfo">
-              <h1>{id?.replace(/_|-/, '/')}</h1>
-              <div className="sub-color font12">
-                {quoteInfo?.fullname
-                  ? `${formatDefaultText(quoteInfo?.coin)}(${formatDefaultText(
-                    quoteInfo?.etfTitle ? quoteInfo?.etfTitle : quoteInfo?.fullname
-                  )})`
-                  : quoteInfo?.description}
-              </div>
+              {isSpot ? (
+                <div>
+                  <span className="main-color font16">{quoteInfo?.coin}</span>
+                  <span className="sub-color font14">/{quoteInfo?.quoteCoin}</span>
+                </div>
+              ) : (
+                <>
+                  <h1>{id?.replace(/_|-/, '/')}</h1>{' '}
+                  <div className="sub-color font12">
+                    {quoteInfo?.fullname
+                      ? `${formatDefaultText(quoteInfo?.coin)}(${formatDefaultText(
+                          quoteInfo?.etfTitle ? quoteInfo?.etfTitle : quoteInfo?.fullname
+                        )})`
+                      : quoteInfo?.description}
+                  </div>
+                </>
+              )}
             </div>
           </div>
           <div className="right">
             <Star code={id} type={getStarType(id)} width={16} height={16} inQuoteList />
-            <div className="guide" onClick={() => setHelpVisible(true)}>
+            <div className="guide" onClick={() => (isSpot ? setSpotGuideVisible(true) : setHelpVisible(true))}>
               <CommonIcon size={16} name="common-help" />
             </div>
           </div>
         </div>
         <div className="quote">
           <div className="left">
-            <div>
-              <span className="sub-color font12 marginRight4">{LANG('最新价格')}</span>
-              <CommonIcon name={'common-mobile-triangle-down'} size={8} />
-            </div>
+            {!isSpot && (
+              <div>
+                <span className="sub-color font12 marginRight4">{LANG('最新价格')}</span>
+                <CommonIcon name={'common-mobile-triangle-down'} size={8} />
+              </div>
+            )}
             <span className={`price ${data?.isUp ? 'main-raise' : 'main-fall'}`}>{data?.price?.toFormat()}</span>
             <div>
               <span className="main-color font12 marginRight4">≈ ${data?.price?.toFormat()}</span>
               <span className={`font12 ${data?.isUp ? 'main-raise' : 'main-fall'}`}>{data?.rate}%</span>
             </div>
-            <span className="second-color font10">标记价格 {flagPrice?.toFormat()}</span>
+            {!isSpot && <span className="second-color font10">标记价格 {flagPrice?.toFormat()}</span>}
           </div>
           <div className="right">
             <div className="row">
@@ -175,7 +189,9 @@ export const Header = ({ isSpot = false }: { isSpot?: boolean }) => {
                             __html: LANG(
                               '买方及卖方在下个资金时段要交换的资金费率。资金费率周期内(每 8 小时)每分钟计算一次溢价指数，并将溢价指数以时间加权平均的方式应用于计算资金费率。 {more}',
                               {
-                                more: `<a target={'_blank'} class="${linkClassName} link" href=${zendeskLink}>${LANG('了解更多')}</a>`
+                                more: `<a target={'_blank'} class="${linkClassName} link" href=${zendeskLink}>${LANG(
+                                  '了解更多'
+                                )}</a>`
                               }
                             )
                           }}
@@ -240,6 +256,7 @@ export const Header = ({ isSpot = false }: { isSpot?: boolean }) => {
           </BottomModal>
         </MobileModal>
         <GuideModal isShow={guideVisible} onClose={() => setGuideVisible(false)} />
+        <SpotGuideModal isShow={spotGuideVisible} onClose={() => setSpotGuideVisible(false)} />
       </div>
       <style jsx>{styles}</style>
     </>
@@ -260,7 +277,7 @@ const styles = css`
       align-items: center;
       flex-shrink: 0;
       height: 3.5rem;
-      border-bottom: 1px solid var(--line-1);
+      border-bottom: 1px solid var(--fill_line_1);
       .left,
       .right {
         display: flex;
@@ -278,7 +295,7 @@ const styles = css`
         align-items: flex-start;
         h1 {
           font-size: 1em;
-          color: var(--text-primary);
+          color: var(--text_1);
         }
       }
       .quoteInfo,
@@ -347,22 +364,22 @@ const styles = css`
       }
     }
     :global(.main-raise) {
-      color: var(--green);
+      color: var(--color-green);
     }
     :global(.main-fall) {
-      color: var(--red);
+      color: var(--color-red);
     }
     .marginRight4 {
       margin-right: 4px;
     }
     .main-color {
-      color: var(--text-primary);
+      color: var(--text_1);
     }
     .sub-color {
-      color: var(--text-tertiary);
+      color: var(--text_3);
     }
     .second-color {
-      color: var(--text-secondary);
+      color: var(--text_2);
     }
 
     .font10 {
@@ -371,6 +388,16 @@ const styles = css`
 
     .font12 {
       font-size: 12px;
+      white-space: nowrap;
+    }
+    .font14 {
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .font16 {
+      font-size: 16px;
+      font-weight: 700;
       white-space: nowrap;
     }
   }
@@ -387,7 +414,7 @@ const styles = css`
       height: 3rem;
       font-size: 14px;
       font-weight: 500;
-      color: var(--text-primary);
+      color: var(--text_1);
     }
   }
 `;

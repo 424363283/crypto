@@ -1,32 +1,48 @@
 import styles from './index.module.scss';
 import { Svg } from '@/components/svg';
 import { LANG, TrLink } from '@/core/i18n';
+import CommonIcon from '@/components/common-icon';
 import SettingPreference from './settingPreference';
 import { useEffect, useState } from 'react';
 import { Copy } from '@/core/shared';
-import { useCopyState } from '@/core/hooks/src/use-copy-state';
+import { CalibrateValue } from '@/core/shared/src/copy/utils';
+import { useRouter } from '@/core/hooks/src/use-router';
 const CopyTradingItem = (props: any) => {
-  const { copyUserId } = useCopyState();
+    const router = useRouter();
+    const {id} = router.query
   const [bringData, setBringData] = useState({});
   const [tradeInfo, setTradeInfo] = useState({});
   // 带单数据
   const fetchBringData = async () => {
-    const bringData = await Copy.fetchCopyTradeuserStatisticsSummary({ cycle: 7, uid: copyUserId });
+    const bringData = await Copy.fetchCopyTradeuserStatisticsSummary({ cycle: 7, uid: id });
     if (bringData.code === 200) {
-      setBringData(bringData.data);
+      const copyBringData:any = bringData.data
+      const total = copyBringData[`profitOrderNumber30`]?.add(copyBringData[`lossOrderNumber30`]);
+      const win:any =  copyBringData[`profitOrderNumber30`]?.div(total) || 0
+      copyBringData.percentWin = win
+      setBringData(copyBringData);
     }
   };
   // 获取交易员或跟单员详情
   const getTraderDetail = async () => {
-    if (copyUserId) {
-      const res = await Copy.fetchShareTraderDetail({ lUid: copyUserId });
-      if (res.code === 200) {
-        const result = res.data;
-        setTradeInfo({
-          ...result
-        });
-      }
-    }
+       if (id) {
+         const res = await Copy.fetchShareTraderDetail({ lUid: id });
+         if (res?.code === 200) {
+           const result = res.data;
+           const base = await Copy.fetchCopyTradeuserBase({ uid: id });
+           if (base.code === 200) {
+             setTradeInfo({
+               ...result,
+               ...base.data
+             });
+           } else {
+             setTradeInfo({
+               ...result,
+             });
+           }
+   
+         }
+       }
   };
   useEffect(() => {
     fetchBringData();
@@ -40,10 +56,10 @@ const CopyTradingItem = (props: any) => {
           <div>
             <div className={`${styles.flexCenter} ${styles.copyName} ${styles.gap4}`}>
               <span>{tradeInfo?.nickname}</span>
-              <Svg src={`/static/icons/primary/common/copy-lever-${tradeInfo.traderType}.svg`} width={16} height={16} />
+              <Svg src={`/static/icons/primary/common/copy-lever-${tradeInfo.traderType || 1}.svg`} width={16} height={16} />
             </div>
             <div className={`${styles.flexCenter} ${styles.gap4}`}>
-              <Svg src={`/static/icons/primary/common/copy-user.svg`} width={12} height={12} />
+             <CommonIcon name="common-copy-user" width={12} height={12} />
               <div className={styles.ml4}>
                 <span className={styles.currentAmount}>{tradeInfo?.currentCopyTraderCount}</span>
                 <span>/{tradeInfo?.maxCopyTraderCount}</span>
@@ -55,23 +71,23 @@ const CopyTradingItem = (props: any) => {
         <div className={styles.incomeBox}>
           <div className={styles.flexSpace}>
             <label>{LANG('近{days}日收益率', { days: 30 })}</label>
-            <span>{bringData?.profitRate30?.mul(100)}%</span>
+            <span style={CalibrateValue(bringData?.profitRate30).color}>{CalibrateValue(bringData?.profitRate30?.mul(100),Copy.copyFixed)?.value}%</span>
           </div>
           <div className={styles.flexSpace}>
             <label>{LANG('近30日收益额')}</label>
-            <span>{bringData?.profitAmount30}</span>
+            <span style={CalibrateValue(bringData?.profitAmount30).color}>{CalibrateValue(bringData?.profitAmount30,Copy.copyFixed)?.value} USDT</span>
           </div>
           <div className={styles.flexSpace}>
             <label>{LANG('近30日胜率')}</label>
-            <span>{bringData.victoryRate30?.mul(100)}%</span>
+            <span>{bringData.victoryRate30?bringData.percentWin?.mul(100)?.toFixed(Copy.copyFixed):'0'}%</span>
           </div>
           <div className={styles.flexSpace}>
             <label>{LANG('带单规模')}</label>
-            <span>{tradeInfo.settledTotalAmount}</span>
+            <span>{tradeInfo?.settledTotalAmount?tradeInfo?.settledTotalAmount?.toFormat(Copy.copyFixed):'0'} USDT</span>
           </div>
           <div className={styles.flexSpace}>
             <label>{LANG('分润比例')}</label>
-            <span>{tradeInfo?.shareRoyaltyRatio?.mul(100)}%</span>
+            <span>{tradeInfo?.shareRoyaltyRatio?tradeInfo?.shareRoyaltyRatio?.mul(100).toFixed(Copy.copyFixed):'0'}%</span>
           </div>
         </div>
       </div>

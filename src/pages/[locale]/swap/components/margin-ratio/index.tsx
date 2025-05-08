@@ -162,13 +162,13 @@ export const MarginRatio = ({ showHeader = true, showSettleCoin = true, list = d
                 line-height: 14px;
                 font-size: 12px;
                 font-weight: 400;
-                color: var(--text-tertiary);
+                color: var(--text_3);
               }
               &:nth-child(2) {
                 line-height: 10px;
                 font-size: 12px;
                 font-weight: 400;
-                color: var(--text-primary);
+                color: var(--text_1);
               }
             }
           }

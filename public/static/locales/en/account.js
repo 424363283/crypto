@@ -751,5 +751,8 @@ var appLang = {
   身份信息: 'Identity information',
   重新认证: 'Recertification',
   '请上传手持护照照片以及手写今天日期和 YMEX 的纸质照片':
-    "Please upload a photo of your passport in hand and a photo of paper with today's date and YMEX handwritten on it"
+    "Please upload a photo of your passport in hand and a photo of paper with today's date and YMEX handwritten on it",
+  "永续{source}转现货": "Perpetual {source} to spot",
+  "现货转永续{target}": "Spot to perpetual {target}",
+  "永续{source}转入永续{target}": "Perpetual {source} to perpetual {target}",
 };

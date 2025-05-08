@@ -20,20 +20,20 @@ const BottomOption = () => {
   const handleClick = (item: Options) => {
     store.thirdItem = {
       id: item.id,
-      name: item.name,
+      name: item.name
     };
     store.currentView = CURRENT_VIEW.TABLE;
   };
   useEffect(() => {
     store.thirdItem = {
       ...store.thirdItem,
-      id: thirdItem.id,
+      id: thirdItem.id
     };
   }, [thirdItem.id]);
   useEffect(() => {
     store.thirdItem = {
       name: 'All',
-      id: '2-1-1',
+      id: '2-1-1'
     };
   }, [secondItem.id]);
 
@@ -49,23 +49,23 @@ const BottomOption = () => {
           className={clsx(item.id === thirdItem.id ? 'active' : '', item.name === 'LVTs' ? 'etf' : '', 'third-item')}
           onClick={() => handleClick(item)}
         >
-          {/^[a-zA-Z0-9]+$/.test(item.name)?item.name : LANG(item.name)}
-          {item.name === 'LVTs' && <Image src='/static/images/common/3x.svg' alt='' width='16' height='14' />}
+          {/^[a-zA-Z0-9]+$/.test(item.name) ? item.name : LANG(item.name)}
+          {item.name === 'LVTs' && <Image src="/static/images/common/3x.svg" alt="" width="16" height="14" />}
         </div>
       );
     });
   };
   const PrevIcon = () => {
     return (
-      <div className='mobile-arrow-left'>
-        <Image src='/static/images/header/media/arrow-left.svg' width={24} height={24} alt='icon' />
+      <div className="mobile-arrow-left">
+        <Image src="/static/images/header/media/arrow-left.svg" width={24} height={24} alt="icon" />
       </div>
     );
   };
   const NextIcon = () => {
     return (
-      <div className='mobile-arrow-right'>
-        <Image src='/static/images/header/media/arrow-right.svg' width={24} height={24} alt='icon' />
+      <div className="mobile-arrow-right">
+        <Image src="/static/images/header/media/arrow-right.svg" width={24} height={24} alt="icon" />
       </div>
     );
   };
@@ -76,8 +76,8 @@ const BottomOption = () => {
       thirdConfigOption
     ) {
       return (
-        <div className='option3-wrapper'>
-          <ScrollXWrap prevIcon={<PrevIcon />} wrapClassName='mobile-list' nextIcon={<NextIcon />}>
+        <div className="option3-wrapper">
+          <ScrollXWrap prevIcon={<PrevIcon />} wrapClassName="mobile-list" nextIcon={<NextIcon />}>
             {renderThirdOptions()}
           </ScrollXWrap>
           <style jsx>{styles}</style>
@@ -85,7 +85,7 @@ const BottomOption = () => {
       );
     }
     return (
-      <div className='option3-wrapper'>
+      <div className="option3-wrapper">
         <style jsx>{styles}</style>
       </div>
     );
@@ -116,24 +116,34 @@ const styles = css`
       margin-bottom: 20px;
     }
     @media ${MediaInfo.mobile} {
-      margin-bottom: 10px;
+      width: auto;
+      height: 100%;
+      margin-bottom: 0;
     }
 
     :global(.third-item) {
       height: 32px;
       font-size: 12px;
       font-weight: 400;
-      color: var(--text-secondary);
+      color: var(--text_2);
       padding: 8px 16px;
       position: relative;
       cursor: pointer;
       flex-shrink: 0;
       border-radius: 6px;
       border: 1px solid var(--line-3);
+      @media ${MediaInfo.mobile} {
+        display: flex;
+        align-items: center;
+        height: auto;
+        border-radius: 4px;
+        padding: 4px 1rem;
+      }
     }
-    :global(.third-item.active), :global(.third-item:hover) {
-      color: var(--text-primary);
-      background-color: var(--fill-3);
+    :global(.third-item.active),
+    :global(.third-item:hover) {
+      color: var(--text_1);
+      background-color: var(--fill_3);
       border: 1px solid transparent;
     }
     :global(.etf) {
@@ -145,20 +155,23 @@ const styles = css`
         margin-left: 4px;
       }
     }
-    
+
     :global(.mobile-list) {
       display: flex;
       align-items: center;
       margin: 0;
       width: 100%;
       gap: 16px;
+      @media ${MediaInfo.mobile} {
+        gap: 8px;
+      }
     }
     :global(.mobile-arrow-left) {
       position: absolute;
       left: -20px;
       padding: 4px 6px 2px 0;
       z-index: 9;
-      background-color: var(--bg-1);
+      background-color: var(--fill_bg_1);
       height: 100%;
     }
     :global(.scroll-wrap) {
@@ -173,7 +186,7 @@ const styles = css`
       position: absolute;
       right: -20px;
       padding: 4px 0 2px 6px;
-      background-color: var(--bg-1);
+      background-color: var(--fill_bg_1);
       height: 100%;
     }
   }

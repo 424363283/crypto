@@ -43,7 +43,7 @@ const styles = css`
       gap: 40px;
       align-self: stretch;
       border-radius: 24px;
-      background: var(--fill-1);
+      background: var(--fill_1);
       justify-content:space-between;
     }
     &-info{
@@ -60,12 +60,12 @@ const styles = css`
       }
 
       .trade-name{
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 16px;
         font-weight: 500;
       }
       .trade-desc{
-        color: var(--text-tertiary);
+        color: var(--text_3);
         font-size: 12px;
         font-weight: 400;
       }
@@ -80,12 +80,12 @@ const styles = css`
       &-left{
         font-size:20px;
         h5{
-          color: var(--text-tertiary);
+          color: var(--text_3);
           font-size: 14px;
           font-weight: 400;
         }
         p{
-          color: var(--text-true);
+          color: var(--text_green);
           font-size: 24px;
           font-weight: 700;
         }

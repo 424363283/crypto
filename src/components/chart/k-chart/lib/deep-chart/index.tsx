@@ -51,7 +51,7 @@ export const DeepChart = ({ id, theme, qty }: any) => {
       <div id={'depth-chart' + qty} style={{ flex: 1, overflow: 'hidden' }}></div>
       <style jsx>{`
         #${'depth-chart' + qty} {
-          background-color: var(--bg-1);
+          background-color: var(--fill_bg_1);
           background-image: url('/static/images/trade/kline/logo.webp');
           background-repeat: no-repeat;
           background-position: center;

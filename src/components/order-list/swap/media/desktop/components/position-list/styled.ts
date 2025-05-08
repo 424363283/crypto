@@ -28,8 +28,8 @@ const { className, styles } = css.resolve`
           align-items: center;
           gap: 10px;
           border-radius: 4px;
-          background: var(--fill-pop);
-          color: var(--text-secondary);
+          background: var(--fill_pop);
+          color: var(--text_2);
           font-size: 10px;
           font-weight: 400;
           padding:0 10px;
@@ -72,7 +72,7 @@ const { className, styles } = css.resolve`
           flex-direction: column;
           align-items: flex-start;
           flex-wrap: wrap;
-          color: var(--text-primary);
+          color: var(--text_1);
           font-size: 12px;
           font-weight: 500;
         }
@@ -104,7 +104,7 @@ const { className, styles } = css.resolve`
       margin:0 0 0 5px;
      
         :global(path){
-          fill:var(--text-secondary);
+          fill:var(--text_2);
         }
      
     }
@@ -136,7 +136,7 @@ const { className, styles } = css.resolve`
         }
       }
       .income-rate{
-        color: var(--text-error);
+        color: var(--text_red);
         font-size: 12px;
         font-weight: 500;
       }
@@ -162,13 +162,13 @@ const { className, styles } = css.resolve`
   }
   .custom-tooltip{
     :global(.ant-tooltip-inner){
-      color: var(--text-tertiary) !important;
+      color: var(--text_3) !important;
       text-align: justify;
       font-size: 12px !important;
       font-weight: 400 !important;
       line-height: 150% !important;
       border-radius: 6px !important;
-      background: var(--fill-pop) !important;;
+      background: var(--fill_pop) !important;;
     }
   }
 `;

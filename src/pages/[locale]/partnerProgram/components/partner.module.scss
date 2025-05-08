@@ -1,6 +1,6 @@
 $sm: 768px;
 .partnerHeader {
-  background: var(--fill-2);
+  background: var(--fill_2);
   @media (max-width: $sm) {
     padding: 18px 8px 18px 16px;
   }
@@ -22,7 +22,7 @@ $sm: 768px;
     font-weight: 700;
     font-size: 48px;
     line-height: 72px;
-    color: var(--text-primary);
+    color: var(--text_1);
     @media (max-width: $sm) {
       font-size: 24px;
       line-height: 32px;
@@ -33,7 +33,7 @@ $sm: 768px;
     font-family: HarmonyOS Sans SC;
     font-weight: 400;
     font-size: 20px;
-    color: var(--text-tertiary);
+    color: var(--text_3);
     margin: 24px 0;
     @media (max-width: $sm) {
       font-size: 14px;
@@ -58,7 +58,7 @@ $sm: 768px;
       font-weight: 500;
       font-size: 32px;
       line-height: 37.5px;
-      color: var(--text-primary);
+      color: var(--text_1);
       @media (max-width: $sm) {
         font-size: 14px;
         line-height: 14px;
@@ -71,7 +71,7 @@ $sm: 768px;
       font-size: 16px;
       line-height: 18.75px;
       margin-top: 8px;
-      color: var(--text-secondary);
+      color: var(--text_2);
       @media (max-width: $sm) {
         font-size: 12px;
         line-height: 12px;
@@ -101,7 +101,7 @@ $sm: 768px;
 }
 
 .colorBrand {
-  color: var(--text-brand);
+  color: var(--text_brand);
 }
 .flexDCenter {
   display: flex;
@@ -116,7 +116,7 @@ $sm: 768px;
   flex-direction: column;
   @media (max-width: $sm) {
     &:not(:last-child) {
-      border-bottom: 1px solid var(--line-1);
+      border-bottom: 1px solid var(--fill_line_1);
       padding-bottom: 24px;
     }
   }
@@ -130,14 +130,14 @@ $sm: 768px;
   font-family: HarmonyOS Sans SC;
   font-weight: 700;
   font-size: 32px;
-  color: var(--text-primary);
+  color: var(--text_1);
 }
 
 .partnerSubTitle {
   font-family: HarmonyOS Sans SC;
   font-weight: 400;
   font-size: 16px;
-  color: var(--text-tertiary);
+  color: var(--text_3);
   margin-top: 16px;
   @media (max-width: $sm) {
     font-size: 14px;
@@ -157,8 +157,8 @@ $sm: 768px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--line-2);
-  color: var(--text-tertiary);
+  border: 1px solid var(--fill_line_2);
+  color: var(--text_3);
   font-family: HarmonyOS Sans SC;
   font-weight: 400;
   font-size: 16px;
@@ -167,13 +167,13 @@ $sm: 768px;
 
 .partnerChooseModule {
   @media (max-width: $sm) {
-    background: var(--fill-2);
+    background: var(--fill_2);
   }
 }
 .partnerChoose {
   padding: 80px 0;
   @media (max-width: $sm) {
-    background: var(--fill-pop);
+    background: var(--fill_pop);
     padding: 40px 24px;
     border-top-left-radius: 24px;
     border-top-right-radius: 24px;
@@ -213,7 +213,7 @@ $sm: 768px;
   font-weight: 700;
   font-size: 24px;
   line-height: 28.13px;
-  color: var(--text-primary);
+  color: var(--text_1);
   margin-top: 24px;
   margin-bottom: 16px;
   @media (max-width: $sm) {
@@ -228,7 +228,7 @@ $sm: 768px;
   font-weight: 400;
   font-size: 14px;
   line-height: 21px;
-  color: var(--text-secondary);
+  color: var(--text_2);
   @media (max-width: $sm) {
     margin-bottom: 16px;
   }
@@ -237,7 +237,7 @@ $sm: 768px;
 .partnerValueItem {
   padding: 40px;
   border-radius: 24px;
-  background: var(--fill-2);
+  background: var(--fill_2);
   @media (max-width: $sm) {
     padding: 24px;
     text-align: center;

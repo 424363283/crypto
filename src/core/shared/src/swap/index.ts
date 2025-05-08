@@ -64,7 +64,7 @@ export class Swap {
    * @param assets 是否全部资产页
    */
   static useListener({ assets }: { assets?: boolean } = {}) {
-    const ws1050Throttle = new Throttle(() => {}, 200);
+    const ws1050Throttle = new Throttle(() => { }, 200);
 
     useResso(Swap.Info.store);
     if (!assets) {
@@ -129,6 +129,11 @@ $axios.interceptors.request.use(async (request: any) => {
     if (walletId) {
       request.headers['ppw'] = walletId;
     }
+  }
+
+  const subWallet = request.params?.subWallet || request.data?.subWallet;
+  if (subWallet) {
+    request.headers['ppw'] = subWallet;
   }
   return request;
 });

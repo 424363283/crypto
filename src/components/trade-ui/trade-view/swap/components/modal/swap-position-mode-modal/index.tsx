@@ -24,12 +24,12 @@ export const SwapPositionModeModal = ({
   const isUsdtType = Swap.Trade.base.isUsdtType;
   const value = Swap.Trade.twoWayMode;
   const [isTwoWayMode, setIsTwoWayMode] = useState(false);
-  useEffect(()=> setIsTwoWayMode(Swap.Trade.twoWayMode),[Swap.Trade.twoWayMode]);
+  useEffect(() => setIsTwoWayMode(Swap.Trade.twoWayMode), [Swap.Trade.twoWayMode]);
 
   const { isMobile } = useResponsive();
   const onTwoWayModeChange = async (next: boolean) => {
     if (next === value) {
-      if(isMobile){
+      if (isMobile) {
         onClose();
       }
       return;
@@ -43,6 +43,7 @@ export const SwapPositionModeModal = ({
         //
       } else {
         message.success(LANG('操作成功'));
+        Swap.Trade.initQuote();
         onClose();
       }
 
@@ -64,11 +65,11 @@ export const SwapPositionModeModal = ({
       LANG('双向持仓'),
       isUsdtType
         ? LANG(
-            '双向持仓模式下，一个合约可允许同时持有多空两个方向的仓位模式。 调整对所有合约统一生效。该设置仅对U本位合约生效。'
-          )
+          '双向持仓模式下，一个合约可允许同时持有多空两个方向的仓位模式。 调整对所有合约统一生效。该设置仅对U本位合约生效。'
+        )
         : LANG(
-            '双向持仓模式下，一个合约可允许同时持有多空两个方向的仓位模式。 调整对所有合约统一生效。该设置仅对币本位合约生效。'
-          ),
+          '双向持仓模式下，一个合约可允许同时持有多空两个方向的仓位模式。 调整对所有合约统一生效。该设置仅对币本位合约生效。'
+        ),
       { twoWayMode: true }
     ]
   ];
@@ -115,7 +116,7 @@ export const SwapPositionModeModal = ({
   if (isMobile) {
     return (
       <MobileModal visible={visible} onClose={onClose} type="bottom" zIndex={zIndex}>
-        <BottomModal title={LANG('仓位模式')} onConfirm={() => onTwoWayModeChange(isTwoWayMode)}>
+        <BottomModal title={isUsdtType ? LANG('U本位账户仓位模式') : LANG('币本位账户仓位模式')} onConfirm={() => onTwoWayModeChange(isTwoWayMode)}>
           {content}
         </BottomModal>
       </MobileModal>
@@ -124,7 +125,7 @@ export const SwapPositionModeModal = ({
   return (
     <>
       <Modal onClose={onClose} contentClassName={clsx('modal')} visible={visible} {...props}>
-        <ModalTitle title={LANG('仓位模式')} onClose={onClose} closable></ModalTitle>
+        <ModalTitle title={isUsdtType ? LANG('U本位账户仓位模式') : LANG('币本位账户仓位模式')} onClose={onClose} closable></ModalTitle>
         {content}
       </Modal>
     </>

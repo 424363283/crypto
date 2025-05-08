@@ -19,7 +19,7 @@ const { className, styles: _styles } = css.resolve`
         justify-content: space-between;
         :global(span) {
           font-size: 10px;
-          color: var(--text-secondary);
+          color: var(--text_2);
         }
       }
     }
@@ -32,7 +32,7 @@ const { className, styles: _styles } = css.resolve`
             width: 8px;
             height: 8px;
             &::after {
-              box-shadow: 0 0 0 2px var(--text-brand) !important;
+              box-shadow: 0 0 0 2px var(--text_brand) !important;
             }
             &::before {
               width: 8px;

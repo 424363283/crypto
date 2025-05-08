@@ -32,7 +32,7 @@ export const CaptchaButton = (props: CaptchaButtonProps) => {
 const styles = css`
   .init-btn-status {
     border-radius: 5px;
-    color: var(--text-brand);
+    color: var(--text_brand);
     font-size: 14px;
     padding: 6px 0 6px 16px;
     font-weight: 400;
@@ -41,14 +41,14 @@ const styles = css`
   }
   .verify-btn {
     cursor: pointer;
-    color: var(--text-brand);
+    color: var(--text_brand);
     border-radius: 5px;
     font-weight: 500;
     display: inline-block;
   }
   .verify-btn-active {
     cursor: not-allowed;
-    color: var(--text-brand);
+    color: var(--text_brand);
     border: none;
   }
 `;

@@ -11,17 +11,11 @@ import { useResponsive } from '@/core/hooks';
 export default function CopyTradingCompare() {
   const tradersRef = useRef(null);
   const { isMobile } = useResponsive();
-  const fetchRanks = useCopyTradingSwapStore.use.fetchRanks();
-  const ranks = useCopyTradingSwapStore.use.copyTradeInfo().ranks;
   const [tabValue, setTabValue] = useState(COPYTRADING_TYPE.SWAP);
   const COMPARE_LIST_MAP = {
     [COPYTRADING_TYPE.SPOT]: <div></div>,
     [COPYTRADING_TYPE.SWAP]: <SwapCopyTradingCompare ref={tradersRef} />
   };
-
-  useEffect(() => {
-    // fetchRanks();
-  }, []);
 
   const addTraderHandler = () => {
     tradersRef.current?.addTraderHandler(0);
@@ -48,21 +42,14 @@ export default function CopyTradingCompare() {
           }}
         >
           <div className={styles.header}>
-            <Breadcrumb
-              items={[
-                {
-                  title: (
-                    <TrLink native href="/copyTrade">
-                      {LANG('跟单交易')}
-                    </TrLink>
-                  )
-                },
-                {
-                  title: LANG('交易员PK')
-                }
-              ]}
-            />
-            <h1 className={'title'}>{LANG('交易员PK')}</h1>
+            <div className={styles.pkbox}>
+              <TrLink className={styles.pkbreak} native href="/copyTrade">
+                {LANG('跟单交易')}
+              </TrLink>
+              /<span> {LANG('交易员PK')}</span>
+            </div>
+
+            <div className={styles.title}>{LANG('交易员PK')}</div>
           </div>
         </div>
         <div className={styles.bottomInfo}>

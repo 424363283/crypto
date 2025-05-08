@@ -25,12 +25,12 @@ const { className, styles: _styles } = css.resolve`
       margin-top: 8px;
       line-height: 12px;
       font-size: 12px;
-      color: var(--text-error);
+      color: var(--text_red);
     }
   }
   .input-item {
     >.label {
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-size: 14px;
       font-weight: 500;
       margin-bottom: 16px;

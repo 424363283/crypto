@@ -4,6 +4,7 @@ import { LANG, useTradeHrefData } from '@/core/i18n';
 import { SUBSCRIBE_TYPES, useWs } from '@/core/network';
 import { FAVORITE_TYPE, FAVORS_LIST, Favors, Group, MarketItem, Markets, MarketsMap, TradeMap } from '@/core/shared';
 import { IDB_STORE_KEYS } from '@/core/store';
+import { useQuoteSearchStore } from '@/store/quote-search';
 import { MediaInfo } from '@/core/utils';
 import { frameRun } from '@/core/utils/src/frame-run';
 import { useCallback, useEffect, useState } from 'react';
@@ -15,7 +16,7 @@ import {
   FAVORITE_OPTION_ID,
   LITE_OPTION_ID,
   PERPETUAL_OPTION_ID,
-  SPOT_GOODS_OPTION_ID,
+  SPOT_GOODS_OPTION_ID
 } from '../../../types';
 import { useLiteList } from '../../hooks';
 import { Wait2AddFavorsList } from '../favors-list';
@@ -27,12 +28,13 @@ import { useColumns } from './useColumns';
 const MarketTable = () => {
   const liteList = useLiteList();
   const { getHrefAndQuery } = useTradeHrefData();
+  const searchTerm = useQuoteSearchStore(state => state.searchTerm);
   const [list, setList] = useImmer<{ [key: string]: MarketItem[] }>({
     spot: [],
     swapUsdt: [],
     swapCoin: [],
     lite: [],
-    etf: [],
+    etf: []
   });
   const [marketsDetail, setMarketDetail] = useState<MarketsMap>();
   const [dataSource, setDataSource] = useState<any[]>([]);
@@ -71,7 +73,7 @@ const MarketTable = () => {
         const hotIds = group?.getHotIds();
         const spotIds = group?.getSpotIds;
         const spots = Markets.getMarketList(detail, spotIds);
-        setList((draft) => {
+        setList(draft => {
           // 创建 spots 数组的副本并排序
           const sortedSpots = [...spots].sort((a, b) => customSpotCoinSort(a, b, hotIds));
           draft.spot = sortedSpots;
@@ -81,14 +83,14 @@ const MarketTable = () => {
     const setSwapCoinIds = () => {
       setIdbKey(IDB_STORE_KEYS.MARKETS_DATA_SWAP_COIN_LIST);
       const swapCoinIds = group?.getSwapCoinIds();
-      setList((draft) => {
+      setList(draft => {
         draft.swapCoin = Markets.getMarketList(detail, swapCoinIds);
       });
     };
     const setSwapUsdtIds = () => {
       setIdbKey(IDB_STORE_KEYS.MARKETS_DATA_SWAP_FEATURE_LIST);
       const swapUsdtIds = group?.getSwapUsdtIds();
-      setList((draft) => {
+      setList(draft => {
         draft.swapUsdt = Markets.getMarketList(detail, swapUsdtIds);
       });
     };
@@ -96,14 +98,14 @@ const MarketTable = () => {
       setIdbKey(IDB_STORE_KEYS.MARKETS_DATA_LITE_LIST);
 
       const liteIds = group?.getLiteQuoteIds;
-      setList((draft) => {
+      setList(draft => {
         draft.lite = Markets.getMarketList(detail, liteIds);
       });
     };
     const setEtfIds = () => {
       setIdbKey(IDB_STORE_KEYS.MARKETS_DATA_ETF_LIST);
       const etfIds = group?.getSpotEtfIds();
-      setList((draft) => {
+      setList(draft => {
         draft.etf = Markets.getMarketList(detail, etfIds);
       });
     };
@@ -114,7 +116,7 @@ const MarketTable = () => {
           [FAVORITE_OPTION_ID.SWAP_COIN]: setSwapCoinIds(),
           [FAVORITE_OPTION_ID.SPOT]: setSpotIds(),
           [FAVORITE_OPTION_ID.LITE]: setLiteIds(),
-          [FAVORITE_OPTION_ID.ETF]: setEtfIds(),
+          [FAVORITE_OPTION_ID.ETF]: setEtfIds()
         };
         FAV_LIST[secondId];
       },
@@ -133,7 +135,7 @@ const MarketTable = () => {
       },
       [CURRENT_TAB.ETF]: () => {
         setEtfIds();
-      },
+      }
     };
     if (TABLE_IDS_MAP.hasOwnProperty(curId)) {
       TABLE_IDS_MAP[curId]();
@@ -159,7 +161,7 @@ const MarketTable = () => {
       const ids =
         [LANG('全部'), 'All'].includes(thirdItemName) || secondId === PERPETUAL_OPTION_ID.SWAP_COIN
           ? group.getSwapByIds()
-          : group.getSwapByIds().filter((v) => swapMap.get(v)?.partition.includes(thirdItemName));
+          : group.getSwapByIds().filter(v => swapMap.get(v)?.partition.includes(thirdItemName));
 
       setFilterSwapIds(ids);
     };
@@ -178,7 +180,6 @@ const MarketTable = () => {
     } else {
       setFavorsList([]);
     }
-
   };
   useEffect(() => {
     fetchFavorsList();
@@ -191,7 +192,7 @@ const MarketTable = () => {
   // 现货列表
   const getSpotList = () => {
     const { spot = [] } = list;
-    const filterSpotItems = spot.filter((item) => {
+    const filterSpotItems = spot.filter(item => {
       return filterSpotIds.includes(item.id);
     });
     return filterSpotItems;
@@ -201,13 +202,13 @@ const MarketTable = () => {
     const { swapUsdt = [], swapCoin = [] } = list;
     const SWAP_LIST_MAP: { [key: string]: MarketItem[] } = {
       [PERPETUAL_OPTION_ID.SWAP_USDT]: swapUsdt,
-      [PERPETUAL_OPTION_ID.SWAP_COIN]: swapCoin,
+      [PERPETUAL_OPTION_ID.SWAP_COIN]: swapCoin
     };
     let result: MarketItem[] = [];
     if (SWAP_LIST_MAP.hasOwnProperty(secondId)) {
       result = SWAP_LIST_MAP[secondId];
     }
-    const filterSwapItems = result.filter((item) => {
+    const filterSwapItems = result.filter(item => {
       return filterSwapIds.includes(item.id);
     });
     return filterSwapItems;
@@ -217,19 +218,19 @@ const MarketTable = () => {
     const { lite = [] } = list;
     const { liteCryptoIds, liteDerivIds, liteUStockIds, liteHKStockIds, liteOrderListIds } = liteList;
 
-    const liteCryptoList = lite.filter((item) => {
+    const liteCryptoList = lite.filter(item => {
       return liteCryptoIds.includes(item.id);
     });
-    const liteDerivList = lite.filter((item) => {
+    const liteDerivList = lite.filter(item => {
       return liteDerivIds.includes(item.id);
     });
-    const liteUStockList = lite.filter((item) => {
+    const liteUStockList = lite.filter(item => {
       return liteUStockIds.includes(item.id);
     });
-    const liteHKStockList = lite.filter((item) => {
+    const liteHKStockList = lite.filter(item => {
       return liteHKStockIds.includes(item.id);
     });
-    const liteOrderList = lite.filter((item) => {
+    const liteOrderList = lite.filter(item => {
       return liteOrderListIds.includes(item.id);
     });
     const LIST_MAP: { [key: string]: MarketItem[] } = {
@@ -238,7 +239,7 @@ const MarketTable = () => {
       [LITE_OPTION_ID.DERIV]: liteDerivList,
       [LITE_OPTION_ID.USTOCK]: liteUStockList,
       [LITE_OPTION_ID.HKSTOCK]: liteHKStockList,
-      [LITE_OPTION_ID.COPY_ORDER]: liteOrderList,
+      [LITE_OPTION_ID.COPY_ORDER]: liteOrderList
     };
     if (LIST_MAP.hasOwnProperty(secondId)) {
       return LIST_MAP[secondId];
@@ -252,11 +253,11 @@ const MarketTable = () => {
   };
   const getFilterFavorsListById = (list: ListObject[]) => {
     const FAVORS_LIST_MAP: { [key: string]: any[] } = {
-      [FAVORITE_OPTION_ID.SPOT]: list.filter((item) => item.type === FAVORITE_TYPE.SPOT && item.zone !== 'LVTs'),
-      [FAVORITE_OPTION_ID.ETF]: list.filter((item) => item.type === FAVORITE_TYPE.SPOT && item.zone === 'LVTs'),
-      [FAVORITE_OPTION_ID.SWAP_USDT]: list.filter((item) => item.type === FAVORITE_TYPE.SWAP_USDT),
-      [FAVORITE_OPTION_ID.SWAP_COIN]: list.filter((item) => item.type === FAVORITE_TYPE.SWAP_COIN),
-      [FAVORITE_OPTION_ID.LITE]: list.filter((item) => item.type === FAVORITE_TYPE.LITE),
+      [FAVORITE_OPTION_ID.SPOT]: list.filter(item => item.type === FAVORITE_TYPE.SPOT && item.zone !== 'LVTs'),
+      [FAVORITE_OPTION_ID.ETF]: list.filter(item => item.type === FAVORITE_TYPE.SPOT && item.zone === 'LVTs'),
+      [FAVORITE_OPTION_ID.SWAP_USDT]: list.filter(item => item.type === FAVORITE_TYPE.SWAP_USDT),
+      [FAVORITE_OPTION_ID.SWAP_COIN]: list.filter(item => item.type === FAVORITE_TYPE.SWAP_COIN),
+      [FAVORITE_OPTION_ID.LITE]: list.filter(item => item.type === FAVORITE_TYPE.LITE)
     };
     return FAVORS_LIST_MAP[secondId] || [];
   };
@@ -275,16 +276,16 @@ const MarketTable = () => {
   // 自选列表
   const getFavoriteList = () => {
     const filteredList: ListObject[] = [];
-    favorsList?.forEach((arr1Obj) => {
+    favorsList?.forEach(arr1Obj => {
       const listName = _toCamelCase(arr1Obj.type); // remove underscore for consistency
       const allListObj = list[listName];
       if (allListObj) {
-        arr1Obj.list.forEach((id) => {
-          const matchedObj = allListObj.find((obj) => obj.id === id);
+        arr1Obj.list.forEach(id => {
+          const matchedObj = allListObj.find(obj => obj.id === id);
           if (matchedObj) {
             filteredList.push({
               ...matchedObj,
-              type: arr1Obj.type,
+              type: arr1Obj.type
             });
           }
         });
@@ -300,7 +301,7 @@ const MarketTable = () => {
       [CURRENT_TAB.PERPETUAL]: getSwapUsdtList(),
       [CURRENT_TAB.LITE]: getLiteList(),
       [CURRENT_TAB.ETF]: getLeverageList(),
-      [CURRENT_TAB.FAVORITE]: getFavoriteList(),
+      [CURRENT_TAB.FAVORITE]: getFavoriteList()
     };
     return TAB_DATA_MAP[currentId] || data;
   };
@@ -318,16 +319,16 @@ const MarketTable = () => {
       const coinNameA = getCoinName({
         coin: formatCoinName(a.name),
         quoteCoin: a.quoteCoin,
-        name: a.name,
+        name: a.name
       });
       const coinNameB = getCoinName({
         coin: formatCoinName(b.name),
         quoteCoin: b.quoteCoin,
-        name: b.name,
+        name: b.name
       });
       return {
         coinNameA,
-        coinNameB,
+        coinNameB
       };
     };
     if (order === 'ascend') {
@@ -391,7 +392,7 @@ const MarketTable = () => {
   const columns = useColumns(onFavorite);
 
   // 行情数据
-  useWs(SUBSCRIBE_TYPES.ws3001, async (detail) => {
+  useWs(SUBSCRIBE_TYPES.ws3001, async detail => {
     frameRun(() => setMarketDetail(detail));
   });
   const handleRowClick = (record: any) => {
@@ -408,25 +409,27 @@ const MarketTable = () => {
     handlePaginationChange();
   };
   useEffect(() => {
-    setMarketsData(tableData);
+    setMarketsData(tableData.filter(item => (searchTerm ? item.name.toUpperCase().includes(searchTerm) : true)));
     // if (searchValue || tableData.length) {
     //   setMarketsData(tableData);
     // }
-  }, [tableData, secondId]);
+  }, [tableData, secondId, searchTerm]);
 
   const MARKETS_TABLE_CONTAINER = (
-    <div className='markets-table-container'>
+    <div className="markets-table-container">
       <Table
         columns={columns}
-        className='market-table'
+        className="market-table"
         dataSource={marketsLocalData}
         rowKey={(record: any) => record.id}
         style={{ tableLayout: 'fixed' }}
         showSorterTooltip={false}
         isHistoryList
+        isHeaderColumn
+        sortOrder={{ columnKey, order }}
         onRow={(record: any) => {
           return {
-            onClick: () => handleRowClick(record),
+            onClick: () => handleRowClick(record)
           };
         }}
         onChange={(pagination: any, filters: any, sorter: any) => {
@@ -450,6 +453,86 @@ const styles = css`
   .markets-table-container {
     height: 100%;
     min-height: 500px;
+    @media ${MediaInfo.mobile} {
+      padding: 0 1.5rem;
+      min-height: 0;
+      :global(.ant-empty-description) {
+        line-height: 14px;
+      }
+      :global(.bottom-pagination) {
+        justify-content: center;
+        padding: 0;
+        :global(.ant-pagination) {
+          gap: 8px;
+        }
+        :global(.page-button) {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 1.25rem;
+          height: 1.25rem;
+          background: transparent;
+          border-radius: 5px;
+          font-weight: 500;
+          :global(> img) {
+            width: 14px;
+            height: 14px;
+          }
+        }
+        :global(.ant-pagination-item) {
+          border: none;
+          width: 1.25rem;
+          min-width: 1.25rem;
+          color: var(--text_1);
+          height: 1.25rem;
+          line-height: 1.25rem;
+          border-radius: 50%;
+          background-color: transparent;
+          margin: 0;
+          font-size: 12px;
+          font-weight: 500;
+        }
+        :global(.ant-pagination-prev),
+        :global(.ant-pagination-next) {
+          width: 1.25rem;
+          height: 1.25rem !important;
+          min-width: 1.25rem;
+          margin: 0;
+          &:focus,
+          &:hover {
+          }
+        }
+        :global(.ant-pagination-item-link) {
+          width: 1rem;
+          height: 1rem !important;
+          :global(.ant-pagination-item-link-icon) {
+            color: var(--text_brand) !important;
+            font-size: 10px;
+            :global(svg) {
+              width: 10px;
+              height: 10px;
+            }
+          }
+          :global(.ant-pagination-item-ellipsis) {
+            border-radius: 1.25rem;
+            color: var(--text_1);
+            width: 1.25rem;
+            height: 1.25rem;
+            font-size: 10px;
+          }
+        }
+        :global(.ant-pagination-item:hover),
+        :global(.ant-pagination-item:focus),
+        :global(.ant-pagination-item-active) {
+          background: var(--brand);
+          color: var(--text-white);
+          font-weight: 500;
+        }
+      }
+      :global(.mobile-item > div:last-child) {
+        gap: 4px;
+      }
+    }
     :global(.market-table) {
       :global(.ant-table-cell) {
         font-weight: 400;
@@ -508,13 +591,17 @@ const styles = css`
     :global(.change-rate) {
       font-size: 14px;
       font-weight: 500;
+      @media ${MediaInfo.mobile} {
+        font-size: 12px;
+      }
     }
     :global(.latest-price) {
       font-size: 14px;
       font-weight: 500;
       @media ${MediaInfo.mobile} {
-        font-size: 16px;
+        // font-size: 16px;
         font-weight: 500;
+        color: var(--text_1);
       }
     }
     :global(.bottom-pagination) {
@@ -530,15 +617,16 @@ const styles = css`
       table-layout: fixed !important;
     }
     :global(.ant-table-content, .ant-table-tbody) {
-     min-height: 500px;
+      min-height: 500px;
     }
-  
-    :global(.ant-table-container .ant-table-thead > tr > th), :global(.ant-table-container .ant-table-tbody > tr > td) {
+
+    :global(.ant-table-container .ant-table-thead > tr > th),
+    :global(.ant-table-container .ant-table-tbody > tr > td) {
       &:first-child {
-        padding: 16px 24px 16px 0;
+        padding: 16px;
       }
       &:last-child {
-        padding: 16px 0 16px 24px;
+        padding: 16px;
       }
     }
     :global(.ant-table-container .ant-table-content .ant-table-tbody .ant-table-row) {

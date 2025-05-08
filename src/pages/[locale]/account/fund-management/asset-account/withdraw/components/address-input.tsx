@@ -194,10 +194,10 @@ const styles = css`
       .label {
         font-size: 16px;
         font-weight: 500;
-        color: var(--text-brand);
+        color: var(--text_brand);
         @media ${MediaInfo.mobile}{
           font-size: 14px;
-          color: var(--text-secondary);
+          color: var(--text_2);
         }
       }
 
@@ -205,11 +205,11 @@ const styles = css`
         line-height: 20px;
         font-size: 14px;
         font-weight: 500;
-        color: var(--text-primary);
+        color: var(--text_1);
       }
     }
     .input {
-      background: var(--fill-3);
+      background: var(--fill_3);
       padding-left: 20px;
       position: relative;
       width: 100%;
@@ -227,7 +227,7 @@ const styles = css`
         box-shadow: 0 0 0 1px var(--brand);
       }
       input {
-        background: var(--fill-3);
+        background: var(--fill_3);
         width: 100%;
         color: var(--theme-font-color-1);
         font-size: 14px;

@@ -29,7 +29,7 @@ const styles = css`
     user-select: none;
     width: 238px;
     height: 58px;
-    color: var(--text-primary);
+    color: var(--text_1);
     .header-menu {
       display: flex;
       align-items: center;

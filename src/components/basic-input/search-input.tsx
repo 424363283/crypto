@@ -12,9 +12,10 @@ interface Props {
   prefix?: boolean;
   placeholder?: string;
   width?: number;
+  prefixICon?: any;
 }
 
-const SearchInput: React.FC<Props> = ({ onChange, value, prefix = true, placeholder, width = 250 }) => {
+const SearchInput: React.FC<Props> = ({ onChange, value, prefix = true, prefixICon, placeholder, width = 250 }) => {
   const [focus, setFocus] = useState(false);
   const [val, setVal] = useState(value);
   const { isMobile } = useResponsive();
@@ -29,12 +30,21 @@ const SearchInput: React.FC<Props> = ({ onChange, value, prefix = true, placehol
   const inputClassNames = clsx('search-input');
 
   return (
-    <div className={clsx(inputClassNames )} style={{ width: width }}>
+    <div className={clsx(inputClassNames)} style={{ width: width }}>
       <BasicInput
         className={clsx('basic-search-input')}
-        prefix={prefix && <CommonIcon name='common-search-0' size={isMobile? 14: 16} className='prefix-icon' />}
+        prefix={
+          prefix ? (
+            prefixICon ? (
+              prefixICon
+            ) : (
+              <CommonIcon name="common-search-0" size={isMobile ? 14 : 16} className="prefix-icon" />
+            )
+          ) : (
+            ''
+          )}
         value={val}
-        label=''
+        label=""
         rounded
         size={Size.SM}
         type={INPUT_TYPE.NORMAL_TEXT}
@@ -42,10 +52,9 @@ const SearchInput: React.FC<Props> = ({ onChange, value, prefix = true, placehol
         placeholder={placeholder || LANG('搜索币种')}
         onFocus={() => setFocus(true)}
         onBlur={() => setFocus(false)}
+        clearable={isMobile ? true : false}
       />
-
     </div>
   );
 };
 export default memo(SearchInput);
-

@@ -17,7 +17,7 @@ import { useResponsive } from '@/core/hooks';
 const _isSwapDemo = isSwapDemo();
 function SwapHistoryOrder({
   isSwapU,
-  onTabChange,
+  onTabChange
 }: {
   isSwapU: boolean;
   onTabChange: (url: string, { id }: { id: string }) => void;
@@ -44,17 +44,19 @@ function SwapHistoryOrder({
     <CommonContainer>
       <AssetTableCard>
         <TabBar
-          type ={TAB_TYPE.CARD}
+          type={TAB_TYPE.CARD}
           // size ={isMobile? Size.SM : Size.XS}
-          size ={Size.XS}
+          size={Size.XS}
           options={[
             { label: LANG('当前委托'), value: SWAP_HISTORY_ORDER_TYPE.CURRENT_COMMISSIONS },
             { label: LANG('历史委托'), value: SWAP_HISTORY_ORDER_TYPE.HISTORY_COMMISSIONS },
             { label: LANG('历史成交'), value: SWAP_HISTORY_ORDER_TYPE.HISTORY_TRANSACTION },
-            { label: LANG('资金流水'), value: SWAP_HISTORY_ORDER_TYPE.ASSET_FLOW },
+            { label: LANG('历史仓位'), value: SWAP_HISTORY_ORDER_TYPE.HISTORY_POSITION },
+            { label: LANG('资金流水'), value: SWAP_HISTORY_ORDER_TYPE.ASSET_FLOW }
           ]}
           value={curTab}
           onChange={onChange}
+          className="swap-tab"
         />
         <SwapFilterWithTable isSwapU={isSwapU} />
       </AssetTableCard>
@@ -66,6 +68,24 @@ const styles = css`
   :global(.order-history-common-container) {
     :global(.asset-table-card) {
       border: unset;
+    }
+    @media ${MediaInfo.mobile} {
+      :global(.swap-tab) {
+        width: auto;
+        padding: 0;
+        :global(.tabs) {
+          gap: 16px;
+          height: 56px;
+          border-bottom: 1px solid var(--fill_line_1);
+        }
+        :global(.tab) {
+          height: auto;
+        }
+        :global(.tab.card > div) {
+          padding: 8px 12px;
+          border-radius:4px;
+        }
+      }
     }
   }
 `;

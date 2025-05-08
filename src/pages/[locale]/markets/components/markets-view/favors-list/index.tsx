@@ -6,9 +6,9 @@ import Image from '@/components/image';
 import { Loading } from '@/components/loading';
 import { DesktopOrTablet } from '@/components/responsive';
 import { getCommonSymbolsApi } from '@/core/api';
-import { useMiniChartData } from '@/core/hooks';
+import { useMiniChartData, useResponsive } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
-import { FAVORS_LIST, Favors, MarketItem } from '@/core/shared';
+import { FAVORS_LIST, Favors, MarketItem, Account } from '@/core/shared';
 import { RootColor } from '@/core/styles/src/theme/global/root';
 import { MediaInfo, clsx, isTablet, message } from '@/core/utils';
 import { memo, useEffect, useState } from 'react';
@@ -19,6 +19,7 @@ import { formatSpotCoinName } from '../table/helper';
 import { isLite } from '@/core/utils';
 import Radio from '@/components/Radio';
 import { Size } from '@/components/constants';
+
 
 export const Wait2AddFavorsList = memo(({ onAddAllCallback }: { onAddAllCallback: () => void }) => {
   const [favorsListIds, setFavorsListIds] = useState<string[]>([]);
@@ -32,6 +33,7 @@ export const Wait2AddFavorsList = memo(({ onAddAllCallback }: { onAddAllCallback
   const [chartCardList, setChartCardList] = useState<MarketItem[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [favorsData, setFavorsData] = useState<FAVORS_LIST[]>([]);
+  const { isMobile } = useResponsive();
   const colorHex = RootColor.getColorHex;
   useEffect(() => {
     setCoinDetailList(marketDetailList);
@@ -100,6 +102,10 @@ export const Wait2AddFavorsList = memo(({ onAddAllCallback }: { onAddAllCallback
     setSelectedIds([...copySelectedIds]);
   };
   const onAddAllClick = async () => {
+    if (!Account.isLogin) {
+      message.error(LANG('请先登录'));
+      return;
+    }
     Loading.start();
     const favors = await Favors.getInstance();
     await favors.addFavors(selectedIds, type);
@@ -122,7 +128,7 @@ export const Wait2AddFavorsList = memo(({ onAddAllCallback }: { onAddAllCallback
         >
           <div className="left">
             <div className="title-info">
-              <CoinLogo coin={item.coin} alt="YMEX" width="32" height="32" />
+              <CoinLogo coin={item.coin} alt="YMEX" width={isMobile ? 20 : 32} height={isMobile ? 20 : 32} />
               <h2 className="coin-name">{formatSpotCoinName(item)}</h2>
               {/* <DesktopOrTablet>
                 <span className='type'>{label}</span>
@@ -134,7 +140,7 @@ export const Wait2AddFavorsList = memo(({ onAddAllCallback }: { onAddAllCallback
             </div>
           </div>
           <div className="right">
-            <Radio label={''} checked={isSelected} {...{ width: 24, height: 24 }} />
+            <Radio label={''} checked={isSelected} {...{ width: isMobile ? 16 : 24, height: isMobile ? 16 : 24 }} />
           </div>
           {/* <div className='charts'>
             <Chart
@@ -191,8 +197,9 @@ const styles = css`
     align-items: center;
     gap: 80px;
     @media ${MediaInfo.mobile} {
-      width: 100%;
+      width: auto;
       gap: 0;
+      padding: 0 1.5rem;
     }
     .title-area {
       display: flex;
@@ -206,10 +213,11 @@ const styles = css`
     }
     .wait2-add-favors-list {
       margin-top: 40px;
-      display: flex;
+      display: grid;
       align-items: flex-start;
       gap: 16px;
       align-self: stretch;
+
       @media ${MediaInfo.desktop} {
         grid-template-columns: repeat(4, 1fr);
       }
@@ -218,9 +226,11 @@ const styles = css`
         grid-template-columns: repeat(2, 1fr);
       }
       @media ${MediaInfo.mobile} {
-        grid: 16px;
-        margin-top: 30px;
-        margin-bottom: 30px;
+        margin-top: 16px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+        grid-gap: 16px;
+        // padding: 0 1.5rem;
       }
       :global(.card-item) {
         cursor: pointer;
@@ -230,9 +240,10 @@ const styles = css`
         gap: 10px;
         flex: 1 0 0;
         border-radius: 16px;
-        border: 0.5px solid var(--text-tertiary);
+        border: 0.5px solid var(--text_3);
         @media ${MediaInfo.mobile} {
-          padding: 16px;
+          padding: 0;
+          gap: 0;
         }
         @media ${MediaInfo.mobileOrTablet} {
         }
@@ -242,6 +253,16 @@ const styles = css`
           align-items: flex-start;
           gap: 16px;
           flex: 1 0 0;
+          @media ${MediaInfo.mobile} {
+            padding: 8px 0;
+            padding-left: 16px;
+          }
+        }
+        :global(.right) {
+          @media ${MediaInfo.mobile} {
+            padding: 8px 0;
+            padding-right: 16px;
+          }
         }
         :global(.selected-icon) {
           position: absolute;
@@ -254,19 +275,16 @@ const styles = css`
           gap: 8px;
           align-self: stretch;
           :global(.coin-name) {
-            color: var(--text-primary);
+            color: var(--text_1);
             leading-trim: both;
             text-edge: cap;
             font-size: 16px;
             font-style: normal;
             font-weight: 700;
             line-height: normal;
-            @media ${MediaInfo.mobile} {
-              font-size: 12px;
-            }
           }
           @media ${MediaInfo.mobile} {
-            margin-bottom: 6px;
+            margin-bottom: 0;
           }
           :global(.type) {
             background-color: var(--theme-background-color-3);
@@ -282,22 +300,22 @@ const styles = css`
           align-items: flex-start;
           gap: 8px;
           :global(.price) {
-            color: var(--text-primary);
+            color: var(--text_1);
             font-size: 16px;
             font-style: normal;
             font-weight: 500;
             line-height: normal;
             @media ${MediaInfo.mobile} {
-              font-size: 16px;
+              font-size: 14px;
             }
           }
           :global(.change-rate) {
-            font-size: 16px;
+            font-size: 14px;
             font-style: normal;
             font-weight: 500;
             line-height: normal;
             @media ${MediaInfo.mobile} {
-              margin-bottom: 6px;
+              margin-bottom: 0px;
             }
           }
         }
@@ -305,8 +323,8 @@ const styles = css`
       :global(.selected-item) {
         :global(img) {
           @media ${MediaInfo.mobile} {
-            width: 28px;
-            height: 28px;
+            width: 20px;
+            height: 20px;
           }
         }
       }

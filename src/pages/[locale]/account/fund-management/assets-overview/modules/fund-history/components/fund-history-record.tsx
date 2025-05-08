@@ -18,6 +18,7 @@ import { useFetchTableData } from './hooks/use-fetch-table-data';
 import { Button } from '@/components/button';
 import { useResponsive } from '@/core/hooks';
 import { MobileBottomSheet, MobileDateRangePicker } from '@/components/mobile-modal';
+import { Svg } from '@/components/svg';
 
 interface CoinOption {
   code: string;
@@ -42,14 +43,16 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
       { label: LANG('现货账户'), value: 'SPOT' },
       { label: LANG('U本位合约账户'), value: 'FUTURE' },
       // { label: LANG('币本位合约账户'), value: 'DELIVERY' },
+      { label: LANG('跟单账户'), value: 'COPY' }
     ],
     transferToOptions: [
       { label: LANG('全部'), value: 'ALL' },
       { label: LANG('现货账户'), value: 'SPOT' },
       { label: LANG('U本位合约账户'), value: 'FUTURE' },
       // { label: LANG('币本位合约账户'), value: 'DELIVERY' },
+      { label: LANG('跟单账户'), value: 'COPY' }
     ],
-    selectedCoinIndex: 0,
+    selectedCoinIndex: 0
   });
   const {
     subPage,
@@ -60,16 +63,16 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
     transferFromValue,
     transferToValue,
     transferFromOptions,
-    transferToOptions,
+    transferToOptions
   } = state;
   const { tableData, total, fetchRecordData, listPage } = useFetchTableData({
     type: tabKey,
     startDate,
-    endDate,
+    endDate
   });
 
   useEffect(() => {
-    setState((draft) => {
+    setState(draft => {
       draft.subPage = tabKey;
       draft.selectedCoinIndex = 0;
       draft.startDate = start;
@@ -85,30 +88,40 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
         { label: LANG('现货账户'), value: 'SPOT' },
         { label: LANG('U本位合约账户'), value: 'FUTURE' },
         // { label: LANG('币本位合约账户'), value: 'DELIVERY' },
+        { label: LANG('跟单账户'), value: 'COPY' }
       ],
       SPOT: [
         { label: LANG('全部'), value: 'ALL' },
         { label: LANG('U本位合约账户'), value: 'FUTURE' },
         // { label: LANG('币本位合约账户'), value: 'DELIVERY' },
+        { label: LANG('跟单账户'), value: 'COPY' }
       ],
       DELIVERY: [
         { label: LANG('全部'), value: 'ALL' },
         { label: LANG('现货账户'), value: 'SPOT' },
         // { label: LANG('币本位合约账户'), value: 'DELIVERY' },
+        { label: LANG('跟单账户'), value: 'COPY' }
       ],
       FUTURE: [
         { label: LANG('全部'), value: 'ALL' },
         { label: LANG('现货账户'), value: 'SPOT' },
         // { label: LANG('U本位合约账户'), value: 'FUTURE' },
+        { label: LANG('跟单账户'), value: 'COPY' }
       ],
+      COPY: [
+        { label: LANG('全部'), value: 'ALL' },
+        { label: LANG('现货账户'), value: 'SPOT' },
+        { label: LANG('U本位合约账户'), value: 'FUTURE' }
+        // { label: LANG('U本位合约账户'), value: 'FUTURE' },
+      ]
     };
     if (TRANSFER_OPTION_MAP.hasOwnProperty(transferFromValue.value)) {
-      setState((draft) => {
+      setState(draft => {
         draft.transferToOptions = TRANSFER_OPTION_MAP[transferFromValue.value];
       });
     }
     if (TRANSFER_OPTION_MAP.hasOwnProperty(transferToValue.value)) {
-      setState((draft) => {
+      setState(draft => {
         draft.transferFromOptions = TRANSFER_OPTION_MAP[transferToValue.value];
       });
     }
@@ -125,19 +138,19 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
     if (duration !== DATE_MODE_OTHER) {
       //实际持续天数设置
       const { start = '', end = '' } = getFormatDateRange(new Date(), duration, true);
-      setState((draft) => {
+      setState(draft => {
         draft.startDate = start;
         draft.endDate = end;
       });
     }
-    setState((draft) => {
+    setState(draft => {
       draft.selectedTime = value[0];
     });
   };
 
   const handleSelectCoin = (code: number[]) => {
     if (!code?.length) return;
-    setState((draft) => {
+    setState(draft => {
       draft.selectedCoinIndex = code[0];
     });
   };
@@ -146,7 +159,7 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
     code,
     page = 1,
     source,
-    target,
+    target
   }: {
     code: string;
     page?: number;
@@ -157,7 +170,7 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
       coin: code,
       source,
       target,
-      page,
+      page
     });
   };
 
@@ -166,7 +179,7 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
     if (!start || !end) {
       return;
     }
-    setState((draft) => {
+    setState(draft => {
       draft.startDate = start.format('YYYY-MM-DD H:m:s');
       draft.endDate = end.format('YYYY-MM-DD H:m:s');
     });
@@ -176,7 +189,7 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
   const DATE_OPTIONS = [
     { label: LANG('最近7天'), value: 7 },
     { label: LANG('最近30天'), value: 30 },
-    { label: LANG('最近90天'), value: 90 },
+    { label: LANG('最近90天'), value: 90 }
   ];
 
   const getWithdrawList = async (): Promise<string[]> => {
@@ -203,7 +216,7 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
       withdrawOptions,
       rechargeOptions,
       undefined,
-      withdrawOptions,
+      withdrawOptions
     ];
     setCoinList(coinListOptions);
   };
@@ -223,48 +236,70 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
   }, [subPage]);
 
   const onSwitchTransferOptions = () => {
-    setState((draft) => {
+    setState(draft => {
       draft.transferFromValue = transferToValue;
       draft.transferToValue = transferFromValue;
     });
   };
 
   const onTransferFromSelectChange = (v: any) => {
-    setState((draft) => {
+    setState(draft => {
       draft.transferFromValue = v;
     });
   };
 
   const onTransferToSelectChange = (v: any) => {
-    setState((draft) => {
+    setState(draft => {
       draft.transferToValue = v;
     });
   };
 
   const MoveRecordSelectOption = () => {
     return (
-      <div className='transfer-options'>
-        <Select
-          width={isMobile ? 355 : 140}
-          height={40}
-          options={transferFromOptions}
-          values={[transferFromValue]}
-          onChange={([v]) => onTransferFromSelectChange(v)}
-        />
-        <CommonIcon
-          name='common-switch-icon'
-          size={16}
-          className='exchange-icon'
-          onClick={onSwitchTransferOptions}
-          enableSkin
-        />
-        <Select
-          width={isMobile ? 355 : 140}
-          height={40}
-          options={transferToOptions}
-          values={[transferToValue]}
-          onChange={([v]) => onTransferToSelectChange(v)}
-        />
+      <div className="transfer-options">
+        <DesktopOrTablet>
+          <Select
+            width={isMobile ? 355 : 140}
+            height={40}
+            options={transferFromOptions}
+            values={[transferFromValue]}
+            onChange={([v]) => onTransferFromSelectChange(v)}
+          />
+          <CommonIcon
+            name="common-switch-icon"
+            size={16}
+            className="exchange-icon"
+            onClick={onSwitchTransferOptions}
+            enableSkin
+          />
+          <Select
+            width={isMobile ? 355 : 140}
+            height={40}
+            options={transferToOptions}
+            values={[transferToValue]}
+            onChange={([v]) => onTransferToSelectChange(v)}
+          />
+        </DesktopOrTablet>
+        <Mobile>
+          <div className="container">
+            <span className="label">{LANG('从')}</span>
+            <Select
+              height={48}
+              options={transferFromOptions}
+              values={[transferFromValue]}
+              onChange={([v]) => onTransferFromSelectChange(v)}
+            />
+          </div>
+          <div className="container">
+            <span className="label">{LANG('到')}</span>
+            <Select
+              height={48}
+              options={transferToOptions}
+              values={[transferToValue]}
+              onChange={([v]) => onTransferToSelectChange(v)}
+            />
+          </div>
+        </Mobile>
       </div>
     );
   };
@@ -275,7 +310,7 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
       page,
       code: coinItem?.currency,
       source: transferFromValue.value,
-      target: transferToValue.value,
+      target: transferToValue.value
     });
   };
 
@@ -285,7 +320,7 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
   const [filterShow, setFiterShow] = useState(false);
 
   const _resetSelect = () => {
-    setState((draft) => {
+    setState(draft => {
       draft.startDate = start;
       draft.endDate = end;
       draft.selectedTime = { label: LANG('最近7天'), value: 7 };
@@ -293,20 +328,19 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
       draft.transferToValue = { label: LANG('全部'), value: 'ALL' };
       draft.selectedCoinIndex = 0;
     });
-  }
-
+  };
 
   return (
     <>
-      <Desktop>
-        <div className='filter-bar'>
-          <div className='box'>
+      <DesktopOrTablet>
+        <div className="filter-bar">
+          <div className="box">
             {subPage === FUND_HISTORY_TAB_KEY.MOVE_RECORD && <MoveRecordSelectOption />}
             {shouldShowSelectCoins && (
               <SelectCoins
                 width={120}
                 options={coinList[+subPage]}
-                className='fund-history-select-coin'
+                className="fund-history-select-coin"
                 values={[selectedCoinIndex]}
                 onChange={(code: number[]) => handleSelectCoin(code)}
               />
@@ -322,20 +356,10 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
                 />
               </DesktopOrTablet>
             )}
-            <Button
-              className='search-button'
-              width={72}
-              rounded
-              onClick={() => onSearchClick()}
-            >
+            <Button className="search-button" width={72} rounded onClick={() => onSearchClick()}>
               {LANG('查询')}
             </Button>
-            <Button
-              className='reset-button'
-              width={72}
-              rounded
-              onClick={() => _resetSelect()}
-            >
+            <Button className="reset-button" width={72} rounded onClick={() => _resetSelect()}>
               {LANG('重置')}
             </Button>
           </div>
@@ -343,25 +367,25 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
             <ExportRecord type={EXPORTS_MODE[subPage]} digital={subPage === FUND_HISTORY_TAB_KEY.RECHARGE_RECORD} />
           )}
         </div>
-      </Desktop>
+      </DesktopOrTablet>
       <Mobile>
-        <div className='mobile-filter-bar'>
-          <div className='mobile-quick-times'>
-            {
-              DATE_OPTIONS.map((item, key) => {
-                return <div
+        <div className="mobile-filter-bar">
+          <div className="mobile-quick-times">
+            {DATE_OPTIONS.map((item, key) => {
+              return (
+                <div
                   onClick={() => onChangeDateMode([item])}
                   className={item.value === state.selectedTime.value ? 'active' : ''}
                   key={key}
                 >
                   {item.label}
                 </div>
-              })
-            }
+              );
+            })}
           </div>
           {
-            <div className='mobile-filter' onClick={() => setFiterShow(true)}>
-              <CommonIcon name='common-filters-brand-0' size={14} />
+            <div className="mobile-filter" onClick={() => setFiterShow(true)}>
+              <Svg src="/static/images/common/filter.svg" width={14} height={14} color={`var(--text_2)`} />
               <span>{LANG('筛选')}</span>
             </div>
           }
@@ -370,10 +394,10 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
           title={LANG('筛选')}
           visible={filterShow}
           content={
-            <div className='mobile-bottom-sheet-box'>
+            <div className="mobile-bottom-sheet-box">
               {subPage === FUND_HISTORY_TAB_KEY.MOVE_RECORD && <MoveRecordSelectOption />}
               {shouldShowSelectCoins && (
-                <div className='filter-item'>
+                <div className="filter-item">
                   <span>{LANG('币种')}</span>
                   <SelectCoins
                     width={120}
@@ -385,7 +409,7 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
                 </div>
               )}
               {subPage !== FUND_HISTORY_TAB_KEY.MOVE_RECORD && (
-                <div className='filter-item'>
+                <div className="filter-item">
                   <span>{LANG('日期')}</span>
                   <MobileDateRangePicker
                     startTime={dayjs(startDate)}
@@ -397,9 +421,12 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
             </div>
           }
           close={() => setFiterShow(false)}
-          onConfirm={() => onSearchClick()}
+          onConfirm={() => {
+            onSearchClick();
+            setFiterShow(false);
+          }}
           hasCancel
-          cancelText='重置'
+          cancelText="重置"
           onCancel={_resetSelect}
         />
       </Mobile>
@@ -420,7 +447,7 @@ const styles = css`
     display: flex;
     align-items: center;
     padding: 0 18px;
-    margin-top:16px;
+    margin-top: 16px;
     justify-content: space-between;
     @media ${MediaInfo.mobile} {
       margin-top: 10px;
@@ -438,7 +465,7 @@ const styles = css`
         transform: translateY(110px);
         align-items: flex-start;
         margin-top: 130px;
-      }   
+      }
       :global(.select-wrapper) {
         margin-right: 24px;
       }
@@ -446,12 +473,12 @@ const styles = css`
         margin-right: 10px;
       }
     }
-    :global( .search-button ) {
+    :global(.search-button) {
       margin-right: 24px;
-      background-color: var(--fill-3);
-      color: var(--text-brand);
+      background-color: var(--fill_3);
+      color: var(--text_brand);
     }
-    :global( .reset-button ) {
+    :global(.reset-button) {
       margin-right: 24px;
     }
   }
@@ -460,19 +487,36 @@ const styles = css`
     display: flex;
     align-items: center;
     margin-right: 8px;
+
     @media ${MediaInfo.mobile} {
       flex-direction: column;
       justify-content: start;
       align-items: start;
       margin: 0;
-      height:240px;
+      // height: 240px;
+      fon-size: 14px;
+      gap: 24px;
+      :global(.container) {
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+        width: 100%;
+        gap: 8px;
+        :global(.label) {
+          color: var(--text_2);
+        }
+        :global(.select-wrapper) {
+          width: 100%;
+        }
+      }
     }
     :global(.exchange-icon) {
       margin-right: 24px;
       cursor: pointer;
       @media ${MediaInfo.mobile} {
         padding: 15px 0;
-        margin:0;
+        margin: 0;
         transform: rotate(90deg);
       }
     }
@@ -485,43 +529,44 @@ const styles = css`
       height: 40px;
     }
   }
-  .mobile-bottom-sheet-box{
-    display: flex ;
+  .mobile-bottom-sheet-box {
+    display: flex;
     flex-direction: column;
     gap: 24px;
     .filter-item {
-       display: flex ;
+      display: flex;
       flex-direction: column;
       gap: 8px;
     }
   }
 
-  .mobile-filter-bar{
+  .mobile-filter-bar {
     display: flex;
     justify-content: space-between;
-    padding-bottom: 10px;
-    margin: 0 12px;
-    .mobile-quick-times{
+    padding: 12px 0;
+    border-bottom: 1px solid var(--fill_line_1);
+     color: var(--text_2);
+    .mobile-quick-times {
       display: flex;
-      gap: 15px;
-      >div{
-        background: var(--fill-3);
-        padding: 5px 10px;
-        border-radius: 3px;
-        border: 1px solid var(--fill-3);
+      gap: 16px;
+      > div {
+        background: var(--fill_3);
+        padding: 8px 12px;
+        border-radius: 4px;
+        border: 1px solid var(--fill_3);
         font-size: 12px;
-        &.active{
-          color: var(--text-brand);
-          border-color: var(--text-brand);
+        &.active {
+          color: var(--text_brand);
+          border-color: var(--text_brand);
         }
       }
     }
-    .mobile-filter{
-      display:flex;
+    .mobile-filter {
+      display: flex;
       font-size: 12px;
       align-items: center;
-      span{
-        padding-left:5px;
+      span {
+        padding-left: 5px;
       }
     }
   }

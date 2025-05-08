@@ -123,7 +123,7 @@ export const AssetsCard = () => {
             <Svg src={!assetShow ? `/static/icons/primary/common/eyes-open.svg` : `/static/icons/primary/common/eyes-close.svg`}
               width={16}
               height={16}
-              color={'var(--text-primary)'}
+              color={'var(--text_1)'}
               onClick={()=>setAssetShow(!assetShow)}
             />
           </div>
@@ -144,7 +144,7 @@ export const AssetsCard = () => {
 };
 const secondOptionBarStyles = css`
   :global(.assets-card-container) {
-    background: var(--bg-1);
+    background: var(--fill_bg_1);
     .option2-bar {
       margin-top: 10px;
       display: flex;
@@ -155,7 +155,7 @@ const secondOptionBarStyles = css`
         align-items: center;
       }
       .left-option-bar {
-        border:1px  solid  var(--line-1);
+        border:1px  solid  var(--fill_line_1);
         border-radius: 4px;
         padding: 3px;
         .option-item {
@@ -167,7 +167,7 @@ const secondOptionBarStyles = css`
           line-height: 32px;
           border-radius:8px;
           text-align: center;
-          color:var(--text-secondary);
+          color:var(--text_2);
           &:nth-child(1) {
             margin-right: 15px;
           }
@@ -179,8 +179,8 @@ const secondOptionBarStyles = css`
           }
         }
         .active-date {
-          background:var(--fill-3);
-          color:var(--text-primary);
+          background:var(--fill_3);
+          color:var(--text_1);
           border-radius:4px;
         }
       }
@@ -211,7 +211,7 @@ const secondOptionBarStyles = css`
 `;
 const styles = css`
   .assets-card-container {
-    border:1px solid var(--fill-3);
+    border:1px solid var(--fill_3);
     border-radius:8px;
     padding: 15px 20px  0  20px;
     @media ${MediaInfo.mobile} {
@@ -230,14 +230,14 @@ const styles = css`
       .title {
         font-size: 16px;
         font-weight: 500;
-        color: var(--text-primary);
+        color: var(--text_1);
         display:flex;
         align-items: center;
         span{
           padding: 0 5px 10px 0;
         }
         @media ${MediaInfo.mobile} {
-          color: var(--text-secondary);
+          color: var(--text_2);
           font-size: 14px;
           margin-bottom: 24px;
           span {
@@ -290,7 +290,7 @@ const styles = css`
           }
           :global(.title) {
             font-size: 14px;
-            color: var(--text-primary);
+            color: var(--text_1);
             @media ${MediaInfo.mobile} {
               font-size:12px;
             }
@@ -309,11 +309,11 @@ const styles = css`
             font-size: 14px;
             font-weight: 500;
             line-height: 14px;
-            color: var(--text-primary);
+            color: var(--text_1);
           }
           :global(.amount) {
             line-height: 12px;
-            color: var(--text-tertiary);
+            color: var(--text_3);
           }
         }
       }

@@ -83,7 +83,7 @@ const Item = ({
         <div className='list-top'>
           <div className='list-left'>
             {logo ? (
-              <Svg src={`/static/icons/primary/common/${logo}.svg`} width={20} height={20} color={'var(--text-primary)'} className='list-logo' />
+              <Svg src={`/static/icons/primary/common/${logo}.svg`} width={20} height={20} color={'var(--text_1)'} className='list-logo' />
             ) : (
               <div className='list-logo' />
             )}
@@ -114,7 +114,7 @@ const Item = ({
   return (
     <li className='list-item'>
       <div className='list-left'>
-        {logo ? <Svg src={`/static/icons/primary/common/${logo}.svg`} width={20} height={20} color={'var(--text-primary)'} className='list-logo' /> : <div className='list-logo' />}
+        {logo ? <Svg src={`/static/icons/primary/common/${logo}.svg`} width={20} height={20} color={'var(--text_1)'} className='list-logo' /> : <div className='list-logo' />}
         <div className='list-box'>
           <p className='list-title'>{title}</p>
           <p className='list-prompt'>{prompt}</p>
@@ -141,7 +141,7 @@ const listLeftStyles = css`
       cursor: pointer;
       div{
         svg{
-          fill: var(--text-primary) !important;
+          fill: var(--text_1) !important;
         }
       }
     }
@@ -157,7 +157,7 @@ const listLeftStyles = css`
         margin-top: 5px;
         font-size: 12px;
         font-weight: 400;
-        color: var(--text-tertiary);
+        color: var(--text_3);
         line-height: 17px;
         :global(.yellow) {
           color: var(--brand);
@@ -178,7 +178,7 @@ const listRightStyles = css`
       align-items: center;
       font-size: 14px;
       font-weight: 500;
-      color: var(--text-primary);
+      color: var(--text_1);
       flex: 1 auto;
       :global(img) {
         margin-right: 8px;
@@ -200,8 +200,8 @@ const listRightStyles = css`
       font-size: 14px;
       coursor: pointer;
       margin-left: 16px;
-      color: var(--text-primary);
-      background-color: var(--fill-3);
+      color: var(--text_1);
+      background-color: var(--fill_3);
       @media ${MediaInfo.mobile} {
         padding: 3px 17px;
         margin-top:5px;

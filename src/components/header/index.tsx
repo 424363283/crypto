@@ -13,7 +13,10 @@ import { TrActiveLink } from './components/active-link';
 import CommonMenuItem from './components/common-menu';
 import { ContractMenu } from './components/contract-menu';
 import AboutDownload from './components/download';
-import { NavDrawer } from './components/drawer/';
+import {
+  NavDrawer
+  //  SearchDrawer
+} from './components/drawer/';
 import { headerSwapDemoGuideStore } from './components/header-swap-demo-guide';
 import DownloadIcon from './components/icon/download-icon';
 import GlobalIcon from './components/icon/global-config-icon';
@@ -27,12 +30,19 @@ import MobileDrawer from '../drawer/mobile-drawer';
 import { NavCard } from '@/pages/[locale]/account/dashboard/components/nav-card';
 import { NavList } from '@/pages/[locale]/account/fund-management/components/common-layout';
 import { useNavMap } from '@/pages/[locale]/account/fund-management/assets-overview/hooks/use-nav-map';
+import { useQuoteSearchStore } from '@/store/quote-search';
+import { Svg } from '@/components/svg';
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
+import { WalletType } from '@/pages/[locale]/account/fund-management/assets-overview/components/types';
 
 const LoginAndRegister = dynamic(() => import('./components/login-register-btn'), { ssr: false });
 const DERIVATIVE_PATH = ['spot', 'swap', 'lite'];
 const PARTNER_SHIP_PATH = [HEADER_PATH.AFFILIATE, HEADER_PATH.ARMY];
 const SPOT_COIN_PATH = ['spot', 'convert'];
 const BUY_COIN_PATH = ['fiat-crypto', 'p2p'];
+
+// 添加导入
+import { SearchDrawer } from './components/search-drawer';
 
 function HeaderComponent({
   hideBorderBottom,
@@ -50,7 +60,7 @@ function HeaderComponent({
   // const { isLogin } = useAppContext();
   // const enableLite = process.env.NEXT_PUBLIC_LITE_ENABLE === 'true';
   const [openNav, setOpenNav] = useState(false);
-  const [bgColor, setBgColor] = useState(backgroundColor || 'var(--bg-1)');
+  const [bgColor, setBgColor] = useState(backgroundColor || 'var(--fill_bg_1)');
   const pathname = router.asPath;
   // const isZh = router.query.locale === 'zh';
   const [activeState, setActiveState] = useImmer({
@@ -59,6 +69,8 @@ function HeaderComponent({
     isPartnerShipActive: false,
     isBuyCoinActive: false
   });
+  const searchTerm = useQuoteSearchStore(state => state.searchTerm);
+  const setSearchTerm = useQuoteSearchStore(state => state.setSearchTerm);
   const { showDemoMenu } = headerSwapDemoGuideStore;
   const { isDerivativeActive, isSpotCoinActive, isPartnerShipActive, isBuyCoinActive } = activeState;
 
@@ -66,6 +78,10 @@ function HeaderComponent({
   const [contractMenuHoverIndex, setContractMenuHoverIndex] = useState(0);
   const [skinIconActive, setSkinIconActive] = useState(false);
   const { isDark } = useTheme();
+  const [searchVisible, setSearchVisible] = useState(false);
+  const [urlType, setUrlType] = useState('');
+  const account: keyof typeof WalletKey = getUrlQueryParams('account')?.toUpperCase();
+  const wallet = WalletKey[account] || (urlType === 'swap-u' ? WalletKey.SWAP_U : '');
 
   const onMouseEnterDownload = () => {
     setDownloadIconActive(true);
@@ -83,8 +99,6 @@ function HeaderComponent({
   const onCloseNavDrawer = () => {
     setOpenNav(false);
   };
-
-  const [urlType, setUrlType] = useState('');
 
   useEffect(() => {
     // 衍生品
@@ -121,15 +135,14 @@ function HeaderComponent({
 
     const type = getUrlQueryParams('type');
     setUrlType(type);
-
   }, [pathname]);
 
   useEffect(() => {
     // const handleScroll = () => {
     //   if (window?.scrollY > 0) {
-    //     setBgColor(!isDark ? '#fff' : 'var(--bg-1)');
+    //     setBgColor(!isDark ? '#fff' : 'var(--fill_bg_1)');
     //   } else {
-    //     setBgColor(hasBgColor ?'var(--fill-2)': 'var(--bg-1)');
+    //     setBgColor(hasBgColor ?'var(--fill_2)': 'var(--fill_bg_1)');
     //   }
     // };
     // window.addEventListener('scroll', handleScroll);
@@ -176,25 +189,30 @@ function HeaderComponent({
   //   }
   //   return <TrActiveLink href={HEADER_PATH.BUY_CRYPTO}>{LANG('快捷买币')}</TrActiveLink>;
   // };
-  const titleList :any = {
-    'overview':'账户总览',
+  const titleList: any = {
+    overview: '账户总览',
     'security-setting': '安全中心',
-    'address': '地址管理',
-    'setting': '账户设置',
-    'spot': '现货总览',
-    'swap-u': 'U本位账户',
-    'records': '订单记录',
-    'fund-history':'资金记录'
-  }
- 
+    address: '地址管理',
+    setting: '设置',
+    spot: '现货账户',
+    'swap-u': {
+      [WalletKey.SWAP_U]: LANG('U本位账户'),
+      [WalletKey.COPY]: LANG('跟单账户')
+    },
+    records: '订单记录',
+    'fund-history': '资金记录'
+  };
+
   const [navShow, setNavShow] = useState(false);
+  const [searchShow, setSearchShow] = useState(false);
   const typeList = ['overview', 'security-setting', 'address', 'setting', 'spot', 'swap-u', 'records', 'fund-history'];
-  const getTitle = (type?: any) => {
+  const getTitle = (type?: any, wallet?: WalletKey) => {
     if (pathname.includes('account/fund-management/assets-overview') && (!type || type == 'overview'  )) return '资产总览'
     if (pathname.includes('account/dashboard') && (!type || type == 'overview'  )) return '账户总览'
-    return titleList[type];
+    return wallet ? titleList[type][wallet] : titleList[type];
   }
   const { NAV_MAP } = useNavMap(false);
+  const lang = router.query?.locale || 'en';
 
   return (
     <>
@@ -242,7 +260,7 @@ function HeaderComponent({
               >
                 {LANG('衍生品')}
               </Menu>
-              {/* <TrActiveLink
+              <TrActiveLink
                 href={HEADER_PATH.COPY_TRADE}
                 onClick={() => {
                   EVENT_TRACK(EVENT_NAME.PC_TopButtonClick, {
@@ -251,7 +269,7 @@ function HeaderComponent({
                 }}
               >
                 {LANG('跟单')}
-              </TrActiveLink> */}
+              </TrActiveLink>
               {/* <TrActiveLink
                 href={HEADER_PATH.PARTNERPROGRAM}
                 onClick={() => {
@@ -288,7 +306,7 @@ function HeaderComponent({
                         href: HEADER_PATH.AFFILIATE
                       },
 
-                      { name: LANG('成为YMEX ARMY'), tips: LANG('推广YMEX并获得奖励'), href: HEADER_PATH.ARMY },
+                      { name: LANG('成为YMEX ARMY'), tips: LANG('推广YMEX并获得奖励'), href: HEADER_PATH.ARMY }
                       // {
                       //   name: LANG('邀请好友'),
                       //   tips: LANG('邀请好友 一起赚钱'),
@@ -321,13 +339,22 @@ function HeaderComponent({
           </Desktop>
           {/* {isLogin ? <Image src={dividedLine} height='20' width={1} alt='' className='icon-line' /> : null} */}
           <MobileOrTablet>
-            {/* isTradePage(pathname) ? (
-              <></>
-            ) : (
-              <CommonIcon name="common-search" size={24} onClick={() => { }} className="icon" />
-            ) */}
-            <LoginAndRegister />
+            {/* <LoginAndRegister /> */}
+            {(pathname === `/${lang}` || pathname === `/${lang}/markets`) && (
+              <Svg
+                src="/static/images/header/search.svg"
+                width={22}
+                height={22}
+                onClick={() => setSearchVisible(true)}
+                className={'icon'}
+              />
+            )}
             <CommonIcon name="header-menu" size={24} onClick={showNav} className="icon" />
+            <SearchDrawer
+              open={searchVisible}
+              onClose={() => setSearchVisible(false)}
+              onSearch={value => setSearchTerm(value)}
+            />
           </MobileOrTablet>
           {isTradePage(pathname) ? (
             <div className="icon-area">
@@ -396,18 +423,22 @@ function HeaderComponent({
           ))}
       </header>
       <Mobile>
-        {
-          (typeList.includes(urlType) || pathname.includes('account/dashboard') || pathname.includes('account/fund-management/assets-overview')) &&
-          <div className='mobile-title' onClick={() => setNavShow(true)} >
-            <CommonIcon name='header-more-option' size={20} className='icon' />
-            <div className='title'>{LANG(getTitle(urlType))}</div>
+        {(typeList.includes(urlType) ||
+          pathname.includes('account/dashboard') ||
+          pathname.includes('account/fund-management/assets-overview')) && (
+          <div className="mobile-title" onClick={() => setNavShow(true)}>
+            <CommonIcon name="header-more-option" size={20} className="icon" />
+            <div className='title'>{LANG(getTitle(urlType, wallet))}</div>
           </div>
-        }
-        <MobileDrawer onClose={() => setNavShow(false)} open={navShow} className='nav-drawer' direction='left'>
-          {
-            (pathname.includes('assets')|| urlType =='records')? <NavList navItems={NAV_MAP} close={()=> setNavShow(false)} /> : <NavCard close={() => setNavShow(false)} />
-          }
+        )}
+        <MobileDrawer onClose={() => setNavShow(false)} open={navShow} className="nav-drawer" direction="left">
+          {pathname.includes('assets') || urlType == 'records' ? (
+            <NavList navItems={NAV_MAP} close={() => setNavShow(false)} />
+          ) : (
+            <NavCard close={() => setNavShow(false)} />
+          )}
         </MobileDrawer>
+        {/* <SearchDrawer onClose={() => setSearchShow(false)} open={searchShow} /> */}
       </Mobile>
       <style jsx>
         {`
@@ -422,10 +453,10 @@ function HeaderComponent({
             justify-content: space-between;
             align-items: center;
             max-width: 100vw;
-            background-color: var(--bg-1);
+            background-color: var(--fill_bg_1);
             @media ${MediaInfo.mobile} {
               height: 2.75rem;
-              background:var(--bg-1);
+              background:var(--fill_bg_1);
             }
             .left {
               height: 100%;
@@ -436,7 +467,7 @@ function HeaderComponent({
               }
               :global(.header-item) {
                 &:hover {
-                  color: var(--text-brand);
+                  color: var(--text_brand);
                 }
               }
               :global(.logo-brand) {
@@ -461,12 +492,12 @@ function HeaderComponent({
                 height: 32px;
                 min-height: 32px;
                 line-height: 32px;
-                background-color: var(--bg-1);
+                background-color: var(--fill_bg_1);
                 border: 1px solid var(--brand);
                 color: var(--brand);
                 margin-right: 24px;
                 &:hover {
-                  color: var(--text-white);
+                  color: var(--text_white);
                   background: var(--brand);
                 }
               }
@@ -511,8 +542,11 @@ function HeaderComponent({
               cursor: pointer;
               margin-left: 24px;
               height: 100%;
+              @media ${MediaInfo.mobile} {
+                margin-left: 16px;
+              }
               :global(svg) {
-                fill: var(--text-primary);
+                fill: var(--text_1);
                 &:hover {
                   fill: var(--brand);
                 }
@@ -521,7 +555,7 @@ function HeaderComponent({
             :global(.theme-icon),
             :global(.user-icon) {
               :global(svg) {
-                fill: var(--text-primary);
+                fill: var(--text_1);
                 &:hover {
                   fill: var(--brand);
                 }
@@ -547,14 +581,14 @@ function HeaderComponent({
               justify-content: center;
               align-items: center;
               margin: 0 12px;
-              @media ${MediaInfo.mobile} {
-                margin: 0;
-              }
               white-space: nowrap;
               transition: all 0.3s;
               font-size: 14px;
               font-weight: 500;
-              color: var(--text-primary);
+              color: var(--text_1);
+              @media ${MediaInfo.mobile} {
+                margin: 0;
+              }
             }
             :global(.header-item.active) {
               color: var(--skin-hover-font-color);
@@ -562,21 +596,21 @@ function HeaderComponent({
               border-bottom: 2px solid var(--skin-primary-color);
             }
           }
-          .mobile-title{
+          .mobile-title {
             position: sticky;
             top: 44px;
             z-index: 999;
             height: 48px;
-            background: var(--fill-3);
+            background: var(--fill_3);
             display: flex;
             justify-content: flex-start;
             align-items: center;
             padding-left: 10px;
-            .title{
+            .title {
               font-size: 16px;
               font-weight: 500;
               margin-left: 12px;
-              color:var(--text-primary);
+              color:var(--text_1);
             }
           }
         `}

@@ -18,32 +18,32 @@ const { className, styles } = css.resolve`
       color: var(--theme-trade-text-color-1);
       @media ${MediaInfo.mobile} {
         font-size: 14px;
-        color: var(--text-secondary);
+        color: var(--text_2);
       }
     }
     .input {
       height: 48px;
       padding: 0 15px;
       border-radius: 12px;
-      background: var(--fill-3);
+      background: var(--fill_3);
       margin: 8px 0 0;
       :global(input) {
         text-indent: 0;
-        color: var(--text-secondary) !important;
+        color: var(--text_2) !important;
         font-size: 14px;
         font-weight: 400;
         line-height: normal;
         &::placeholder {
-          color: var(--text-secondary);
+          color: var(--text_2);
         }
       }
       .suffix {
-        color: var(--text-secondary);
+        color: var(--text_2);
         font-size: 14px;
         font-weight: 400;
         .max {
           cursor: pointer;
-          color: var(--text-brand);
+          color: var(--text_brand);
           font-size: 14px;
           font-weight: 400;
           padding: 0 8px;
@@ -64,13 +64,13 @@ const { className, styles } = css.resolve`
       align-items: center;
       align-self: stretch;
       .label {
-        color: var(--text-secondary);
+        color: var(--text_2);
         font-size: 14px;
         font-weight: 400;
         line-height: 150%;
       }
       .value {
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 14px;
         font-weight: 400;
         line-height: 150%; /* 21px */
@@ -79,16 +79,16 @@ const { className, styles } = css.resolve`
     .auto-margin {
       padding: 24px 0;
       font-size: 12px;
-      border-top: 1px solid var(--line-3);
+      border-top: 1px solid var(--fill_line_3);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      color: var(--text-secondary);
+      color: var(--text_2);
       font-size: 14px;
       font-weight: 400;
     }
     .custom-switch {
-      background: var(--text-secondary) !important;
+      background: var(--text_2) !important;
       width: 32px;
       height: 20px;
       :global(.ant-switch-handle) {
@@ -96,7 +96,7 @@ const { className, styles } = css.resolve`
         height: 14px;
         top: 3px !important;
         &:before {
-          background-color: var(--text-white) !important;
+          background-color: var(--text_white) !important;
         }
       }
     }
@@ -111,8 +111,8 @@ const { className, styles } = css.resolve`
       justify-content: center;
 
       border-radius: 8px;
-      background: var(--fill-3);
-      color: var(--text-secondary);
+      background: var(--fill_3);
+      color: var(--text_2);
       font-size: 16px;
       font-weight: 400;
       height: 36px !important;
@@ -123,7 +123,7 @@ const { className, styles } = css.resolve`
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--text-secondary);
+        color: var(--text_2);
         font-size: 16px;
         font-weight: 400;
         padding: 0;
@@ -133,7 +133,7 @@ const { className, styles } = css.resolve`
         border-radius: 8px;
         background: var(--brand);
         border-bottom: none !important;
-        color: var(--text-white);
+        color: var(--text_white);
       }
     }
   }

@@ -40,7 +40,7 @@ const styles = css`
     height: 100%;
     display: flex;
     flex-direction: column;
-    background: var(--bg-1);
+    background: var(--fill_bg_1);
     // padding: 20px;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
@@ -64,7 +64,7 @@ const styles = css`
           position: relative;
           width: auto;
           padding:0;
-          background: var(--bg-1);
+          background: var(--fill_bg_1);
         }
       }
       :global(.nav-title+.content) {

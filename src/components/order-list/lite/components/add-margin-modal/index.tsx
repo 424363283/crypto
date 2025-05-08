@@ -222,20 +222,20 @@ const styles = css`
   :global(.addMarginModal) {
     :global(.container) {
       border-radius: 8px;
-      background: var(--fill-3);
+      background: var(--fill_3);
       margin: 0;
       :global(input) {
         border-radius: 8px;
-        background: var(--fill-3);
+        background: var(--fill_3);
 
-        color: var(--text-primary) !important;
+        color: var(--text_1) !important;
         font-family: 'HarmonyOS Sans SC';
         font-size: 14px;
         font-style: normal;
         font-weight: 500;
         line-height: normal;
         &::placeholder {
-          color: var(--text-tertiary);
+          color: var(--text_3);
           font-family: 'HarmonyOS Sans SC';
           font-size: 14px;
           font-style: normal;
@@ -258,8 +258,8 @@ const styles = css`
     }
     :global(.ant-btn-primary) {
       border-radius: 40px !important;
-      background: var(--text-brand) !important;
-      color: var(--text-white) !important;
+      background: var(--text_brand) !important;
+      color: var(--text_white) !important;
       font-size: 16px !important;
       font-weight: 500 !important;
       width: 100% !important;
@@ -271,7 +271,7 @@ const styles = css`
       gap: 8px;
     }
     .smallLabel {
-      color: var(--text-secondary);
+      color: var(--text_2);
       font-family: 'HarmonyOS Sans SC';
       font-size: 14px;
       font-style: normal;
@@ -279,7 +279,7 @@ const styles = css`
       line-height: 150%; /* 21px */
     }
     .label {
-      color: var(--text-secondary);
+      color: var(--text_2);
       font-family: 'HarmonyOS Sans SC';
       font-size: 14px;
       font-style: normal;
@@ -291,7 +291,7 @@ const styles = css`
     }
     .value {
       font-weight: 500;
-      color: var(--text-primary);
+      color: var(--text_1);
       font-family: 'HarmonyOS Sans SC';
       font-size: 14px;
       font-style: normal;
@@ -299,7 +299,7 @@ const styles = css`
       line-height: normal;
     }
     .setMaxBtn {
-      color: var(--text-brand);
+      color: var(--text_brand);
       font-family: 'HarmonyOS Sans SC';
       font-size: 14px;
       font-style: normal;
@@ -313,7 +313,7 @@ const styles = css`
       align-items: flex-start;
       align-self: stretch;
       border-radius: 12px;
-      background: var(--fill-3);
+      background: var(--fill_3);
       flex-direction: column;
 
       .grid {
@@ -323,7 +323,7 @@ const styles = css`
 
         label {
           display: block;
-          color: var(--text-secondary);
+          color: var(--text_2);
           font-family: 'HarmonyOS Sans SC';
           font-size: 14px;
           font-style: normal;
@@ -340,7 +340,7 @@ const styles = css`
     }
     .result {
       margin-top: 24px;
-      border-top: 1px solid var(--line-1);
+      border-top: 1px solid var(--fill_line_1);
       padding: 24px 0 0;
       display: flex;
       gap: 24px;
@@ -352,7 +352,7 @@ const styles = css`
         gap: 24px;
       }
       .label {
-        color: var(--text-secondary);
+        color: var(--text_2);
         font-family: 'HarmonyOS Sans SC';
         font-size: 14px;
         font-style: normal;
@@ -360,7 +360,7 @@ const styles = css`
         line-height: normal;
       }
       .value {
-        color: var(--text-primary);
+        color: var(--text_1);
         font-family: 'HarmonyOS Sans SC';
         font-size: 14px;
         font-style: normal;

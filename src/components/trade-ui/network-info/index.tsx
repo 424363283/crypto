@@ -128,7 +128,7 @@ export const NetworkInfo = () => {
           justify-content: space-between;
           align-items: center;
           height: 100%;
-          background: var(--bg-1);
+          background: var(--fill_bg_1);
           .left {
             display: flex;
             flex-direction: row;

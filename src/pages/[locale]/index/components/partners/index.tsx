@@ -127,7 +127,7 @@ export default function Partners() {
           width: 100%;
           overflow: hidden;
           position: relative;
-          background: var(--bg-1);
+          background: var(--fill_bg_1);
           > div {
             display: flex;
             align-items: center;

@@ -192,7 +192,7 @@ const Notices = ({ total, list, page, posts, tags }: any) => {
                     }
                     .date {
                       font-size: 12px;
-                      color: var(--text-tertiary);
+                      color: var(--text_3);
                     }
                     .count {
                       position: relative;
@@ -273,7 +273,7 @@ const Notices = ({ total, list, page, posts, tags }: any) => {
           }
           .pagination-wrapper {
             margin-top: 72px;
-            color:var(--text-primary);
+            color:var(--text_1);
             @media ${MediaInfo.tablet} {
               padding-right: 18px;
             }

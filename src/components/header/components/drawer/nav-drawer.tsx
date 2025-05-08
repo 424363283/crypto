@@ -266,7 +266,7 @@ const NavDrawer = (props: NavDrawerProps) => {
 const styles = css`
   :global(.nav-drawer) {
     :global(.ant-drawer-header) {
-      border-bottom: 1px solid var(--line-1) !important;
+      border-bottom: 1px solid var(--fill_line_1) !important;
     }
 
     :global(.ant-drawer-content) {
@@ -286,7 +286,7 @@ const styles = css`
         margin-bottom: 8px;
       }
       :global(.register-btn) {
-        color: var(--text-white);
+        color: var(--text_white);
         background: var(--brand);
       }
       :global(.login-btn),
@@ -305,8 +305,8 @@ const styles = css`
       align-items: center;
       justify-content: space-between;
       min-height: 2.5rem;
-      border-bottom: 1px solid var(--line-1);
-      color: var(--text-primary);
+      border-bottom: 1px solid var(--fill_line_1);
+      color: var(--text_1);
     }
     :global(.ant-drawer-body) {
       :global(.nav-list) {
@@ -337,7 +337,7 @@ const styles = css`
           :global(.title) {
             font-size: 14px;
             font-weight: 400;
-            color: var(--text-primary);
+            color: var(--text_1);
           }
           :global(.triangle) {
             width: 1.5rem;
@@ -364,7 +364,7 @@ const styles = css`
           :global(span) {
             font-size: 14px;
             font-weight: 400;
-            color: var(--text-secondary);
+            color: var(--text_2);
             width: 100%;
           }
           :global(.active-menu-item) {
@@ -387,7 +387,7 @@ const styles = css`
         :global(.title) {
           font-size: 14px;
           font-weight: 400;
-          color: var(--text-primary);
+          color: var(--text_1);
           display: flex;
           align-items: center;
         }
@@ -402,13 +402,13 @@ const styles = css`
           }
           :global(.ant-switch-inner) {
             padding: 0;
-            background: var(--text-secondary);
+            background: var(--text_2);
           }
         }
         :global(.ant-switch-checked .ant-switch-handle) {
           inset-inline-start: calc(100% - 1.125rem);
           &:before {
-            background: var(--text-secondary);
+            background: var(--text_2);
           }
         }
         :global(.ant-switch-checked .ant-switch-inner) {

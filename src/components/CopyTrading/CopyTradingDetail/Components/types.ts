@@ -15,3 +15,20 @@ export enum FollowOptionStatus {
   apply = 0, // 申请跟单
   cancel = 1 // 跟单员移除跟随
 }
+
+// tab  跟单切换
+export enum CopyTabActive {
+  performance = 'performance', // 表现
+  performanceData = 'performanceData', // 数据
+  performanceChart = 'performanceChart', // 图表
+  current = 'current', // 当前
+  history = 'history', // 历史
+  follower = 'follower', // 跟随
+  sharingData = 'sharingData'
+}
+
+//   合约类型 合约类型 1=币本位 2=U本位
+export enum ContractType {
+  spot = 1,
+  swap = 2
+}

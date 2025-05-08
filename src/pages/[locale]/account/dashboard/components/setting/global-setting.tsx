@@ -1,4 +1,4 @@
-import { ThemeModeSwitch } from '@/components/header/components/switch';
+import { ThemeSwitchBtn } from '@/components/header/components/switch';
 import { useResponsive, useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { WS } from '@/core/network';
@@ -16,7 +16,7 @@ import { Desktop } from '@/components/responsive';
 export default function GlobalSetting() {
   const { isMobile } = useResponsive();
   const [selectedTime, setSelectedTime] = useState<{ label: string; value: string }[]>([
-    { label: 'UTC-8', value: '16' },
+    { label: 'UTC-8', value: '16' }
   ]);
   // const [timeZone, setTimeZone] = useState([{ label: '', value: '' }]);
   const [value, setValue] = useState(1);
@@ -24,22 +24,18 @@ export default function GlobalSetting() {
   // const colorImg = ['', 'common-green-up-red-down-0', 'common-red-up-green-down-0','common-red-up-blue-down','common-cvd'];
   useEffect(() => {
     if (WS.timeOffset == '24') {
-      setSelectedTime([
-        { label: LANG('近24小时'), value: '24'},
-    ]);
+      setSelectedTime([{ label: LANG('近24小时'), value: '24' }]);
     } else {
       setSelectedTime([
-        { label: TIME_ZON.find((item) => item.value === String(WS.timeOffset))?.title || '', value: WS.timeOffset },
+        { label: TIME_ZON.find(item => item.value === String(WS.timeOffset))?.title || '', value: WS.timeOffset }
       ]);
     }
   }, [WS.timeOffset]);
 
-
-  useEffect(() => { 
+  useEffect(() => {
     const index = RootColor.getColorIndex;
     setValue(index);
-  },[RootColor.getColorIndex])
-
+  }, [RootColor.getColorIndex]);
 
   const { isDark, toggleTheme } = useTheme();
   const onSwitchChange = () => {
@@ -50,11 +46,11 @@ export default function GlobalSetting() {
   const [timeZoneShow, setTimeZoneShow] = useState<boolean>(false);
 
   return (
-    <div className='global-setting-wrapper'>
+    <div className="global-setting-wrapper">
       <Desktop>
-        <h1 className='title'>{LANG('设置')}</h1>
+        <h1 className="title">{LANG('设置')}</h1>
       </Desktop>
-      <div className='setting-box'>
+      <div className="setting-box">
         {/* <div className='change-setting'>
           <p className='base-title'>{LANG('颜色偏好设置')}</p>
           <div className='setting-bar'>
@@ -62,13 +58,15 @@ export default function GlobalSetting() {
             <div className='setting-edit' onClick={()=>setFavorColorsShow(true)}>{LANG('编辑')}</div>
           </div>
         </div> */}
-        <div className='change-setting'>
-        <p className='base-title'>{LANG('UTC时区')}</p>
-        <div className='setting-bar'>
-          <div className='setting-subtitle'>{selectedTime[0].label }</div>
-          <Button size={Size.SM} width={isMobile? 40: 72} rounded onClick={()=> setTimeZoneShow(true)}>{LANG('编辑')}</Button>
-        </div>
-        {/* <div className='option-right'>
+        <div className="change-setting">
+          <p className="base-title">{LANG('UTC时区')}</p>
+          <div className="setting-bar">
+            <div className="setting-subtitle">{selectedTime[0].label}</div>
+            <Button size={Size.SM} width={isMobile ? 56 : 72} rounded onClick={() => setTimeZoneShow(true)}>
+              {LANG('编辑')}
+            </Button>
+          </div>
+          {/* <div className='option-right'>
           <Radio.Group onChange={onQuoteOptionChange} value={quoteOption}>
             <Radio value='24h'>
               <span className='label'>{LANG('24小时制')}</span>
@@ -80,22 +78,19 @@ export default function GlobalSetting() {
           <Select disabled={quoteOption == '24h'} values={selectedTime} options={timeZone} onChange={onUtcTimeSelect} />
         </div> */}
         </div>
-        <div className='change-setting'>
-          <p className='base-title'>{LANG('主题背景')}</p>
-          <div className='setting-bar'>
-            <div className='setting-subtitle'>{LANG(isDark?'黑夜模式':'白天模式') }</div>
-            <div className="setting-theme-box"><ThemeModeSwitch onChange={onSwitchChange} checked={isDark} /></div>
+        <div className="change-setting">
+          <p className="base-title">{LANG('主题背景')}</p>
+          <div className="setting-bar">
+            <div className="setting-subtitle">{LANG(isDark ? '黑夜模式' : '白天模式')}</div>
+            <div className="setting-theme-box">
+              {/* <ThemeModeSwitch onChange={onSwitchChange} checked={isDark} /> */}
+              <ThemeSwitchBtn onChange={onSwitchChange} checked={isDark} />
+            </div>
           </div>
         </div>
       </div>
-      <FavorColorSetting
-        isOpen={favorColorsShow}
-        close={() => setFavorColorsShow(false)}
-      />
-      <TimeZone
-        isOpen={timeZoneShow}
-        close={() => setTimeZoneShow(false)}
-      />
+      <FavorColorSetting isOpen={favorColorsShow} close={() => setFavorColorsShow(false)} />
+      <TimeZone isOpen={timeZoneShow} close={() => setTimeZoneShow(false)} />
       <style jsx>{styles}</style>
     </div>
   );
@@ -103,9 +98,9 @@ export default function GlobalSetting() {
 const styles = css`
   .global-setting-wrapper {
     min-height: calc(100vh - 81px);
-    border: 1px solid var(--line-1);
+    border: 1px solid var(--fill_line_1);
     border-radius: 8px;
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     @media ${MediaInfo.tablet} {
       height: calc(100vh - 300px);
     }
@@ -117,14 +112,14 @@ const styles = css`
       border-radius: 15px;
     }
     .title {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 24px;
       font-weight: 500;
       padding-bottom: 25px;
       padding-top: 28px;
       padding-left: 20px;
     }
-    
+
     .change-setting {
       display: flex;
       align-items: center;
@@ -140,37 +135,37 @@ const styles = css`
         padding-bottom: 10px;
       }
       .base-title{
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 14px;
         font-weight: 500;
       }
-      .setting-bar{
+      .setting-bar {
         display: flex;
         justify-content: center;
-        .setting-subtitle{
+        .setting-subtitle {
           font-size: 14px;
           margin-right: 15px;
           line-height: 30px;   
-          color: var(--text-primary);    
+          color: var(--text_1);    
           font-weight: 400;  
         }
-        .setting-edit{
+        .setting-edit {
           width: 72px;
           height: 32px;
-          background:var(--fill-3);
+          background:var(--fill_3);
           display: flex;
           align-items: center;
           justify-content: center;
           border-radius: 16px;
           font-size: 14px;
-          color: var(--text-primary);
+          color: var(--text_1);
           cursor: pointer;
         }
-        .setting-theme-box{
+        .setting-theme-box {
           :global(.ant-switch-checked .ant-switch-handle) {
-            inset-inline-start:calc(100% - 28px);
+            inset-inline-start: calc(100% - 28px);
           }
-          :global(.theme-mode-switch){
+          :global(.theme-mode-switch) {
             width: 70px;
             height: 30px;
             :global(.ant-switch-handle) {
@@ -184,8 +179,11 @@ const styles = css`
               }
             }
             :global(.ant-switch-inner) {
-              background:var(--fill-3) !important;
+              background:var(--fill_3) !important;
             }
+          }
+          @media ${MediaInfo.mobile} {
+            position: relative;
           }
         }
       }

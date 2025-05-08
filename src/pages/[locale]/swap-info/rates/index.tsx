@@ -129,7 +129,7 @@ const Rate = () => {
 
 const styles = css`
   .content {
-    background: var(--bg-1);
+    background: var(--fill_bg_1);
     .box {
       margin: 24px auto 66px auto;
       display: flex;
@@ -146,7 +146,7 @@ const styles = css`
       position: relative;
       font-size: 12px;
       font-weight: 400;
-      color: var(--text-tertiary);
+      color: var(--text_3);
       line-height: 17px;
       margin-bottom: 40px;
     }

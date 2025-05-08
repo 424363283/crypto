@@ -79,7 +79,7 @@ const { className: cssClassName, styles } = css.resolve`
         flex-direction: column;
         align-items: flex-start;
         text-align: left;
-        color: var(--text-secondary);
+        color: var(--text_2);
         font-size: 12px;
         font-weight: normal;
       }
@@ -123,7 +123,7 @@ const { className: cssClassName, styles } = css.resolve`
       :global(.ant-btn:nth-child(2)) {
         margin-inline-start: 0;
         margin-right: 0px;
-       color: var(--text-white);
+       color: var(--text_white);
     background: var(--brand);
       }
       :global(.ant-btn-primary:disabled) {
@@ -141,7 +141,7 @@ const { className: cssClassName, styles } = css.resolve`
     :global(.ant-modal-content),
     :global(.ant-modal-body) {
       background: var(--common-modal-bg);
-      color: var(--text-secondary);
+      color: var(--text_2);
     }
     :global(.ant-modal-footer) {
       background: var(--theme-background-color-2);

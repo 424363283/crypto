@@ -1,13 +1,14 @@
 import { AmountInput } from '@/components/basic-input';
+import CommonIcon from '@/components/common-icon';
 import { Loading } from '@/components/loading';
-import { BottomModal, MobileBottomSheet, MobileModal } from '@/components/mobile-modal';
+import { BottomModal, MobileModal } from '@/components/mobile-modal';
 import { walletTransferApi } from '@/core/api';
 import { useCurrencyScale, useResponsive, useRouter, useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Account, Swap } from '@/core/shared';
 import { SWAP_BOUNS_WALLET_KEY } from '@/core/shared/src/swap/modules/assets/constants';
 import { SWAP_DEFAULT_WALLET_ID } from '@/core/shared/src/swap/modules/info/constants';
-import { message } from '@/core/utils';
+import { MediaInfo, message } from '@/core/utils';
 import type { ModalProps } from 'antd/lib/modal';
 import { useEffect } from 'react';
 import css from 'styled-jsx/css';
@@ -30,7 +31,6 @@ export type DefaultCoin =
   | 'XRP-USDT'
   | 'DOGE-USDT'
   | 'DOT-USDT';
-  
 type TransferProps = {
   onTransferDone?: (args: { accounts: ACCOUNT_TYPE[] }) => void; // 划转成功后的回调
   defaultSourceAccount?: ACCOUNT_TYPE; // from
@@ -42,25 +42,26 @@ type TransferProps = {
 } & ModalProps;
 
 export { ACCOUNT_TYPE };
-const enableLite = process.env.NEXT_PUBLIC_LITE_ENABLE === 'true';
+const enableLite = false; //process.env.NEXT_PUBLIC_LITE_ENABLE === 'true';
 const TransferModal = (props: TransferProps) => {
+  const { isDark } = useTheme();
   const { isMobile } = useResponsive();
   const {
     open = false,
     onTransferDone,
     defaultSourceAccount = ACCOUNT_TYPE.SPOT,
     defaultTargetAccount = enableLite ? ACCOUNT_TYPE.LITE : ACCOUNT_TYPE.SWAP_U,
-    defaultCoin = 'BTC-USD',
+    defaultCoin = 'BTC-USD'
   } = props;
   const router = useRouter();
   const [state, setState] = useImmer({
     accounts: [
       ACCOUNT_TYPE.SPOT, // from
-      enableLite ? ACCOUNT_TYPE.LITE : ACCOUNT_TYPE.SWAP_U, // to
+      enableLite ? ACCOUNT_TYPE.LITE : ACCOUNT_TYPE.SWAP_U // to
     ],
     wallets: [SWAP_DEFAULT_WALLET_ID, SWAP_DEFAULT_WALLET_ID], // target source
     defaultCrypto: 'BTC-USD',
-    transferAmount: '', // 划转数量
+    transferAmount: '' // 划转数量
   });
   const { accounts, defaultCrypto, transferAmount } = state;
   const targetAccount = accounts[1]; // to
@@ -68,14 +69,14 @@ const TransferModal = (props: TransferProps) => {
   const cryptoOptions = useCryptoOptions({
     sourceAccount,
     targetAccount,
-    open,
+    open
   }); // 转出或转入 其中一个是永续 就跳转永续页面
-  const isOneOfSwap = [targetAccount, sourceAccount].find((v) => [ACCOUNT_TYPE.SWAP_U, ACCOUNT_TYPE.SWAP].includes(v));
+  const isOneOfSwap = [targetAccount, sourceAccount].find(v => [ACCOUNT_TYPE.SWAP_U, ACCOUNT_TYPE.SWAP].includes(v));
   const swapPositions = Swap.Order.getPosition(ACCOUNT_TYPE.SWAP_U === state.accounts[0]);
   const swapPendings = Swap.Order.getPending(ACCOUNT_TYPE.SWAP_U === state.accounts[0]);
   const swapWallet = Swap.Assets.getBalanceData({
     usdt: ACCOUNT_TYPE.SWAP_U === state.accounts[0],
-    walletId: state.wallets[0],
+    walletId: state.wallets[0]
   });
 
   /// 永续体验金钱包 有持仓不能划转
@@ -83,7 +84,7 @@ const TransferModal = (props: TransferProps) => {
     [ACCOUNT_TYPE.SWAP_U, ACCOUNT_TYPE.SWAP].includes(state.accounts[0]) &&
     // state.wallets[0] === SWAP_BOUNS_WALLET_KEY &&
     swapWallet.bonusAmount > 0 &&
-    [...swapPendings, ...swapPositions].filter((v) => v.subWallet === state.wallets[0]).length > 0;
+    [...swapPendings, ...swapPositions].filter(v => v.subWallet === state.wallets[0]).length > 0;
   const disabledConfirm = swapBounsCannotTransfer;
 
   useEffect(() => {
@@ -100,7 +101,7 @@ const TransferModal = (props: TransferProps) => {
 
   useEffect(() => {
     if (open) {
-      setState((draft) => {
+      setState(draft => {
         draft.accounts[0] = defaultSourceAccount;
         draft.accounts[1] = defaultTargetAccount;
         draft.defaultCrypto = defaultCoin;
@@ -128,13 +129,13 @@ const TransferModal = (props: TransferProps) => {
       return { crypto: code };
     }
     return {
-      crypto: 'USDT',
+      crypto: 'USDT'
     };
   };
   const { crypto } = getCryptoId();
   let { scale } = useCurrencyScale(crypto);
   const swapVolDigit = Swap.Assets.getBalanceDigit({
-    code: crypto === 'USDT' ? 'BTC-USDT' : `${crypto}-USD`,
+    code: crypto === 'USDT' ? 'BTC-USDT' : `${crypto}-USD`
   });
   if ([ACCOUNT_TYPE.SWAP, ACCOUNT_TYPE.SWAP_U].includes(accounts[0])) {
     scale = swapVolDigit;
@@ -143,7 +144,7 @@ const TransferModal = (props: TransferProps) => {
   const onAccountChange = ({
     value,
     positiveTransfer,
-    wallet,
+    wallet
   }: {
     value: ACCOUNT_TYPE;
     positiveTransfer: boolean;
@@ -159,7 +160,7 @@ const TransferModal = (props: TransferProps) => {
             [ACCOUNT_TYPE.SWAP_U, ACCOUNT_TYPE.SWAP].includes(state.accounts[0]) &&
             state.wallets[0] === SWAP_BOUNS_WALLET_KEY;
           if (!isBounsWallet) {
-            setState((draft) => {
+            setState(draft => {
               draft.accounts = draft.accounts.reverse();
               draft.wallets = draft.wallets.reverse();
             });
@@ -169,20 +170,20 @@ const TransferModal = (props: TransferProps) => {
         }
       }
       const allowTypes = ACCOUNT_CAN_TRANSFER_TYPES[value];
-      setState((draft) => {
+      setState(draft => {
         draft.accounts[0] = value;
         if (wallet) draft.wallets[0] = wallet;
       });
       onAmountInput('');
       if (!allowTypes.includes(targetAccount)) {
-        setState((draft) => {
+        setState(draft => {
           draft.accounts[1] = allowTypes[0];
           draft.wallets[1] = SWAP_DEFAULT_WALLET_ID;
         });
         onAmountInput('');
       }
     } else {
-      setState((draft) => {
+      setState(draft => {
         draft.accounts[1] = value;
         if (wallet) draft.wallets[1] = wallet;
       });
@@ -191,50 +192,48 @@ const TransferModal = (props: TransferProps) => {
   };
 
   const onTransferDirectionChange = () => {
-    setState((draft) => {
+    setState(draft => {
       draft.accounts = draft.accounts.reverse();
       draft.wallets = draft.wallets.reverse();
+      draft.transferAmount = '';
     });
-    console.log(state, 'draft.wallets');
   };
-
   const onAmountInput = (value: string) => {
-    setState((draft) => {
+    setState(draft => {
       draft.transferAmount = value;
     });
   };
 
   const onCryptoChange = (crypto: string) => {
-    setState((draft) => {
+    setState(draft => {
       draft.defaultCrypto = crypto;
     });
   };
 
   const option = cryptoOptions?.find(
-    (v) =>
+    v =>
       v.crypto === crypto &&
       ([ACCOUNT_TYPE.SWAP_U, ACCOUNT_TYPE.SWAP].includes(accounts[0]) ? v.wallet === state.wallets[0] : true)
   );
-
   const balance = Number((option?.price || 0).toFixed(scale)) < 0 ? '0' : (option?.price || 0).toFixed(scale);
-
   const onClickFillAllAmount = () => {
-    setState((draft) => {
+    setState(draft => {
       draft.transferAmount = balance;
     });
   };
-  
   const handleTransfer = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const isLogin = Account.isLogin;
     if (!transferAmount) {
       message.warning(LANG('请输入划转数量'));
-      return
+      return;
     }
     if (!isLogin) {
       router.push('/login');
       return;
     }
-    if (disabledConfirm)  return;
+    if (disabledConfirm) {
+      return;
+    }
     const { allow: isAgreeAgreement } = Swap.Info.store.agreement;
 
     if (isOneOfSwap && !isAgreeAgreement) {
@@ -253,7 +252,7 @@ const TransferModal = (props: TransferProps) => {
       !(await showBounsDisappearAlert({
         isUsdtType: ACCOUNT_TYPE.SWAP_U === state.accounts[0],
         crypto: defaultCrypto,
-        wallet: state.wallets[0],
+        wallet: state.wallets[0]
       }))
     ) {
       return;
@@ -269,7 +268,7 @@ const TransferModal = (props: TransferProps) => {
       target: target.toUpperCase(),
       currency: crypto,
       amount: transferAmount,
-      version: '2',
+      version: '2'
     };
     // 子钱包id
     if ([ACCOUNT_TYPE.SWAP_U, ACCOUNT_TYPE.SWAP].includes(sourceAccount)) {
@@ -279,12 +278,21 @@ const TransferModal = (props: TransferProps) => {
     if ([ACCOUNT_TYPE.SWAP_U, ACCOUNT_TYPE.SWAP].includes(targetAccount)) {
       params.targetId = state.wallets[1];
     }
+    // 跟单账户
+    if (source === ACCOUNT_TYPE.COPY) {
+      params.source = ACCOUNT_TYPE.SWAP.toUpperCase();
+      params.sourceId = ACCOUNT_TYPE.COPY.toUpperCase();
+    }
+    if (target === ACCOUNT_TYPE.COPY) {
+      params.target = ACCOUNT_TYPE.SWAP.toUpperCase();
+      params.targetId = ACCOUNT_TYPE.COPY.toUpperCase();
+    }
     Loading.start();
     try {
       const res = await walletTransferApi(params);
       if (res.code === 200) {
         message.success(LANG('划转成功'));
-        setState((draft) => {
+        setState(draft => {
           draft.transferAmount = '';
         });
         onTransferDone?.({ accounts: state.accounts });
@@ -299,29 +307,28 @@ const TransferModal = (props: TransferProps) => {
     }
   };
 
-
   const renderContent = () => {
     return (
-      <div className='transfer-content-wrapper'>
+      <div className="transfer-content-wrapper">
         <TypeBar
-          values={state.accounts}
-          wallets={state.wallets}
-          crypto={crypto}
+          values={accounts}
           onChange={onAccountChange}
           onTransferDirectionChange={onTransferDirectionChange}
+          wallets={state.wallets}
+          crypto={crypto}
         />
-        <div className='coin-label'>{LANG('币种')}</div>
+        <div className="coin-label">{LANG('币种')}</div>
         <CryptoSelect
           accounts={state.accounts}
-          options={cryptoOptions.filter((v) =>
+          options={cryptoOptions.filter(v =>
             [ACCOUNT_TYPE.SWAP_U, ACCOUNT_TYPE.SWAP].includes(accounts[0]) ? v.wallet === state.wallets[0] : true
           )}
           onChange={onCryptoChange}
           value={crypto}
         />
-        <div className='available-assets-container'>
-          <div className='label'>
-            <div className='left-label'>{LANG('数量')}</div>
+        <div className="available-assets-container">
+          <div className="label">
+            <div className="left-label">{LANG('数量')}</div>
           </div>
           <AmountInput
             onInputChange={onAmountInput}
@@ -335,8 +342,12 @@ const TransferModal = (props: TransferProps) => {
             digit={scale}
             error={swapBounsCannotTransfer ? LANG('您当前持有仓位/委托，不可操作划转转出') : undefined}
           />
-          <div className='balance-wrapper'>
-            <span>{LANG('可用资产')}</span>
+          {isMobile && <div className="line"></div>}
+          <div className="balance-wrapper">
+            <span className="label">
+              {LANG('可用资产')}
+              {isMobile ? ':' : ''}
+            </span>
             <div>
               {balance} <span>{crypto}</span>
             </div>
@@ -347,64 +358,74 @@ const TransferModal = (props: TransferProps) => {
     );
   };
 
-  // if (isMobile) {
-  //   return <MobileBottomSheet
-  //     title={LANG('资金划转')}
-  //     visible={open}
-  //     close={() => props.onCancel?.('' as any)}
-  //     content={renderContent()}
-  //     confirmText={LANG('确定')}
-  //     onConfirm={() => handleTransfer('' as any)}
-  //   />
-  // }
+  if (isMobile) {
+    return (
+      <>
+        <MobileModal visible={open} onClose={() => props.onCancel?.('' as any)} type="bottom">
+          <BottomModal title={LANG('资金划转')} confirmText={LANG('确定')} onConfirm={() => handleTransfer('' as any)}>
+            {renderContent()}
+          </BottomModal>
+        </MobileModal>
+        <style jsx>{styles}</style>
+      </>
+    );
+  }
 
   return (
-    <>
-       <BasicModal
-          {...props}
-          title={LANG('资金划转')}
-          open={open}
-          destroyOnClose
-          width={480}
-          okText={LANG('确定')}
-          cancelText={LANG('取消')}
-          hasCancel={false}
-          className='transfer-modal-wrapper'
-          onOk={handleTransfer}
-          okButtonProps={{
-            disabled: !Number(transferAmount) || +transferAmount < 0,
-          }}
-        >
-          {renderContent()}
-        </BasicModal>
-    </>
+    <BasicModal
+      {...props}
+      title={LANG('资金划转')}
+      open={open}
+      destroyOnClose
+      width={480}
+      okText={LANG('确定')}
+      cancelText={LANG('取消')}
+      hasCancel={false}
+      className="transfer-modal-wrapper"
+      onOk={handleTransfer}
+      okButtonProps={{
+        disabled: !Number(transferAmount) || +transferAmount < 0
+      }}
+    >
+      {renderContent()}
+    </BasicModal>
   );
 };
 const styles = css`
   :global(.transfer-content-wrapper) {
+    @media ${MediaInfo.mobile} {
+      padding: 0 0.5rem;
+    }
     :global(.coin-label) {
       margin: 24px 0 8px;
       line-height: 14px;
       font-size: 14px;
       font-weight: 500;
       color: var(--theme-font-color-1);
+      @media ${MediaInfo.mobile} {
+        margin: 1rem 0 8px;
+        color: var(--text_2);
+      }
     }
     :global(.crypto-selected-content) {
-      background: var(--fill-3) !important;
+      background: var(--fill_3) !important;
       border-radius: 8px;
     }
-    
+
     :global(.available-assets-container) {
       margin-top: 20px;
+      @media ${MediaInfo.mobile} {
+        margin-top: 1rem;
+      }
       :global(.amount-input-wrapper) {
         margin-top: 8px;
         border-radius: 8px !important;
         :global(.basic-input-bordered) {
           border-radius: 8px !important;
-          background: var(--fill-3) !important;
+          background: var(--fill_3) !important;
           :global(input) {
             color: var(--theme-font-color-1);
-            background: var(--fill-3) !important;
+            background: var(--fill_3) !important;
             border-radius: 8px !important;
             height: 40px;
           }
@@ -415,6 +436,9 @@ const styles = css`
         justify-content: space-between;
         align-items: center;
         color: var(--theme-font-color-1);
+        @media ${MediaInfo.mobile} {
+          color: var(--text_2);
+        }
         :global(.right-label) {
           color: #232e34;
           font-size: 14px;
@@ -424,14 +448,24 @@ const styles = css`
           }
         }
       }
+      .line {
+        height: 1px;
+        width: 100%;
+        background: var(--fill_line_1);
+        margin-top: 1rem;
+      }
       .balance-wrapper {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin: 24px 0;
-        color: var(--text-primary);
+        color: var(--text_1);
         > span {
-          color: var(--text-secondary);
+          color: var(--text_2);
+        }
+        @media ${MediaInfo.mobile} {
+          margin: 1rem 0;
+          font-size: 12px;
         }
       }
     }
@@ -442,7 +476,6 @@ const styles = css`
         :global(.ant-btn-default) {
         }
         :global(.ant-btn-primary) {
-
         }
       }
     }
@@ -457,7 +490,6 @@ const styles = css`
         :global(.basic-content) {
           padding: 0px 24px;
         }
-
       }
     }
     :global(.ant-modal-close) {
@@ -467,4 +499,3 @@ const styles = css`
   }
 `;
 export default TransferModal;
-

@@ -11,6 +11,7 @@ import { message } from '@/core/utils';
 import dayjs from 'dayjs';
 import { useImmer } from 'use-immer';
 import { FUND_HISTORY_TAB_KEY } from '../../types';
+import { SWAP_COPY_WALLET_KEY, SWAP_DEFAULT_WALLET_KEY } from '@/core/shared/src/swap/modules/assets/constants';
 
 export const useFetchTableData = ({
   type,
@@ -149,12 +150,32 @@ export const useFetchTableData = ({
         createTimeLe: endDate || ''
       };
       if (source !== 'ALL') {
-        params['sourceWallet'] = source;
+        if (source === SWAP_COPY_WALLET_KEY) {
+          params['sourceId'] = 'COPY';
+          params['sourceWallet'] = 'FUTURE';
+
+        } else if (source === 'FUTURE') {
+          params['sourceId'] = SWAP_DEFAULT_WALLET_KEY;
+          params['sourceWallet'] = 'FUTURE';
+
+        } else {
+          params['sourceWallet'] = source;
+        }
       }
       if (target !== 'ALL') {
-        params['targetWallet'] = target;
+        if (target === SWAP_COPY_WALLET_KEY) {
+          params['targetId'] = 'COPY';
+          params['targetWallet'] = 'FUTURE';
+
+        } else if (target === 'FUTURE') {
+          params['targetId'] = SWAP_DEFAULT_WALLET_KEY;
+          params['targetWallet'] = 'FUTURE';
+
+        } else {
+          params['targetWallet'] = target;
+        }
       }
-      if (source === 'FUTURE' || target === 'FUTURE') {
+      if (source === 'FUTURE' || target === 'FUTURE'  || source === SWAP_COPY_WALLET_KEY || target === SWAP_COPY_WALLET_KEY) {
         params['currency'] = 'USDT';
       }
       if (source === 'DELIVERY' || target === 'DELIVERY') {

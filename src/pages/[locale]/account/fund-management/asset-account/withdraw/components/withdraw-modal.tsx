@@ -97,12 +97,12 @@ const styles = css`
         display: flex;
         align-items: center;
         :global(.ant-checkbox-inner) {
-          border-color: var(--text-tertiary) !important;
+          border-color: var(--text_3) !important;
         }
         :global(.tips) {
           font-weight: 400;
           font-size: 16px;
-          color: var(--text-secondary);
+          color: var(--text_2);
           padding-left: 6px;
         }
       }
@@ -116,7 +116,7 @@ const styles = css`
           display: flex;
           align-items: center;
           justify-content: space-between;
-          color: var(--text-secondary);
+          color: var(--text_2);
           :global(span) {
             &:nth-child(2) {
               flex: 1;
@@ -125,13 +125,13 @@ const styles = css`
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
-              color: var(--text-primary);
+              color: var(--text_1);
             }
             :global(b) {
               font-weight: 400;
               display: inline-block;
-              background: var(--label);
-              color: var(--text-brand);
+              background: var(--brand_20);
+              color: var(--text_brand);
               line-height: 20px;
               padding: 0 8px;
               margin-right: 4px;

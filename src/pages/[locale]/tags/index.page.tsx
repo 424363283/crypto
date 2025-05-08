@@ -116,7 +116,7 @@ const Tags = ({ total, list, page, posts, tags }: any) => {
           h1 {
             font-size: 26px;
             font-weight: 600;
-            color: var(--text-primary);
+            color: var(--text_1);
             font-family: Inter !important;
             @media ${MediaInfo.tablet} {
               font-size: 32px;
@@ -128,7 +128,7 @@ const Tags = ({ total, list, page, posts, tags }: any) => {
           h4 {
             font-size: 16px;
             font-weight: 400;
-            color: var(--text-primary);
+            color: var(--text_1);
             margin-top: 24px;
             margin-bottom: 40px;
             font-family: Inter !important;
@@ -176,7 +176,7 @@ const Tags = ({ total, list, page, posts, tags }: any) => {
                 overflow: hidden;
                 margin-top: 20px;
                 margin-bottom: 16px;
-                color: var(--text-primary);
+                color: var(--text_1);
               }
               .count {
                 color: var(--spec-font-color-3);

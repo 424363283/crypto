@@ -39,14 +39,14 @@ const styles = css`
     display: flex;
     flex-direction: row;
     border-radius: 8px;
-    background-color: var(--fill-3);
+    background-color: var(--fill_3);
     > div {
       cursor: pointer;
       flex: 1;
       line-height: 36px;
       font-size: 16px;
       font-weight: 400;
-      color: var(--text-secondary);
+      color: var(--text_2);
       text-align: center;
       &.active {
         border-radius: 8px;

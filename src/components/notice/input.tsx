@@ -29,7 +29,7 @@ const styles = css`
     align-items: center;
     padding: 0 16px;
     height: 44px;
-    background-color: var(--fill-3);
+    background-color: var(--fill_3);
     border-radius: 8px;
     @media ${MediaInfo.mobile} {
       height: 40px;
@@ -42,7 +42,7 @@ const styles = css`
       background-color: inherit;
       width: 100%;
       height: 44px;
-      color: var(--text-primary);
+      color: var(--text_1);
       margin-left: 4px;
       @media ${MediaInfo.mobile} {
         height: 40px;

@@ -8,6 +8,7 @@ import { Dropdown, MenuProps } from 'antd';
 import { memo, useEffect } from 'react';
 import css from 'styled-jsx/css';
 import { useCalcSwapAssets, useSwapBalance } from '../../../fund-management/assets-overview/hooks/use-swap-balance';
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
 
 export const AssetsBalanceBefore = memo(
   ({
@@ -79,12 +80,13 @@ export enum WalletType {
 type AssetsBalanceProps = {
   enableHideBalance?: boolean;
   type: WalletType;
+  wallet: WalletKey;
   onCurrencyChange?: (currency: string) => void;
 };
 export const AssetsBalance = (props: AssetsBalanceProps) => {
   const swapType = getUrlQueryParams('type');
   const isSwapU = swapType === 'swap-u';
-  const { enableHideBalance = false, type = WalletType.ASSET_TOTAL, onCurrencyChange } = props;
+  const { enableHideBalance = false, type = WalletType.ASSET_TOTAL, wallet, onCurrencyChange } = props;
   const { spotAssetsStore } = Account.assets;
   const { spotTotalBalance } = spotAssetsStore;
   const { swapBalance, swapUBalance } = useSwapBalance(); // 不包含冻结部分，未实现盈亏不计算入内
@@ -100,7 +102,7 @@ export const AssetsBalance = (props: AssetsBalanceProps) => {
     onCurrencyChange?.(value);
   };
 
-  const { total: calcTotal } = useCalcSwapAssets({ isSwapU });
+  const { total: calcTotal, wallets } = useCalcSwapAssets({ isSwapU });
   useEffect(() => {
     if (type === WalletType.ASSET_SPOT) {
       const polling = new Polling({
@@ -137,14 +139,19 @@ export const AssetsBalance = (props: AssetsBalanceProps) => {
     [WalletType.ASSET_TOTAL]: totalAssetsBalance,
     [WalletType.ASSET_SPOT]: spotTotalBalance,
     [WalletType.ASSET_SWAP]: calcTotal.accb,
-    [WalletType.ASSET_SWAP_U]: calcTotal.accb,
+    // [WalletType.ASSET_SWAP_U]: calcTotal.accb,
+    [WalletType.ASSET_SWAP_U]: {
+      [WalletKey.SWAP_U]: wallets.find(item => item.wallet === WalletKey.SWAP_U)?.accb,
+      [WalletKey.COPY]: wallets.find(item => item.wallet === WalletKey.COPY)?.accb,
+    }
   };
+  const assetsBalance = wallet ? ASSETS_BALANCE_MAP[type][wallet] : ASSETS_BALANCE_MAP[type];
   return (
     <div className='assets-text-wrapper'>
       <div className='assets-before-selector'>
         <AssetsBalanceBefore
           enableHideBalance={enableHideBalance}
-          assetsBalance={ASSETS_BALANCE_MAP[type]}
+          assetsBalance={assetsBalance}
           selectedCurrency={selectedCurrency}
         />
         <Dropdown menu={{ items, onClick: handleButtonClick }} trigger={['click']}>
@@ -153,7 +160,7 @@ export const AssetsBalance = (props: AssetsBalanceProps) => {
           </div>
         </Dropdown>
       </div>
-      <AssetsBalanceAfter assetsBalance={ASSETS_BALANCE_MAP[type]} enableHideBalance={enableHideBalance} />
+      <AssetsBalanceAfter assetsBalance={assetsBalance} enableHideBalance={enableHideBalance} />
       <style jsx>{styles}</style>
     </div>
   );
@@ -172,7 +179,7 @@ const styles = css`
       :global(.assets-before) {
         font-size: 32px;
         font-weight: 700;
-        color: var(--text-primary);
+        color: var(--text_1);
         line-height: 32px;
         @media ${MediaInfo.mobile} {
           font-size: 30px;
@@ -183,7 +190,7 @@ const styles = css`
       color: var(--theme-font-color-6);
     }
     :global(.assets-after) {
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-size: 14px;
       font-weight: 400;
       white-space: nowrap;

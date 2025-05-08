@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useResponsive } from "@/core/hooks";
-import { useWindowWidthByValue } from "@/core/hooks/src/use-responsive";
-import { LANG } from "@/core/i18n";
-import { useAppContext } from "@/core/store";
-import { clsx } from "@/core/utils";
-import dynamic from "next/dynamic";
-import KlineViewRight from "./kline-view-right";
-import usePageSize from "@/hooks/pageResize";
-import { useDragX } from "@/hooks/dragX";
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useResponsive } from '@/core/hooks';
+import { useWindowWidthByValue } from '@/core/hooks/src/use-responsive';
+import { LANG } from '@/core/i18n';
+import { useAppContext } from '@/core/store';
+import { clsx } from '@/core/utils';
+import dynamic from 'next/dynamic';
+import KlineViewRight from './kline-view-right';
+import usePageSize from '@/hooks/pageResize';
+import { useDragX } from '@/hooks/dragX';
 import {
   colCount,
   getOrderModuleSide,
@@ -15,17 +15,17 @@ import {
   minWindowWidth,
   modulePadding,
   rowHeight,
-  useLayoutControl,
-} from "@/hooks/spotLayoutControl";
+  useLayoutControl
+} from '@/hooks/spotLayoutControl';
 
-const GridLayout = dynamic(() => import("react-grid-layout"), { ssr: false });
-import "react-grid-layout/css/styles.css";
-import "react-resizable/css/styles.css";
+const GridLayout = dynamic(() => import('react-grid-layout'), { ssr: false });
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 import { Account, Swap } from '@/core/shared';
 import { useLayoutStore } from '@/store/layout';
 import { ORDER_BOOK_TYPES, OrderBook } from '@/components/trade-ui/order-book/swapIndex';
 const LightningOrder = dynamic(() => import('@/components/trade-ui/trade-view/swap/components/lightning-order'), {
-  ssr: false,
+  ssr: false
 });
 
 export const SwapDesktopLayout = ({
@@ -41,7 +41,7 @@ export const SwapDesktopLayout = ({
   HeaderFavorite,
   NetworkInfo,
   HeaderAnnouncement,
-  TradeGuideBar,
+  TradeGuideBar
 }: {
   // QuoteList: React.ReactNode;
   KlineHeader: React.ReactNode;
@@ -60,58 +60,36 @@ export const SwapDesktopLayout = ({
   const { isLogin } = useAppContext();
   const { isSmallDesktop } = useResponsive(false);
   const { isMatch: isLargeDesktop } = useWindowWidthByValue({ width: 1440 });
-  const klineHeight = !isSmallDesktop ? "628px" : "697px";
-  const [orderModuleSide, setOrderModuleSide] = useState(() =>
-    getOrderModuleSide()
-  ); // 下单模块位置 'right' | 'left'
+  const klineHeight = !isSmallDesktop ? '628px' : '697px';
+  const [orderModuleSide, setOrderModuleSide] = useState(() => getOrderModuleSide()); // 下单模块位置 'right' | 'left'
   // grid布局宽度
   const { windowWidth, windowHeight, rightModuleWidth } = usePageSize();
   const layoutWidth = useMemo(() => {
     const rightModuleWidthPlus = rightModuleWidth + marginWidth;
-    return windowWidth < minWindowWidth
-      ? minWindowWidth - rightModuleWidthPlus
-      : windowWidth - rightModuleWidthPlus;
+    return windowWidth < minWindowWidth ? minWindowWidth - rightModuleWidthPlus : windowWidth - rightModuleWidthPlus;
   }, [windowWidth, rightModuleWidth]);
 
   const resetLayout = useLayoutStore(state => state.resetLayout);
 
-
-
-
   // 下单区拖拽左右定位逻辑
-  const {
-    dragMoveX,
-    dragStatus,
-    handleMouseDown,
-    handleMouseMove,
-    handleDragOver,
-    setDragStatus,
-  } = useDragX({
-    side: `to-${orderModuleSide === "right" ? "left" : "right"}`,
-    maxX: 100,
+  const { dragMoveX, dragStatus, handleMouseDown, handleMouseMove, handleDragOver, setDragStatus } = useDragX({
+    side: `to-${orderModuleSide === 'right' ? 'left' : 'right'}`,
+    maxX: 100
   });
-  const {
-    layoutConfig,
-    layoutH,
-    historyLayoutH,
-    layoutDone,
-    handleLayoutChange,
-    handleDropLayout,
-    handleResetLayout,
-  } = useLayoutControl({
-    windowHeight,
-    orderModuleDragStatus: dragStatus,
-    setOrderModuleDragStatus: setDragStatus,
-    orderModuleSide,
-    setOrderModuleSide,
-  });
+  const { layoutConfig, layoutH, historyLayoutH, layoutDone, handleLayoutChange, handleDropLayout, handleResetLayout } =
+    useLayoutControl({
+      windowHeight,
+      orderModuleDragStatus: dragStatus,
+      setOrderModuleDragStatus: setDragStatus,
+      orderModuleSide,
+      setOrderModuleSide
+    });
   // 下单区动态样式
   const orderModuleStyle = useMemo(() => {
     const style: { [key: string]: any } = {};
     if (orderModuleSide === 'right') {
       // style.right = `${dragStatus === 'init' ? '2px' : -dragMoveX}px`;
       style.right = '2px';
-
     } else {
       style.left = `${dragStatus === 'init' ? modulePadding : dragMoveX}px`;
     }
@@ -132,36 +110,30 @@ export const SwapDesktopLayout = ({
     }
     return style;
   }, [orderModuleSide, dragMoveX, dragStatus, rightModuleWidth, layoutH]);
-  const chartIdx = 1
+  const chartIdx = 1;
   const { lightningOrder } = Swap.Info.getTradePreference(Swap.Trade.base.isUsdtType);
 
-
-
-//恢复默认布局
-
+  //恢复默认布局
 
   useEffect(() => {
-    console.log("获取当前的默认值",resetLayout)
+    console.log('获取当前的默认值', resetLayout);
     // if(resetLayout){
-      handleResetLayout()
+    handleResetLayout();
     // }
-
   }, [resetLayout]);
 
   return (
     <>
       <div className="spot_page_trade">
-        <div className='announcement'>{HeaderAnnouncement}</div>
-        <div className='kline-header-content'>
-          {KlineHeader}
-        </div>
+        <div className="announcement">{HeaderAnnouncement}</div>
+        <div className="kline-header-content">{KlineHeader}</div>
         {/* {
           <LightningOrder />
         } */}
-        {/* {Account.isLogin && lightningOrder && <LightningOrder />} */}
+        {Account.isLogin && lightningOrder && <LightningOrder />}
         <div className="view-main">
           <GridLayout
-            className={`view-main-left${layoutDone ? " layout-done" : ""}`}
+            className={`view-main-left${layoutDone ? ' layout-done' : ''}`}
             draggableHandle=".draggable-module"
             layout={layoutConfig}
             onLayoutChange={handleLayoutChange}
@@ -170,7 +142,7 @@ export const SwapDesktopLayout = ({
             cols={colCount}
             rowHeight={rowHeight}
             // width={layoutWidth}
-            width={layoutWidth<1100?880:layoutWidth}
+            width={layoutWidth < 1100 ? 880 : layoutWidth}
             margin={[marginWidth, marginWidth]}
             style={gridLayoutStyle}
           >
@@ -180,14 +152,11 @@ export const SwapDesktopLayout = ({
               </div>
               <div className="view-port-chart">
                 <div
-                  className={`nav-detail-ctr detail-tv spot_klineContent  nav-detail-ctr-left${chartIdx === 1 ? "" : "-hide"
-                    }`}
+                  className={`nav-detail-ctr detail-tv spot_klineContent  nav-detail-ctr-left${
+                    chartIdx === 1 ? '' : '-hide'
+                  }`}
                 >
-                  {
-                    KlineView
-                  }
-
-
+                  {KlineView}
                 </div>
               </div>
             </div>
@@ -196,37 +165,24 @@ export const SwapDesktopLayout = ({
                 <div className="draggable-module-ctr">
                   <div className="draggable-module" />
                 </div>
-                <KlineViewRight className='kline-view-right' OrderBook={<OrderBook type={ORDER_BOOK_TYPES.SWAP} layoutH={historyLayoutH} />} RecentTrades={RecentTrades} />
-
-
-
+                <KlineViewRight
+                  className="kline-view-right"
+                  OrderBook={<OrderBook type={ORDER_BOOK_TYPES.SWAP} layoutH={historyLayoutH} />}
+                  RecentTrades={RecentTrades}
+                />
               </div>
-
             </div>
             <div key="form">
               <div className="view-positions" id="formCtr">
                 <div className="draggable-module-ctr">
                   <div className="draggable-module" />
                 </div>
-                <div className={`positions-ctr com-scroll-bar scroll-ctr`}>
-                  {
-                    OrderList
-                  }
-                </div>
+                <div className={`positions-ctr com-scroll-bar scroll-ctr`}>{OrderList}</div>
               </div>
             </div>
-
-
           </GridLayout>
-          <div
-
-            className={`view-main-right com-scroll-bar${' com-loading-with-animation'
-              }`}
-            style={orderModuleStyle}
-          >
-            {
-              TradeView
-            }
+          <div className={`view-main-right com-scroll-bar${' com-loading-with-animation'}`} style={orderModuleStyle}>
+            {TradeView}
 
             {MarginRatio}
             {Assets}
@@ -238,19 +194,16 @@ export const SwapDesktopLayout = ({
               onMouseUp={handleDragOver}
               onMouseLeave={handleDragOver}
             />
-
           </div>
         </div>
-        <div className='swap-network-info'>{NetworkInfo}</div>
-
-
+        <div className="swap-network-info">{NetworkInfo}</div>
       </div>
-        <style jsx>{`
+      <style jsx>{`
         .kline-header-content {
           height: 58px;
           display: flex;
-          background-color: var(--bg-1);
-          margin-top:2px;
+          background-color: var(--fill_bg_1);
+          margin-top: 2px;
         }
 
         $moduleMargin: 14px;
@@ -297,27 +250,26 @@ export const SwapDesktopLayout = ({
               cursor: se-resize;
               display: inline-block;
             }
-            .react-resizable-handle-se{
+            .react-resizable-handle-se {
               cursor: se-resize;
               display: inline-block;
             }
-            &:hover .react-resizable-handle-se{
-              &::after{
+            &:hover .react-resizable-handle-se {
+              &::after {
                 content: '';
               }
             }
-            .react-resizable-handle-se{
-              &::after{
+            .react-resizable-handle-se {
+              &::after {
                 position: absolute;
-              right: 0;
-              bottom: 0;
-              width: 4px;
-              height: 4px;
-              border-right: 2px solid var(--trade-font-grey);
-              border-bottom: 2px solid var(--trade-font-grey);
+                right: 0;
+                bottom: 0;
+                width: 4px;
+                height: 4px;
+                border-right: 2px solid var(--trade-font-grey);
+                border-bottom: 2px solid var(--trade-font-grey);
               }
             }
-
 
             &:hover .react-resizable-handle::after {
               content: '';
@@ -338,7 +290,7 @@ export const SwapDesktopLayout = ({
         // 布局
         .spot_page_trade {
           color: var(--trade-font-light);
-          background-color:var(--fill-3);
+          background-color: var(--fill_3);
 
           .x-nav-bar {
             height: 36px;
@@ -355,9 +307,9 @@ export const SwapDesktopLayout = ({
             transition: all 100ms linear;
           }
 
-          @media  (max-width: 1100px){
+          @media (max-width: 1100px) {
             .view-main-right {
-              width: 318px  !important;
+              width: 318px !important;
             }
           }
 
@@ -402,12 +354,12 @@ export const SwapDesktopLayout = ({
           .view-port-chart {
             flex-grow: 1;
             height: 100%;
-            padding-bottom:18px;
+            padding-bottom: 18px;
           }
 
           .view-port-history {
             height: 100%;
-            margin-top:1px
+            margin-top: 1px;
           }
 
           .view-positions {
@@ -421,7 +373,7 @@ export const SwapDesktopLayout = ({
           .view-main-right,
           .view-positions {
             border-radius: 0px;
-            background-color: var(--bg-1);
+            background-color: var(--fill_bg_1);
           }
 
           .draggable-module-ctr {
@@ -653,7 +605,7 @@ export const SwapDesktopLayout = ({
         }
 
         // 导航内容区样式
-         .nav-detail-ctr {
+        .nav-detail-ctr {
           position: absolute;
           top: 0px;
           bottom: 0;
@@ -1905,4 +1857,3 @@ export const SwapDesktopLayout = ({
     </>
   );
 };
-

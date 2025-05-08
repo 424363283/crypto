@@ -13,10 +13,10 @@ const { className, styles } = css.resolve`
         align-items: center;
         gap: 24px;
         align-self: stretch;
-        color: var(--text-secondary);
+        color: var(--text_2);
         > div {
           cursor: pointer;
-          color: var(--text-secondary);
+          color: var(--text_2);
           text-align: justify;
           font-family: 'HarmonyOS Sans SC';
           font-size: 16px;
@@ -24,7 +24,7 @@ const { className, styles } = css.resolve`
           font-weight: 500;
           line-height: normal;
           &.active {
-            color: var(--text-brand);
+            color: var(--text_brand);
             text-align: justify;
             font-family: 'HarmonyOS Sans SC';
             font-size: 16px;
@@ -46,7 +46,7 @@ const { className, styles } = css.resolve`
   }
   @media ${MediaInfo.mobile} {
     :global(.modal) {
-      background-color: var(--fill-pop) !important;
+      background-color: var(--fill_pop) !important;
     }
   }
 `;

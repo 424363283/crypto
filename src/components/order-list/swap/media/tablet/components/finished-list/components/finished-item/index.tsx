@@ -130,7 +130,7 @@ export const FinishedItem = ({ data: item }: { data: any }) => {
       <style jsx>{`
         .finished-item {
           font-size: 12px;
-          border-bottom: 1px solid var(--line-1);
+          border-bottom: 1px solid var(--fill_line_1);
           &:last-child {
             border-bottom: 0;
           }
@@ -145,7 +145,7 @@ export const FinishedItem = ({ data: item }: { data: any }) => {
             flex-direction: column;
             align-items: flex-start;
             gap: 4px;
-            color: var(--text-primary);
+            color: var(--text_1);
             .code {
               font-size: 1rem;
               font-weight: 500;
@@ -159,7 +159,7 @@ export const FinishedItem = ({ data: item }: { data: any }) => {
               align-items: center;
               gap: 10px;
               border-radius: 4px;
-              color: var(--text-white);
+              color: var(--text_white);
               &.buy {
                 background: var(--color-green);
               }
@@ -202,19 +202,19 @@ export const FinishedItem = ({ data: item }: { data: any }) => {
                     overflow: hidden;
                   }
                   &:first-child {
-                    color: var(--text-tertiary);
+                    color: var(--text_3);
                   }
                   &:last-child {
                     width: 100%;
                     white-space: nowrap;
                     text-overflow: ellipsis;
                     overflow: hidden;
-                    color: var(--text-primary);
+                    color: var(--text_1);
                     &.profit {
-                      color: var(--text-true);
+                      color: var(--text_green);
                     }
                     &.loss {
-                      color: var(--text-error);
+                      color: var(--text_red);
                     }
                   }
                 }

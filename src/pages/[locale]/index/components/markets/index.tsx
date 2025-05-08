@@ -22,7 +22,6 @@ import { TrLink } from '@/core/i18n';
 import { DEFAULT_ORDER, FAVORITE_TYPE, FAVORS_LIST, Favors, Group, MarketItem, Markets } from '@/core/shared';
 import { Wait2AddFavorsList } from '@/pages/[locale]/markets/components/markets-view/favors-list';
 import { CURRENT_TAB, store } from '@/pages/[locale]/markets/store';
-import MarketTable from '@/pages/[locale]/markets/components/markets-view/table';
 import MiddleOption from '@/pages/[locale]/markets/components/markets-view/components/middle-option';
 import TopOptions from '@/pages/[locale]/markets/components/markets-view/components/top-option';
 import { FAVORITE_OPTION_ID } from '@/pages/[locale]/markets/types';
@@ -31,11 +30,13 @@ import { EmptyComponent } from '@/components/empty';
 import { isLite } from '@/core/utils';
 import { useResponsive } from '@/core/hooks';
 import { Svg } from '@/components/svg';
+import { useQuoteSearchStore } from '@/store/quote-search';
+import Star from '@/components/star';
 
 export default function MarketsComponent() {
   const { isMobile } = useResponsive();
   const [searchKey, setSearchKey] = useState<string>('');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
+  const [sortDirection, setSortDirection] = useState<{ key: string; order: string }>({ key: '', order: '' });
   const ids = useRef<{ [key: string]: string[] }>();
   const config = useCascadeOptions();
   const { secondItem, thirdItem, currentId, searchValue } = store;
@@ -46,6 +47,7 @@ export default function MarketsComponent() {
   const { getHrefAndQuery } = useTradeHrefData();
   const [miniChartData, setMiniChartData] = useState<any>({});
   const [list, setList] = useState<{ [key: string]: MarketItem[] }>({});
+  const searchTerm = useQuoteSearchStore(state => state.searchTerm);
   const sortLiteCoins = (data: string[]): string[] => {
     const sorts = ['BTCUSDT', 'ETHUSDT', 'XRPUSDT', 'DOTUSDT', 'TRXUSDT', 'UNIUSDT'];
     const sortData = sorts.map(id => data.find(item => new RegExp(`^${id}`).test(item))).filter(v => v);
@@ -210,27 +212,30 @@ export default function MarketsComponent() {
       return [];
     }
     let result = list[key];
-    if (searchKey) {
+    if (searchTerm) {
       result = list[key].filter(item => {
-        const lowerCaseSearchKey = searchKey.toLowerCase(); // 转为小写
+        const lowerCaseSearchKey = searchTerm.toLowerCase(); // 转为小写
         return (
           item.name.toLowerCase().indexOf(lowerCaseSearchKey) !== -1 ||
-          item.fullName.toLowerCase().indexOf(lowerCaseSearchKey) !== -1 ||
           item.fullName.toLowerCase().indexOf(lowerCaseSearchKey) !== -1
         );
       });
     }
 
-    if (sortDirection) {
+    if (sortDirection.order) {
       result = [...result].sort((a, b) => {
-        const rateA = parseFloat(a.rate);
-        const rateB = parseFloat(b.rate);
-        return sortDirection === 'desc' ? rateB - rateA : rateA - rateB;
+        if (sortDirection.key === 'rate') {
+          const rateA = parseFloat(a.rate);
+          const rateB = parseFloat(b.rate);
+          return sortDirection.order === 'desc' ? rateB - rateA : rateA - rateB;
+        }
+
+        return sortDirection.order === 'desc' ? (b.id > a.id ? 1 : -1) : a.id > b.id ? 1 : -1;
       });
     }
 
     return result;
-  }, [searchKey, secondId, list, sortDirection]);
+  }, [searchTerm, secondId, list, sortDirection]);
 
   const callback = useCallback(({ detail }: any) => {
     store.marketDetailList = detail;
@@ -249,6 +254,16 @@ export default function MarketsComponent() {
     }
   };
 
+  const getFavorType = useCallback(() => {
+    if (store.currentId === CURRENT_TAB.PERPETUAL) {
+      return FAVORITE_TYPE.SWAP_USDT;
+    }
+    if (store.currentId === CURRENT_TAB.LITE) {
+      return FAVORITE_TYPE.LITE;
+    }
+    return FAVORITE_TYPE.SPOT;
+  }, [store.currentId]);
+
   return (
     <MoreBtnMemo>
       <div className="filter-options">
@@ -260,16 +275,61 @@ export default function MarketsComponent() {
       ) : (
         <div className={clsx('table')}>
           <ul className="thead row">
-            <li>{LANG('币对')}</li>
+            <li
+              className={isMobile ? 'sort' : ''}
+              onClick={() => {
+                if (isMobile) {
+                  setSortDirection(prev => {
+                    const order =
+                      prev.key !== 'code' && prev.order
+                        ? prev.order
+                        : !prev.order
+                        ? 'desc'
+                        : prev.order === 'desc'
+                        ? 'asc'
+                        : '';
+
+                    return { key: 'code', order };
+                  });
+                }
+              }}
+            >
+              {LANG('交易对')}{' '}
+              {isMobile && (
+                <div className="sort-icons">
+                  <Svg
+                    src="/static/images/common/sort_up.svg"
+                    width={6}
+                    height={6}
+                    className={clsx('up', sortDirection.key === 'code' && sortDirection.order === 'asc' && 'selected')}
+                  />
+                  <Svg
+                    src="/static/images/common/sort_up.svg"
+                    width={6}
+                    height={6}
+                    className={clsx(
+                      'down',
+                      sortDirection.key === 'code' && sortDirection.order === 'desc' && 'selected'
+                    )}
+                  />
+                </div>
+              )}
+            </li>
             {isMobile ? (
               <>
                 <li
                   onClick={() => {
                     setSortDirection(prev => {
-                      if (prev === null) return 'desc';
-                      if (prev === 'desc') return 'asc';
+                      const order =
+                        prev.key !== 'rate' && prev.order
+                          ? prev.order
+                          : !prev.order
+                          ? 'desc'
+                          : prev.order === 'desc'
+                          ? 'asc'
+                          : '';
 
-                      return null;
+                      return { key: 'rate', order };
                     });
                   }}
                   className="sort"
@@ -278,15 +338,21 @@ export default function MarketsComponent() {
                   <div className="sort-icons">
                     <Svg
                       src="/static/images/common/sort_up.svg"
-                      width={10}
-                      height={10}
-                      className={clsx('up', sortDirection === 'asc' && 'selected')}
+                      width={6}
+                      height={6}
+                      className={clsx(
+                        'up',
+                        sortDirection.key === 'rate' && sortDirection.order === 'asc' && 'selected'
+                      )}
                     />
                     <Svg
                       src="/static/images/common/sort_up.svg"
-                      width={10}
-                      height={10}
-                      className={clsx('down', sortDirection === 'desc' && 'selected')}
+                      width={6}
+                      height={6}
+                      className={clsx(
+                        'down',
+                        sortDirection.key === 'rate' && sortDirection.order === 'desc' && 'selected'
+                      )}
                     />
                   </div>
                 </li>
@@ -311,7 +377,13 @@ export default function MarketsComponent() {
                   <li className="row" key={key} onClick={() => _goToTrade(item.id)}>
                     <ul className="market_item">
                       <li className="name">
-                        <CoinLogo width="32" height="32" className="icon" coin={item.coin} />
+                        {isMobile && <Star code={item.id} type={getFavorType()} width={24} height={24} />}
+                        <CoinLogo
+                          width={isMobile ? 20 : 32}
+                          height={isMobile ? 20 : 32}
+                          className="icon"
+                          coin={item.coin}
+                        />
                         <div>
                           {item.type?.toUpperCase() === 'SPOT' || item.type?.toUpperCase() === 'ETF' ? (
                             <>
@@ -362,7 +434,7 @@ export default function MarketsComponent() {
               <EmptyComponent text={LANG('暂无数据')} style={{ height: 300 }} />
             )}
           </ul>
-          {resultList.length > 0 ? (
+          {resultList?.length > 0 ? (
             <TrLink href="/markets" className={clsx('view-more')}>
               {LANG('查看更多')}
               <YIcon.moreIcon />
@@ -411,17 +483,17 @@ const style = css`
         background: var(--brand);
         border-radius: 24px;
         &:hover {
-          background: var(--hover);
-          color: var(--text-white);
+          background: var(--btn_brand_hover);
+          color: var(--text_white);
         }
       }
     }
     li.row:hover {
-      background: var(--fill-2);
+      background: var(--fill_2);
       :global(.trade-btn-2) {
         &:hover {
-          background: var(--hover);
-          color: var(--text-white);
+          background: var(--btn_brand_hover);
+          color: var(--text_white);
         }
       }
     }
@@ -452,7 +524,7 @@ const style = css`
         .price {
           font-size: 16px;
           font-weight: 500;
-          color: var(--text-primary);
+          color: var(--text_1);
 
           @media ${MediaInfo.mobile} {
             width: 100%;
@@ -460,6 +532,8 @@ const style = css`
             align-items: center;
             flex-direction: column;
             align-items: flex-end;
+            font-size: 14px;
+            gap: 4px;
           }
         }
         .name {
@@ -471,26 +545,44 @@ const style = css`
             height: 26px;
             border-radius: 50%;
             margin-right: 10px;
+            @media ${MediaInfo.mobile} {
+              width: 20px !important;
+              height: 20px;
+              margin: 0;
+            }
           }
           span {
             font-weight: 500;
             color: var(--theme-font-color-2);
           }
           .coin_symbol {
-            color: var(--text-primary);
+            color: var(--text_1);
             font-size: 16px;
             font-weight: 700;
+            @media ${MediaInfo.mobile} {
+              font-size: 14px;
+            }
           }
           .coin_alias {
-            color: var(--text-primary);
+            color: var(--text_1);
             font-size: 16px;
             font-weight: 500;
+            @media ${MediaInfo.mobile} {
+              font-size: 14px;
+              font-weight: 700;
+            }
           }
           .n-type {
             color: var(--theme-font-color-2);
             text-align: left;
           }
+          @media ${MediaInfo.mobile} {
+            gap: 8px;
+          }
         }
+      }
+      @media ${MediaInfo.mobile} {
+        min-height: auto;
       }
     }
     .thead {
@@ -498,7 +590,7 @@ const style = css`
     }
     .thead {
       li {
-        color: var(--text-tertiary);
+        color: var(--text_3);
       }
     }
     .thead,
@@ -506,6 +598,10 @@ const style = css`
       li {
         font-size: 16px;
         font-weight: 500;
+        @media ${MediaInfo.mobile} {
+          font-size: 12px;
+          font-weight: 400;
+        }
       }
       :global(li) {
         &:nth-child(1) {
@@ -537,6 +633,10 @@ const style = css`
           padding: 0 !important;
           white-space: nowrap;
         }
+        :global(.sort:last-child) {
+          display: flex;
+          justify-content: flex-end;
+        }
       }
     }
     :global(.view-more) {
@@ -547,17 +647,21 @@ const style = css`
       justify-content: center;
       font-size: 16px;
       font-weight: 400;
-      color: var(--text-tertiary);
+      color: var(--text_3);
     }
   }
   .sort {
     display: flex;
     align-items: center;
     flex-direction: row;
+    @media ${MediaInfo.mobile} {
+      gap: 4px;
+    }
+
     :global(.svg) {
       display: inline-flex !important;
       :global(svg) {
-        fill: var(--text-tertiary);
+        fill: var(--text_3);
       }
     }
 

@@ -185,7 +185,7 @@ export const ScrollXWrap = ({
               top: 0;
               width: 20px;
               height: 100%;
-              background-color: var(--bg-1);
+              background-color: var(--fill_bg_1);
               display: flex;
               justify-content: center;
               align-items: center;
@@ -199,7 +199,7 @@ export const ScrollXWrap = ({
               top: 0;
               width: 20px;
               height: 100%;
-              background-color: var(--bg-1);
+              background-color: var(--fill_bg_1);
               display: flex;
               justify-content: center;
               align-items: center;

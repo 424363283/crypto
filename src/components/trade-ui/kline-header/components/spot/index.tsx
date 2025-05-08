@@ -167,11 +167,11 @@ export const Spot = () => {
             .line {
               width: 2px;
               height: 19.692px;
-              background: var(--line-1);
+              background: var(--fill_line_1);
             }
             .coin-name {
               padding: 4px 0;
-              border-bottom: 1px dashed var(--line-3);
+              border-bottom: 1px dashed var(--fill_line_3);
             }
             .book-icon {
               flex: 1;
@@ -243,7 +243,7 @@ export const Spot = () => {
           }
           :global(.spot-tooltip-wrapper) {
             :global(.ant-tooltip-inner) {
-              background: var(--bg-1);
+              background: var(--fill_bg_1);
               color: var(--theme-trade-text-color-1);
               padding: 15px;
               width: 450px;

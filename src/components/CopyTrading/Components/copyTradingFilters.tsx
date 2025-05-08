@@ -1,6 +1,5 @@
 import styles from './tradingList.module.scss';
 import React, { useState } from 'react';
-import { MediaInfo, clsx } from '@/core/utils';
 import { Select } from '@/components/select';
 import { Drawer } from 'antd';
 import Radio from '@/components/Radio';
@@ -10,21 +9,18 @@ import Slider from '@/components/Slider';
 import DSlider from '@/components/Slider/dSlider';
 import CopyTradingContract from './copyTradingContract';
 import CopySettingInput from './copySettingInput';
-import UserTagsModule from '@/components/CopyTrading/CopyTradingDetail/Components/userTagsModule';
+// import UserTagsModule from '@/components/CopyTrading/CopyTradingDetail/Components/userTagsModule';
 import { LANG } from '@/core/i18n';
 import { Button } from '@/components/button';
 import { useCopyTradingSwapStore } from '@/store/copytrading-swap';
-// 定义 props 的接口
-interface TradingFiltersProps {
-  confrim: (data: object) => void; // 回调函数，接收一个 string 参数
-}
+import { FILTERINFO_DEFAULT } from '@/core/shared/src/copy/constants';
 
-const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => void }) => {
+const CopyTradingFilters = (props: { confrimFilter: (data: any, params?: any) => void }) => {
   const { isMobile } = useResponsive();
   const [filterStatus, setFilterStatus] = useState<boolean>(false);
-  const filterInfo =  useCopyTradingSwapStore.use.filterInfo();
-  const [currentFilterInfo, setCurrentFilterInfo] = useState(filterInfo)
-  const fetchRanks = useCopyTradingSwapStore.use.fetchRanks();
+  const filterInfo = useCopyTradingSwapStore.use.filterInfo();
+  const [currentFilterInfo, setCurrentFilterInfo] = useState(FILTERINFO_DEFAULT);
+  const [clearable, setClearable] = useState(false)
   const dateRangeData = [
     { label: LANG('{days}日', { days: 7 }), value: 7 },
     { label: LANG('{days}日', { days: 30 }), value: 30 },
@@ -121,10 +117,10 @@ const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => v
   ];
   const [tagsList, setTagsList] = useState(tags);
   const handleSelect = (row: any) => {
-    const tagsIndex  = tagsList.findIndex((tag) => tag.value === row.value)
-    tagsList[tagsIndex].isChecked =  !tagsList[tagsIndex].isChecked
+    const tagsIndex = tagsList.findIndex(tag => tag.value === row.value);
+    tagsList[tagsIndex].isChecked = !tagsList[tagsIndex].isChecked;
     setTagsList([...tagsList]);
-    const userTag = tagsList.filter((checked)=>checked.isChecked).map((item) => item.value)
+    const userTag = tagsList.filter(checked => checked.isChecked).map(item => item.value);
     setCurrentFilterInfo({
       ...currentFilterInfo,
       userTag: userTag.join(',')
@@ -132,13 +128,16 @@ const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => v
   };
 
   const selectContract = (e: Array<object>) => {
-    console.log(e, 'e=====')
-    const contractInfo = e && e.map((item) => item.id)
+    console.log(e, 'e=====');
+    if (!e.length) {
+      setClearable(false)
+    }
+    const contractInfo = e && e.map(item => item.symbol);
     setCurrentFilterInfo({
       ...currentFilterInfo,
       contractInfo: contractInfo.join(',')
     });
-  }
+  };
 
   const hanldeInput = (e: number) => {
     setCurrentFilterInfo({
@@ -148,7 +147,14 @@ const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => v
   };
   const filterConfirm = () => {
     props.confrimFilter(currentFilterInfo);
-    setFilterStatus(!filterStatus)
+    setFilterStatus(!filterStatus);
+  };
+  const handleReset = () => {
+    setCurrentFilterInfo({
+      ...FILTERINFO_DEFAULT,
+      contractSetting: ''
+    });
+    setClearable(true)
   };
   const FilterButton = () => {
     return (
@@ -158,7 +164,7 @@ const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => v
             }`}
           width={isMobile ? 14 : 16}
           height={isMobile ? 14 : 16}
-          color={'var(--text-primary)'}
+          color={'var(--text_1)'}
           className={styles.filterIcon}
         />
         {!isMobile && <span>{LANG('筛选')}</span>}
@@ -166,14 +172,15 @@ const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => v
     );
   };
 
-    const SelectOption = () => {
-      const  dateRangeSelect = (val) => {
-        setCurrentFilterInfo({
-          ...currentFilterInfo,
-          timeType: val[0].value,
-          selectDate: val[0]
-        });
-        props.confrimFilter({
+  const SelectOption = () => {
+    const dateRangeSelect = val => {
+      setCurrentFilterInfo({
+        ...currentFilterInfo,
+        timeType: val[0].value,
+        selectDate: val[0]
+      });
+      props.confrimFilter(
+        {
           ...currentFilterInfo,
           timeType: val[0].value,
           selectDate: val[0]
@@ -183,22 +190,22 @@ const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => v
           size: currentFilterInfo.size,
           timeType: val[0].value
         }
-        );
-      }
-      return (
-          <Select
-          width={80}
-          height={32}
-          className='select-coin-pair'
-           wrapperClassName="second-option-wrapper"
-          values={[filterInfo.selectDate]}
-          onChange={(val: any) => {
-           dateRangeSelect(val)
-          }}
-          options={dateRangeData}
-        />
       );
     };
+    return (
+      <Select
+        width={80}
+        height={32}
+        className="select-coin-pair"
+        wrapperClassName="second-option-wrapper"
+        values={[filterInfo.selectDate]}
+        onChange={(val: any) => {
+          dateRangeSelect(val);
+        }}
+        options={dateRangeData}
+      />
+    );
+  };
   return (
     <>
       <div className={`${styles.flexCenter} ${styles.gap16}`}>
@@ -220,7 +227,7 @@ const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => v
               src={`/static/icons/primary/common/close-square.svg`}
               width={isMobile ? 16 : 24}
               height={isMobile ? 16 : 24}
-              color={'var(--text-primary)'}
+              color={'var(--text_1)'}
               onClick={() => setFilterStatus(!filterStatus)}
               className={styles.closeBox}
             />
@@ -235,6 +242,8 @@ const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => v
                       <Radio
                         label={item.label}
                         checked={currentFilterInfo.timeType === item.value}
+                        size={14}
+                        labelcolor={currentFilterInfo.timeType === item.value ? 'var(--text_1)' : 'var(--text_2)'}
                         onChange={() =>
                           setCurrentFilterInfo({
                             ...currentFilterInfo,
@@ -250,16 +259,19 @@ const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => v
             </div>
             <div className={`${styles.mb32}`}>
               <div className={styles.flexSpan}>
-                <p className={`${styles.mb16} ${styles.setTitle}`}>{LANG('{days}日收益额', { days: currentFilterInfo.timeType })}(USDT)</p>
+                <p className={`${styles.mb16} ${styles.setTitle}`}>
+                  {LANG('{days}日收益额', { days: currentFilterInfo.timeType })}(USDT)
+                </p>
                 <div className={`${styles.flexCenter} ${styles.gap4}`}>
                   ≥
                   <CopySettingInput value={currentFilterInfo.profitAmount} onChange={hanldeInput} />
                 </div>
               </div>
-              <div>
+              <div  className={styles.SigleSlider}>
                 <Slider
                   min={1}
                   max={1000}
+                  className={styles.cuSlider}
                   onChange={(val: number) => {
                     setCurrentFilterInfo({
                       ...currentFilterInfo,
@@ -272,7 +284,9 @@ const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => v
             </div>
             <div className={`${styles.mb32}`}>
               <div className={styles.flexSpan}>
-                <p className={`${styles.mb16} ${styles.setTitle}`}>{LANG('{days}日收益率', { days: currentFilterInfo.timeType })}</p>
+                <p className={`${styles.mb16} ${styles.setTitle}`}>
+                  {LANG('{days}日收益率', { days: currentFilterInfo.timeType })}
+                </p>
                 <div className={`${styles.flexCenter} ${styles.gap4}`}>
                   ≥
                   <CopySettingInput
@@ -287,10 +301,11 @@ const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => v
                   />
                 </div>
               </div>
-              <div>
+              <div  className={styles.SigleSlider}>
                 <Slider
                   min={1}
                   max={100}
+                  className={styles.cuSlider}
                   onChange={(val: number) => {
                     setCurrentFilterInfo({
                       ...currentFilterInfo,
@@ -303,7 +318,9 @@ const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => v
             </div>
             <div className={`${styles.mb32}`}>
               <div className={`${styles.flexSpan}`}>
-                <p className={`${styles.mb16} ${styles.setTitle}`}>{LANG('{days}日胜率', { days: currentFilterInfo.timeType })}</p>
+                <p className={`${styles.mb16} ${styles.setTitle}`}>
+                  {LANG('{days}日胜率', { days: currentFilterInfo.timeType })}
+                </p>
                 <div className={`${styles.flexCenter} ${styles.gap4}`}>
                   <CopySettingInput
                     value={currentFilterInfo.victoryRateMin}
@@ -346,12 +363,14 @@ const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => v
             </div>
             <div className={`${styles.mb32}`}>
               <p className={`${styles.mb16} ${styles.setTitle}`}>{LANG('入驻天数(天)')}</p>
-              <div className={`${styles.setMutitle} `}>
+              <div className={`${styles.setMutitle}`}>
                 {dateRangeData.map(item => {
                   return (
                     <div className={styles.flexSpan} key={item.value}>
                       <Radio
                         label={`≥${item.label}`}
+                        size={14}
+                        labelcolor={currentFilterInfo.settledDays === item.value ? 'var(--text_1)' : 'var(--text_2)'}
                         checked={currentFilterInfo.settledDays === item.value}
                         onChange={() => {
                           setCurrentFilterInfo({
@@ -447,7 +466,7 @@ const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => v
                 />
               </div>
             </div>
-            <div className={`${styles.mb32}`}>
+            {/* <div className={`${styles.mb32}`}>
               <p className={`${styles.mb16} ${styles.setTitle}`}>{LANG('交易员等级')}</p>
               <div className={styles.setMutitle}>
                 {userLeverType.map(lever => {
@@ -468,7 +487,7 @@ const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => v
                   );
                 })}
               </div>
-            </div>
+            </div> */}
             {/* <div className={`${styles.mb32}`}>
               <p className={`${styles.mb16} ${styles.setTitle}`}>{LANG('交易员标签')}</p>
               <UserTagsModule selected={item => handleSelect(item)} tagsList={tagsList} />
@@ -478,7 +497,7 @@ const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => v
               <div className={styles.flexCenter}>
                 <Radio
                   size={14}
-                  fillColor="var(--text-brand)"
+                  fillColor="var(--text_brand)"
                   label={LANG('隐藏已满员的交易员')}
                   checked={currentFilterInfo.hideTrader}
                   onChange={() =>
@@ -493,11 +512,11 @@ const CopyTradingFilters = (props: { confrimFilter: (data: any,params?:any) => v
             <div>
               <p className={`${styles.mb16} ${styles.setTitle}`}>{LANG('带单合约')}</p>
               <div>
-                <CopyTradingContract selectContract={selectContract} />
+                <CopyTradingContract type='filter' clearable={clearable} selectContract={selectContract} />
               </div>
             </div>
             <div className={`${styles.flexSpan} ${styles.copySubmit}`}>
-              <Button rounded type='brand' height={40} style={{ width: '39%' }} onClick={filterConfirm}>
+              <Button rounded type="brand" height={40} style={{ width: '39%' }} onClick={handleReset}>
                 {LANG('重置')}
               </Button>
               <Button rounded type="primary" height={40} style={{ width: '60%' }} onClick={filterConfirm}>

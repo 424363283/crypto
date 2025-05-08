@@ -236,7 +236,7 @@ export const List = ({
             margin-bottom: 8px;
             white-space: nowrap;
             > div {
-              color: var(--text-secondary);
+              color: var(--text_2);
               cursor: pointer;
               display: flex;
               align-items: center;

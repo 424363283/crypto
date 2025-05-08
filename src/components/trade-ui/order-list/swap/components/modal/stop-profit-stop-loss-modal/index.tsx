@@ -37,6 +37,7 @@ import {
   resetFormData
 } from './utils';
 import { DesktopOrTablet, Mobile } from '@/components/responsive';
+import { POSITION_TYPE } from '@/core/shared/src/constants/order';
 const TYPES = Utils.TYPES;
 
 const StopProfitStopLossModal = ({
@@ -66,7 +67,9 @@ const StopProfitStopLossModal = ({
     incomeStandard1,
     incomeStandard2,
     incomeStandard3,
-    stopLossLimitPrice
+    stopLossLimitPrice,
+    stopVolumePercent,
+    volumePercent
   } = store;
   const [_value, _setValue] = useState(price);
   const [ckey, setCkey] = useState(() => +new Date());
@@ -316,6 +319,9 @@ const StopProfitStopLossModal = ({
         message.error(e?.error?.message || LANG('失败'), 1);
       }
     };
+    const newMarginMode = Swap.Info._newMarginMode;
+    const twoWayMode = data.positionType === POSITION_TYPE.TWO || Swap.Trade.twoWayMode;
+    const extraParams = newMarginMode && twoWayMode ? { marginType: data.marginType, leverage: data.leverage } : {};
     // 提交请求
     const requestParams = {
       subWallet: data['subWallet'],
@@ -327,7 +333,8 @@ const StopProfitStopLossModal = ({
       reduceOnly: 1,
       opType: 3,
       triggerPrice: stopTriggerPrice,
-      priceType: store.stopProfitLimitType === TYPES.FLAG_PRICE ? 2 : 1
+      priceType: store.stopProfitLimitType === TYPES.FLAG_PRICE ? 2 : 1,
+      ...extraParams
     };
     const [result, result2] = await Promise.all([
       !isCloseType
@@ -498,9 +505,11 @@ const StopProfitStopLossModal = ({
   };
 
   const handleClose = () => {
-    resetFormData();
+    resetFormData(data);
     onClose?.();
   };
+
+  const walletData = Swap.Assets.getWallet({ walletId: data.subWallet, usdt: isUsdtType, withHooks: false });
 
   const content = (
     <>
@@ -516,6 +525,7 @@ const StopProfitStopLossModal = ({
               {data.leverage}
               <span>X</span>
             </div>
+            <div className={clsx('wallet')}>{Swap.Assets.walletFormat(walletData)?.alias}</div>
           </div>
 
           <div className={clsx('price-group')}>
@@ -621,7 +631,7 @@ const StopProfitStopLossModal = ({
                           placeholder={!isLimit ? LANG('市价') : LANG('请输入价格')}
                           unit={volumeUnit}
                           disabled={!isLimit}
-                          value={!isLimit ? '' : price > 0 ? price : ''}
+                          value={!isLimit ? '' : price ? price : ''}
                           data={data}
                           income={stopProfitIncome}
                           onTypeChange={_onStopProfitLimitTypeChange}
@@ -629,6 +639,7 @@ const StopProfitStopLossModal = ({
                           onChange={(v: any) => onChangePrice(v)}
                           className={clsx(!isLimit ? 'market-price-input' : '')}
                         />
+
                         <SwitchPrice
                           type={!isLimit ? TYPES.NEWS_PRICE : TYPES.FLAG_PRICE}
                           options={[LANG('市价'), LANG('限价')]}
@@ -650,6 +661,7 @@ const StopProfitStopLossModal = ({
                           onChangeVolume(v, null);
                         }}
                       />
+
                       <Slider
                         min={1}
                         max={100}
@@ -667,7 +679,7 @@ const StopProfitStopLossModal = ({
                           <span className={clsx('title')}> {LANG('可止盈量')} </span>
                           {formatPositionNumber(data?.availPosition)} {volumeUnit}
                         </p>
-                        {/* <NewCloseTips
+                        <NewCloseTips
                           {...{
                             isLimit,
                             price,
@@ -680,7 +692,7 @@ const StopProfitStopLossModal = ({
                             availPosition: volume,
                             isCloseType: false
                           }}
-                        /> */}
+                        />
                       </div>
                     </div>
                   ) : (
@@ -740,7 +752,7 @@ const StopProfitStopLossModal = ({
                           placeholder={!store.stopIsLimit ? LANG('市价') : LANG('请输入价格')}
                           unit={priceUnitText}
                           disabled={!store.stopIsLimit}
-                          value={!store.stopIsLimit ? '' : stopLossLimitPrice > 0 ? stopLossLimitPrice : ''}
+                          value={!store.stopIsLimit ? '' : stopLossLimitPrice ? stopLossLimitPrice : ''}
                           onChange={(v: any) => setstopLossLimitPrice(v)}
                           data={data}
                           income={stopLossIncome}
@@ -748,6 +760,7 @@ const StopProfitStopLossModal = ({
                           type={store.stopLossLimitType}
                           className={clsx(!store.stopIsLimit ? 'market-price-input' : '')}
                         />
+
                         <SwitchPrice
                           type={!store.stopIsLimit ? TYPES.NEWS_PRICE : TYPES.FLAG_PRICE}
                           options={[LANG('市价'), LANG('限价')]}
@@ -777,7 +790,7 @@ const StopProfitStopLossModal = ({
                           const value = optionFormat((rate / 100) * data.availPosition, getAvgPrice());
                           onChangeVolume(value, null, rate, 'partialPositionStop');
                         }}
-                        value={store.stopVolumePercent}
+                        value={stopVolumePercent}
                         marks={marks}
                         type="stopLossRoe"
                       />
@@ -786,10 +799,10 @@ const StopProfitStopLossModal = ({
                           <span className={clsx('title')}> {LANG('可止损量')} </span>
                           {formatPositionNumber(data?.availPosition)} {volumeUnit}
                         </p>
-                        {/* <NewCloseTips
+                        <NewCloseTips
                           {...{
-                            isLimit,
-                            price,
+                            isLimit: store.stopIsLimit,
+                            price: stopLossLimitPrice,
                             triggerPrice: store.stopTriggerPrice,
                             triggerPriceType: store.stopLossLimitType,
                             isUsdtType,
@@ -799,7 +812,7 @@ const StopProfitStopLossModal = ({
                             availPosition: store.stopVolume,
                             isCloseType: false
                           }}
-                        /> */}
+                        />
                       </div>
                     </div>
                   )}
@@ -911,7 +924,7 @@ const StopProfitStopLossModal = ({
                       // );
                       onChangeVolume(value, null, rate);
                     }}
-                    value={store.volumePercent}
+                    value={volumePercent}
                     marks={marks}
                     type="stopProfit"
                   />
@@ -1119,24 +1132,23 @@ const StopProfitStopLossModal = ({
                   marks={marks}
                   type="stopProfit"
                 />
-                <DesktopOrTablet>
-                  {stopProfit ? (
-                    <NewCloseTips
-                      {...{
-                        isLimit: false,
-                        price,
-                        triggerPrice: stopProfit,
-                        triggerPriceType: stopProfitType,
-                        isUsdtType,
-                        data,
-                        settleCoin,
-                        incomeStandard: incomeStandard3,
-                        availPosition: data.availPosition,
-                        isCloseType: true
-                      }}
-                    />
-                  ) : null}
-                </DesktopOrTablet>
+
+                {stopProfit ? (
+                  <NewCloseTips
+                    {...{
+                      isLimit: false,
+                      price,
+                      triggerPrice: stopProfit,
+                      triggerPriceType: stopProfitType,
+                      isUsdtType,
+                      data,
+                      settleCoin,
+                      incomeStandard: incomeStandard3,
+                      availPosition: data.availPosition,
+                      isCloseType: true
+                    }}
+                  />
+                ) : null}
               </div>
               <div className={clsx('liquidation-pannel')}>
                 <div className={clsx('liquidation-label')}>{LANG('止损')}</div>
@@ -1196,24 +1208,23 @@ const StopProfitStopLossModal = ({
                   marks={marks}
                   type="stopLossRoe"
                 />
-                <DesktopOrTablet>
-                  {stopLoss ? (
-                    <NewCloseTips
-                      {...{
-                        isLimit: false,
-                        price,
-                        triggerPrice: stopLoss,
-                        triggerPriceType: stopLossType,
-                        isUsdtType,
-                        data,
-                        settleCoin,
-                        incomeStandard: incomeStandard3,
-                        availPosition: data.availPosition,
-                        isCloseType: true
-                      }}
-                    />
-                  ) : null}
-                </DesktopOrTablet>
+
+                {stopLoss ? (
+                  <NewCloseTips
+                    {...{
+                      isLimit: false,
+                      price,
+                      triggerPrice: stopLoss,
+                      triggerPriceType: stopLossType,
+                      isUsdtType,
+                      data,
+                      settleCoin,
+                      incomeStandard: incomeStandard3,
+                      availPosition: data.availPosition,
+                      isCloseType: true
+                    }}
+                  />
+                ) : null}
               </div>
             </div>
           )}

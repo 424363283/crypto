@@ -118,7 +118,7 @@ const styles = css`
           font-size: 20px;
           font-style: normal;
           font-weight: 500;
-          color: var(--text-tertiary);
+          color: var(--text_3);
         }
         :global(a:first-of-type) {
           padding-left: 0;

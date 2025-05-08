@@ -14,6 +14,7 @@ import FundHistory from './modules/fund-history';
 import PowerExchange from './modules/power-exchange';
 import { ASSET_TYPE, SUB_MODULE_TYPE } from './types';
 import OpenContractModal from '@/components/trade-ui/trade-view/swap/components/modal/open-contract-modal';
+import { useCopyTradingSwapStore } from '@/store/copytrading-swap';
 
 export default function AssetsOverviewContainer() {
   const [verifiedDeveloped, setVerifiedDeveloped] = useState(false);
@@ -31,6 +32,11 @@ export default function AssetsOverviewContainer() {
   const subModule = getUrlQueryParams('module') as SUB_MODULE_TYPE;
   const { NAV_MAP } = useNavMap(verifiedDeveloped);
   const { openContractVisible } = Swap.Trade.store.modal;
+  const fetchShareTrader = useCopyTradingSwapStore.use.fetchShareTrader();
+
+  useEffect(() => {
+    fetchShareTrader()
+  }, []);
   
   useEffect(() => {
     fetchUserInfo();
@@ -45,6 +51,9 @@ export default function AssetsOverviewContainer() {
     },
     [ASSET_TYPE.ASSETS_SWAP_U]: () => {
       return <AssetSwapPage key={'u' + type} />;
+    },
+    [ASSET_TYPE.ASSETS_SWAP_COPY]: () => {
+      return <AssetSwapPage key={'copy' + type} />;
     },
     [ASSET_TYPE.ASSETS_LITE]: () => <AssetLitePage />,
     [ASSET_TYPE.ASSETS_FUND]: () => <FundHistory />,

@@ -52,7 +52,7 @@ const { className, styles: _styles } = css.resolve`
         :global(> div) {
           width: auto;
           height: 1px;
-          background: var(--line-1);
+          background: var(--fill_line_1);
         }
       }
     }
@@ -101,7 +101,7 @@ const { className, styles: _styles } = css.resolve`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    color: var(--text-secondary);
+    color: var(--text_2);
     padding: 0 24px;
   }
   .drawer-content {

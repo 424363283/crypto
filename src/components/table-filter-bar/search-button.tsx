@@ -12,6 +12,6 @@ export const SearchButton = ({ onSearchClick }: { onSearchClick: () => void }) =
 };
 const styles = css`
   :global(.search-button) {
-    color: var(--text-brand)!important;
+    color: var(--text_brand)!important;
   }
 `;

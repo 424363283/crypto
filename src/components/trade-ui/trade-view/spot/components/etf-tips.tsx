@@ -97,7 +97,7 @@ const styles = css`
     border-bottom: var(--theme-trade-layout-gap) solid var(--theme-trade-bg-color-1);
     font-size: 12px;
     padding: 12px;
-    background: var(--bg-1);
+    background: var(--fill_bg_1);
     color: var(--theme-font-color-1);
     font-weight: 500;
     .closeIcon {

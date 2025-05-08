@@ -1,4 +1,11 @@
-import { getSpotAssetApi, getSpotGridPositionListApi, getSpotHistoryCommissionApi, getSpotHistoryDetailApi, getSpotInvestPositionListApi, getSpotPositionListApi } from '@/core/api';
+import {
+  getSpotAssetApi,
+  getSpotGridPositionListApi,
+  getSpotHistoryCommissionApi,
+  getSpotHistoryDetailApi,
+  getSpotInvestPositionListApi,
+  getSpotPositionListApi
+} from '@/core/api';
 import { Polling, message } from '@/core/utils';
 import dayjs from 'dayjs';
 import { Account } from '../../account';
@@ -13,42 +20,42 @@ export class Position {
 
   public static pollingPosition = new Polling({
     interval: 1000,
-    callback: Position.fetchPositionList,
+    callback: Position.fetchPositionList
   });
 
   public static pollingTradeHistory = new Polling({
     interval: 1000,
-    callback: Position.fetchTradeHistoryList,
+    callback: Position.fetchTradeHistoryList
   });
 
   public static pollingOrderHistory = new Polling({
     interval: 1000,
-    callback: Position.fetchOrderHistoryList,
+    callback: Position.fetchOrderHistoryList
   });
 
   public static pollingAssets = new Polling({
     interval: 1000,
-    callback: Position.fetchSpotAssetsList,
+    callback: Position.fetchSpotAssetsList
   });
 
   public static pollingGrid = new Polling({
     interval: 2000,
-    callback: Position.fetchSpotGridPositionList,
+    callback: Position.fetchSpotGridPositionList
   });
 
   public static pollingGridAtFiveSeconds = new Polling({
     interval: 5000,
-    callback: Position.fetchSpotGridPositionList,
+    callback: Position.fetchSpotGridPositionList
   });
 
   public static pollingInvest = new Polling({
     interval: 2000,
-    callback: Position.fetchSpotInvestPositionList,
+    callback: Position.fetchSpotInvestPositionList
   });
 
   public static pollingInvestAtFiveSeconds = new Polling({
     interval: 5000,
-    callback: Position.fetchSpotInvestPositionList,
+    callback: Position.fetchSpotInvestPositionList
   });
 
   // 记录上一次请求时的持仓数据数量，有变化时代表有交易成交，重新拉取余额
@@ -65,7 +72,7 @@ export class Position {
     let payload = {};
     if (Position.state.positionCommissionType !== CommissionType.All) {
       payload = {
-        type: Position.state.positionCommissionType,
+        type: Position.state.positionCommissionType
       };
     }
 
@@ -93,13 +100,13 @@ export class Position {
     // Position.state.loading = true;
 
     let payload: any = {
-      openTypes: '0,2',
+      openTypes: '0,2'
     };
 
     if (Position.state.historyCommissionType !== CommissionType.All) {
       payload = {
         type: Position.state.historyCommissionType,
-        ...payload,
+        ...payload
       };
     }
 
@@ -107,7 +114,7 @@ export class Position {
 
     if (res.code === 200) {
       const {
-        data: { list },
+        data: { list }
       } = res;
       Position.state.orderHistoryList = list;
     }
@@ -128,8 +135,10 @@ export class Position {
         createTimeLe = dayjs().endOf('day');
         break;
       case HistoryRange.WEEK:
-        createTimeGe = dayjs().startOf('week').add(1, 'd');
-        createTimeLe = dayjs().endOf('week').add(1, 'd');
+        const today = dayjs();
+        const isSunday = today.day() === 0;
+        createTimeGe = isSunday ? today.subtract(6, 'day').startOf('day') : today.startOf('week').add(1, 'd');
+        createTimeLe = isSunday ? today.endOf('day') : today.endOf('week').add(1, 'd');
         break;
       case HistoryRange.MONTH:
         createTimeGe = dayjs().startOf('month');
@@ -146,12 +155,12 @@ export class Position {
     const res = await getSpotHistoryDetailApi({
       openTypes: '0,2',
       createTimeGe: createTimeGe.format('YYYY-MM-DD HH:mm:ss'),
-      createTimeLe: createTimeLe.format('YYYY-MM-DD HH:mm:ss'),
+      createTimeLe: createTimeLe.format('YYYY-MM-DD HH:mm:ss')
     });
 
     if (res.code === 200) {
       const {
-        data: { list },
+        data: { list }
       } = res;
       Position.state.tradeHistoryList = list;
     } else {

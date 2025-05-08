@@ -1,6 +1,76 @@
+$sm: 768px;
 .swapTraderCompareList {
   .compareTableTile {
     display: flex;
     justify-content: space-between;
   }
+}
+.tradeContainer {
+  color: var(--text_1);
+}
+.swapTradeTitle {
+  @media (max-width: $sm) {
+    width: 56px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+.tradeTitle {
+  font-family: HarmonyOS Sans SC;
+  font-weight: 500;
+  font-size: 20px;
+  border: 1px solid var(--fill_line_2);
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+}
+.swapTraderRow5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  height: 72px;
+  border: 1px solid var(--fill_line_2);
+  border-top: none;
+  .swapTraderItem {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid var(--fill_line_2);
+    &:last-child {
+      border-right: none;
+    }
+    @media (max-width: $sm) {
+      font-size: 12px;
+    }
+    &.swapTraderGreen {
+      color: var(--color-green);
+    }
+    &.swapTraderRed {
+      color: var(--color-red);
+    }
+    &.swapTraderhight {
+      color: var(--yellow);
+    }
+  }
+}
+.noBorder {
+  border-top: none;
+  @media (max-width: $sm) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    height: 62px;
+    .tradeData {
+      font-size: 20px;
+    }
+  }
+}
+.flexSpace {
+  display: flex;
+  justify-content: space-between;
 }

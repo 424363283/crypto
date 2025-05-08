@@ -322,7 +322,7 @@ export default memo(SwapFilterWithTable);
 const styles = css`
   .swap-filter-bar {
     height: 55px;
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     @media ${MediaInfo.mobile} {
       padding: 0 10px;
       overflow-x: auto;

@@ -59,7 +59,7 @@ export const Infos = ({
             display: flex;
             align-items: center;
             gap: 8px;
-            color: var(--text-primary);
+            color: var(--text_1);
             font-size: 16px;
             font-weight: 500;
             line-height: 16px;
@@ -75,8 +75,8 @@ export const Infos = ({
                 align-items: center;
                 gap: 10px;
                 border-radius: 4px;
-                background: var(--fill-3);
-                color: var(--text-secondary);
+                background: var(--fill_3);
+                color: var(--text_2);
                 leading-trim: both;
                 text-edge: cap;
                 font-size: 12px;
@@ -123,7 +123,7 @@ export const Infos = ({
               justify-content: center;
               align-items: flex-start;
               gap: 8px;
-              color: var(--text-primary);
+              color: var(--text_1);
               font-size: 14px;
               font-weight: 400;
               line-height: 14px;

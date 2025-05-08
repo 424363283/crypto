@@ -202,13 +202,13 @@ const styles = css`
     font-size: 12px;
     font-style: normal;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--text_1);
   }
   :global(.liteMultiple) {
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
-    color: var(--text-primary);
+    color: var(--text_1);
   }
   :global(.liteSafetyPrice) {
     font-size: 12px;
@@ -227,7 +227,7 @@ const styles = css`
     font-size: 12px;
     font-style: normal;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--text_1);
     display: flex;
     align-items: end;
     gap: 8px;
@@ -242,8 +242,8 @@ const styles = css`
       background: transparent !important;
     }
     :global(.ant-table-cell) {
-      color: var(--text-tertiary) !important;
-      border-bottom: 1px solid var(--line-1) !important;
+      color: var(--text_3) !important;
+      border-bottom: 1px solid var(--fill_line_1) !important;
     }
     :global(.ant-table-row) {
       :global(td) {
@@ -318,20 +318,20 @@ const styles = css`
         cursor: pointer;
         border-radius: 22px;
         background: var(--Color-Brand-brand, #07828b);
-        color: var(--text-primary);
+        color: var(--text_1);
         min-width: 50px;
       }
       :global(.settingBtn) {
         background: var(--Color-Brand-brand, #07828b);
         border: none;
-        color: var(--text-white);
+        color: var(--text_white);
       }
     }
   }
   :global(.dark .ant-table-row) {
     :global(td) {
       color: #c7c7c7 !important;
-      border-bottom: 1px solid var(--line-1);
+      border-bottom: 1px solid var(--fill_line_1);
     }
   }
 `;

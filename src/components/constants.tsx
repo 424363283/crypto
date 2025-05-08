@@ -4,6 +4,7 @@ export enum Size {
   DEFAULT = '',
   LG = 'lg',
   XL = 'xl',
+  MD= 'md'
 }
 
 export enum Intent {

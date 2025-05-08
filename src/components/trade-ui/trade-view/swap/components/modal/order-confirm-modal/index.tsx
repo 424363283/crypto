@@ -48,8 +48,23 @@ export const OrderConfirmModal = ({
   const storePrice = Swap.Trade.store.price;
   const volPrice = isMarketType ? marketPrice : storePrice;
   const triggerPrice = Swap.Trade.store.triggerPrice;
-  const volume_display = Swap.Trade.store.volume;
-  const currentPosition = Swap.Trade.getInputVolume({ isBuy, flagPrice: Number(volPrice) });
+  const { direct, inputVolume } = Swap.Trade.store.modal;
+  const volume_display = direct && inputVolume ? inputVolume : Swap.Trade.store.volume;
+  let currentPosition = '';
+
+  if (direct && inputVolume) {
+    const isVolUnit = Swap.Info.getIsVolUnit(isUsdtType);
+    currentPosition = (isUsdtType ? true : !isVolUnit)
+      ? Swap.Calculate.amountToVolume({
+          usdt: isUsdtType,
+          value: inputVolume,
+          code: quoteId,
+          flagPrice: marketPrice
+        })
+      : inputVolume;
+  } else {
+    currentPosition = Swap.Trade.getInputVolume({ isBuy, flagPrice: Number(volPrice) });
+  }
   const depthPrice = Swap.Info.getDepthPrice({ isBuy: isBuy, id: quoteId, volume: currentPosition });
   const price = isMarketType ? depthPrice : storePrice;
   const buyCommissionCost = Swap.Utils.numberDisplayFormat(
@@ -58,7 +73,7 @@ export const OrderConfirmModal = ({
   const sellCommissionCost = Swap.Utils.numberDisplayFormat(
     Swap.Trade.getCommissionCost({ isBuy: false, positionMode: true, fixed: 8 })
   );
-  const volume = !trackData
+  let volume = !trackData
     ? `${Swap.Calculate.formatPositionNumber({
         usdt: isUsdtType,
         code: quoteId,
@@ -76,6 +91,9 @@ export const OrderConfirmModal = ({
         value: trackData?.currentPosition || 0
       })}`;
 
+  if (Swap.Trade.store.modal.direct && Swap.Trade.store.modal.inputVolume) {
+    volume = Swap.Trade.store.modal.inputVolume;
+  }
   const onClose =
     _onClose ||
     (() => {
@@ -118,7 +136,6 @@ export const OrderConfirmModal = ({
   });
 
   const newPrice = marketMaps?.[quoteId]?.price || 0;
-
   const _onConfirm = () => {
     if (propsOnConfirm) {
       propsOnConfirm({ dontShouldAgain });
@@ -130,7 +147,9 @@ export const OrderConfirmModal = ({
           limitSpsl: false,
           marketSpsl: false
         });
-      Swap.Trade.onPlaceAnOrder({ buy: isBuy });
+
+      const { direct, inputVolume } = Swap.Trade.store.modal;
+      Swap.Trade.onPlaceAnOrder({ buy: isBuy, direct, inputVolume });
       onOrderConfirm?.();
     }
   };
@@ -144,7 +163,17 @@ export const OrderConfirmModal = ({
               {Swap.Info.getCryptoData(quoteId).name} {perpetualText}
             </div>
             <div className={clsx(isBuy ? 'main-green' : 'main-red', 'side')}>
-              {isBuy ? (isOpenPosition ? LANG('买多') : LANG('平多')) : isOpenPosition ? LANG('卖空') : LANG('平空')}
+              {direct
+                ? isBuy
+                  ? LANG('买多')
+                  : LANG('卖空')
+                : isBuy
+                ? isOpenPosition
+                  ? LANG('买多')
+                  : LANG('平多')
+                : isOpenPosition
+                ? LANG('卖空')
+                : LANG('平空')}
             </div>
           </div>
           {!trackData ? (
@@ -159,7 +188,7 @@ export const OrderConfirmModal = ({
               )}
               <div className={clsx('row')}>
                 <div>{LANG('价格')}</div>
-                <div>{!isMarketType ? `${volPrice} ${priceUnitText}` : LANG('市价')}</div>
+                <div>{!isMarketType && !direct ? `${volPrice} ${priceUnitText}` : LANG('市价')}</div>
               </div>
               <div className={clsx('row')}>
                 <div>{LANG('数量')}</div>
@@ -167,11 +196,11 @@ export const OrderConfirmModal = ({
                   {volume_display} {Swap.Info.getUnitText({ symbol: quoteId })}
                 </div>
               </div>
-              {isOpenPosition && (
+              {(isOpenPosition || direct) && (
                 <div className={clsx('row')}>
                   <Tooltip
                     placement="top"
-                    className='tooltip'
+                    className="tooltip"
                     title={LANG(
                       '预估强平价为下单前预估的仓位强平价格，仅供参考。仓位的实际强平价取决于开仓均价、浮动盈亏和保证金。'
                     )}
@@ -183,7 +212,7 @@ export const OrderConfirmModal = ({
                   <div>{`${liquidationPrice} ${priceUnitText}`}</div>
                 </div>
               )}
-              {isOpenPosition && (
+              {(isOpenPosition || direct) && (
                 <div className={clsx('row')}>
                   <Tooltip
                     placement="top"
@@ -248,7 +277,7 @@ export const OrderConfirmModal = ({
         <div className={clsx('remind')}>
           <DesktopOrTablet>
             <div className={clsx('checkbox', checkboxProps.checked && 'active')}>
-              <CheckboxV2 {...checkboxProps} />
+              <CheckboxItem value={checkboxProps.checked} onChange={checkboxProps.onClick} />
             </div>
             <div className={clsx('text')}>{LANG('不再展示，您可在【偏好设置】中重新设置。')}</div>
           </DesktopOrTablet>

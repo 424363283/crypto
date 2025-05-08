@@ -105,7 +105,7 @@ const HeaderUser = (props: HeaderUserProps) => {
                     >
                       <span className="uid">
                         <span>UID:{user?.uid}</span>
-                        <CommonIcon size={10} name="common-copy" enableSkin />
+                        <CommonIcon size={14} name="common-copy" enableSkin />
                       </span>
                     </CopyToClipboard>
                   ) : null}
@@ -151,12 +151,12 @@ const styles = css`
     text-align: left;
     li {
       :global(> a) {
-        color: var(--text-secondary) !important;
+        color: var(--text_2) !important;
         :global(> *:nth-last-child(2)) {
-          color: var(--text-primary);
+          color: var(--text_1);
         }
         :global(> *:nth-child(2)) {
-          color: var(--text-tertiary);
+          color: var(--text_3);
         }
       }
       &:hover {
@@ -224,19 +224,19 @@ const styles = css`
         font-weight: 400;
         line-height: 12px; /* 100% */
         &.no-valid {
-          background-color: var(--fill-3);
-          color: var(--text-tertiary);
+          background-color: var(--fill_3);
+          color: var(--text_3);
         }
         &.review {
-          background-color: var(--yellow_tips, rgba(240, 186, 48, 0.1));
+          background-color: var(--yellow_10);
           color: var(--yellow, #f0ba30);
         }
         &.fail {
-          background-color: var(--red_light, rgba(239, 69, 74, 0.1));
+          background-color: var(--red_10, rgba(239, 69, 74, 0.1));
           color: var(--red);
         }
         &.success {
-          background-color: var(--label, rgba(7, 130, 139, 0.2));
+          background-color: var(--brand_20, rgba(7, 130, 139, 0.2));
           color: var(--brand);
         }
       }
@@ -244,13 +244,12 @@ const styles = css`
         display: flex;
         align-items: center;
         padding-top: 8px;
-
-        color: var(--text-secondary);
-        font-family: 'HarmonyOS Sans SC';
+        color: var(--text_2);
         font-size: 14px;
         font-style: normal;
         font-weight: 400;
         line-height: normal;
+        gap: 8px;
       }
     }
   }

@@ -83,7 +83,7 @@ const KChartComponent = ({
         <Loading.wrap
           style={{ position: 'relative', flex: 1 }}
           isLoading={isLoading}
-          background={'var(--bg-1)'}
+          background={'var(--fill_bg_1)'}
         >
           <OnceRender render={kType === KTYPE.K_LINE_CHART}>
             {id && (

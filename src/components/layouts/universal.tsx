@@ -58,13 +58,14 @@ const UniversalLayout = React.memo(
         {!hideFooter && !isNativeAPP && <Footer />}
         <style jsx>{`
           .uni-layout {
-            background-color: var(--bg-1);
+            background-color: var(--fill_bg_1);
             @media ${MediaInfo.mobile} {
-              background-color: var(--fill-3);
+              background-color: var(--fill_3);
             }
             .main {
               display: flex;
               flex-direction: column;
+              min-height: calc(100vh - 56px);
               @media ${MediaInfo.mobile} {
                  margin: 0 !important;
               }

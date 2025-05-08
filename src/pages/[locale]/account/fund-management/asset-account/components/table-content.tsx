@@ -38,7 +38,7 @@ const styles = css`
       padding: 0 10px;
       margin: 15px 0;
       border-radius: 8px;
-      background:var( --bg-1);
+      background:var(--fill_bg_1);
       width: auto;
     }
     .header {
@@ -60,7 +60,7 @@ const styles = css`
         align-item: center;
         font-size: 14px;
         font-weight: 400;
-        color: var(--text-tertiary);
+        color: var(--text_3);
         line-height: 18px;
         :global(.icon) {
           margin-right: 8px;

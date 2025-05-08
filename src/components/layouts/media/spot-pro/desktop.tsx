@@ -69,7 +69,7 @@ export const SpotProDesktopLayout = ({
         #spot-layout {
           overflow: auto;
           flex: 1;
-          background-color: var(--fill-3);
+          background-color: var(--fill_3);
           padding-top: var(--theme-trade-layout-gap);
           padding-left: var(--theme-trade-layout-spacing);
           display: flex;
@@ -201,7 +201,7 @@ export const SpotProDesktopLayout = ({
             padding-bottom: 20px;
           }
           .bg {
-            background-color: var(--bg-1);
+            background-color: var(--fill_bg_1);
             overflow: hidden;
           }
         }
@@ -220,8 +220,8 @@ export const SpotProDesktopLayout = ({
         .right-title {
             height: 40px;
             padding: 16px 4px;
-            border-bottom: 1px solid var(--line-1, rgba(31, 33, 36, 1));
-            color: var(--text-secondary);
+            border-bottom: 1px solid var(--fill_line_1, rgba(31, 33, 36, 1));
+            color: var(--text_2);
             display:flex;
             align-items:center;
             &.ru,
@@ -243,7 +243,7 @@ export const SpotProDesktopLayout = ({
               font-weight: 500;
 
               &.active {
-                color: var(--text-brand);
+                color: var(--text_brand);
               }
               &:last-child {
                 margin-right: 0px;

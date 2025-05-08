@@ -54,6 +54,7 @@ const styles = css`
     padding: 10px 10px;
     @media ${MediaInfo.mobile} {
       width: 100%;
+      padding: 0;
     }
     :global(.verify-form) {
       width: 440px;

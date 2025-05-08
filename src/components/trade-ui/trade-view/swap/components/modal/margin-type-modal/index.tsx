@@ -39,6 +39,7 @@ export const MarginTypeModal = () => {
   const { marginType } = Swap.Info.getLeverFindData(Swap.Trade.store.quoteId);
   const [value, setValue] = useState(marginType);
   const title = LANG('保证金模式'); //`${quoteName} ${LANG('永续____1')} ${LANG('保证金模式')}`;
+  const twoWayMode = Swap.Trade.twoWayMode;
 
   const onClose = () => {
     Swap.Trade.setModal({ marginTypeVisible: false });
@@ -51,6 +52,14 @@ export const MarginTypeModal = () => {
       }
     }
   }, [marginType, visible]);
+
+  const updateMarginTypeByOnewayMode = async () => {
+    
+  }
+
+  const updateMarginTypeByHedgeMode = () => {
+
+  }
 
   const _onConfirm = async () => {
     if (marginType === value) {
@@ -77,6 +86,7 @@ export const MarginTypeModal = () => {
     } finally {
       Loading.end();
     }
+
   };
 
   const content = (
@@ -94,7 +104,7 @@ export const MarginTypeModal = () => {
                   </div>
                   <div className={clsx('info')}>{info}</div>
                 </div>
-                <CheckboxItem label={''} value={active} radioAttrs={{width:16, height:16}}/>
+                <CheckboxItem label={''} value={active} radioAttrs={{ width: 16, height: 16 }} />
               </div>
             );
           })}

@@ -3,7 +3,7 @@ import { Icon } from '@/components/YIcons';
 import { ReactNode, useCallback } from 'react';
 
 
-function CheckIcon({ name,...props }: { name: string;[key: string]: any }) {
+function CheckIcon({ name, ...props }: { name: string;[key: string]: any }) {
   const IconsMap = useCallback((name: string, fillColor: string) => {
     let img = null;
     switch (name) {
@@ -36,9 +36,9 @@ export default function Radio(props: {
   large?: boolean;
   size?: number;
   fillColor?: string;
-  labelcolor?:string;
+  labelcolor?: string;
 }) {
-  const {labelcolor, checked, disabled = false, label, onChange = noop, theme, large, size = 12, fillColor = 'var(--brand)', ...iconAttrs } = props;
+  const { labelcolor, checked, disabled = false, label, onChange = noop, theme, large, size = 12, fillColor = 'var(--brand)', ...iconAttrs } = props;
   const iconName = checked ? 'checkboxChecked' : theme && /^light$/gi.test(theme) ? 'checkboxLight' : 'checkbox';
 
   return (
@@ -49,7 +49,7 @@ export default function Radio(props: {
             <CheckIcon name={iconName} viewBox="0 0 14 14" fillColor={fillColor} {...{ width: size, height: size, ...iconAttrs }} /> :
             <CheckIcon name={iconName} viewBox="0 0 12 12" fillColor={fillColor} {...{ width: size, height: size, ...iconAttrs }} />
         }
-        {label && <span>{label}</span>}
+        {label && <span className='icon-span'>{label}</span>}
       </label>
       <style jsx>
         {`
@@ -72,10 +72,16 @@ export default function Radio(props: {
 
             & span {
               margin-left: 8px;
-              color: ${!labelcolor?'var(--text-secondary)':labelcolor};
+              color: ${!labelcolor ? 'var(--text_2)' : labelcolor};
               font-size: ${size}px;
               font-weight: 400;
             }
+              .icon-span {
+               margin-left: 8px;
+              color: ${!labelcolor ? 'var(--text_2)' : labelcolor};
+              font-size: ${size}px;
+              font-weight: 400;
+              }
           }
         `}
       </style>

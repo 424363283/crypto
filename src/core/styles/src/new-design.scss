@@ -43,11 +43,11 @@
 .ant-checkbox-inner {
   border-radius: 4px !important;
   background-color: transparent !important;
-  border-color: var(--line-2) !important;
+  border-color: var(--fill_line_2) !important;
 
   .ant-checkbox-checked & {
-    background-color: var(--text-primary) !important;
-    border-color: var(--text-primary) !important;
+    background-color: var(--text_1) !important;
+    border-color: var(--text_1) !important;
   }
 }
 

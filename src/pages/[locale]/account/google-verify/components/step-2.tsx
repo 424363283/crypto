@@ -69,7 +69,7 @@ const styles = css`
     .prompt {
       font-size: 14px;
       font-weight: 500;
-      color: var(--text-tertiary);
+      color: var(--text_3);
       text-align: left;
     }
     .qrcode-box{
@@ -77,13 +77,13 @@ const styles = css`
       height: 160px;
       align-items: center;
       justify-content: start;
-      border: 1px solid var(--line-1);
+      border: 1px solid var(--fill_line_1);
       border-radius:8px;
       padding-left: 20px;
       margin: 20px 0;
       @media ${MediaInfo.mobile} {
         padding: 15px;   
-        background: var(--fill-3);
+        background: var(--fill_3);
         height:auto;
         width:calc( 100% - 26px);
       }
@@ -93,7 +93,7 @@ const styles = css`
       height: 120px;
       text-align: center;
       padding: 4px;
-      background: var(--text-white);
+      background: var(--text_white);
       @media ${MediaInfo.mobile} {
         width: 72px;
         height: 72px;
@@ -126,7 +126,7 @@ const styles = css`
           .qr-copy {
             display: flex;
             align-items:center;
-            color: var(--text-secondary);
+            color: var(--text_2);
             font-size: 14px;
             font-weight:500;
             span{

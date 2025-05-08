@@ -38,7 +38,7 @@ export default function ResetPhone() {
         <button
           className={clsx('pc-v2-btn', shouldDisableBtn ? 'disabled' : '')}
           onClick={handleNewPhone}
-          style={{ marginTop: '10px' }}
+          style={{ marginTop: '10px', padding: 0 }}
         >
           {LANG('确定')}
         </button>

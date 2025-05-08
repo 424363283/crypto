@@ -29,8 +29,8 @@ const styles = css`
       display: inline-block;
       line-height: 16px;
       text-align: center;
-      background-color: var(--fill-pop);
-      color: var(--text-primary);
+      background-color: var(--fill_pop);
+      color: var(--text_1);
       padding: 0 12px;
       border-radius: 6px;
       font-size:12px;

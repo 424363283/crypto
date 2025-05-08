@@ -148,6 +148,7 @@ export const HistoryItem = ({ data: item }: { data: any }) => {
             <div className="type">
               <div className={buy ? 'buy' : 'sell'}>{LANG(buy ? '买入' : '卖出')}</div>
               <div className="margin-type">{LANG(item.marginType === 1 ? '全仓' : '逐仓')}</div>
+              <div className="wallet">{item.subWallet}</div>
               <span> {leverageLevel}X</span>
             </div>
           </div>
@@ -194,7 +195,7 @@ export const HistoryItem = ({ data: item }: { data: any }) => {
       <style jsx>{`
         .history-item {
           font-size: 12px;
-          border-bottom: 1px solid var(--line-1);
+          border-bottom: 1px solid var(--fill_line_1);
           &:last-child {
             border-bottom: 0;
           }
@@ -237,7 +238,7 @@ export const HistoryItem = ({ data: item }: { data: any }) => {
                     overflow: hidden;
                   }
                   &:first-child {
-                    color: var(--text-tertiary);
+                    color: var(--text_3);
                   }
                   &:last-child {
                     width: 100%;
@@ -245,7 +246,7 @@ export const HistoryItem = ({ data: item }: { data: any }) => {
                     text-overflow: ellipsis;
                     overflow: hidden;
 
-                    color: var(--text-primary);
+                    color: var(--text_1);
                     :global(.icon) {
                       margin-left: 3px;
                     }
@@ -265,10 +266,10 @@ export const HistoryItem = ({ data: item }: { data: any }) => {
             color: var(--color-red);
           }
           :global(.profit) {
-            color: var(--text-true) !important;
+            color: var(--text_green) !important;
           }
           :global(.loss) {
-            color: var(--text-error) !important;
+            color: var(--text_red) !important;
           }
           .main {
             color: var(--skin-hover-font-color);
@@ -281,7 +282,7 @@ export const HistoryItem = ({ data: item }: { data: any }) => {
             justify-content: space-between;
             align-items: center;
             font-weight: 400;
-            color: var(--text-primary);
+            color: var(--text_1);
             .item {
               display: flex;
               flex-direction: column;
@@ -309,7 +310,7 @@ export const HistoryItem = ({ data: item }: { data: any }) => {
                 align-items: center;
                 gap: 10px;
                 border-radius: 4px;
-                color: var(--text-white);
+                color: var(--text_white);
                 &.buy {
                   background: var(--color-green);
                 }
@@ -318,16 +319,16 @@ export const HistoryItem = ({ data: item }: { data: any }) => {
                 }
               }
               .margin-type {
-                background: var(--fill-3);
-                color: var(--text-secondary);
+                background: var(--fill_3);
+                color: var(--text_2);
               }
               span {
                 font-size: 12px;
-                color: var(--text-primary);
+                color: var(--text_1);
                 white-space: nowrap;
               }
               .label {
-                color: var(--text-tertiary);
+                color: var(--text_3);
               }
             }
           }

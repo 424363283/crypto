@@ -9,7 +9,7 @@ const { className, styles } = css.resolve`
       display: flex;
       background: transparent;
       border: none !important;
-      color: var(--text-primary, #fff);
+      color: var(--text_1, #fff);
       font-size: 14px;
       font-weight: 500;
       height: 40px;
@@ -18,14 +18,14 @@ const { className, styles } = css.resolve`
         border: none;
       }
       &::placeholder {
-        color: var(--text-primary, #fff);
+        color: var(--text_1, #fff);
       }
     }
     :global(.ant-input-wrapper, .ant-input) {
       height: 40px;
       display: flex;
       align-item: center;
-      background: var(--fill-3) !important;
+      background: var(--fill_3) !important;
       border-radius: 8px;
     }
     :global(.ant-input-outlined) {
@@ -49,7 +49,7 @@ const { className, styles } = css.resolve`
       margin: 0;
     }
     :global(.ant-select-selection-item) {
-      color: var(--text-secondary) !important;
+      color: var(--text_2) !important;
       font-size: 12px;
     }
     :global(.ant-input-affix-wrapper) {
@@ -58,8 +58,8 @@ const { className, styles } = css.resolve`
       align-items: center;
       gap: 8px;
       border-radius: 8px;
-      background: var(--fill-3);
-      color: var(--text-primary);
+      background: var(--fill_3);
+      color: var(--text_1);
       font-size: 14px;
       font-weight: 500;
       border: none !important;
@@ -70,7 +70,7 @@ const { className, styles } = css.resolve`
     align-items: center;
     justify-content: center;
     height: 40px;
-    color: var(--text-secondary);
+    color: var(--text_2);
     font-size: 12px;
     font-weight: 400;
   }

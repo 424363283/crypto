@@ -133,13 +133,13 @@ export const useSpotTableColumns = ({ data }: UseSpotTableColumnsProps) => {
             const { key, label, link } = OPERATE_BUTTONS[item];
             return key === 'trade' ? (
               <Button key={key} type={'primary'} rounded size={Size.SM} style={{ minWidth: 72 }}>
-                <TradeLink style={{ color: 'var(--text-white)' }} id={`${code}_usdt`} native className='operate-button'>
+                <TradeLink style={{ color: 'var(--text_white)' }} id={`${code}_usdt`} native className='operate-button'>
                   {label}
                 </TradeLink>
               </Button>
             ) : (
               <Button key={key} rounded size={Size.SM} style={{ minWidth: 72 }}>
-                <TrLink style={{ color: 'var(--text-primary)' }}
+                <TrLink style={{ color: 'var(--text_1)' }}
                   key={key}
                   className='operate-button'
                   native
@@ -162,13 +162,13 @@ export const useSpotTableColumns = ({ data }: UseSpotTableColumnsProps) => {
       const { key, label, link } = OPERATE_BUTTONS[item];
       return key === 'trade' ? (
         <Button key={key} type={'primary'} rounded size={Size.SM} style={{ minWidth: 72 }}>
-          <TradeLink id={`${code}_usdt`} style={{ color: 'var(--text-white)' }} native>
+          <TradeLink id={`${code}_usdt`} style={{ color: 'var(--text_white)' }} native>
             {label}
           </TradeLink>
         </Button>
       ) : (
         <Button key={key} rounded size={Size.SM} style={{ minWidth: 72 }}>
-          <TrLink style={{ color: 'var(--text-primary)' }} href={`${link}`} query={{ code: code }}>
+          <TrLink style={{ color: 'var(--text_1)' }} href={`${link}`} query={{ code: code }}>
             {label}
           </TrLink>
         </Button>

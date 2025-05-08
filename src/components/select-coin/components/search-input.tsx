@@ -37,21 +37,21 @@ const styles = css`
     flex-direction: row;
     align-items: center;
     padding: 0 10px;
-    background-color: var(--fill-3);
+    background-color: var(--fill_3);
     .icon {
       user-select: none;
       width: 16px;
       height: 16px;
     }
     input {
-      background-color: var(--fill-3);
+      background-color: var(--fill_3);
       padding-left: 10px;
       flex: 1;
       font-size: 14px;
       border: 0;
       outline: none;
       width: 0;
-      color: var(--text-primary);
+      color: var(--text_1);
     }
   }
 `;

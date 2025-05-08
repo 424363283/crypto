@@ -12,7 +12,7 @@ import { kChartEmitter } from '@/core/events';
 import { SwapOrderEmitter } from '@/core/events/src/swap-order';
 import { SUBSCRIBE_TYPES, useWs } from '@/core/network';
 import { resso, useAppContext } from '@/core/store';
-import { getUrlQueryParams, hiddenTxt, message } from '@/core/utils';
+import { getUrlQueryParams, hiddenTxt, isSwapDemo, message } from '@/core/utils';
 import { frameRun } from '@/core/utils/src/frame-run';
 import dayjs from 'dayjs';
 import { cloneDeep } from 'lodash';
@@ -36,12 +36,13 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import ClipboardItem from '@/components/clipboard-item';
 import { Button } from '@/components/button';
 import { Intent, Size } from '@/components/constants';
+import { useLocation } from 'react-use';
 
 const ORDER_TYPE_COLUMNS: { [key: string]: string[] } = {
-  [ORDER_TYPES.LIMIT]: ['symbol', 'side', 'dealVolume', 'volume', 'avgPrice', 'price', 'spsl', 'reduceOnly', 'status', 'orderId', 'ctime', 'mtime', 'actions'],
+  [ORDER_TYPES.LIMIT]: ['symbol', 'subWallet', 'side', 'dealVolume', 'volume', 'avgPrice', 'price', 'spsl', 'reduceOnly', 'status', 'orderId', 'ctime', 'mtime', 'actions'],
   // [ORDER_TYPES.LIMIT]: ['symbol', 'side', 'dealVolume', 'volume', 'avgPrice', 'dealVolume', 'volume', 'avgPrice', 'price', 'spsl', 'reduceOnly', 'price', 'spsl', 'reduceOnly', 'status', 'orderId', 'ctime', 'mtime', 'actions'],
   [ORDER_TYPES.SPSL]: ['symbol', 'side', 'volume', 'triggerPrice', 'priceType', 'price', 'spsl', 'reduceOnly', 'statusTrigger', 'orderId', 'ctime', 'actions'],
-  [ORDER_TYPES.SP_OR_SL]: ['symbol', 'orderType', 'side', 'volume', 'triggerPrice', 'priceType', 'price', 'reduceOnly', 'statusTrigger', 'orderId', 'ctime', 'actions']
+  [ORDER_TYPES.SP_OR_SL]: ['symbol', 'subWallet', 'orderType', 'side', 'volume', 'triggerPrice', 'priceType', 'price', 'reduceOnly', 'statusTrigger', 'orderId', 'ctime', 'actions']
 };
 
 const store: any = resso({
@@ -312,6 +313,7 @@ const useColumns = ({ data, onPendingDetailModalOpen, formatItemVolume }: any) =
   const isZh = locale === 'zh';
   const storeCode = store.code;
   const storeType = store.type;
+  const isDemo = isSwapDemo(useLocation().pathname);
 
   const onCancelOrder = async (item: any) => {
     Loading.start();
@@ -357,6 +359,20 @@ const useColumns = ({ data, onPendingDetailModalOpen, formatItemVolume }: any) =
         };
         break;
 
+      }
+      case 'subWallet': {
+        colItem = {
+          title: LANG('账户'),
+          dataIndex: 'subWallet',
+          minWidth: 100,
+          render: (v: any, item: any) => {
+            const walletData = Swap.Assets.getWallet({ walletId: item.subWallet, usdt: isUsdtType, withHooks: false });
+            return (
+              <WalletName> {LANG(walletData?.alias)} </WalletName>
+            );
+          }
+        }
+        break;
       }
       case "side": {
         colItem = {

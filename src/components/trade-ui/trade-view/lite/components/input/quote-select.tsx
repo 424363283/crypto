@@ -41,13 +41,13 @@ const QuoteSelect = ({ value, label, onChange, list }: Props) => {
 export default QuoteSelect;
 const styles = css`
   .title {
-    background: var(--fill-3);
+    background: var(--fill_3);
     height: 40px;
     border-radius: 8px;
     padding: 12px 16px;
     display: flex;
     justify-content: center;
-    color: var(--text-primary);
+    color: var(--text_1);
     font-weight: 500;
     cursor: pointer;
     .content {
@@ -57,7 +57,7 @@ const styles = css`
       gap: 4px;
       flex: 1 0 0;
       .value {
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 14px;
         font-style: normal;
         font-weight: 500;
@@ -91,12 +91,12 @@ const styles = css`
     line-height: 28px;
     font-size: 14px;
     font-weight: 400;
-    color: var(--text-primary);
+    color: var(--text_1);
     margin-bottom: 1px;
     padding: 0 16px;
     &:hover,
     &.active {
-      color: var(--text-brand);
+      color: var(--text_brand);
       font-weight: 500;
     }
   }

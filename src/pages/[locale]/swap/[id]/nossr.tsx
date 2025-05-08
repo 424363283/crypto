@@ -71,6 +71,7 @@ const usePageHook = () => {
         // Swap.Assets.fetchBalance(false, false);
         Swap.Order.fetchPending(isUsdtType, { forced: true });
         Swap.Order.fetchPosition(isUsdtType, { forced: true });
+        Swap.Info.fetchPositionType(true);
       }
     });
   }, [id]);

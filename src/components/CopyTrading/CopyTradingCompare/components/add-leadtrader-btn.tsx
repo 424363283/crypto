@@ -4,7 +4,7 @@ import { Button } from '@/components/button';
 import CommonIcon from '@/components/common-icon';
 import { LANG } from '@/core/i18n';
 import { useResponsive } from '@/core/hooks';
-const AddLeadTraderButton = ({ onClick }: { onClick: () => void }) => {
+const AddLeadTraderButton = ({ onClick,type = 'outside' }: { onClick: () => void,type:string }) => {
   const { isMobile } = useResponsive();
   return (
     <>
@@ -17,7 +17,10 @@ const AddLeadTraderButton = ({ onClick }: { onClick: () => void }) => {
             </div>
           </Button>
         )}
-        {isMobile && <CommonIcon name="common-add-round-brand-0" size={16} onClick={() => onClick()} />}
+        {isMobile && type === 'outside' && <CommonIcon name="common-add-round-brand-0" size={16} onClick={() => onClick()} />}
+        {isMobile && type === 'inner' && <div className={styles.addInnerBox}  onClick={() => onClick()}>
+          <CommonIcon name="common-add-all-round-0" size={12} />
+        </div>}
       </div>
     </>
   );

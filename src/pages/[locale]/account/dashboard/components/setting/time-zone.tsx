@@ -116,13 +116,13 @@ const timeZoneStyle = css`
         height: 400px;
         overflow-y: auto;
         .items{
-            border: 1px solid var(--line-3);
+            border: 1px solid var(--fill_line_3);
             border-radius: 8px;
             padding: 10px 15px;
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
-            color: var(--text-primary);;
+            color: var(--text_1);;
             align-items: center;
             &.active{
                 border-color: var(--brand);

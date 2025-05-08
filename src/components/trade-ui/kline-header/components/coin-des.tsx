@@ -121,7 +121,7 @@ const _CoinDes = ({ id, name }: { id: string; name?: string }) => {
             gap: 8px;
             cursor: pointer;
             .subtitle {
-              color: var(--text-secondary);
+              color: var(--text_2);
               font-size: 14px;
               font-style: normal;
               font-weight: 400;

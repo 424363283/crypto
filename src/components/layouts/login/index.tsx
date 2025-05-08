@@ -36,7 +36,7 @@ export default function LoginCommonLayout(props: IProps) {
 }
 const styles = css`
   :global(.login-common) {
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
   }
  
   .login-bg {
@@ -48,14 +48,14 @@ const styles = css`
       justify-content: center;
       min-height: calc(100vh - 53px);
     }
-    background: var(--bg-1);
+    background: var(--fill_bg_1);
     @media ${MediaInfo.mobile} {
       justify-content: center;
     }
     .login-box {
       position: relative;  
       border-radius: 12px;
-      background-color: var(--bg-1);
+      background-color: var(--fill_bg_1);
       @media ${MediaInfo.desktop} {
         display: flex;
         width: 100%;

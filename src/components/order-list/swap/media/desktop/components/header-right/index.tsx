@@ -201,8 +201,8 @@ const { className, styles } = css.resolve`
       justify-content: center;
       align-items: center;
       border-radius: 24px;
-      background: var(--text-brand);
-      color: var(--text-white);
+      background: var(--text_brand);
+      color: var(--text_white);
       font-size: 12px;
       font-weight: 400;
       margin:0 0 0 24px;

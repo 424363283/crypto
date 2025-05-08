@@ -56,7 +56,7 @@ const styles = css`
         font-weight: 700;
         font-size: 32px;
         line-height: 37.5px;
-        color: var(--text-primary);
+        color: var(--text_1);
         @media ${MediaInfo.mobile} {
           display: flex;
           align-items: center;
@@ -71,7 +71,7 @@ const styles = css`
         font-weight: 400;
         font-size: 24px;
         line-height: 28.13px;
-        color: var(--text-secondary);
+        color: var(--text_2);
         margin-top: 16px;
         @media ${MediaInfo.mobile} {
           margin-top: 0;

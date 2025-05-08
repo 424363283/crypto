@@ -68,7 +68,7 @@ const styles = css`
     align-items: center;
     just-content: center;
     border-radius: 16px;
-    background: var(--fill-3);
+    background: var(--fill_3);
     gap: 13px;
     :global(.icon) {
       width: 32px;
@@ -82,7 +82,7 @@ const styles = css`
       flex-direction: column;
       gap: 8px;
       .title {
-        color: var(--text-primary);
+        color: var(--text_1);
         text-align: center;
         font-size: 14px;
         font-style: normal;
@@ -90,7 +90,7 @@ const styles = css`
         line-height: 14px; /* 100% */
       }
       .description {
-        color: var(--text-tertiary);
+        color: var(--text_3);
         text-align: center;
         font-size: 12px;
         font-style: normal;

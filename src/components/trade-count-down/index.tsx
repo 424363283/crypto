@@ -143,7 +143,7 @@ const styles = css`
     width: 100%;
     height: 100%;
     flex: 1;
-    background: var(--bg-1);
+    background: var(--fill_bg_1);
     .coin {
       font-weight: 500;
       font-size: 24px;

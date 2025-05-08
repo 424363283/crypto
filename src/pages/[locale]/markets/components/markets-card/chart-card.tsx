@@ -137,7 +137,7 @@ const styles = css`
     gap: 10px;
     flex: 1 0 0;
     border-radius: 16px;
-    border: 0.5px solid var(--text-tertiary);
+    border: 0.5px solid var(--text_3);
     :global(.chart-content) {
       display: flex;
       flex-direction: column;
@@ -154,7 +154,7 @@ const styles = css`
           width: 142px;
           align-items: center;
           gap: 8px;
-          color: var(--text-primary);
+          color: var(--text_1);
           font-size: 16px;
           font-style: normal;
           font-weight: 700;
@@ -178,14 +178,14 @@ const styles = css`
           gap: 8px;
           flex: 1 0 0;
           .price {
-            color: var(--text-primary);
+            color: var(--text_1);
             font-size: 20px;
             font-style: normal;
             font-weight: 500;
             line-height: normal;
           }
           .volume {
-            color: var(--text-primary);
+            color: var(--text_1);
             font-size: 12px;
             font-style: normal;
             font-weight: 500;

@@ -93,7 +93,7 @@ const Overview = ({ data, isMobile = false }: { data: any; isMobile?: boolean })
               gap: 16px;
               align-self: stretch;
               .title {
-                color: var(--text-primary);
+                color: var(--text_1);
                 font-weight: 500;
               }
               .container {
@@ -105,7 +105,7 @@ const Overview = ({ data, isMobile = false }: { data: any; isMobile?: boolean })
                   flex-direction: column;
                   align-items: center;
                   line-height: normal;
-                  color: var(--text-primary);
+                  color: var(--text_1);
                   gap: 8px;
                 }
                 .chat {
@@ -326,7 +326,7 @@ const styles = css`
     display: flex;
     align-self: stretch;
     align-items: flex-start;
-    color: var(--text-primary);
+    color: var(--text_1);
     gap: 24px;
     @media ${MediaInfo.tablet} {
       flex-direction: column;
@@ -354,8 +354,8 @@ const styles = css`
             flex: 1;
             text-align: center;
             padding: 8px;
-            background: var(--fill-3);
-            color: var(--text-primary);
+            background: var(--fill_3);
+            color: var(--text_1);
             margin-right: 4px;
             border-radius: 6px;
             &:last-child {
@@ -398,7 +398,7 @@ const styles = css`
         }
         .subtitle {
           font-size: 12px;
-          color: var(--text-secondary);
+          color: var(--text_2);
         }
         .right {
           display: flex;
@@ -410,7 +410,7 @@ const styles = css`
       .introduction {
         white-space: normal;
         word-break: normal;
-        color: var(--text-primary);
+        color: var(--text_1);
         height: 130px;
         overflow-y: auto;
       }
@@ -423,8 +423,8 @@ const styles = css`
           flex: 1;
           text-align: center;
           padding: 8px;
-          background: var(--fill-3);
-          color: var(--text-primary);
+          background: var(--fill_3);
+          color: var(--text_1);
           border-radius: 6px;
           &:last-child {
             margin-right: 0;
@@ -439,11 +439,11 @@ const styles = css`
       gap: 16px;
       flex: 1 0 0;
       .base-info {
-        color: var(--text-primary);
+        color: var(--text_1);
         font-weight: 500;
       }
       .publish {
-        color: var(--text-secondary);
+        color: var(--text_2);
       }
       .icon-wrapper {
         display: flex;
@@ -461,8 +461,8 @@ const styles = css`
           justify-content: center;
           align-items: center;
           padding: 6px;
-          background: var(--fill-3);
-          color: var(--text-primary);
+          background: var(--fill_3);
+          color: var(--text_1);
           border-radius: 6px;
           cursor: default;
         }
@@ -484,10 +484,10 @@ const styles = css`
           align-self: stretch;
           > div {
             &:first-child {
-              color: var(--text-secondary);
+              color: var(--text_2);
             }
             span {
-              color: var(--text-secondary);
+              color: var(--text_2);
             }
             &.raise {
               color: var(--color-green);
@@ -502,7 +502,7 @@ const styles = css`
         display: flex;
         justify-content: center;
         align-items: center;
-        color: var(--text-secondary);
+        color: var(--text_2);
         :global(.coinMarketCap_icon) {
           margin-left: 5px;
         }
@@ -519,10 +519,10 @@ const styles = css`
           justify-content: space-between;
           align-items: center;
           &:first-child {
-            color: var(--text-primary);
+            color: var(--text_1);
           }
           &:last-child {
-            color: var(--text-secondary);
+            color: var(--text_2);
           }
         }
         .percent-wrapper {
@@ -542,7 +542,7 @@ const styles = css`
               display: inline-block;
               height: 6px;
               width: 4px;
-              background: var(--bg-1);
+              background: var(--fill_bg_1);
               position: absolute;
               right: -4px;
               border-top-right-radius: 3px;
@@ -553,7 +553,7 @@ const styles = css`
             background: var(--red);
           }
           .none {
-            background: var(--fill-3);
+            background: var(--fill_3);
           }
         }
       }

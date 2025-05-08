@@ -68,7 +68,7 @@ const styles = css`
       .name {
         font-size: 12px;
         font-weight: 500;
-        color: var(--text-tertiary);
+        color: var(--text_3);
         @media ${MediaInfo.mobile}{
           font-weight:400;
         }
@@ -76,7 +76,7 @@ const styles = css`
       .num {
         font-size: 12px;
         font-weight: 500;
-        color: var(--text-primary);
+        color: var(--text_1);
         margin-top: 10px;
       }
     }

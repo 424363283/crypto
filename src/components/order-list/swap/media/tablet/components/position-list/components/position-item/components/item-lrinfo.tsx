@@ -46,13 +46,13 @@ export const ItemLrInfo = ({ income, incomeRate, scale }: { income: any; incomeR
             }
           }
           .green {
-            color: var(--text-true);
+            color: var(--text_green);
           }
           .red {
-            color: var(--text-error);
+            color: var(--text_red);
           }
           .gray {
-            color: var(--text-secondary);
+            color: var(--text_2);
           }
         }
       `}</style>

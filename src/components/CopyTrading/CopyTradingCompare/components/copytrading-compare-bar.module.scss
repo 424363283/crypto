@@ -1,11 +1,22 @@
+$sm: 768px;
 .copyTradingCompareBar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 16px;
+  padding: 9px;
+  @media (max-width: $sm) {
+  padding: 16px 24px;
+  }
   .left {
     display: flex;
     gap: 16px;
   }
-
+  :global(.tab-bar){
+    padding-left: 0!important;
+    @media (max-width: $sm) {
+      :global(.tab) {
+        font-size: 20px;
+      }
+    }
+  }
 }

@@ -8,10 +8,11 @@ import { WalletType } from '../types';
 import { DaysProfitAndLossSmallCard } from './days-pnl-card'; // 今日盈亏 7日盈亏
 import { PnlNavButton } from './pnl-nav-button';
 import { SwapPnlInfoCard } from './swap-pnl-card';
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
 // import YieldTrendChart from './yield-trend-chart';
 const YieldTrendChart = dynamic(() => import('./yield-trend-chart'), { ssr: false });
 
-export const ProfitAnalysisCard = ({ type }: { type: WalletType }) => {
+export const ProfitAnalysisCard = ({ type, wallet }: { type: WalletType, wallet: WalletKey }) => {
   const [state, setState] = useImmer({
     currentDay: {
       date: LANG('7日'),
@@ -27,10 +28,12 @@ export const ProfitAnalysisCard = ({ type }: { type: WalletType }) => {
   };
   const { start = '', end = '' } = getDayjsDateRange(new Date(), intervalDay[currentDay.value] - 1, true);
   // 永续盈亏汇总
+  // TO-DO 添加钱包类型 筛选数据(如跟单数据)
   const { totalProfit, totalLoss } = useSwapPnlData({
     startDate: start.valueOf(),
     endDate: end.valueOf(),
     type,
+    wallet
   });
   // 现货收益率走势
   const renderSpotYieldTrend = () => {
@@ -62,7 +65,7 @@ export const ProfitAnalysisCard = ({ type }: { type: WalletType }) => {
       <div className='line hidden'></div>
       <div className='profit-container'>
         <div className='main-days-profit-card'>
-          <DaysProfitAndLossSmallCard type={type} />
+          <DaysProfitAndLossSmallCard type={type} wallet={wallet} />
         </div>
         <div className='days-profit-detail-card'>
           <div className='date-filter border-1'>
@@ -94,7 +97,7 @@ const styles = css`
     width: 396px;
     border-radius: 15px;
     height: 100%;
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     @media ${MediaInfo.mobile} {
       padding: 0 12px;
       margin-top: 12px;
@@ -109,14 +112,14 @@ const styles = css`
         padding: 16px 0 0;
       }
       .title {
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 16px;
         font-weight: 500;
       }
     }
    
     .line {
-      border: 1px solid var(--line-1);
+      border: 1px solid var(--fill_line_1);
       margin-right: 15px;
     }
     .profit-container {
@@ -146,7 +149,7 @@ const styles = css`
           font-size: 12px;
           height: 30px;
           line-height: 30px;
-          color: var(--text-secondary);
+          color: var(--text_2);
           cursor: pointer;
           border-radius: 3px;
           @media ${MediaInfo.mobile} {
@@ -155,8 +158,8 @@ const styles = css`
           }
         }
         .current-date {
-          color: var(--text-primary);
-          background: var(--fill-3);
+          color: var(--text_1);
+          background: var(--fill_3);
         }
         :global(.charts-container) {
           :global(.title) {

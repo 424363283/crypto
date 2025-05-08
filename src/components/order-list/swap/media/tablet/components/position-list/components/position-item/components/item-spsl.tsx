@@ -23,11 +23,11 @@ export const ItemSpsl = ({ sp, sl, onClick }: { sp: any; sl: any; onClick: any }
           align-items: flex-start;
           gap: 4px;
           .label {
-            color: var(--text-tertiary);
+            color: var(--text_3);
           }
           .value {
             // margin-left: 3px;
-            color: var(--text-primary);
+            color: var(--text_1);
           }
           :global(.icon) {
             margin-left: 3px;

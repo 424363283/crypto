@@ -18,7 +18,7 @@ const Nav = ({ title, back }: { title: string; back?: () => void }) => {
     <div className='nav-title'>
       <div className='nav-box'>
         <span onClick={_onBack} className='back'>
-          <Svg src='/static/icons/primary/common/back-icon.svg' width={16} color={'var(--text-primary)'} />
+          <Svg src='/static/icons/primary/common/back-icon.svg' width={16} color={'var(--text_1)'} />
         </span>
         <span className='title'>{title}</span>
       </div>
@@ -32,10 +32,10 @@ const styles = css`
     align-items: center;
     padding: 32px 0;
     line-height: 20px;
-    background:var(--fill-2);
+    background:var(--fill_2);
     @media ${MediaInfo.mobile} {
       padding: 10px 0;
-      background:var(--fill-3);
+      background:var(--fill_3);
     }
     .nav-box{
       display: flex;
@@ -66,7 +66,7 @@ const styles = css`
       font-weight: 500;
       font-size: 20px;
       line-height: 20px;
-      color: var(--text-primary);
+      color: var(--text_1);
       @media ${MediaInfo.mobile} {
         font-size: 16px;
       }

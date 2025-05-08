@@ -184,7 +184,7 @@ const styles = css`
     display: flex;
     align-items: center;
     border-radius: 8px;
-    background: var(--fill-3);
+    background: var(--fill_3);
 
     display: flex;
     height: 48px;
@@ -214,7 +214,7 @@ const styles = css`
         outline: none;
         border: 0;
         width: 100%;
-        color: var(--text-tertiary);
+        color: var(--text_3);
         text-align: center;
         &::placeholder,
         input::placeholder,

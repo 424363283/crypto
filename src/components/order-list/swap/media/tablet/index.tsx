@@ -120,8 +120,8 @@ const ListContent = ({ tabIndex }: { tabIndex: number }) => {
     <PendingList key="2" />,
     <HistoryList key="3" active={tabIndex == 2} />,
     <FinishedList key="4" active={tabIndex == 3} />,
-    // <PositionHistory key='5' active={tabIndex == 4} />, // TODO
-    <FundsList key="5" active={tabIndex == 4} />
+    <PositionHistory key='5' active={tabIndex == 4} />, 
+    <FundsList key="5" active={tabIndex == 5} />
   ];
 
   return (

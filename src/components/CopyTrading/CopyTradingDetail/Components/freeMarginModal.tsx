@@ -23,13 +23,13 @@ const FreeMarginModal = (props: CancelSettingProps) => {
   const handleConfrim = async() => {
     const  copyMargin = childRef.current?.getMargin()
     Loading.start()
-    const user: any = Copy.getUserInfo();
+    const user: any = await Copy.getUserInfo();
     const res = await Copy.fetchUpdateShareConfig({
-      uid: user?.user.uid,
+      uid: user?.uid,
       copyMinAvailableMargin: Number(copyMargin)
     })
     Loading.end()
-    if( res.code === 200) {
+    if( res?.code === 200) {
       close(true)
     } else {
       message.error(res.message)
@@ -45,7 +45,7 @@ const FreeMarginModal = (props: CancelSettingProps) => {
     return (
       <div className="copy-modal-container">
         <CopySettingInput unit="USDT" placeholder={LANG('保证金')} value={margin} onChange={e => setMargin(e)} />
-        <div className="tips">{LANG('跟随者设置跟随时所需的最低可用保证金')}</div>
+        <div className="tips">{LANG('跟随者设置跟随时所需的最低可用保证金。')}</div>
         <style jsx>{copyCancelStyle}</style>
       </div>
     );
@@ -100,7 +100,7 @@ const copyCancelStyle = css`
         font-family: HarmonyOS Sans SC;
         font-size: 12px;
         font-weight: 400;
-        color: var(--text-tertiary);
+        color: var(--text_3);
         margin-top: 8px;
       }
       :global(.handle-btn) {
@@ -112,9 +112,9 @@ const copyCancelStyle = css`
           border-radius: 12px;
           height: 48px;
           padding: 0 8px;
-          background: var(--fill-3);
+          background: var(--fill_3);
           :global(input) {
-            background: var(--fill-3);
+            background: var(--fill_3);
           }
         }
       }

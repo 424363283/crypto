@@ -62,7 +62,7 @@ const { className, styles } = css.resolve`
       display: flex;
       flex-direction: column;
       box-shadow: none;
-      color: var(--text-secondary);
+      color: var(--text_2);
       .item {
         cursor: pointer;
         display: flex;

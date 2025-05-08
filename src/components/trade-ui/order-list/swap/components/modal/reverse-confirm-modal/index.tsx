@@ -142,7 +142,7 @@ const ReverseConfirmModal = ({
             <div className={clsx('card', isBuy ? 'sell' : 'buy')}>
               <div className={clsx('row-item')}>
                 <div className={clsx('row-item-position')}>
-                  {isBuy ? LANG('市价平空') : LANG('市价平多')}
+                  {isBuy ? LANG('市价开空') : LANG('市价开多')}
                   <span className={clsx(isBuy ? 'row-item-sell' : 'row-item-buy')}>
                     {isBuy ? LANG('卖') : LANG('买')}
                     {data.leverage}X

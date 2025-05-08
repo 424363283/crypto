@@ -51,7 +51,7 @@ export default function ApplyBenefit() {
 }
 const styles = css`
   .other-benefit {
-    background: var(--fill-3);
+    background: var(--fill_3);
   }
   .other-benefit-box {
     width: 1200px;
@@ -67,7 +67,7 @@ const styles = css`
       font-size: 40px;
       line-height: 46.88px;
       text-align: center;
-      color: var(--text-primary);
+      color: var(--text_1);
       @media ${MediaInfo.mobile} {
         font-size: 32px;
       }
@@ -81,7 +81,7 @@ const styles = css`
       font-family: HarmonyOS Sans SC;
       font-weight: 700;
       font-size: 24px;
-      color: var(--text-primary);
+      color: var(--text_1);
       @media ${MediaInfo.mobile} {
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: repeat(3, 1fr);

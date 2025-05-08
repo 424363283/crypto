@@ -65,7 +65,7 @@ export default function Main() {
 }
 const styles = css`
   .container {
-    background: var(--bg-1);
+    background: var(--fill_bg_1);
     overflow: hidden;
   }
 `;

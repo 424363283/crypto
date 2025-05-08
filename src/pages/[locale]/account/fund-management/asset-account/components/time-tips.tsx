@@ -30,7 +30,7 @@ export default TimeTips;
 const styles = css`
   .withdraw-tips-container {
     padding: 16px 0;
-    background: var(--fill-3);
+    background: var(--fill_3);
     border-radius: 16px;
     display: flex;
     margin: 0 auto;
@@ -46,14 +46,14 @@ const styles = css`
       justify-content: center;
       gap: 8px;
       .title {
-        color: var(--text-primary);
+        color: var(--text_1);
         text-align: center;
         font-size: 14px;
         font-weight: 500;
         line-height: 14px;
       }
       .description {
-        color: var(--text-tertiary);
+        color: var(--text_3);
         text-align: center;
         font-size: 12px;
         font-weight: 400;

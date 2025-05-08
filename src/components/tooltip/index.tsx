@@ -34,7 +34,7 @@ const styles = css`
       padding: 16px;
       background: var(--dropdown-select-bg-color) !important;
       box-shadow: 0px 4px 16px 0px var(--dropdown-select-shadow-color) !important;
-      color: var(--text-tertiary) !important;
+      color: var(--text_3) !important;
       font-size: 12px;
       line-height: 1.5;
       border-radius: 16px;

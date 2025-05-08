@@ -157,7 +157,7 @@ export const SwapTabletLayout = ({
             margin-right: var(--theme-trade-layout-gap);
           }
           .bg {
-            background-color: var(--bg-1);
+            background-color: var(--fill_bg_1);
             overflow: hidden;
           }
           .order-bg {

@@ -39,7 +39,7 @@ export const WhatIsWallet = () => {
           padding-bottom: 20px;
           .header {
             cursor: pointer;
-            color: var(--text-primary);
+            color: var(--text_1);
             padding: 20px 0 6px;
             display: flex;
             align-items: center;

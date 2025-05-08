@@ -1,8 +1,9 @@
 import { Lang } from '@/core/i18n/src';
-import { DeviceInfo, toEAST8Time } from '@/core/utils';
+import { DeviceInfo, removeCookie, toEAST8Time } from '@/core/utils';
 import { isSwapDemo } from '@/core/utils/src/is';
 import axios from 'axios';
 import { TO_GMT8_API } from './constants';
+import { Account } from '@/core/shared';
 
 /**
  * 配置-AXIOS
@@ -49,6 +50,9 @@ const $Axios = ({ retry = Infinity, retryDelay = 1000, ...axiosConfig }) => {
   _axios.interceptors.response.use(
     response => {
       if (+response.data?.code === 401) {
+        // removeCookie('TOKEN');
+        // document.documentElement.setAttribute('token', '');
+        // return Account.setLoginStatus(false);
         // Account.logout();
         return;
       }

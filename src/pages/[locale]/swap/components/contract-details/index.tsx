@@ -126,7 +126,7 @@ export const ContractDetails = () => {
               height: 40px;
               padding: 0 16px;
               align-items: center;
-              color: var(--text-primary);
+              color: var(--text_1);
               margin-bottom: 8px;
             }
             .contract-content {
@@ -135,7 +135,7 @@ export const ContractDetails = () => {
                 display: flex;
                 height: 24px;
                 align-items: center;
-                color: var(--text-primary);
+                color: var(--text_1);
                 font-size: 14px;
                 font-weight: 500;
                 margin-bottom: 8px;
@@ -151,17 +151,17 @@ export const ContractDetails = () => {
                   &:nth-child(1) {
                     font-size: 12px;
                     font-weight: 400;
-                    color: var(--text-tertiary);
+                    color: var(--text_3);
                   }
                   &:nth-child(2) {
                     font-size: 12px;
                     font-weight: 400;
-                    color: var(--text-primary);
+                    color: var(--text_1);
                   }
                 }
                 :global(.link) {
                   cursor: pointer;
-                  color: var(--text-brand);
+                  color: var(--text_brand);
                 }
               }
             }

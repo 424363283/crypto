@@ -35,7 +35,7 @@ const generateChartOptions = (
     stroke: {
       show: true,
       width: 2,
-      colors: ['var(--fill-3)']
+      colors: ['var(--fill_3)']
     },
     labels: data.map((v) => v.label),
     series: data.map((v) => (v.value ? +v.value : 0)),
@@ -73,12 +73,14 @@ const PieChart = memo(
     contractuBalance,
     spotBalance,
     p2pBalance,
+    contractCopyBalance,
     width = 120,
     height = 120,
     circleBorderWidth = 24
   }: {
     contractBalance: number;
     contractuBalance: number;
+    contractCopyBalance: number;
     spotBalance: number;
     p2pBalance?: number;
     width?: number;
@@ -92,8 +94,8 @@ const PieChart = memo(
       generateChartOptions({ data: [], onSelect: setSelect }, true)
     );
     const balances = enableP2p
-      ? [spotBalance, contractuBalance, contractBalance, p2pBalance ?? 0]
-      : [spotBalance, contractuBalance, contractBalance];
+      ? [spotBalance, contractuBalance, contractCopyBalance, contractBalance, p2pBalance ?? 0]
+      : [spotBalance, contractuBalance, contractCopyBalance, contractBalance];
 
     const percents = useMemo(() => getPercents(...balances), balances);
 
@@ -106,13 +108,15 @@ const PieChart = memo(
                 ? [
                   { label: '1', value: spotBalance || 0 },
                   { label: '2', value: contractuBalance || 0 },
-                  { label: '3', value: contractBalance || 0 },
-                  // { label: '4', value: p2pBalance || 0 },
+                  { label: '3', value: contractCopyBalance || 0 },
+                  { label: '4', value: contractBalance || 0 },
+                  // { label: '5', value: p2pBalance || 0 },
                 ]
                 : [
                   { label: '1', value: spotBalance || 0 },
                   { label: '2', value: contractuBalance || 0 },
-                  // { label: '3', value: contractBalance || 0 },
+                  { label: '3', value: contractCopyBalance || 0 },
+                  // { label: '4', value: contractBalance || 0 },
                 ],
               onSelect: (index) => {
                 flag = false;
@@ -142,7 +146,7 @@ const PieChart = memo(
             <div className='prompt'>
               {enableP2p
                 ? [LANG('现货账户'), LANG('U本位账户'), LANG('币本位账户'), LANG('P2P账户')][selected]
-                : [LANG('现货账户'), LANG('U本位账户')][selected]}
+                : [LANG('现货账户'), LANG('U本位账户'), LANG('跟单账户')][selected]}
               {/* : [LANG('现货账户'), LANG('U本位账户'), LANG('币本位账户')][selected]} */}
 
             </div>
@@ -177,9 +181,9 @@ const PieChart = memo(
               position: absolute;
               width: calc(100% - 48px); /* 外层圆环的宽度 */
               height: calc(100% - 48px); /* 外层圆环的高度 */
-              background-color: var(--bg-1); /* 外层圆环的背景色 */
+              background-color: var(--fill_bg_1); /* 外层圆环的背景色 */
               border-radius: 50%;
-              border: ${circleBorderWidth}px solid var(--fill-3);
+              border: ${circleBorderWidth}px solid var(--fill_3);
               top: -1px;
               left: 0;
               box-sizing: content-box; /* 使用 content-box 让边框不占用容器的尺寸 */
@@ -200,7 +204,7 @@ const PieChart = memo(
               font-size: 16px;
               white-space: nowrap;
               font-weight: 500;
-              color: var(--text-primary);
+              color: var(--text_1);
               line-height: 14px;
               .prompt {
                 margin-top: 8px;
@@ -211,7 +215,7 @@ const PieChart = memo(
               word-break: break-all;
               font-size: 12px;
               font-weight: 400;
-              color: var(--text-tertiary);
+              color: var(--text_3);
               max-width: 70px;
             }
           }

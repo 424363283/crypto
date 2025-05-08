@@ -133,7 +133,7 @@ export const Index = () => {
               border-radius: 2.5rem;
               font-size: 14px;
               font-weight: 500;
-              color: var(--text-white);
+              color: var(--text_white);
               margin-right: 0;
               &:nth-child(1) {
                 background: var(--green);

@@ -97,16 +97,16 @@ const GlobalIcon = ({ className }: { className?: string }) => {
             overflow: hidden;
             
             :global(.ant-tabs-tab-btn) {
-              color: var(--text-secondary);
+              color: var(--text_2);
               font-size: 18px;
               font-weight: 500;
               &:focus:not(:focus-visible) {
-                color: var(--text-brand);
+                color: var(--text_brand);
               }
             }
             :global(.ant-tabs-tab-active) {
               :global(.ant-tabs-tab-btn) {
-                color: var(--text-brand);
+                color: var(--text_brand);
               }
             }
           }

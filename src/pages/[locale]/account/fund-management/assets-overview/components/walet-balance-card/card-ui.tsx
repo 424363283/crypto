@@ -4,23 +4,25 @@ import ProTooltip from '@/components/tooltip';
 import { useLocalStorage } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { LOCAL_KEY } from '@/core/store';
-import { MediaInfo } from '@/core/utils';
+import { MediaInfo, getUrlQueryParams } from '@/core/utils';
 import { memo } from 'react';
 import css from 'styled-jsx/css';
 import { AssetsBalance } from '../../../../dashboard/components/assets-balance';
 import { PnlNavButton } from '../profit-analysis-card/pnl-nav-button';
 import { store } from '../store';
 import { WalletType } from '../types';
+import { SWAP_COPY_WALLET_KEY, SWAP_DEFAULT_WALLET_KEY, WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
 
 type CardProps = {
   type: WalletType;
+  wallet?: WalletKey | '';
   buttons: { [key: string]: () => any };
 };
 const FundWalletCardUi = (props: CardProps) => {
   const WALLET_BALANCE_COMMENT = LANG(
     '钱包余额=总共净划入+总共已实现盈亏+总共净资金费用-总共手续费；资产折合BTC、USD数据仅供参考，由于数据汇率波动，可能导致计算误差情况，具体资产以下方全部资产明细数据为准'
   );
-  const { type, buttons } = props;
+  const { type, wallet, buttons } = props;
   const { hideBalance } = store;
   const [selectedCurrency, setSelectedCurrency] = useLocalStorage(LOCAL_KEY.ASSETS_COIN_UNIT, 'BTC');
   const BUTTON_MAP = buttons;
@@ -30,7 +32,10 @@ const FundWalletCardUi = (props: CardProps) => {
   const WALLET_TITLE_MAP: any = {
     [WalletType.ASSET_SPOT]: LANG('现货账户'),
     // [WalletType.ASSET_SWAP]: LANG('币本位合约账户'),
-    [WalletType.ASSET_SWAP_U]: LANG('U本位合约账户'),
+    [WalletType.ASSET_SWAP_U]: {
+      [WalletKey.SWAP_U]: LANG('U本位合约账户'),
+      [WalletKey.COPY]: LANG('跟单账户')
+    },
     [WalletType.ASSET_TOTAL]: LANG('资产总览'),
   };
   const TITLE_MAP: any = {
@@ -55,7 +60,7 @@ const FundWalletCardUi = (props: CardProps) => {
   return (
     <div className='fund-wallet-card'>
       <Desktop>
-        <p className='head-title'>{WALLET_TITLE_MAP[type]}</p>
+        <p className='head-title'>{wallet ? WALLET_TITLE_MAP[type][wallet] : WALLET_TITLE_MAP[type]}</p>
       </Desktop>
       <div className='assets-info'>
         <div className='left-asset-wrapper'>
@@ -70,7 +75,7 @@ const FundWalletCardUi = (props: CardProps) => {
               </MobileOrTablet>
             )}
           </div>
-          <AssetsBalance enableHideBalance={hideBalance} type={type} onCurrencyChange={onCurrencyChange} />
+          <AssetsBalance enableHideBalance={hideBalance} type={type} wallet={wallet} onCurrencyChange={onCurrencyChange} />
         </div>
         <div className='right-button-area'>{BUTTON_MAP[type] && BUTTON_MAP[type]()}</div>
       </div>
@@ -81,7 +86,7 @@ const FundWalletCardUi = (props: CardProps) => {
 export const FundWalletCardUiMemo = memo(FundWalletCardUi);
 const styles = css`
   .fund-wallet-card {
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     width: 100%;
     border-radius: 15px;
     display: flex;
@@ -90,7 +95,7 @@ const styles = css`
     margin-bottom: 16px;
     @media ${MediaInfo.mobile} {
       margin:0;
-      border-bottom: 1px solid var(--line-1);
+      border-bottom: 1px solid var(--fill_line_1);
       position: relative;
       border-radius: 0px;
       border-top-left-radius: 15px;
@@ -99,12 +104,12 @@ const styles = css`
     .head-title {
       font-size: 16px;
       font-weight: 500;
-      color: var(--text-primary);
+      color: var(--text_1);
       @media ${MediaInfo.mobile} {
         padding: 18px 10px 15px;
       }
       @media ${MediaInfo.mobileOrTablet} {
-        border-bottom: 1px solid var(--line-1);
+        border-bottom: 1px solid var(--fill_line_1);
       }
     }
     .assets-info {
@@ -134,7 +139,7 @@ const styles = css`
           line-height: 22px;
           font-size: 16px;
           font-weight: 400;
-          color: var(--text-secondary);
+          color: var(--text_2);
           gap: 8px;
           @media ${MediaInfo.mobile}{
             width: 100%;
@@ -145,7 +150,7 @@ const styles = css`
             align-items: center;
             .text {
               cursor: pointer;
-              border-bottom: 1px solid var(--line-1);
+              border-bottom: 1px solid var(--fill_line_1);
             }
             :global(.eye-icon) {
               cursor: pointer;

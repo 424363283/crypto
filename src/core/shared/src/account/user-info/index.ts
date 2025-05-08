@@ -11,6 +11,7 @@ class UserInfo {
 
   public uid: string = ''; // 用户id
   public username: string = ''; // 用户名
+  public usernameNo: number = 0; // 用户名修改次數
   public avatar: string = ''; // 头像
   public phone: string = ''; // 手机
   public email: string = ''; // 邮箱
@@ -50,6 +51,7 @@ class UserInfo {
     this.avatar = data.avatar;
     this.uid = data.userId;
     this.username = data.username;
+    this.usernameNo = data.usernameNo;
     this.phone = data.phone;
     this.email = data.email;
     this.ru = data.refer;
@@ -81,6 +83,7 @@ class UserInfo {
     return await asyncFactory.getInstance<UserInfo>(async (): Promise<UserInfo> => {
       const { data } = await getCommonUserInfoApi();
       UserInfo.instance = new UserInfo(data);
+      UserInfo.instance.setUserInfo(data);
       return UserInfo.instance;
     }, UserInfo);
   }

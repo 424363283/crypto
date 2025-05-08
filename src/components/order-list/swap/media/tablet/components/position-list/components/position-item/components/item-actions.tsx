@@ -27,7 +27,7 @@ export const ItemActions = ({
         <SubButton onClick={onSpsl}>{LANG('止盈/止损')}</SubButton>
         <SubButton onClick={onClose}>{LANG('平仓')}</SubButton>
         <SubButton onClick={onCloseAll}>{LANG('市价全平')}</SubButton>
-        {twoWayMode && (
+        {!twoWayMode && (
           <SubButton onClick={onReverse} className={'reverse'}>
             <CommonIcon name="common-reverse-fan" width={16} height={16} enableSkin className="icon" />
           </SubButton>
@@ -43,7 +43,7 @@ export const ItemActions = ({
           :global(> div) {
             cursor: pointer;
             background-color: var(--brand);
-            color: var(--text-white);
+            color: var(--text_white);
             display: flex;
             align-items: center;
             justify-content: center;

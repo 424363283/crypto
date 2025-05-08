@@ -110,7 +110,7 @@ const SecondaryTitle = ({
             padding: 4px 8px;
             font-size: 14px;
             background: transparent;
-            color: var(--text-secondary);
+            color: var(--text_2);
             justify-content: center;
             align-items: center;
             border-radius: 4px;
@@ -122,7 +122,7 @@ const SecondaryTitle = ({
             }
             .text {
               font-size: 12px;
-              color: var(--text-white);
+              color: var(--text_white);
               position: absolute;
               right: 0px;
               top: -4px;
@@ -131,8 +131,8 @@ const SecondaryTitle = ({
             }
           }
           :global(.item.active) {
-            background: var(--label);
-            color: var(--text-brand);
+            background: var(--brand_20);
+            color: var(--text_brand);
           }
           :global(.item.etf) {
             position: relative;
@@ -150,14 +150,14 @@ const SecondaryTitle = ({
             overflow-y: scroll;
             background: var(--dropdown-select-bg-color);
             :global(li) {
-              color: var(--text-secondary) !important;
+              color: var(--text_2) !important;
             }
             :global(.ant-dropdown-menu-item) {
               &:hover {
-                color: var(--text-brand) !important;
+                color: var(--text_brand) !important;
               }
               :global(.active) {
-                color: var(--text-brand) !important;
+                color: var(--text_brand) !important;
               }
             }
           }

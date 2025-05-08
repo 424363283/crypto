@@ -217,7 +217,7 @@ const styles = css`
     font-size: 12px;
     font-style: normal;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--text_1);
   }
   :global(.StopLoss) {
     color: var(--color-red);
@@ -227,9 +227,10 @@ const styles = css`
     font-size: 12px;
     font-style: normal;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--text_1);
     display: flex;
     align-items: end;
+    gap: 8px;
   }
 
   :global(.lite-history-table) {
@@ -305,7 +306,7 @@ const styles = css`
     :global(.ant-table-row) {
       :global(td) {
         color: #c7c7c7 !important;
-        border-bottom: 1px solid var(--line-1) !important;
+        border-bottom: 1px solid var(--fill_line_1) !important;
       }
     }
   }

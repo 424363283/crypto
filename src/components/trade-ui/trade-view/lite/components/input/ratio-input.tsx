@@ -180,7 +180,7 @@ const styles = css`
     display: flex;
     align-items: center;
     position: relative;
-    background: var(--fill-3);
+    background: var(--fill_3);
     &:hover {
       border-color: var(--skin-color-active) !important;
     }
@@ -190,14 +190,14 @@ const styles = css`
     }
     input {
       flex: 1;
-      color: var(--text-primary);
+      color: var(--text_1);
       padding: 0 8px;
       font-size: 14px;
       outline: none;
       text-align: center;
       border: 0;
       width: 100%;
-      background: var(--fill-3);
+      background: var(--fill_3);
       &::placeholder,
       input::placeholder,
       input::-webkit-input-placeholder,
@@ -209,7 +209,7 @@ const styles = css`
       position: absolute;
       font-size: 14px;
       pointer-events: none;
-      color: var(--text-primary);
+      color: var(--text_1);
     }
     .controller {
       width: auto;
@@ -221,7 +221,7 @@ const styles = css`
         outline: 0;
         height: 36px;
         width: auto;
-        background: var(--fill-3);
+        background: var(--fill_3);
         display: flex;
         justify-content: space-evenly;
         align-items: center;
@@ -229,7 +229,7 @@ const styles = css`
         cursor: pointer;
         padding: 0 8px;
         span {
-          color: var(--text-tertiary);
+          color: var(--text_3);
           text-align: center;
           font-size: 20px;
           font-style: normal;

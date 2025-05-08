@@ -225,9 +225,12 @@ export const SpslSettingModal = () => {
           //   `${quoteName} ${Swap.Info.getContractName(isUsdtType)} / ${!isBuy ? LANG('卖') : LANG('买')
           //   } ${leverageLevel}X`,
           // ],
-          [LANG('委托价格'), !isMarketType ? `${storePrice} ${priceUnitText}` : LANG('市价')],
-          [LANG('委托数量'), `${volume_display} ${Swap.Info.getUnitText({ symbol: quoteId })}`],
-          [LANG('最新价格'), `${newPrice} ${priceUnitText}`]
+          // [LANG('最新价格'), !isMarketType ? `${newPrice} ${priceUnitText}` : LANG('市价')],
+          [LANG('最新价格'), `${newPrice}`],
+          [LANG('标记价格'), `${flagPrice}`],
+          [LANG('委托价格'), !isMarketType ? `${storePrice}` : LANG('市价')]
+
+          //
         ]}
       />
       <div className={clsx('line')}></div>
@@ -494,7 +497,7 @@ const { className, styles } = css.resolve`
     .line {
       height: 1px;
       width: 100%;
-      background-color: var(--line-1);
+      background-color: var(--fill_line_1);
       @media ${MediaInfo.mobile} {
         margin: 0 0.5rem;
       }
@@ -528,7 +531,7 @@ const { className, styles } = css.resolve`
     flex: 1 0 0;
   }
   .liquidation-label {
-    color: var(--text-tertiary);
+    color: var(--text_3);
     font-size: 14px;
     font-weight: 500;
   }
@@ -547,20 +550,20 @@ const { className, styles } = css.resolve`
   }
   .market-price-input {
     :global(.ant-input) {
-      background: var(--fill-projection) !important;
+      background: var(--fill_shadow) !important;
     }
   }
   .switch-price {
     :global(.ant-input) {
-      background: var(--fill-3) !important;
+      background: var(--fill_3) !important;
     }
   }
 
   :global(.custom-dropdown) {
     min-width: 50px;
-    background: var(--fill-3);
+    background: var(--fill_3);
     :global(.ant-select-item) {
-      color: var(--text-secondary) !important;
+      color: var(--text_2) !important;
       text-align: center;
       padding: 0 !important;
       height: 24px !important;
@@ -569,7 +572,7 @@ const { className, styles } = css.resolve`
     }
     :global(.ant-select-item-option-selected) {
       background: transparent !important;
-      color: var(--text-brand) !important;
+      color: var(--text_brand) !important;
     }
   }
   @media ${MediaInfo.mobile} {
@@ -587,11 +590,11 @@ const { className, styles } = css.resolve`
       }
     }
     :global(.custom-dropdown) {
-      background: var(--fill-pop);
+      background: var(--fill_pop);
       padding: 4px 0;
       min-width: 5rem;
       border-radius: 8px;
-      box-shadow: 0px 0px 8px 0px var(--fill-projection);
+      box-shadow: 0px 0px 8px 0px var(--fill_shadow);
       :global(.rc-virtual-list-holder-inner) {
         gap: 4px;
         padding: 4px 0px;
@@ -607,21 +610,28 @@ const { className, styles } = css.resolve`
     .liquidation-pannel {
       width: 100%;
     }
-    .liquidation-action {
+    :global(.liquidation-action) {
       flex-direction: column;
       gap: 1.5rem;
       padding: 0 0.5rem;
       overflow-y: auto;
+      justify-content: space-between;
     }
     .liquidation-form {
       width: 100%;
       &.market-price-input {
         :global(.ant-input) {
-          background: var(--fill-projection) !important;
+          background: var(--fill_shadow) !important;
         }
         :global(.liquidation-switch) {
-          background: var(--fill-projection);
+          background: var(--fill_shadow);
         }
+      }
+      :global(.liquidation-ipt) {
+        max-width: none;
+      }
+      :global(.liquidation-switch) {
+        box-sizing: border-box;
       }
     }
   }

@@ -74,7 +74,7 @@ export const FundsItem = ({ data: item }: { data: any }) => {
       <style jsx>{`
         .funds-item {
           font-size: 12px;
-          border-bottom: 1px solid var(--line-1);
+          border-bottom: 1px solid var(--fill_line_1);
           &:last-child {
             border-bottom: 0;
           }
@@ -91,7 +91,7 @@ export const FundsItem = ({ data: item }: { data: any }) => {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            color: var(--text-primary);
+            color: var(--text_1);
             .code {
               font-size: 1rem;
               font-weight: 500;
@@ -104,10 +104,10 @@ export const FundsItem = ({ data: item }: { data: any }) => {
               gap: 4px;
               > span {
                 &:first-child {
-                  color: var(--text-tertiary);
+                  color: var(--text_3);
                 }
                 &:last-child {
-                  color: var(--text-primary);
+                  color: var(--text_1);
                 }
               }
             }
@@ -146,19 +146,19 @@ export const FundsItem = ({ data: item }: { data: any }) => {
                     overflow: hidden;
                   }
                   &:first-child {
-                    color: var(--text-tertiary);
+                    color: var(--text_3);
                   }
                   &:last-child {
                     width: 100%;
                     white-space: nowrap;
                     text-overflow: ellipsis;
                     overflow: hidden;
-                    color: var(--text-primary);
+                    color: var(--text_1);
                     &.profit {
-                      color: var(--text-true);
+                      color: var(--text_green);
                     }
                     &.loss {
-                      color: var(--text-error);
+                      color: var(--text_red);
                     }
                   }
                 }

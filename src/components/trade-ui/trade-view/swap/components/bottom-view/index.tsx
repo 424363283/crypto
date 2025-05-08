@@ -41,7 +41,7 @@ export const BottomView = ({ wrapperClassName }: { wrapperClassName?: string }) 
             <Button
               rounded
               className="sign-button"
-              style={{ color: isDark ? 'var(--text-black)' : 'var(--text-white)' }}
+              style={{ color: isDark ? 'var(--text_black)' : 'var(--text_white)' }}
               onClick={() => router.push('/register')}
             >
               {LANG('注册')}
@@ -188,7 +188,7 @@ const { className, styles } = css.resolve`
     flex-direction: column;
     gap: 16px;
     padding-bottom: 16px;
-    border-bottom: 2px solid var(--line-1);
+    border-bottom: 2px solid var(--fill_line_1);
     @media ${MediaInfo.mobile} {
       border-bottom: 0;
       padding-bottom: 0;
@@ -203,7 +203,7 @@ const { className, styles } = css.resolve`
     }
     :global(.sign-button) {
       flex: 1;
-      background: var(--text-primary);
+      background: var(--text_1);
     }
     :global(.login-button) {
       flex: 1;
@@ -227,7 +227,7 @@ const { className, styles } = css.resolve`
         cursor: pointer;
         font-weight: 500;
         font-size: 14px;
-        color: var(--text-white);
+        color: var(--text_white);
       }
       .buy {
         margin-right: 8px;
@@ -282,7 +282,7 @@ const { className, styles } = css.resolve`
           line-height: 16px;
           font-size: 12px;
           font-weight: 400;
-          color: var(--text-primary);
+          color: var(--text_1);
           gap: 4px;
           @media ${MediaInfo.mobile} {
             line-height: normal;
@@ -301,7 +301,7 @@ const { className, styles } = css.resolve`
   .label-color {
     color: var(--theme-trade-text-color-2);
     @media ${MediaInfo.mobile} {
-      color: var(--text-tertiary);
+      color: var(--text_3);
     }
   }
   .line {

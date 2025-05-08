@@ -1,7 +1,7 @@
 import { Svg } from '@/components/svg';
 import { useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
-import { clsx } from '@/core/utils';
+import { clsx, MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
 import { AccountTypeSelect2 } from './account-type-select2';
 import { ACCOUNT_TYPE } from './types';
@@ -11,20 +11,21 @@ const TypeBar = ({
   onChange,
   onTransferDirectionChange,
   wallets,
-  crypto,
+  crypto
 }: {
   values: ACCOUNT_TYPE[];
   onChange: (args: { value: ACCOUNT_TYPE; positiveTransfer: boolean; wallet?: string }) => void;
   onTransferDirectionChange: () => void;
   wallets: string[];
   crypto: string;
-  }) => {
+}) => {
   const { isDark } = useTheme();
   const enableLite = process.env.NEXT_PUBLIC_LITE_ENABLE === 'true';
   const options = [
     [ACCOUNT_TYPE.SPOT, LANG('现货账户')],
     // [ACCOUNT_TYPE.SWAP, LANG('币本位合约账户')],
-    [ACCOUNT_TYPE.SWAP_U, LANG('U本位合约')],
+    [ACCOUNT_TYPE.COPY, LANG('跟单账户')],
+    [ACCOUNT_TYPE.SWAP_U, LANG('U本位合约')]
   ];
   if (enableLite) {
     options.push([ACCOUNT_TYPE.LITE, LANG('简易合约账户')]);
@@ -32,27 +33,30 @@ const TypeBar = ({
 
   return (
     <div className={clsx('type-bar', !isDark && 'light')}>
-      <div className='types'>
+      <div className="types">
         {values.map((item, i) => {
-          const option = options?.find((v) => v[0] === item);
-          const [, label]: any = option || []; 
+          const option = options?.find(v => v[0] === item);
+          const [, label]: any = option || [];
           const positiveTransfer = i == 0;
           const content = (
             <>
-              <div className='title' key={i}>
-                <div className='prev'>{i === 0 ? LANG('从') : LANG('到')}</div>
+              <div className="title" key={i}>
+                <div className="prev">{i === 0 ? LANG('从') : LANG('到')}</div>
               </div>
-              <div className='description'>
-                <div className='left'>
-                  <div className='label'>{label}</div>
+              <div className="description">
+                <div className="left flexSpan">
+                  <div className="label">{label}</div>
+                  <Svg src="/static/icons/primary/common/icon-down.svg" width={14} height={14} className={clsx('arrow')} />
                 </div>
               </div>
             </>
           );
           return (
             <>
-              <AccountTypeSelect2
+             {i === 0 && <AccountTypeSelect2
                 key={i}
+                from={i == 0}
+                to={i == 1}
                 onChange={onChange}
                 selectedValue={item}
                 wallets={wallets}
@@ -62,16 +66,32 @@ const TypeBar = ({
                 crypto={crypto}
               >
                 {content}
-              </AccountTypeSelect2>
-              {i === 0 && <div className='transfer-icon'>
-                <Svg
-                  className='img'
-                  src={'/static/images/common/modal/transfer_type.svg'}
-                  width='40'
-                  height='40'
-                  onClick={onTransferDirectionChange}
-                />
-              </div>}
+              </AccountTypeSelect2>} 
+              {i === 1 && <AccountTypeSelect2
+                key={i}
+                from={i == 0}
+                to={i == 1}
+                onChange={onChange}
+                selectedValue={item}
+                wallets={wallets}
+                targetAccount={values[1]}
+                sourceAccount={values[0]}
+                positiveTransfer={positiveTransfer}
+                crypto={crypto}
+              >
+                {content}
+              </AccountTypeSelect2>} 
+              {i === 0 && (
+                <div className="transfer-icon">
+                  <Svg
+                    className="img"
+                    src={'/static/images/common/modal/transfer_type.svg'}
+                    width="40"
+                    height="40"
+                    onClick={onTransferDirectionChange}
+                  />
+                </div>
+              )}
             </>
           );
         })}
@@ -91,6 +111,9 @@ const styles = css`
     flex-direction: row;
     align-items: center;
     margin-top: 8px;
+    @media ${MediaInfo.mobile} {
+      margin: 0;
+    }
     .col-line {
       width: 38px;
       padding-right: 4px;
@@ -131,11 +154,11 @@ const styles = css`
         flex: 1 0 0;
         .title {
           flex: 1 0 0;
-          color: var(--text-secondary);
+          color: var(--text_2);
           font-size: 14px;
           font-weight: 400;
         }
-        .description { 
+        .description {
           display: flex;
           height: 48px;
           padding: 0px 16px;
@@ -144,7 +167,7 @@ const styles = css`
           gap: 8px;
           align-self: stretch;
           cursor: pointer;
-          background: var(--fill-3);
+          background: var(--fill_3);
           border-radius: 8px;
           &:last-child {
             border-bottom: 0;
@@ -152,7 +175,7 @@ const styles = css`
           :global(.left) {
             display: flex;
             align-items: center;
-            color: var(--text-primary);
+            color: var(--text_1);
             font-size: 14px;
             font-weight: 400;
             gap: 8px;
@@ -170,18 +193,24 @@ const styles = css`
               align-items: center;
               gap: 10px;
               border-radius: 4px;
-              background: var(--label);
-              color: var(--text-brand);
+              background: var(--brand_20);
+              color: var(--text_brand);
               text-align: center;
               font-size: 12px;
               font-weight: 400;
               line-height: 14px;
             }
           }
+          :global(.flexSpan) {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: space-between;
+          }
           :global(.icon) {
             margin-right: 25px;
             margin-left: 8px;
-          } 
+          }
         }
       }
     }

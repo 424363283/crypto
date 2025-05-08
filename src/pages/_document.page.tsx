@@ -56,10 +56,17 @@ class MyDocument extends Document {
       const lang_js_novice_task = pathname == '/[locale]/novice-task' ? `/static/locales/${lang}/novice-task.js?t=${buildTime}` : '';
       const lang_js_markets = pathname == '/[locale]/markets' ? `/static/locales/${lang}/markets.js?t=${buildTime}` : '';
       const lang_js_partner_program = pathname == '/[locale]/partnerProgram' ? `/static/locales/${lang}/partner-program.js?t=${buildTime}` : '';
-      const lang_js_copy_traders = pathname == '/[locale]/copyTrade' ? `/static/locales/${lang}/copy-traders.js?t=${buildTime}` : '';
-      const lang_js_copy_traders_copy_advantages = pathname == '/[locale]/copyTrade/copyAdvantages' ? `/static/locales/${lang}/copy-traders.js?t=${buildTime}` : '';
-      const lang_js_copy_traders_apply = pathname == '/[locale]/copyTrade/applyTraders' ? `/static/locales/${lang}/copy-traders.js?t=${buildTime}` : '';
-      const lang_js_copy_traders_setting = pathname == '/[locale]/copyTrade/setting' ? `/static/locales/${lang}/copy-traders.js?t=${buildTime}` : '';
+      // const lang_js_copy_traders = pathname == '/[locale]/copyTrade' ? `/static/locales/${lang}/copy-traders.js?t=${buildTime}` : '';
+      // const lang_js_copy_traders_copy_advantages = pathname == '/[locale]/copyTrade/copyAdvantages' ? `/static/locales/${lang}/copy-traders.js?t=${buildTime}` : '';
+      // const lang_js_copy_traders_apply = pathname == '/[locale]/copyTrade/applyTraders' ? `/static/locales/${lang}/copy-traders.js?t=${buildTime}` : '';
+      // const lang_js_copy_traders_setting = pathname == '/[locale]/copyTrade/setting' ? `/static/locales/${lang}/copy-traders.js?t=${buildTime}` : '';
+      const lang_js_copy_traders =
+      pathname.indexOf('/[locale]/copyTrade') > -1 ||
+      pathname.indexOf('/[locale]/copyTrade/copyAdvantages') > -1 ||
+      pathname.indexOf('/[locale]/copyTrade/applyTraders') > -1 ||
+      pathname.indexOf('/[locale]/copyTrade/setting') > -1
+        ? `/static/locales/${lang}/copy-traders.js?t=${buildTime}`
+        : '';
       const lang_js_swap_info = pathname == '/[locale]/swap-info' ? `/static/locales/${lang}/swap-info.js?t=${buildTime}` : '';
       const lang_js_tv = pathname.indexOf('/[locale]/tv') > -1 ? `/static/locales/${lang}/tv.js?t=${buildTime}` : '';
       const lang_js_vip = pathname.indexOf('/[locale]/vip') > -1 ? `/static/locales/${lang}/vip.js?t=${buildTime}` : '';
@@ -96,9 +103,9 @@ class MyDocument extends Document {
               {lang_js_markets && <script src={lang_js_markets}></script>}
               {lang_js_partner_program && <script src={lang_js_partner_program}></script>}
               {lang_js_copy_traders && <script src={lang_js_copy_traders}></script>}
-              {lang_js_copy_traders_copy_advantages && <script src={lang_js_copy_traders_copy_advantages}></script>}
+              {/* {lang_js_copy_traders_copy_advantages && <script src={lang_js_copy_traders_copy_advantages}></script>}
               {lang_js_copy_traders_apply && <script src={lang_js_copy_traders_apply}></script>}
-              {lang_js_copy_traders_setting && <script src={lang_js_copy_traders_setting}></script>}
+              {lang_js_copy_traders_setting && <script src={lang_js_copy_traders_setting}></script>} */}
               {lang_js_swap_info && <script src={lang_js_swap_info}></script>}
               {lang_js_tv && <script src={lang_js_tv}></script>}
               {lang_js_vip && <script src={lang_js_vip}></script>}

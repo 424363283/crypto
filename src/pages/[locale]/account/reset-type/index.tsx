@@ -171,7 +171,7 @@ const styles = css`
       font-size: 20px;
       font-weight: 700;
       line-height: 20px;
-      color: var(--text-primary);
+      color: var(--text_1);
       padding-bottom: 16px;
     }
     .reset-list {
@@ -179,7 +179,7 @@ const styles = css`
       flex-direction: column;
       padding: 24px;
       border-radius: 8px;
-      border: 1px solid var(--line-1);
+      border: 1px solid var(--fill_line_1);
       margin: 0 0 40px 0;
       gap: 24px;
       :global(.r-li) {
@@ -189,7 +189,7 @@ const styles = css`
           font-size: 14px;
           margin-left: 8px;
           font-weight: 400;
-          color: var(--text-primary);
+          color: var(--text_1);
         }
       }
     }

@@ -49,7 +49,7 @@ const BasicModal = (props: BasicProps) => {
       zIndex={zIndexMap['--zindex-trade-pc-modal']}
       closeIcon={
         <CommonIcon name="common-close-0" size={14} onClick={onCancel} />
-        // <Svg src={'/static/icons/primary/common/close.svg'} width={14} fill='var(--text-primary)' onClick={onCancel} />
+        // <Svg src={'/static/icons/primary/common/close.svg'} width={14} fill='var(--text_1)' onClick={onCancel} />
       }
       footer={
         hasFooter ? (
@@ -88,7 +88,7 @@ const styles = css`
       }
       :global(.ant-modal-title) {
         padding: 0 20px;
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 16px;
         font-weight: 500;
         padding-bottom: 20px;
@@ -126,7 +126,7 @@ const styles = css`
         }
         :global(.ant-btn:last-child) {
           background: var(--brand);
-          color: var(--text-white);
+          color: var(--text_white);
           margin-left: 0px;
           border-radius: 30px;
           &:hover {

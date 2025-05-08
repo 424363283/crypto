@@ -14,13 +14,13 @@ import {
   LatestPriceColumnMemo,
   LowestPriceColumnMemo,
   TradeButtonMemo,
-  TradeVolumeColumnMemo,
+  TradeVolumeColumnMemo
 } from './columns';
 import { FAVOR_ID_MAP } from './constants';
 import { formatSpotCoinName } from './helper';
 
 const TradePair = React.memo(({ item }: { item: MarketItem }) => {
-  return <span className='trade_pair_name'>{formatSpotCoinName(item)}</span>;
+  return <span className="trade_pair_name">{formatSpotCoinName(item)}</span>;
 });
 
 const useColumns = (onFavorite: (latestFavorsList: FAVORS_LIST[]) => void) => {
@@ -31,14 +31,14 @@ const useColumns = (onFavorite: (latestFavorsList: FAVORS_LIST[]) => void) => {
   const [localCoinList, setLocalCoinList] = useIndexedDB(IDB_STORE_KEYS.MARKET_DETAIL_CMC_LIST, coinList);
   const getCoinDetailList = async () => {
     return fetch('/static/json/apissr_cmc_list.json')
-      .then((response) => {
+      .then(response => {
         return response.json();
       })
-      .then((data) => {
+      .then(data => {
         setLocalCoinList(data);
         setCoinList(data);
       })
-      .catch((err) => {
+      .catch(err => {
         setCoinList([]);
         console.error('getCoinDetailList error', err);
       });
@@ -69,18 +69,25 @@ const useColumns = (onFavorite: (latestFavorsList: FAVORS_LIST[]) => void) => {
       // fixed: isMobile ? false : 'left',
       render(a, item: MarketItem) {
         return (
-          <div className='trade_pair' key={item?.id}>
-            <Star width={24} height={24} code={item.id} inQuoteList type={getCoinType()} onFavorite={onFavorite} />
-            <div className='right-coin'>
-              <CryptoLogo id={item.id} width='32' height='32' />
-              <div className='name'>
+          <div className="trade_pair" key={item?.id}>
+            <Star
+              width={isMobile ? 20 : 24}
+              height={isMobile ? 20 : 24}
+              code={item.id}
+              inQuoteList
+              type={getCoinType()}
+              onFavorite={onFavorite}
+            />
+            <div className="right-coin">
+              <CryptoLogo id={item.id} width={isMobile? 20:32} height={isMobile? 20:32} />
+              <div className="name">
                 <TradePair item={item} />
                 {/* <Tags id={item.id} /> */}
               </div>
             </div>
           </div>
         );
-      },
+      }
     },
     {
       title: LANG('最新价'),
@@ -92,7 +99,7 @@ const useColumns = (onFavorite: (latestFavorsList: FAVORS_LIST[]) => void) => {
         const coinName = formatSpotCoinName(item);
         return <LatestPriceColumnMemo hideRate={true} latestPrice={a.toFormat(item.digit)} code={coinName} />;
       },
-      sorter: true,
+      sorter: true
     },
     {
       title: LANG('24H涨跌'),
@@ -103,7 +110,7 @@ const useColumns = (onFavorite: (latestFavorsList: FAVORS_LIST[]) => void) => {
       render(value, record: MarketItem) {
         return <ChangeIn24HColumnMemo rate={value} isUp={record?.isUp} />;
       },
-      sorter: true,
+      sorter: true
     },
     {
       title: LANG('24H最高'),
@@ -114,7 +121,7 @@ const useColumns = (onFavorite: (latestFavorsList: FAVORS_LIST[]) => void) => {
       render(value, record: MarketItem) {
         return <HighestPriceColumnMemo highestPrice={value?.toFormat(record?.digit)} />;
       },
-      sorter: true,
+      sorter: true
     },
     {
       title: LANG('24H最低'),
@@ -125,7 +132,7 @@ const useColumns = (onFavorite: (latestFavorsList: FAVORS_LIST[]) => void) => {
       render: (value, item: MarketItem) => {
         return <LowestPriceColumnMemo lowestPrice={value?.toFormat(item?.digit)} />;
       },
-      sorter: true,
+      sorter: true
     },
     {
       title: `${LANG('24H成交额')}(USDT)`,
@@ -136,7 +143,7 @@ const useColumns = (onFavorite: (latestFavorsList: FAVORS_LIST[]) => void) => {
       render: (value, item: MarketItem) => {
         return <TradeVolumeColumnMemo volume={value} />;
       },
-      sorter: true,
+      sorter: true
     },
     {
       title: LANG('操作'),
@@ -146,8 +153,8 @@ const useColumns = (onFavorite: (latestFavorsList: FAVORS_LIST[]) => void) => {
       key: 'id',
       render(value, item) {
         return <TradeButtonMemo id={value} coin={item.coin} coinList={localCoinList} currentId={currentId} />;
-      },
-    },
+      }
+    }
   ];
   const mobileColumns: any = {
     title: `${LANG('最新价')}/${LANG('24H涨跌')}`,
@@ -163,10 +170,10 @@ const useColumns = (onFavorite: (latestFavorsList: FAVORS_LIST[]) => void) => {
           <ChangeIn24HColumnMemo rate={value.rate} isUp={value?.isUp} />
         </>
       );
-    },
+    }
   };
   if (isMobile) {
-    columns = columns.filter((item) => item.key === 'coinName');
+    columns = columns.filter(item => item.key === 'coinName');
     columns.push(mobileColumns);
   }
   return columns;

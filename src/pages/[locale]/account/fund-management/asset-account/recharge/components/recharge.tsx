@@ -309,7 +309,7 @@ export const Recharge = ({ hasQueryCode }: { hasQueryCode: boolean }) => {
         values={coinIndex}
         icon='common-tiny-triangle-down-2'
         options={rechargeList}
-        bgColor='var(--fill-3)'
+        bgColor='var(--fill_3)'
         borderColor='transparent'
         onChange={onChangeRechargeCoin}
         className='recharge-select-coin'
@@ -527,7 +527,7 @@ const styles = css`
       margin-bottom: 24px;
     }
     :global(.title) {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 16px;
       font-weight: 500;
       margin-bottom: 10px;
@@ -541,7 +541,7 @@ const styles = css`
     }
   }
   .main-content-wrapper {
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     margin: 0 auto;
     width: 100%;
     @media ${MediaInfo.mobileOrTablet} {
@@ -557,7 +557,7 @@ const styles = css`
       @media ${MediaInfo.mobileOrTablet} {
         flex-direction: column;
         align-items: flex-start;
-        background-color: var(--bg-1);
+        background-color: var(--fill_bg_1);
         margin: 0 auto;
         border-radius: 10px;
         padding: 12px;
@@ -565,7 +565,7 @@ const styles = css`
           padding: 5px 0;
           margin-top: 24px;
           font-weight: 400;
-          color:var(--text-tertiary);
+          color:var(--text_3);
         }
       } 
       .asset-account-steps-wrapper {
@@ -607,7 +607,7 @@ const styles = css`
         }
         :global(.top-info-card) {
           padding: 24px 0 ;
-          border: 1px solid var(--fill-3);
+          border: 1px solid var(--fill_3);
           @media ${MediaInfo.mobile}{
             padding: 8px 0;
           }
@@ -621,7 +621,7 @@ const styles = css`
         }
         .bottom-row {
           padding: 20px;
-          border: 1px solid var(--fill-3);
+          border: 1px solid var(--fill_3);
           border-radius: 8px;
           @media ${MediaInfo.mobile}{
             padding:12px;
@@ -682,7 +682,7 @@ const styles = css`
   }
 
   :global(.qrcode-container) {
-    background-color: var(--fill-2);
+    background-color: var(--fill_2);
     border-radius: 8px;
     padding: 12px;
     display: flex;

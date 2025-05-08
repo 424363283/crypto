@@ -4,25 +4,38 @@ $sm: 768px;
 }
 .copyContainer {
   margin-bottom: 120px;
-  background: var(--bg-1);
+  background: var(--fill_bg_1);
+}
+.leadtraderItem {
+  @media (max-width: $sm) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 .contentBox {
-  background: var(--fill-pop) !important;
+  background: var(--fill_pop) !important;
 }
 .closeBox {
   cursor: pointer;
 }
-
+.mt10 {
+  margin-top: 10px;
+}
+.userInfo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
 .copyHeader {
   height: 400px;
-  background: var(--label);
+  background: var(--brand_20);
   padding-top: 62px;
   padding-bottom: 63px;
   .copyApply {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    color: var(--text-primary);
+    color: var(--text_1);
     font-family: 'HarmonyOS Sans SC';
     font-size: 14px;
     font-style: normal;
@@ -43,7 +56,7 @@ $sm: 768px;
 }
 .copyHeaderContainer {
   .title {
-    color: var(---text-black);
+    color: var(--text_black);
     font-family: 'HarmonyOS Sans SC';
     font-size: 40px;
     font-style: normal;
@@ -64,7 +77,7 @@ $sm: 768px;
   gap: 32px;
   align-self: stretch;
   border-radius: 24px;
-  background: var(--bg-1);
+  background: var(--fill_bg_1);
 }
 .copyInfo {
   width: 100%;
@@ -74,7 +87,7 @@ $sm: 768px;
   width: 100%;
   justify-content: space-around;
   align-items: center;
-  color: var(--text-secondary);
+  color: var(--text_2);
   font-family: 'HarmonyOS Sans SC';
   font-size: 14px;
   font-style: normal;
@@ -90,7 +103,7 @@ $sm: 768px;
   text-align: right;
 }
 .myInTitle {
-  color: var(--text-primary);
+  color: var(--text_1);
   font-family: 'HarmonyOS Sans SC';
   font-size: 16px;
   font-style: normal;
@@ -121,15 +134,15 @@ $sm: 768px;
     height: 40px;
     border: none;
     border-radius: 40px;
-    background: var(--fill-3);
+    background: var(--fill_3);
   }
 }
 @media (max-width: $sm) {
   .searchBox {
     margin-top: 24px;
     padding: 0 16px;
-    border-top: 1px solid var(--line-1);
-    border-bottom: 1px solid var(--line-1);
+    border-top: 1px solid var(--fill_line_1);
+    border-bottom: 1px solid var(--fill_line_1);
     padding-top: 24px;
     padding-bottom: 8px;
   }
@@ -145,7 +158,7 @@ $sm: 768px;
     overflow-y: auto;
 
     .tabItem {
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-family: 'HarmonyOS Sans SC';
       font-size: 14px;
       font-style: normal;
@@ -172,8 +185,8 @@ $sm: 768px;
     justify-content: center;
     align-items: center;
     border-radius: 24px;
-    background: var(--text-brand);
-    color: var(--text-white);
+    background: var(--text_brand);
+    color: var(--text_white);
     font-family: 'HarmonyOS Sans SC';
     font-size: 12px;
     font-style: normal;
@@ -219,9 +232,9 @@ $sm: 768px;
   font-weight: 400;
   font-size: 14px;
   line-height: 16.41px;
-  color: var(--text-tertiary);
+  color: var(--text_3);
   border-radius: 24px;
-  border: 1px solid var(--line-2);
+  border: 1px solid var(--fill_line_2);
   padding: 24px;
   margin-bottom: 24px;
   .assetCol {
@@ -229,13 +242,22 @@ $sm: 768px;
     grid-template-columns: repeat(3, 1fr);
     grid-row-gap: 24px;
     flex: 1;
+    @media (max-width: $sm) {
+      grid-template-columns: repeat(2, 1fr);
+      width: 100%;
+    }
   }
   .assetItem {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    @media (max-width: $sm) {
+      &:nth-child(2n) {
+        text-align: right;
+      }
+    }
     .copyCount {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-weight: 500;
     }
   }
@@ -247,7 +269,7 @@ $sm: 768px;
     margin-right: 8px;
   }
   .copyName {
-    color: var(--text-primary);
+    color: var(--text_1);
     font-family: 'HarmonyOS Sans SC';
     font-size: 16px;
     font-style: normal;
@@ -256,10 +278,10 @@ $sm: 768px;
     margin-bottom: 4px;
   }
   .currentAmount {
-    color: var(--text-primary);
+    color: var(--text_1);
   }
   .copyIncome {
-    color: var(--text-true);
+    color: var(--text_green);
     font-family: 'HarmonyOS Sans SC';
     font-size: 32px;
     font-style: normal;
@@ -268,12 +290,12 @@ $sm: 768px;
     margin-top: 8px;
   }
   .copyCount {
-    color: var(--text-primary);
+    color: var(--text_1);
     font-weight: 500;
   }
   .copyLine {
     padding-bottom: 24px;
-    border-bottom: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--fill_line_2);
   }
   .symbolBox {
     gap: 4px;
@@ -295,7 +317,7 @@ $sm: 768px;
     gap: 10px;
     align-self: stretch;
     border-radius: 40px;
-    color: var(--text-brand);
+    color: var(--text_brand);
     border: 1px solid var(--brand);
     text-align: center;
     font-family: 'HarmonyOS Sans SC';
@@ -306,7 +328,7 @@ $sm: 768px;
     cursor: pointer;
     &:hover {
       background: var(--brand);
-      color: var(--text-white);
+      color: var(--text_white);
     }
   }
 }
@@ -363,7 +385,7 @@ $sm: 768px;
 }
 
 .setBox {
-  color: var(--text-secondary);
+  color: var(--text_2);
   font-family: 'HarmonyOS Sans SC';
   font-size: 14px;
   font-style: normal;
@@ -373,7 +395,7 @@ $sm: 768px;
     margin-bottom: 40px;
   }
   .setTitle {
-    color: var(--text-primary);
+    color: var(--text_1);
     font-family: 'HarmonyOS Sans SC';
     font-size: 14px;
     font-style: normal;
@@ -393,12 +415,12 @@ $sm: 768px;
     line-height: normal;
     cursor: pointer;
     border-radius: 4px;
-    border: 0.5px solid var(--line-3);
+    border: 0.5px solid var(--fill_line_3);
     height: 24px;
     justify-content: center;
     &.itemSelect {
-      color: var(--text-brand);
-      border: 0.5px solid var(--text-brand);
+      color: var(--text_brand);
+      border: 0.5px solid var(--text_brand);
     }
   }
   .usertag {
@@ -410,7 +432,7 @@ $sm: 768px;
   height: 32px;
   border: 1px solid var(--skin-primary-color);
   border-radius: 40px;
-  background: var(--fill-3);
+  background: var(--fill_3);
   &.w240 {
     width: 240px;
   }
@@ -418,7 +440,7 @@ $sm: 768px;
 .contractSelect {
   margin-bottom: 16px;
   .currencyOpt {
-    color: var(--text-primary);
+    color: var(--text_1);
     margin-left: 16px;
   }
 }
@@ -441,11 +463,11 @@ $sm: 768px;
     border: 1px solid var(--brand);
   }
   .copyReset {
-    color: var(---text-brand);
+    color: var(--text_brand);
     width: 40%;
   }
   .copyConfirm {
-    color: var(--text-white);
+    color: var(--text_white);
     background: var(--brand);
     width: 50%;
   }
@@ -465,10 +487,10 @@ $sm: 768px;
       font-size: 20px;
       font-style: normal;
       font-weight: 700;
-      color: var(--text-primary);
+      color: var(--text_1);
     }
     .symbolType {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 20px;
       font-style: normal;
       font-weight: 700;
@@ -479,8 +501,8 @@ $sm: 768px;
       padding: 4.5px 16px;
       align-items: center;
       border-radius: 4px;
-      background: var(--fill-3);
-      color: var(--text-secondary);
+      background: var(--fill_3);
+      color: var(--text_2);
       margin-left: 8px;
       font-size: 14px;
       font-style: normal;
@@ -491,7 +513,7 @@ $sm: 768px;
       padding: 4.5px 16px;
       align-items: center;
       border-radius: 4px;
-      background: var(--green_light);
+      background: var(--gree_10);
       color: var(--color-green);
       margin-left: 8px;
       font-size: 14px;
@@ -505,7 +527,7 @@ $sm: 768px;
       font-size: 14px;
       font-style: normal;
       font-weight: 400;
-      color: var(--text-tertiary);
+      color: var(--text_3);
       margin-left: 8px;
     }
   }
@@ -520,13 +542,13 @@ $sm: 768px;
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--text_1);
   }
   .symbolListTitle {
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
-    color: var(--text-tertiary);
+    color: var(--text_3);
     margin-bottom: 26px;
     &:nth-of-type(2) {
       margin-bottom: 0px;
@@ -543,7 +565,7 @@ $sm: 768px;
   }
   .symbolListTitleInfo {
     margin-right: 8px;
-    color: var(--text-tertiary);
+    color: var(--text_3);
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -559,7 +581,7 @@ $sm: 768px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-white);
+    color: var(--text_white);
     cursor: pointer;
   }
   .symbolItem {
@@ -571,8 +593,8 @@ $sm: 768px;
 }
 
 .textPrimary {
-  color: var(--text-primary);
+  color: var(--text_1);
   &:hover {
-    color: var(--text-primary);
+    color: var(--text_1);
   }
 }

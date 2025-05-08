@@ -59,7 +59,7 @@ const styles = css`
             }
             .length-limit{
                 display: flex;
-                color: var(--text-tertiary);
+                color: var(--text_3);
             }
         }
     }

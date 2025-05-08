@@ -45,7 +45,7 @@ export const ItemInfo = ({
             font-weight: 400;
           }
           .position-type {
-            color: var(--text-white);
+            color: var(--text_white);
             &.buy {
               background: var(--color-green);
             }
@@ -54,14 +54,14 @@ export const ItemInfo = ({
             }
           }
           .margin-type {
-            background: var(--fill-3);
-            color: var(--text-secondary);
+            background: var(--fill_3);
+            color: var(--text_2);
           }
           .actions {
             display: flex;
             align-items: center;
             font-size: 12px;
-            color: var(--text-primary);
+            color: var(--text_1);
             white-space: nowrap;
             gap: 4px;
           }

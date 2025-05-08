@@ -52,9 +52,9 @@ const UniversalLayout = React.memo(
         {!hideFooter && <Footer />}
         <style jsx>{`
           .uni-layout {
-            background-color: var(--bg-1);
+            background-color: var(--fill_bg_1);
             @media ${MediaInfo.mobile} {
-              background-color: var(--fill-3);
+              background-color: var(--fill_3);
             }
             .main {
               min-height: ${hideHeader ? '100vh' : 'calc(100vh - 56px)'};

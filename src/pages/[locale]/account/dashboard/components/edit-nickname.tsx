@@ -41,7 +41,7 @@ const EditNickname: React.FC<{ nickname: string, maxLength?: number, onChange: (
         <div className='tips-item'>
           <p className='tips'>1. {LANG('昵称仅允许修改一次，设置后无法再次修改')}</p>
           <div className='length-limit'>
-            <p style={{ 'color': 'var(--text-primary)' }}>{nameLength}</p>
+            <p style={{ 'color': 'var(--text_1)' }}>{nameLength}</p>
             <span>/{maxLength}</span>
           </div>
         </div>
@@ -63,8 +63,8 @@ const styles = css`
     align-items: center;
     position: relative;
     border-radius: 8px;
-    background: var(--fill-3);
-    border: 1px solid var(--fill-3);
+    background: var(--fill_3);
+    border: 1px solid var(--fill_3);
     &:hover {
       box-shadow: none;
       border: 1px solid var(--brand);
@@ -79,13 +79,13 @@ const styles = css`
       width: 100%;
       background: transparent;
       outline: none;
-      color: var(--text-primary);
+      color: var(--text_1);
       border-radius: 8px;
       box-shadow: none;
       padding: 0 20px;
       border: none;
       &::placeholder {
-        color: var(--text-tertiary);
+        color: var(--text_3);
       }
     }
 
@@ -95,14 +95,14 @@ const styles = css`
     .tips-item{
       display: flex;
       justify-content: space-between;
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-size: 12px;
       font-style: normal;
       font-weight: 400;
       line-height: 18px; /* 150% */
       .length-limit{
         display: flex;
-        color: var(--text-tertiary);
+        color: var(--text_3);
       }
     }
   }

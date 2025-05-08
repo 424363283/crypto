@@ -31,7 +31,7 @@ export default function SwapDetailCard(props: SwapDetailProps) {
       align: 'left',
       dataIndex: 'date',
       render: (value: string) => {
-        return <span style={{ color: 'var(--text-secondary)' }}>{dayjs(value).format('YYYY/MM/DD')}</span>;
+        return <span style={{ color: 'var(--text_2)' }}>{dayjs(value).format('YYYY/MM/DD')}</span>;
       },
     },
     {

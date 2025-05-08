@@ -30,6 +30,8 @@ export const PositionLineFigureKey = {
   Reverse: 'reverse'
 };
 
+export const cacheTPSLineFigureKey = {};
+
 const positionOverlay: OverlayTemplate = {
   name: 'positionOverlay',
   totalStep: 2,
@@ -38,18 +40,19 @@ const positionOverlay: OverlayTemplate = {
   needDefaultXAxisFigure: true,
   needDefaultYAxisFigure: true,
   createPointFigures: ({ coordinates, bounding, overlay, xAxis, yAxis }) => {
-    // debugger
     const positonExtendData: any = overlay.extendData.positionOverlay;
     // const profitLoss=overlay.extendData.extendsConfig.profitLoss
     const volume = overlay.extendData.extendsConfig.volume;
 
     const positionText = overlay.extendData.extendsConfig.profitLoss;
     const changeText = '↑↓';
-    const closePositionText = 'x';
+    const closePositionText = 'X';
     const HEIGHT = 22;
-    let isLongProfit = false;
-    const closeColor = isLongProfit ? '#A5A8AC' : '#A5A8AC'; //关闭按钮色
+    let isLongProfit = overlay.extendData.extendsConfig.isLong;
+    const closeColor = isLongProfit ? '#2AB26C' : '#A5A8AC'; //关闭按钮色
     const closeBg = isLongProfit ? '#34343B' : '#34343B'; //关闭按钮内容背景色
+    let sideBg = isLongProfit ? '#2AB26C' : '#EF454A'; //方向背景
+    let sideColor = isLongProfit ? '#FFFFFF' : '#FFFFFF'; //方向颜色
 
     const PADDING = 8;
     const backgroundColor = overlay.styles?.backgroundColor;
@@ -67,9 +70,6 @@ const positionOverlay: OverlayTemplate = {
     const volumeTextRectWidth = Math.max(volumeTextWidth + PADDING * 2, 22);
     const openDirectionColor = overlay.styles?.openDirectionColor;
     // const profitLossTextWidth = utils.calcTextWidth(profitLossText) + PADDING * 2;
-
-    let sideBg = '#2AB26C'; //方向背景
-    let sideColor = '#FFFFFF'; //方向颜色
 
     let qtyBg = '#121212'; //方向背景
     let qtyColor = '#FFFFFF'; //方向颜色
@@ -145,7 +145,7 @@ const positionOverlay: OverlayTemplate = {
         // 样式，可选项`fill`，`stroke`，`stroke_fill`
         style: 'fill',
         // 颜色
-        color: '#2AB26C',
+        color: sideColor,
         // 尺寸
         size: 12,
         // 字体
@@ -169,9 +169,9 @@ const positionOverlay: OverlayTemplate = {
         // 边框虚线参数
         borderDashedValue: [2, 2],
         // 边框圆角值
-        borderRadius: 0,
+        borderRadius: [4, 0, 0, 4],
         // 背景色
-        backgroundColor: '#14221B'
+        backgroundColor: sideBg
       }
     };
 
@@ -318,7 +318,7 @@ const positionOverlay: OverlayTemplate = {
         width: HEIGHT,
         align: 'left',
         baseline: 'middle',
-        text: '✕'
+        text: 'X'
       },
       styles: {
         style: 'stroke_fill',
@@ -418,13 +418,27 @@ const positionOverlay: OverlayTemplate = {
       )
     ) {
       console.log('点击了持仓按钮');
-      if (takeProfitExtendData.show) {
+      // if (positionExtendData.positionData.stopProfit && positionExtendData.positionData.stopLoss) {
+      //   return;
+      // }
+      const currentCacheTPSLine = cacheTPSLineFigureKey[positionExtendData.positionData.positionId];
+      if (currentCacheTPSLine) {
+        stopLossExtendData.show = false;
         takeProfitExtendData.show = false;
-        e.overlay.extendData.chart.removeOverlay({ id: takeProfitExtendData.id });
+        // 移除现有的overlay
+        ['takeProfitOverlayId', 'stopLossOverlayId'].forEach(key => {
+          if (currentCacheTPSLine[key]) {
+            e.overlay.extendData.chart.removeOverlay({ id: currentCacheTPSLine[key] });
+          }
+        });
+        Object.assign(cacheTPSLineFigureKey, {
+          takeProfitOverlayId: null,
+          stopLossOverlayId: null,
+          id: null,
+          [positionExtendData.positionData.positionId]: null
+        });
       } else {
-        takeProfitExtendData.show = true;
-        const takeProfitOverlay = e.overlay.extendData.chart.createOverlay({
-          name: 'takeProfitOverlay',
+        const createOverlayConfig = {
           paneId: 'candle_pane',
           visible: true,
           lock: false,
@@ -437,32 +451,40 @@ const positionOverlay: OverlayTemplate = {
             }
           ],
           extendData: e.overlay.extendData
-        });
-        takeProfitExtendData.id = takeProfitOverlay;
+        };
+
+        // 缓存overlayId
+        let cacheOverlayId = {
+          takeProfitOverlayId: null,
+          stopLossOverlayId: null
+        };
+
+        // 创建止盈overlay
+        if (!positionExtendData.positionData.stopProfit) {
+          if (!positionExtendData.positionData.stopProfit) {
+            const takeProfitOverlay = e.overlay.extendData.chart.createOverlay({
+              name: 'takeProfitOverlay',
+              ...createOverlayConfig
+            });
+            takeProfitExtendData.show = true;
+            cacheOverlayId.takeProfitOverlayId = cacheTPSLineFigureKey.takeProfitOverlayId = takeProfitOverlay;
+          }
+        }
+        // 创建止损overlay
+        if (!positionExtendData.positionData.stopLoss) {
+          const stopLossOverlay = e.overlay.extendData.chart.createOverlay({
+            name: 'stopLossOverlay',
+            ...createOverlayConfig
+          });
+          stopLossExtendData.show = true;
+          stopLossExtendData.stopLossOverlayId =
+            cacheOverlayId.stopLossOverlayId =
+            cacheTPSLineFigureKey.stopLossOverlayId =
+              stopLossOverlay;
+        }
+        cacheTPSLineFigureKey[positionExtendData.positionData.positionId] = cacheOverlayId;
       }
 
-      if (stopLossExtendData.show) {
-        stopLossExtendData.show = false;
-        e.overlay.extendData.chart.removeOverlay({ id: stopLossExtendData.id });
-      } else {
-        stopLossExtendData.show = true;
-        const stopLossOverlay = e.overlay.extendData.chart.createOverlay({
-          name: 'stopLossOverlay',
-          paneId: 'candle_pane',
-          visible: true,
-          lock: false,
-          mode: OverlayMode.Normal,
-          points: [
-            {
-              dataIndex: positionExtendData.positionData.dataIndex,
-              timestamp: positionExtendData.positionData.timestamp,
-              value: positionExtendData.positionData.value
-            }
-          ],
-          extendData: e.overlay.extendData
-        });
-        stopLossExtendData.id = stopLossOverlay;
-      }
       return true;
     }
 

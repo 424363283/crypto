@@ -119,7 +119,7 @@ export const Index = React.memo(() => {
           padding: 8px 24px;
           display: flex;
           align-items: center;
-          background: var(--label);
+          background: var(--brand_20);
           /* margin-bottom: var(--theme-trade-layout-gap); */
           transition: 0.3s all;
           gap: 16px;
@@ -131,7 +131,7 @@ export const Index = React.memo(() => {
           &.light {
             /* border-radius: 8px; */
             /* border: 1px solid #fde57b; */
-            background: var(--label);
+            background: var(--brand_20);
           }
           &.hidden {
             margin-bottom: 0;
@@ -168,7 +168,7 @@ export const Index = React.memo(() => {
             font-size: 14px;
             font-style: normal;
             font-weight: 400;
-            color: var(--text-primary);
+            color: var(--text_1);
             @media ${MediaInfo.mobile} {
               height: 100%;
               font-size: 12px;

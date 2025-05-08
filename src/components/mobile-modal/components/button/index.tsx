@@ -61,15 +61,15 @@ const styles = css`
     background: var(--skin-primary-color);
     font-size: 14px;
     font-weight: 500;
-    color: var(--text-white);
+    color: var(--text_white);
     &.type-1 {
       background: rgba(254, 214, 11, 0.2);
       color: var(--theme-font-color-3);
     }
     &.disabled {
       cursor: not-allowed;
-      color: var(--text-tertiary);
-      background: var(--fill-3);
+      color: var(--text_3);
+      background: var(--fill_3);
     }
   }
 `;

@@ -45,7 +45,7 @@ const Chart = ({
           },
           axisLine: {
             lineStyle: {
-              color: 'var(--line-1)'
+              color: 'var(--fill_line_1)'
             }
           },
           data: xData
@@ -115,11 +115,11 @@ const Chart = ({
           backgroundColor: tooltipBg,
           borderColor: tooltipBg,
           textStyle: {
-            color: 'var(--text-primary)' // Change this to your desired hover text color
+            color: 'var(--text_1)' // Change this to your desired hover text color
           },
           axisPointer: {
             lineStyle: {
-              color: 'var(--text-primary)' // Change this to your desired hover line color
+              color: 'var(--text_1)' // Change this to your desired hover line color
             }
           },
           formatter: (params: any) => {
@@ -169,15 +169,15 @@ const Chart = ({
             align-items: center;
             gap: 4px;
             border-radius: 8px;
-            background: var(--fill-pop);
-            box-shadow: 0px 0px 8px 0px var(--fill-projection);
+            background: var(--fill_pop);
+            box-shadow: 0px 0px 8px 0px var(--fill_shadow);
             padding: 4px 0;
             .menu {
               height: 1.5rem;
               line-height: 1.5rem;
               font-size: 12px;
               font-weight: 500;
-              color: var(--text-secondary);
+              color: var(--text_2);
               &.active {
                 color: var(--brand);
               }
@@ -360,7 +360,7 @@ const styles = css`
       justify-content: center;
       align-items: center;
       border-radius: 40px;
-      background: var(--brand, #07828b);
+      background: var(--brand);
 
       .btn {
         font-size: 12px;
@@ -418,8 +418,8 @@ const styles = css`
             gap: 8px;
             font-size: 12px;
             min-width: 4.375rem;
-            background: var(--fill-3);
-            color: var(--text-primary);
+            background: var(--fill_3);
+            color: var(--text_1);
             &::after {
               content: '';
               display: block;
@@ -431,14 +431,14 @@ const styles = css`
               height: 0;
               border-left: 4px solid transparent;
               border-right: 4px solid transparent;
-              border-top: 5px solid var(--text-tertiary);
+              border-top: 5px solid var(--text_3);
             }
           }
         }
         .bottom {
           font-size: 12px;
           font-weight: 500;
-          color: var(--text-tertiary);
+          color: var(--text_3);
         }
       }
     }

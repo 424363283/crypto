@@ -6,6 +6,7 @@ import { getFile } from '@/core/i18n/src/get-static-props';
 import { defaultLang, LANGUAGE } from '@/core/i18n/src/constants';
 import { getCmcPath } from '@/core/utils/src/get-cmc-path';
 import dynamic from 'next/dynamic';
+import { WS3001, WS4001 } from '@/core/network';
 const CopyTradingDetail = dynamic(() => import('@/components/CopyTrading/CopyTradingDetail'), { ssr: false, loading: () => <div /> });
 //交易員詳情
 function CopyTradingSettingDetail() {
@@ -16,7 +17,7 @@ function CopyTradingSettingDetail() {
   );
 
 }
-export default Lang.SeoHead(CopyTradingSettingDetail);
+export default Lang.SeoHead(WS4001(CopyTradingSettingDetail, { swap: true }));
 export const getServerSideProps = async (context: any) => {
   const locale = context.params?.locale || defaultLang;
   const id = context.params?.id || '';

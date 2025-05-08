@@ -26,7 +26,7 @@ const LeadTraderCompareBox = (props: { copyItem: CopyItem, onClose: (id: number)
       <div className={styles.leadTraderCompareBox}>
         <CommonIcon className={styles.closeBtn} name='common-compare-close-0' size={12} onClick={() => { onClose(item.id) }} />
         <LeadTraderAvator copyItem={item} >
-          <FollowButton status={0} onClick={(id: number) => { }} />
+          {/* <FollowButton status={0} onClick={(id: number) => { }} /> */}
         </LeadTraderAvator>
       </div>
     </>

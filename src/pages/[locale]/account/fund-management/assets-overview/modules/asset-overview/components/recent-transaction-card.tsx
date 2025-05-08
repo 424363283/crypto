@@ -171,7 +171,7 @@ const styles = css`
     width: 396px;
     border-radius: 15px;
     height: 100%;
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     @media ${MediaInfo.mobile} {
       margin-top: 12px;
       width: 100%;
@@ -187,13 +187,13 @@ const styles = css`
       .title {
         font-weight: 500;
         font-size: 16px;
-        color: var(--text-primary);
+        color: var(--text_1);
       }
       :global(.view-all) {
         display: flex;
         align-items: center;
         :global(.content) {
-          color: var(--text-secondary);
+          color: var(--text_2);
           padding-right: 4px;
         }
       }
@@ -230,13 +230,13 @@ const styles = css`
           display: flex;
           flex-direction: column;
           gap: 8px;
-          color: var(--text-primary);
+          color: var(--text_1);
           font-size: 14px;
           font-weight: 500;
           .label {
             display: flex ;
             align-items: center;
-            color: var(--text-primary);
+            color: var(--text_1);
             font-size: 14px;
             font-weight: 500;
             line-height: 14px; /* 100% */
@@ -245,7 +245,7 @@ const styles = css`
           .time {
             font-size: 12px;
             font-weight: 400;
-            color: var(--text-tertiary);
+            color: var(--text_3);
             line-height: 12px; /* 100% */
           }
         }
@@ -281,7 +281,7 @@ const styles = css`
             display: flex;
             align-items: center;
             font-size: 12px;
-            color: var(--text-secondary);
+            color: var(--text_2);
             margin-top: 5px;
           }
         }

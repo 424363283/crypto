@@ -20,15 +20,18 @@ import OrderHeaderItem from '../pending-list/components/order-header-item';
 import { ORDER_TYPES, OrderTypeSelect } from '../pending-list/components/order-type-select';
 import ClipboardItem from '@/components/clipboard-item';
 import OrderSPSLItem from '../pending-list/components/order-spsl-item';
+import { isSwapDemo } from '@/core/utils';
+import { useLocation } from 'react-use';
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
 
 const ORDER_TYPE_COLUMNS: { [key: string]: string[] } = {
   // [ORDER_TYPES.LIMIT]: ['symbol', 'side', 'dealVolume', 'volume', 'avgPrice', 'price', 'income', 'rate', 'fee', 'spsl', 'reduceOnly', 'status', 'orderId', 'ctime', 'mtime'],
-  [ORDER_TYPES.LIMIT]: ['symbol', 'orderType', 'side', 'dealVolume', 'volume', 'avgPrice', 'price', 'spsl', 'reduceOnly', 'status', 'orderId', 'ctime', 'mtime'],
+  [ORDER_TYPES.LIMIT]: ['symbol', 'subWallet', 'orderType', 'side', 'dealVolume', 'volume', 'avgPrice', 'price', 'spsl', 'reduceOnly', 'status', 'orderId', 'ctime', 'mtime'],
   [ORDER_TYPES.SPSL]: ['symbol', 'side', 'volume', 'triggerPrice', 'priceType', 'price', 'spsl', 'reduceOnly', 'status', 'orderId', 'ctime'],
-  [ORDER_TYPES.SP_OR_SL]: ['symbol', 'orderType', 'side', 'triggerPrice', 'priceType', 'price', 'reduceOnly', 'status', 'orderId', 'ctime']
+  [ORDER_TYPES.SP_OR_SL]: ['symbol', 'subWallet', 'orderType', 'side', 'triggerPrice', 'priceType', 'price', 'reduceOnly', 'status', 'orderId', 'ctime']
 };
 
-export const HistoryList = ({ active }: { active: boolean }) => {
+export const HistoryList = ({ active, wallet }: { active: boolean, wallet?: WalletKey }) => {
   const { isUsdtType } = Swap.Trade.base;
   const scrollRef = useRef();
   const scrollToTop = useCallback(() => {
@@ -36,11 +39,12 @@ export const HistoryList = ({ active }: { active: boolean }) => {
       (scrollRef?.current as any).scrollTop = 0;
     }
   }, [scrollRef]);
-  const { data: firstFilterList, loading, onSubmit, onLoadMore } = useData({ isUsdtType, scrollToTop });
+  const { data: originFilterList, loading, onSubmit, onLoadMore, orderCounts } = useData({ isUsdtType, scrollToTop });
   const { orderType } = store;
+  const firstFilterList = originFilterList.filter(item => !wallet || item.subWallet === wallet);
   const typeListLength = useMemo(() => {
     const reuslt: number[] = [];
-    firstFilterList.forEach((v: any) => {
+    firstFilterList.filter(item => !wallet || item.subWallet === wallet).forEach((v: any) => {
 
       if (v.orderType === 1) {
         reuslt[0] = (reuslt[0] || 0) + 1;
@@ -61,8 +65,10 @@ export const HistoryList = ({ active }: { active: boolean }) => {
     });
     return reuslt;
   }, [firstFilterList])
+  typeListLength[0] = orderCounts[ORDER_TYPES.LIMIT];
+  typeListLength[2] = orderCounts[ORDER_TYPES.SP_OR_SL];
 
-  let data = !orderType ? firstFilterList : firstFilterList.filter((v) => {
+  let tabData = !orderType ? firstFilterList : firstFilterList.filter((v) => {
     //   限价委托 orderType = 1
     // 追踪出场 orderType = 3
     // 止盈止损委托 orderType = 2 ， 且 reduceOnly = false
@@ -82,7 +88,7 @@ export const HistoryList = ({ active }: { active: boolean }) => {
     if (active) {
       onSubmit();
     }
-  }, [active, onSubmit]);
+  }, [active, onSubmit, orderType]);
 
   return (
     <>
@@ -90,9 +96,9 @@ export const HistoryList = ({ active }: { active: boolean }) => {
         <OrderTypeSelect listLength={typeListLength} value={orderType} onChange={(v) => (store.orderType = v)} />
         <RecordList
           renderRowKey={(v) => v.orderId}
-          data={data}
+          data={tabData}
           loading={loading}
-          columns={useColumns({ isUsdtType, data: data })}
+          columns={useColumns({ isUsdtType, data: tabData })}
           onLoadMore={onLoadMore}
           rowClassName={(item: any) => (item.status !== '4' ? '' : clsx('cancel-row'))}
           getScrollElement={useCallback((v: any) => (scrollRef.current = v), [])}
@@ -118,6 +124,7 @@ const useColumns = ({ isUsdtType, data }: any) => {
   const storeCode = store.code;
   const storeStatus = store.status;
   const storeType = store.type;
+  const isDemo = isSwapDemo(useLocation().pathname);
 
   const columns = ORDER_TYPE_COLUMNS[store.orderType]?.map(colKey => {
     let colItem: any = null;
@@ -144,6 +151,20 @@ const useColumns = ({ isUsdtType, data }: any) => {
               />
             );
           },
+        }
+        break;
+      }
+      case "subWallet": {
+        colItem = {
+          title: LANG('账户'),
+          dataIndex: 'subWallet',
+          minWidth: 100,
+          render: (v: any, item: any) => {
+            const walletData = Swap.Assets.getWallet({ walletId: item.subWallet, usdt: isUsdtType, withHooks: false });
+            return (
+              <WalletName> {LANG(walletData?.alias)} </WalletName>
+            );
+          }
         }
         break;
       }

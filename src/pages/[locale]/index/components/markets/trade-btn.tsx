@@ -41,7 +41,7 @@ const styles = css`
     line-height: 40px;
     font-size: 14px;
     font-weight: 500;
-    color: var(--text-white);
+    color: var(--text_white);
     border-radius: 4px;
     cursor: pointer;
     min-width: 88px;

@@ -168,7 +168,7 @@ export function nameMask(name: string, hide?: boolean) {
  * 隐藏电话
  * */
 export function mobileMask(mobile: string, hide?: boolean) {
-  if (mobile == "") return;
+  if (!mobile) return;
   if (!hide) return mobile;
   return mobile.replace(/(\d{3}).+(\d{4})/, "$1****$2");
 }
@@ -177,7 +177,7 @@ export function mobileMask(mobile: string, hide?: boolean) {
  * 隐藏邮箱地址
  * */
 export function emailMask(email: string, hide?: boolean) {
-  if (email == "") return;
+  if (!email) return;
   if (!hide) return email;
   return email.replace(/(.{1}).+(.{1}@.+)/g, "$1****$2");
 }

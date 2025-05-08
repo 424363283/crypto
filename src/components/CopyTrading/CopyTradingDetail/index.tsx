@@ -4,7 +4,7 @@ import css from 'styled-jsx/css';
 import DetailTab from './Components/detailTab';
 import CopySetting from '../CopySetting/index';
 import { useCopyState } from '@/core/hooks/src/use-copy-state';
-import UserInformation from '@/components/CopyTrading/Components/userInformation';
+import UserInformationPage from '@/components/CopyTrading/Components/userInformation';
 import BringSetting from './Components/bringSetting';
 import { CopyTradeSetting } from '@/components/CopyTrading/CopyTradingDetail/Components/types';
 export default function CopyTradingDetail() {
@@ -20,9 +20,10 @@ export default function CopyTradingDetail() {
       return <DetailTab />;
     }
   };
+ 
   return (
     <div className="copy-detail-box">
-      <UserInformation />
+      <UserInformationPage />
       <div className="copy-detail">
         <div className="copy-detail-container">
           <ShowCopyTrading />
@@ -35,7 +36,7 @@ export default function CopyTradingDetail() {
 
 const styles = css`
   .copy-detail-box {
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
   }
   .copy-detail {
     padding-bottom: 120px;

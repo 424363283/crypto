@@ -190,7 +190,7 @@ const PercentInput = ({
 export default PercentInput;
 const styles = css`
   .prefix {
-    color: var(--text-secondary);
+    color: var(--text_2);
     font-size: 14px;
     font-weight: 400;
   }
@@ -203,7 +203,7 @@ const styles = css`
     margin: 16px 0 8px;
     display: flex;
     align-items: center;
-    background: var(--fill-3);
+    background: var(--fill_3);
     &:hover {
       border-color: var(--brand) !important;
     }
@@ -215,24 +215,24 @@ const styles = css`
       flex: 1;
       position: relative;
       input {
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 14px;
         font-weight: 500;
         text-indent: 12px;
         outline: none;
         border: 0;
         width: 100%;
-        background: var(--fill-3);
+        background: var(--fill_3);
         text-align: center;
         &::placeholder,
         input::placeholder,
         input::-webkit-input-placeholder,
         &::-webkit-input-placeholder {
-          color: var(--text-tertiary);
+          color: var(--text_3);
         }
       }
       .symbol {
-        color: var(--text-tertiary);
+        color: var(--text_3);
         position: absolute;
         font-size: 14px;
         pointer-events: none;

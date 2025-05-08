@@ -11,7 +11,7 @@ export const BaseModalStyle = () => {
             .ant-modal-content {
               padding: 0;
               border-radius: 24px;
-              background: var(--fill-pop);
+              background: var(--fill_pop);
               .ant-modal-header {
                 padding: 16px 24px;
                 margin: 0;
@@ -21,18 +21,18 @@ export const BaseModalStyle = () => {
                 .ant-modal-title {
                   font-size: 16px;
                   font-weight: 500;
-                  color: var(--text-primary);
+                  color: var(--text_1);
                 }
               }
 
               .ant-modal-close{
-                color:var(--text-secondary);
+                color:var(--text_2);
                 width:24px;
                 height:24px;
                 top:16px;
                 right:24px;
                 &:hover{
-                  color:var(--text-secondary);
+                  color:var(--text_2);
                   background:transparent !important;
                 }
               }
@@ -64,9 +64,9 @@ export const BaseModalStyle = () => {
                   align-items: center;
                  
                   border-radius: 40px;
-                  background: var(--text-brand);
+                  background: var(--text_brand);
 
-                  color: var(--text-white);
+                  color: var(--text_white);
                   font-size: 16px;
                   font-weight: 500;
 

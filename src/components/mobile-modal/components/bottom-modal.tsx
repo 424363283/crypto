@@ -104,7 +104,7 @@ const BottomModal = ({
             .title {
               font-size: 1rem;
               font-weight: 500;
-              color: var(--text-primary);
+              color: var(--text_1);
               display: flex;
               flex-direction: row;
               align-items: center;
@@ -152,7 +152,7 @@ const BottomModal = ({
         }
         @media ${MediaInfo.mobile} {
           .modal {
-          background-color: var(--fill-1);
+          background-color: var(--fill_1);
             .header {
               &.tab {
                 height: 1.5rem;
@@ -169,7 +169,7 @@ const BottomModal = ({
                   margin: 0;
                   font-size: 1rem;
                   font-weight: 500;
-                  color: var(--text-secondary);
+                  color: var(--text_2);
                   border-bottom: 0;
                   &.active {
                     color: var(--brand);

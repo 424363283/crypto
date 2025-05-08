@@ -198,16 +198,16 @@ const styles = css`
       /* background: var(--theme-background-color-3-2); */
       font-size: 12px;
       font-weight: 400;
-      color: var(--text-secondary);
+      color: var(--text_2);
       display: flex;
       align-items: center;
       padding: 4px 1rem;
       cursor: pointer;
       border-radius: 4px;
-      border: 0.5px solid var(--line-3);
+      border: 0.5px solid var(--fill_line_3);
 
       &.active {
-        color: var(--text-white);
+        color: var(--text_white);
         background: var(--brand);
         border: none;
       }
@@ -242,7 +242,7 @@ const styles = css`
         align-items: center;
         font-size: 16px;
         font-weight: 500;
-        color: var(--text-tertiary);
+        color: var(--text_3);
         span {
           display: flex;
           align-items: center;
@@ -260,7 +260,7 @@ const styles = css`
 
   :global(.ant-table-thead > tr > th) {
     padding: 0;
-    color: var(--text-tertiary);
+    color: var(--text_3);
     font-weight: 400;
     font-size: 12px;
     border: 0;
@@ -277,7 +277,7 @@ const styles = css`
   :global(td.ant-table-cell) {
     padding: 0;
     font-size: 12px;
-    color: var(--text-primary);
+    color: var(--text_1);
     font-weight: 500;
     &:last-child {
       text-align: right;
@@ -307,7 +307,7 @@ const styles = css`
       border: none;
       width: 1.25rem !important;
       min-width: 1.25rem !important;
-      color: var(--text-primary);
+      color: var(--text_1);
       height: 1.25rem !important;
       line-height: 1.25rem !important;
       border-radius: 50%;
@@ -316,7 +316,7 @@ const styles = css`
       font-size: 12px !important;
       font-weight: 500;
       &:hover {
-        background-color: var(--fill-3);
+        background-color: var(--fill_3);
       }
     }
     :global(.ant-pagination-prev),
@@ -333,7 +333,7 @@ const styles = css`
       width: 1rem !important;
       height: 1rem !important;
       :global(.ant-pagination-item-link-icon) {
-        color: var(--text-brand) !important;
+        color: var(--text_brand) !important;
         font-size: 10px !important;
         :global(svg) {
           width: 10px !important;
@@ -342,7 +342,7 @@ const styles = css`
       }
       :global(.ant-pagination-item-ellipsis) {
         border-radius: 1.25rem !important;
-        color: var(--text-primary) !important;
+        color: var(--text_1) !important;
         width: 1rem !important;
         height: 1rem !important;
         font-size: 10px !important;
@@ -350,7 +350,7 @@ const styles = css`
     }
     :global(.ant-pagination-item-active) {
       background: var(--brand) !important;
-      color: var(--text-white) !important;
+      color: var(--text_white) !important;
       font-weight: 500 !important;
     }
   }

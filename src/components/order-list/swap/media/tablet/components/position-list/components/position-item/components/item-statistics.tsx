@@ -154,7 +154,7 @@ export const ItemStatistics = ({
                   overflow: hidden;
                 }
                 &:first-child {
-                  color: var(--text-tertiary);
+                  color: var(--text_3);
                 }
                 &:last-child {
                   width: 100%;
@@ -162,7 +162,7 @@ export const ItemStatistics = ({
                   text-overflow: ellipsis;
                   overflow: hidden;
 
-                  color: var(--text-primary);
+                  color: var(--text_1);
                   :global(.icon) {
                     margin-left: 3px;
                   }

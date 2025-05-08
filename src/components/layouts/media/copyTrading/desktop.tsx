@@ -248,7 +248,7 @@ export const SwapDesktopLayout = ({
         .kline-header-content {
           height: 58px;
           display: flex;
-          background-color: var(--bg-1);
+          background-color: var(--fill_bg_1);
           margin-top:2px;
         }
 
@@ -337,7 +337,7 @@ export const SwapDesktopLayout = ({
         // 布局
         .spot_page_trade {
           color: var(--trade-font-light);
-          background-color:var(--fill-3);
+          background-color:var(--fill_3);
 
           .x-nav-bar {
             height: 36px;
@@ -415,7 +415,7 @@ export const SwapDesktopLayout = ({
           .view-main-right,
           .view-positions {
             border-radius: 0px;
-            background-color: var(--bg-1);
+            background-color: var(--fill_bg_1);
           }
 
           .draggable-module-ctr {

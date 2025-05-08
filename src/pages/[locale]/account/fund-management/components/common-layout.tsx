@@ -1,4 +1,5 @@
 import CommonIcon from '@/components/common-icon';
+import { ACCOUNT_TYPE } from '@/components/modal';
 import { Desktop } from '@/components/responsive';
 import { useRouter } from '@/core/hooks';
 import { TrLink } from '@/core/i18n';
@@ -19,24 +20,32 @@ type NavProps = {
   navItems: NavItemProps[];
   close?: () => void;
 };
- 
+
 const NavListItem = (props: NavItemProps) => {
   const router = useRouter();
   const item = props;
-  const isActive = (param: string | undefined, url?: string) => {
-    const type = getUrlQueryParams('type');
+  const isActive = (menuItem: NavItemProps) => {
+    const currentType = getUrlQueryParams('type');
+    const currentAccount = getUrlQueryParams('account');
     const lastPathname = router.query.id;
-    if (!type && param === 'overview') return true;
-    if (url?.includes(lastPathname?.toLowerCase())) return true;
-    return param === type;
+    if (!currentType && menuItem.query?.type === 'overview') return true;
+    if (menuItem.href?.includes(lastPathname?.toLowerCase())) return true;
+    if (menuItem.query?.type !== currentType) return false;
+    if (menuItem.query?.account) {
+      return menuItem.query?.account === currentAccount;
+    } else if (currentAccount) {
+      return false;
+    }
+    return true;
   }
-  const active = isActive(item.query?.type || item.query?.id, item.href);
+  // const active = isActive(item.query?.type || item.query?.id, item.query.account, item.href);
+  const active = isActive(item);
   const currentIcon = active ? (item.activeIcon || item.icon) : item.icon;
   return (
     <>
       <li
-        className={clsx('nav-list-item', isActive(item.query?.type, item.href) && 'nav-list-item-active')}
-        onClick={()=> item.click?.()}
+        className={clsx('nav-list-item', active && 'nav-list-item-active')}
+        onClick={() => item.click?.()}
       >
         <TrLink
           className='nav-list-item-content'
@@ -60,7 +69,7 @@ const navListItemStyles = css`
   }
   :global(.nav-list-item-content) {
     display: flex;
-    color: var(--text-secondary);
+    color: var(--text_2);
     align-items: center;
     width: 100%;
     font-size: 16px;
@@ -69,7 +78,7 @@ const navListItemStyles = css`
   }
   &.nav-list-item-active {
     .title {
-      color: var(--text-brand);
+      color: var(--text_brand);
     }
   }
 }
@@ -88,7 +97,7 @@ export const NavList = (props: NavProps) => {
               activeIcon={item.activeIcon}
               title={item.title}
               href={item.href}
-              click={()=> close?.()}
+              click={() => close?.()}
             />
           )
         })}
@@ -111,7 +120,7 @@ const navListStyles = css`
       }
       :global(.nav-list-item) {
         &:hover {
-          color: var(--text-brand);
+          color: var(--text_brand);
         }
       }
       :global(.nav-active) {
@@ -131,7 +140,7 @@ type CommonLayoutProps = {
   navItems?: NavProps['navItems'];
 };
 
- 
+
 
 export const CommonLayout = (props: CommonLayoutProps) => {
   const { children, navItems } = props;
@@ -140,7 +149,7 @@ export const CommonLayout = (props: CommonLayoutProps) => {
   useEffect(() => {
     setType(getUrlQueryParams('type'));
   }, [getUrlQueryParams('type')]);
-  
+
   return (
     <div className='common-layout'>
       {
@@ -162,9 +171,9 @@ const styles = css`
     flex-direction: column;
     height: 100%;
     min-height: calc(100vh - 64px);
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     @media ${MediaInfo.mobileOrTablet} {
-      background:var(--fill-3);
+      background:var(--fill_3);
     }
     @media ${MediaInfo.desktop} {
       display: flex;
@@ -202,7 +211,7 @@ const styles = css`
         width: auto;
       }
       :global(.asset-account-header) {
-        background-color: var(--fill-2);
+        background-color: var(--fill_2);
         :global(.nav-title) {
           max-width: 1224px;
           line-height: 20px;

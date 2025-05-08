@@ -15,7 +15,7 @@ const { className, styles: _styles } = css.resolve`
       text-align: left;
       line-height: 14px;
       font-size: 14px;
-      font-weight: 400;
+      font-weight: 500;
       padding: 7px 15px 7px 18px;
       color: var(--theme-trade-text-color-1);
       margin-bottom: 5px;
@@ -30,7 +30,6 @@ const { className, styles: _styles } = css.resolve`
       }
       &.active {
         color: var(--skin-primary-color) !important;
-        font-weight: 500;
       }
     }
   }

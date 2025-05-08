@@ -56,9 +56,9 @@ const styles = css`
     align-items: center;
     align-self: stretch;
     color: var(--theme-font-color-1);
-    background: var(--bg-1);
+    background: var(--fill_bg_1);
     &.bg {
-      background-color: var(---bg-1);
+      background-color: var(--fill_bg_1);
     }
     > div {
       display: flex;

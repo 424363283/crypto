@@ -6,6 +6,7 @@ import css from 'styled-jsx/css';
 import { useApiContext } from '../context';
 import { GoVerifyBtn } from './go-verify-btn';
 import YIcon from '@/components/YIcons';
+import { MediaInfo } from '@/core/utils';
 
 const InitialInfoModalContent = ({ remainAmount, unit }: { remainAmount: number; unit: string }) => {
   const { setApiState } = useApiContext();
@@ -61,7 +62,7 @@ const styles = css`
         :global(.top-user-auth),
         :global(.bottom-cert-requirement) {
           border-radius: 8px;
-          background: var(--fill-3);
+          background: var(--fill_3);
           display: flex;
           padding: 12px 16px;
           flex-direction: column;
@@ -69,7 +70,7 @@ const styles = css`
           gap: 8px;
 
           :global(.title) {
-            color: var(--text-secondary);
+            color: var(--text_2);
             font-family: 'HarmonyOS Sans SC';
             font-size: 14px;
             font-style: normal;
@@ -83,9 +84,9 @@ const styles = css`
             gap: 10px;
             align-self: stretch;
             border-radius: 8px;
-            background: var(--bg-1);
+            background: var(--fill_bg_1);
 
-            color: var(--text-primary);
+            color: var(--text_1);
             font-family: 'HarmonyOS Sans SC';
             font-size: 14px;
             font-style: normal;
@@ -96,7 +97,7 @@ const styles = css`
         :global(.footer-button) {
           margin-top: 0;
           border-radius: 40px;
-          background: var(--text-brand);
+          background: var(--text_brand);
           display: flex;
           height: 48px;
           padding: 0px 16px;
@@ -106,6 +107,16 @@ const styles = css`
           :global(.nui-primary) {
             &:hover {
               background: none;
+            }
+          }
+          @media ${MediaInfo.mobile} {
+            padding: 0;
+            background: rgba(0, 0, 0, 0);
+            :global(button) {
+              height: 48px;
+              padding: 0;
+              margin: 0;
+              border-radius: 48px;
             }
           }
         }

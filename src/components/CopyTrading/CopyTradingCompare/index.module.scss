@@ -2,11 +2,12 @@
 $sm: 768px;
 
 .copyTradingCompare {
+  margin-bottom: 120px;
   display: flex;
   flex-direction: column;
   gap: 80px;
   @media (max-width: $sm) {
-    gap: 16px;
+    gap: 0px;
   }
   .topInfo {
     position: relative;
@@ -23,11 +24,12 @@ $sm: 768px;
       max-width: var(--const-max-page-width);
       width: 100%;
       margin: auto;
-      padding-top: 28px;
+      padding-top: 32px;
       gap: 34px;
       @media (max-width: $sm) {
         gap: 16px;
         padding: 26px 24px 0 24px;
+        width: auto;
       }
     }
 
@@ -37,5 +39,28 @@ $sm: 768px;
     max-width: var(--const-max-page-width);
     width: 100%;
     margin: auto;
+  }
+  .pkbox {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--text-white);
+  }
+  .title {
+    font-family: HarmonyOS Sans SC;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 100%;
+    color: var(--text-white);
+    @media (max-width: $sm) {
+      font-size: 24px;
+    }
+  }
+  .pkbreak {
+    font-family: HarmonyOS Sans SC;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    color: var(--text-white);
   }
 }

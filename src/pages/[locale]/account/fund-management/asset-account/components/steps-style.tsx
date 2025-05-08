@@ -7,12 +7,12 @@ export const StepsStyle = () => {
             .ant-steps-item-title {
               font-size: 16px;
               font-weight: 500;
-              color: var(--text-brand);
+              color: var(--text_brand);
               margin-bottom: 16px;
             }
             .ant-steps-item-wait {
               .ant-steps-item-icon {
-                background-color: var(--fill-3);
+                background-color: var(--fill_3);
                 border-color: transparent;
                 &>.ant-steps-icon {
                   color: var(--tertiary);
@@ -20,7 +20,7 @@ export const StepsStyle = () => {
               }
               .ant-steps-item-content {
                 .ant-steps-item-title {
-                  color: var(--text-tertiary)
+                  color: var(--text_3)
                 }
               }
             }
@@ -34,12 +34,12 @@ export const StepsStyle = () => {
                 background-color: var(--brand);
                 border-color: transparent;
                 &>.ant-steps-icon {
-                  color: var(--text-white);
+                  color: var(--text_white);
                 }
               }
               .ant-steps-item-content {
                 .ant-steps-item-title {
-                  color: var(--text-brand)
+                  color: var(--text_brand)
                 }
               }
             }

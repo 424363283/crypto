@@ -19,7 +19,9 @@ export const Table = (props: any): JSX.Element => {
     showMobileTable = false,
     showTabletTable = false,
     isHistoryList = false,
+    isHeaderColumn = false,
     historyType,
+    orderType,
     ...rest
   } = props;
 
@@ -28,13 +30,13 @@ export const Table = (props: any): JSX.Element => {
       ...item,
       sortIcon: ({ sortOrder }: { sortOrder: 'ascend' | 'descend' }) => {
         if (sortOrder === 'ascend') {
-          return <CommonIcon name='common-sort-up-active-icon-0' size={10} enableSkin />;
+          return <CommonIcon name="common-sort-up-active-icon-0" size={10} enableSkin />;
         }
         if (sortOrder === 'descend') {
-          return <CommonIcon name='common-sort-down-active-icon-0' size={10} enableSkin />;
+          return <CommonIcon name="common-sort-down-active-icon-0" size={10} enableSkin />;
         }
-        return <CommonIcon name='common-sort-icon-0' size={10} />;
-      },
+        return <CommonIcon name="common-sort-icon-0" size={10} />;
+      }
     };
   });
   const renderAntdWithoutPaginationTable = () => {
@@ -60,14 +62,15 @@ export const Table = (props: any): JSX.Element => {
       <>
         <Desktop forceInitRender={false}>{renderAntdWithoutPaginationTable()}</Desktop>
         <Mobile forceInitRender={false}>
-          {
-            isHistoryList ?
-              (historyType !== undefined ?
-                <MobileOrderHistoryList dataSource={dataSource} type={historyType} /> :
-                <MobileTable className={className} columns={columns} dataSource={dataSource} pagination={pagination} />
-              ) :
-              <MobileFundHistoryList dataSource={dataSource} />
-          }
+          {isHistoryList ? (
+            orderType && historyType !== undefined ? (
+              <MobileOrderHistoryList dataSource={dataSource} type={historyType} orderType={orderType} />
+            ) : (
+              <MobileTable className={className} columns={columns} dataSource={dataSource} pagination={pagination} />
+            )
+          ) : (
+            <MobileFundHistoryList dataSource={dataSource} />
+          )}
         </Mobile>
         <Tablet forceInitRender={false}>
           {showTabletTable ? (
@@ -96,17 +99,17 @@ export const Table = (props: any): JSX.Element => {
           expandIconColumnIndex: columns?.length, // 将展开图标放在最后一列
           expandIcon: ({ expanded, onExpand, record }) =>
             expanded ? (
-              <div className='expand-btn' onClick={(e) => onExpand(record, e)}>
+              <div className="expand-btn" onClick={e => onExpand(record, e)}>
                 <span>{LANG('详情')}</span>
-                <CommonIcon name='common-expanded-icon-0' size={12} style={{ cursor: 'pointer' }} enableSkin />
+                <CommonIcon name="common-expanded-icon-0" size={12} style={{ cursor: 'pointer' }} enableSkin />
               </div>
             ) : (
-              <div className='expand-btn' onClick={(e) => onExpand(record, e)}>
+              <div className="expand-btn" onClick={e => onExpand(record, e)}>
                 <span>{LANG('详情')}</span>
-                <CommonIcon name='common-expand-icon-0' size={12} style={{ cursor: 'pointer' }} enableSkin />
+                <CommonIcon name="common-expand-icon-0" size={12} style={{ cursor: 'pointer' }} enableSkin />
               </div>
             ),
-          ...props.expandable,
+          ...props.expandable
         }}
       />
     );
@@ -115,14 +118,23 @@ export const Table = (props: any): JSX.Element => {
     <>
       <DesktopOrTablet>{renderWithPaginationTable()}</DesktopOrTablet>
       <Mobile>
-        {
-          isHistoryList ?
-            historyType !== undefined ?
-              <MobileOrderHistoryList dataSource={dataSource} type={historyType} /> :
-              <MobileTable className={className} columns={columns} dataSource={dataSource} pagination={pagination} />
-            :
-            <MobileFundHistoryList dataSource={dataSource} />
-        }
+        {isHistoryList ? (
+          orderType && historyType !== undefined ? (
+            <MobileOrderHistoryList dataSource={dataSource} type={historyType} orderType={orderType} />
+          ) : (
+            <MobileTable
+              className={className}
+              columns={columns}
+              dataSource={dataSource}
+              pagination={pagination}
+              isHeaderColumn={isHeaderColumn}
+              sortOrder={props.sortOrder}
+              onChange={props.onChange}
+            />
+          )
+        ) : (
+          <MobileFundHistoryList dataSource={dataSource} />
+        )}
       </Mobile>
       <Pagination {...pagination} showSizeChanger={false} dataSource={dataSource} total={_total} />
       <style jsx>{tableStyles}</style>
@@ -132,35 +144,35 @@ export const Table = (props: any): JSX.Element => {
 export { Pagination };
 
 const mobileListStyles = css`
-  .mobile-cloumns-list{
+  .mobile-cloumns-list {
     margin: 10px 0 15px;
     padding:0 12px 10px;
-    border-bottom: 1px solid var(--fill-3);
+    border-bottom: 1px solid var(--fill_3);
     .cloumns{
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       font-size: 15px;
-      .logo{
-         display: flex;
-         align-items: center;
-         span{
+      .logo {
+        display: flex;
+        align-items: center;
+        span {
           padding-left: 5px;
-         }
+        }
       }
-      .type{
+      .type {
         display: flex;
         align-items: center;
       }
-      .price{
+      .price {
         color: var(--green);
       }
-      &:first-child{
+      &:first-child {
         margin-bottom: 10px;
       }
-      &:last-child{
+      &:last-child {
         font-size: 14px;
-        color: var(--text-tertiary)
+        color: var(--text_3)
       }
     }
   }
@@ -177,7 +189,7 @@ const tableStyles = css`
         :global(th),
         :global(td) {
           color: var(--theme-font-color-1);
-          border-color: var(--line-2) !important;
+          border-color: var(--fill_line_2) !important;
         }
         :global(.ant-table-cell-row-hover) {
           /* background: var(--theme-background-color-2-5) !important; */
@@ -185,12 +197,12 @@ const tableStyles = css`
         :global(.ant-table-row-expand-icon-cell) {
           background-color: unset;
           border-bottom: none;
-          color: var(--text-tertiary);
+          color: var(--text_3);
           :global(.expand-btn) {
             display: flex;
             align-items: center;
             cursor: pointer;
-            color: var(--text-tertiary);
+            color: var(--text_3);
             font-size: 14px;
             min-width: 50px;
             max-width: 400;

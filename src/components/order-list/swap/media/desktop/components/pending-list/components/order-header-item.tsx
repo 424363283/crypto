@@ -31,12 +31,12 @@ const OrderHeaderItem = ({
             <div className='col-bottom'>
               <MarginTypeItem type={marginType} />
               {!!Number(leverage) && <LeverItem lever={leverage} />}
-              {
-                // <WalletName>
-                //   {alias ||
-                //     Swap.Assets.getWallet({ walletId: subWallet, usdt: isUsdtType, withHooks: false })?.alias}
-                // </WalletName>
-              }
+              {/*
+                <WalletName>
+                  {alias ||
+                    Swap.Assets.getWallet({ walletId: subWallet, usdt: isUsdtType, withHooks: false })?.alias}
+                </WalletName>
+              */}
             </div>
           </div>
         </div>
@@ -56,7 +56,7 @@ const OrderHeaderItem = ({
               flex-direction: row;
               align-items: center;
               font-size: 12px;
-              color: var(--text-primary);
+              color: var(--text_1);
               margin: 0;
             }
             .col-bottom {

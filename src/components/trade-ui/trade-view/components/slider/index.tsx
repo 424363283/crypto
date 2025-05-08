@@ -38,7 +38,7 @@ const Slider = ({
   renderText,
   renderDots,
   trackClassName,
-  railBgColor = 'var(--fill-3)',
+  railBgColor = 'var(--fill_3)',
   ...props
 }: {
   percent?: any;

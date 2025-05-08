@@ -35,7 +35,9 @@ export const InputPrice = ({
     if (select) {
       addonAfter = (
         <Select
-          dropdownClassName={clsx('custom-dropdown')}
+          popupClassName={clsx('custom-dropdown')}
+          placement='bottomRight'
+          popupMatchSelectWidth={false}
           suffixIcon={<YIcon.arrowDown className={clsx('editIcon')} />}
           value={type}
           onChange={val => onTypeChange(val)}

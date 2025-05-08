@@ -29,11 +29,11 @@ const { className, styles: _styles } = css.resolve`
           line-height: 1.5rem;
           height: 1.5rem;
         }
-        color: var(--text-secondary);
+        color: var(--text_2);
 
         &.active {
           font-weight: 500;
-          color: var(--text-brand);
+          color: var(--text_brand);
         }
         &:last-child {
           margin-right: 0;

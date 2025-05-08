@@ -119,7 +119,7 @@ function BottomQuotes() {
               justify-content: space-between;
               position: relative;
               cursor: pointer;
-              background-color: var(--fill-2);
+              background-color: var(--fill_2);
               transition: all 0.3s;
               .chart-content {
                 display: flex;

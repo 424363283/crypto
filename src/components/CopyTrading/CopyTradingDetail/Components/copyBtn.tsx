@@ -36,71 +36,73 @@ const styles = css`
     border-radius: 24px;
     &:hover,
     &:active {
-      color: var(--text-brand) !important;
-      border-color: var(--text-brand) !important;
+      color: var(--text_brand) !important;
+      border-color: var(--text_brand) !important;
       opacity: 0.8;
     }
   }
   :global(.brand) {
-    background: var(--text-brand);
+    background: var(--text_brand);
     color: #fff;
     border: 1px solid var(--brand);
 
     &:hover,
     &:active {
-      background: var(--text-brand) !important;
+      background: var(--text_brand) !important;
       color: #fff !important;
-      border-color: var(--text-brand) !important;
+      border-color: var(--text_brand) !important;
       opacity: 0.8;
     }
   }
   :global(.border) {
-    color: var(--text-brand);
+    color: var(--text_brand);
     font-family: 'HarmonyOS Sans SC';
     font-style: normal;
     font-weight: 500;
     line-height: normal;
-    border-color: var(--text-brand);
+    border-color: var(--text_brand);
     &:hover {
-      color: var(--text-brand);
-      border-color: var(--text-brand);
+      color: var(--text_brand);
+      border-color: var(--text_brand);
       opacity: 0.8;
     }
   }
   :global(.gracy) {
-    color: var(--text-secondary);
+    color: var(--text_2);
     font-family: 'HarmonyOS Sans SC';
     font-style: normal;
     font-weight: 500;
     line-height: normal;
-    background: var(--fill-3);
-    border-color: var(--fill-3);
+    background: var(--fill_3);
+    border-color: var(--fill_3);
     &:hover {
-      color: var(--text-brand);
-      border-color: var(--fill-3);
+      color: var(--text_brand);
+      border-color: var(--fill_3);
       opacity: 0.8;
     }
   }
   :global(.gracyLabel) {
-    color: var(--text-brand);
+    color: var(--text_brand);
     font-family: 'HarmonyOS Sans SC';
     font-style: normal;
     font-weight: 500;
     line-height: normal;
-    background: var(--Color-Brand-label, rgba(7, 130, 139, 0.2));
-    border-color: var(--Color-Brand-label, rgba(7, 130, 139, 0.2));
+    background: var(--brand_20);
+    border-color: var(--brand_20);
     border-radius: 24px;
-    background: var(--Color-Brand-label, rgba(7, 130, 139, 0.2));
+    background: var(--brand_20);
     &:hover,
     &:active {
-      color: var(--text-brand) !important;
-      border-color: var(--Color-Brand-label, rgba(7, 130, 139, 0.2)) !important;
+      color: var(--text_brand) !important;
+      border-color: var(--brand_20) !important;
     }
   }
   :global(.textSize16) {
     font-size: 16px;
+    font-weight: 500;
   }
   :global(.textSize14) {
     font-size: 14px;
+
   }
 `;

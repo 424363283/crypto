@@ -179,7 +179,21 @@ const UserInfoArea = (props: InfoItemProps) => {
         )}
         <div className="user-item">
           <div className="item-title">{LANG('邀请码')}</div>
-          <div className="item-content">{!showInfo ? ru : hiddenTxt(ru, 1, 1, 4)}</div>
+          <CopyToClipboard
+            text={ru}
+            onCopy={(copiedText, success) => {
+              if (ru === copiedText && success) {
+                message.success(LANG('复制成功'));
+              } else {
+                message.error(LANG('复制失败'));
+              }
+            }}
+          >
+            <div className="item-content">
+              <span style={{ paddingRight: '5px' }}>{!showInfo ? ru : hiddenTxt(ru, 1, 1, 4)}</span>
+              <CommonIcon size={12} name="common-copy" enableSkin />
+            </div>
+          </CopyToClipboard>
         </div>
         <style jsx>{UserInfoStyles}</style>
       </div>
@@ -217,7 +231,7 @@ const UserInfoStyles = css`
         padding: 10px 0;
       }
       .item-title {
-        color: var(--text-secondary);
+        color: var(--text_2);
       }
       .item-content {
         display: flex;
@@ -225,7 +239,7 @@ const UserInfoStyles = css`
         align-items: center;
         font-size: 16px;
         font-weight: bold;
-        color: var(--text-primary);
+        color: var(--text_1);
         cursor: pointer;
         margin-top: 5px;
         @media ${MediaInfo.mobileOrTablet} {
@@ -253,11 +267,11 @@ const UserInfoStyles = css`
               white-space: nowrap;
             }
             &.no-valid {
-              background-color: var(--fill-3);
-              color: var(--text-tertiary);
+              background-color: var(--fill_3);
+              color: var(--text_3);
             }
             &.review {
-              background-color: var(--yellow_tips, rgba(240, 186, 48, 0.1));
+              background-color: var(--yellow_10);
               color: var(--yellow, #f0ba30);
             }
             &.fail {

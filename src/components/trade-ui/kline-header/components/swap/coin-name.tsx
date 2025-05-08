@@ -65,11 +65,11 @@ export const CoinName = () => {
             .id {
               font-size: 20px;
               font-weight: 700;
-              color: var(--text-primary);
+              color: var(--text_1);
             }
             .text {
               font-size: 12px;
-              color: var(--text-secondary);
+              color: var(--text_2);
             }
           }
         `}</style>

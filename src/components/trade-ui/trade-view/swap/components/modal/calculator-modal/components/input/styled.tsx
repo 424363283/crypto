@@ -5,7 +5,7 @@ const { className, styles: _styles } = css.resolve`
   .input {
     width: 100%;
     height: 40px;
-    background: var(--fill-3);
+    background: var(--fill_3);
     border-radius: 8px;
     border: none;
     padding: 0 10px;
@@ -13,12 +13,12 @@ const { className, styles: _styles } = css.resolve`
     .label {
       font-size: 12px;
       font-weight: 400;
-      color: var(--text-secondary);
+      color: var(--text_2);
     }
     :global(input) {
       font-size: 12px;
       text-indent: 0;
-      color: var(--text-primary) !important;
+      color: var(--text_1) !important;
       text-align: right;
       padding-right: 10px;
     }

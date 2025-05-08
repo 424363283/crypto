@@ -14,7 +14,7 @@ export const LightningOrder = () => {
   const { ref, state, onMouseDown, onMouseUp } = useDrag({
     dragElement: dragRef.current,
     topHeight: 64,
-    bottomHeight: 38,
+    bottomHeight: 38
   });
   const [value, setValue] = useState('');
   const { quoteId, priceUnitText, isUsdtType } = Swap.Trade.base;
@@ -32,35 +32,37 @@ export const LightningOrder = () => {
   );
   const onOrder = (isBuy: boolean) => {
     setValue('');
-    Swap.Trade.onLightningOrder({ isBuy: isBuy, value: value });
+    // Swap.Trade.onLightningOrder({ isBuy: isBuy, value: value });
+
+    Swap.Trade.onPlaceAnOrder({ buy: isBuy, inputVolume: value, direct: true });
   };
 
   return (
     <>
       <div
-        className='lightning-order'
+        className="lightning-order"
         style={{
           left: state.pos.x,
-          top: state.pos.y,
+          top: state.pos.y
         }}
         ref={dragRef}
       >
-        <div className='btn' ref={ref} onMouseDown={onMouseDown} onMouseUp={onMouseUp}>
-          <Svg src='/static/images/swap/lightning_order/menu.svg' width={12} />
+        <div className="btn" ref={ref} onMouseDown={onMouseDown} onMouseUp={onMouseUp}>
+          <Svg src="/static/images/swap/lightning_order/menu.svg" width={12} />
         </div>
-        <div className='content'>
-          <div className='price buy' onClick={() => onOrder(true)}>
+        <div className="content">
+          <div className="price buy" onClick={() => onOrder(true)}>
             <span>{LANG('市价买入')}</span>
             {sell1Price}
           </div>
-          <div className='ipnut-wrapper' onClick={() => inputRef.current?.focus()}>
-            <div className='label' onClick={() => Swap.Trade.setModal({ selectUnitVisible: true })}>
+          <div className="ipnut-wrapper" onClick={() => inputRef.current?.focus()}>
+            <div className="label" onClick={() => Swap.Trade.setModal({ selectUnitVisible: true })}>
               {LANG('数量')}({Swap.Info.getUnitText({ symbol: quoteId })})
-              <CommonIcon className='icon' name='common-tiny-triangle-down-2' size={12} />
+              <CommonIcon className="icon" name="common-tiny-triangle-down-2" size={12} />
             </div>
             <AppInput
               inputRef={inputRef}
-              type='number'
+              type="number"
               component={DecimalInput}
               className={'my-input'}
               onChange={setValue}
@@ -69,17 +71,17 @@ export const LightningOrder = () => {
               max={Number(max)}
               min={0}
               digit={Swap.Info.getVolumeDigit(quoteId)}
-              blankDisplayValue=''
+              blankDisplayValue=""
               value={value}
             />
           </div>
-          <div className='price sell' onClick={() => onOrder(false)}>
+          <div className="price sell" onClick={() => onOrder(false)}>
             <span>{LANG('市价卖出')}</span>
             {buy1Price}
           </div>
         </div>
-        <div className='btn' onClick={() => Swap.Info.setTradePreference(isUsdtType, { lightningOrder: false })}>
-          <Svg src='/static/images/swap/lightning_order/close.svg' width={12} />
+        <div className="btn" onClick={() => Swap.Info.setTradePreference(isUsdtType, { lightningOrder: false })}>
+          <Svg src="/static/images/swap/lightning_order/close.svg" width={12} />
         </div>
       </div>
       <style jsx>{`
@@ -88,7 +90,7 @@ export const LightningOrder = () => {
           background-color: var(--theme-trade-bg-color-3);
           position: absolute;
           height: 41px;
-          left:'10%';
+          left: '10%';
           display: flex;
           flex-direction: row;
           align-items: center;

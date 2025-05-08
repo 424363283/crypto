@@ -58,7 +58,7 @@ export const LiteDesktopLayout = ({
         #lite-layout {
           overflow: auto;
           flex: 1;
-          background-color: var(--fill-3);
+          background-color: var(--fill_3);
           padding-top: var(--theme-trade-layout-gap);
           padding-left: var(--theme-trade-layout-spacing);
           display: flex;
@@ -187,7 +187,7 @@ export const LiteDesktopLayout = ({
             padding-bottom: 20px;
           }
           .bg {
-            background-color: var(--bg-1);
+            background-color: var(--fill_bg_1);
             overflow: hidden;
           }
         }

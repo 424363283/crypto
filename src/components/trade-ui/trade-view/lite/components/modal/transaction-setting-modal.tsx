@@ -325,7 +325,7 @@ const styles = css`
       .row {
         margin-top: 10px;
         span {
-          color: var(--text-secondary);
+          color: var(--text_2);
         }
       }
       ul {
@@ -343,8 +343,8 @@ const styles = css`
           gap: 10px;
           flex: 1 0 0;
           border-radius: 4px;
-          background: var(--fill-3);
-          color: var(--text-secondary);
+          background: var(--fill_3);
+          color: var(--text_2);
           text-align: center;
           font-size: 12px;
           font-style: normal;
@@ -417,7 +417,7 @@ const styles = css`
     }
     .line {
       height: 1px;
-      background: var(--line-3);
+      background: var(--fill_line_3);
     }
   }
 `;

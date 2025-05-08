@@ -1,5 +1,6 @@
 import { postSwapEditSpslApi, postSwapSetSpslApi } from '@/core/api';
 import { Swap } from '@/core/shared';
+import { POSITION_TYPE } from '@/core/shared/src/constants/order';
 import { resso } from '@/core/store';
 import { formatNumber2Ceil } from '@/core/utils';
 
@@ -107,7 +108,6 @@ export const useLiquidation = ({ data }: { data: any }) => {
     }
     if (type === 'partialPositionStop') {
       store.stopVolume = e;
-      store.stopVolumeIndex = index;
       if (rate) {
         store.stopVolumePercent = Number(rate);
       } else {
@@ -214,7 +214,10 @@ export const SubmitStopProfitStopLoss = async ({
   // }
 
   const query = [];
-
+  const newMarginMode = Swap.Info._newMarginMode;
+  const twoWayMode = position.positionType === POSITION_TYPE.TWO || Swap.Trade.twoWayMode;
+  const extraParams =
+    newMarginMode && twoWayMode ? { marginType: position.marginType, leverage: position.leverage } : {};
   const defaultData = {
     // 'positionId': data['positionId'],
     type: 5, //1 limit 2 market 4 limit_close 5 market_close
@@ -223,7 +226,8 @@ export const SubmitStopProfitStopLoss = async ({
     source: Swap.Utils.getSource(),
     side: position['side'] == '1' ? '2' : '1', // 1 买  2 卖
     opType: 1, // 1 仓位止盈止损  2 普通止盈止损
-    positionId: position['positionId']
+    positionId: position['positionId'],
+    ...extraParams
   };
 
   if (edit) {
@@ -366,8 +370,8 @@ export const setDefaultSpsl = ({ data, incomeLoss }: { data: any; incomeLoss: bo
     let stopProfitType = TYPES.NEWS_PRICE;
     data.orders.forEach((o: any) => {
       if (o.strategyType === '1') {
-        stopProfit = Number(o.triggerPrice).toFixed(priceScale);
-        stopProfitType = o.priceType === '1' ? TYPES.NEWS_PRICE : TYPES.FLAG_PRICE;
+        stopProfit = Number(o.newTriggerPrice || o.triggerPrice).toFixed(priceScale);
+        stopProfitType = o.newTriggerPrice || o.priceType === '1' ? TYPES.NEWS_PRICE : TYPES.FLAG_PRICE;
       }
     });
     store.stopProfit = stopProfit !== null ? `${stopProfit}`.toFixed() : '';
@@ -396,7 +400,7 @@ export const setDefaultSpsl = ({ data, incomeLoss }: { data: any; incomeLoss: bo
 
     data.orders.forEach((o: any) => {
       if (o.strategyType === '2') {
-        stopLoss = Number(o.triggerPrice).toFixed(priceScale);
+        stopLoss = Number(o.newTriggerPrice || o.triggerPrice).toFixed(priceScale);
         stopLossType = o.priceType === '1' ? TYPES.NEWS_PRICE : TYPES.FLAG_PRICE;
       }
     });
@@ -462,7 +466,7 @@ export const setstopLossLimitPrice = (price: any) => {
   store.stopLossLimitPrice = price;
 };
 
-export const resetFormData = () => {
+export const resetFormData = data => {
   store.triggerPrice = '';
   store.triggerPriceRoe = '';
   store.volume = '';
@@ -473,4 +477,13 @@ export const resetFormData = () => {
   store.stopVolumePercent = 0;
   store.stopLossLimitPrice = 0;
   store.stopIsLimit = false;
+
+  if (data && data.orders) {
+    data.orders = data.orders.map(item => {
+      if (item.newTriggerPrice) {
+        delete item.newTriggerPrice;
+      }
+      return item;
+    });
+  }
 };

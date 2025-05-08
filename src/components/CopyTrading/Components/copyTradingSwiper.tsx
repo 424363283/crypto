@@ -1,4 +1,3 @@
-'use client';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { MediaInfo } from '@/core/utils';
 import 'swiper/css';
@@ -7,33 +6,52 @@ import 'swiper/css/autoplay';
 import css from 'styled-jsx/css';
 import { useRouter } from '@/core/hooks/src/use-router';
 import { Svg } from '@/components/svg';
-import { useResponsive } from '@/core/hooks';
+import { useResponsive, useTheme } from '@/core/hooks';
 import SwiperCore, { Pagination, Autoplay, Navigation } from 'swiper';
+import { useLayoutEffect, useState } from 'react'
 SwiperCore.use([Pagination, Autoplay, Navigation]);
 import { useAppContext } from '@/core/store';
 function TradIingSwiper() {
+  const { isDark } = useTheme();
   const { locale } = useAppContext();
   const { isMobile } = useResponsive();
-  const slides = [
-    {
-      id: 11,
-      url: `/static/images/copy/banner-contract-${locale}.svg`,
-    },
-    {
-      id: 12,
-      url: `/static/images/copy/banner-copy-${locale}.svg`,
-    },
-  ];
+  const [slides, setSlides] = useState([])
   const router = useRouter();
-  const handleToAdvantage = () => {
-    router.push({
-      pathname: `/copyTrade/copyAdvantages`
-    });
+  const handleToAdvantage = (row: any) => {
+    if (row.key === 'contract') {
+      router.push({
+        pathname: `/copyTrade/applyTraders`
+      });
+    } else {
+      router.push({
+        pathname: `/copyTrade/copyAdvantages`
+      });
+    }
   };
+
+  
+  useLayoutEffect(() => {
+    setTimeout(() => {
+      const swiperList: any = [
+        {
+          id: 11,
+          key:'contract',
+          url: `/static/images/copy/banner-contract-${locale}-${isDark ? 'dark' : 'light'}.svg`
+        },
+        {
+          id: 12,
+          key:'copy',
+          url: `/static/images/copy/banner-copy-${locale}-${isDark ? 'dark' : 'light'}.svg`
+        }
+      ];
+      setSlides(swiperList)
+    }, 10)
+  }, [locale,isDark]);
+
   return (
     <>
       <div className="swiper-box">
-        {!isMobile && (
+        {!isMobile && slides?.length > 0 && (
           <>
             <div className="swiper-action swiper-pre swiper-button-prev">
               <Svg src={`/static/icons/primary/common/copy-swiper-btn.svg`} width={24} height={24} />
@@ -45,28 +63,30 @@ function TradIingSwiper() {
                   nextEl: '.swiper-button-next',
                   prevEl: '.swiper-button-prev'
                 }}
+                loop={true}
                 spaceBetween={0}
                 key={'SwiperPC'}
                 slidesPerView={1}
                 slideToClickedSlide={true}
+                observer={true}
+                observeParents={true}
                 allowSlidePrev
                 pagination={{ clickable: true }}
                 onSlideChange={() => console.log('slide change')}
-                // onSwiper={swiper => console.log(swiper)}
+              // onSwiper={swiper => console.log(swiper)}
               >
-                {
-                  slides.map((slide,idx) => {
-                    return <SwiperSlide
-                        key={idx}
-                        onClick={handleToAdvantage}
-                        className="w-full swiper-item "
-                        style={{ background: 'lightblue', height: 233, width: '100%' }}
-                      >
-                        <img src={slide?.url} className="swiperImg" />
-                      </SwiperSlide>
-                  })
-                }
-
+                {slides.map((slide, idx) => {
+                  return (
+                    <SwiperSlide
+                      key={idx}
+                      onClick={()=>handleToAdvantage(slide)}
+                      className="w-full swiper-item "
+                      style={{ height: 233, width: '100%' }}
+                    >
+                      <img src={slide?.url} className="swiperImg" />
+                    </SwiperSlide>
+                  );
+                })}
               </Swiper>
             </div>
             <div className="swiper-action swiper-next swiper-button-next">
@@ -74,24 +94,24 @@ function TradIingSwiper() {
             </div>
           </>
         )}
-        <div className="swiper-mobile-box">
-          {isMobile && (
+        {isMobile && slides?.length > 0 && (
+          <div className="swiper-mobile-box">
             <div className="swiper-mobile-content">
               <Swiper
                 modules={[Autoplay]}
                 // centeredSlides={true}
                 loop={true}
                 slidesPerView={'auto'}
+                observer={true}
+                observeParents={true}
                 spaceBetween={16}
                 key={'SwiperMoble'}
                 freeMode={true}
                 autoplay={{ delay: 3000 }}
               >
                 {slides.map((slideContent, index) => (
-                  <SwiperSlide
-                    key={index}
-                    virtualIndex={index}
-                    style={{ height: '160px', width: '290px' }}
+                  <SwiperSlide key={index} virtualIndex={index} style={{ height: '160px', width: '290px' }}
+                  onClick={()=>handleToAdvantage(slideContent)}
                   >
                     <div className="swiper-mobile-item" style={{ width: '290px' }}>
                       <img src={slideContent?.url} className="swiperImg" />
@@ -100,8 +120,8 @@ function TradIingSwiper() {
                 ))}
               </Swiper>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
       <style jsx>{styles}</style>
     </>
@@ -118,6 +138,8 @@ const styles = css`
     justify-content: center;
     position: relative;
     width: 100%;
+    width: 100%;
+    overflow: hidden;
     .swiper-mobile-box {
       width: 100%;
     }
@@ -155,13 +177,14 @@ const styles = css`
   :global(.swiper-pagination-bullet) {
     width: 16px;
     height: 4px;
-    border-radius: 4px;
-    background: var(--label);
+    border-radius: 24px;
+    background: var(--brand_20);
+    opacity: 1;
   }
   :global(.swiper-pagination-bullet-active) {
     background: var(--brand);
   }
-   .swiperImg{
+  .swiperImg {
     width: 100%;
     height: 100%;
   }

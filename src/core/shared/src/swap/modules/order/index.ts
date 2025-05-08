@@ -14,10 +14,12 @@ import { Utils } from '../utils';
 import { OrderField, PendingItemType } from './field';
 import { message, playAudio } from '@/core/utils';
 import { LANG } from '@/core/i18n';
+import { Swap } from '@/core/shared';
+import { POSITION_TYPE } from '../../../constants/order';
 
 export class Order extends OrderField {
-  _fetchPositionDebounce = { u: new Debounce(() => {}, 200), c: new Debounce(() => {}, 200) };
-  _fetchPendingDebounce = { u: new Debounce(() => {}, 200), c: new Debounce(() => {}, 200) };
+  _fetchPositionDebounce = { u: new Debounce(() => { }, 200), c: new Debounce(() => { }, 200) };
+  _fetchPendingDebounce = { u: new Debounce(() => { }, 200), c: new Debounce(() => { }, 200) };
 
   init({ resso }: any) {
     this.store = resso({
@@ -62,6 +64,7 @@ export class Order extends OrderField {
       const result = await getSwapPositionApi(usdt);
       if (result.code === 200) {
         this.setPosition(usdt, result.data);
+        Swap.Trade.syncLeverageFind();
       }
       return result;
     } finally {
@@ -74,6 +77,7 @@ export class Order extends OrderField {
       const result: any = await getSwapGetPendingApi(usdt, { size: 9999 });
       if (result?.code === 200) {
         this.setPending(usdt, result.data.pageData);
+        Swap.Trade.syncLeverageFind();
       }
       return result;
     } finally {
@@ -128,7 +132,9 @@ export class Order extends OrderField {
 
   async closePosition(data: any, params: any) {
     const _usdt = Info.getIsUsdtType(data.symbol);
-
+    const newMarginMode = Info._newMarginMode;
+    const twoWayMode = data.positionType === POSITION_TYPE.TWO || Swap.Trade.twoWayMode;
+    const extraParams = newMarginMode && twoWayMode ? { marginType: data.marginType, leverage: data.leverage } : {};
     const result = await postSwapPositionCloseApi(
       {
         subWallet: data.subWallet,
@@ -136,6 +142,7 @@ export class Order extends OrderField {
         side: data['side'] == '1' ? 1 : 2,
         symbol: data['symbol'].toUpperCase(),
         source: Utils.getSource(),
+        ...extraParams,
         ...params
       },
       _usdt

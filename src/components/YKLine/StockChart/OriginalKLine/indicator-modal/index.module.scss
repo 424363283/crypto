@@ -29,21 +29,22 @@
 }
 
 .kineindicatorName{
-  color: var(--text-primary);
+  color: var(--text_1);
 }
 .indicatorContentTitleName{
-  color: var(--text-secondary);
+  color: var(--text_2);
 
   
 
 }
 .indicatorCancel{
-  // background: var(--text-primary);
+  background: #F4F5F6;
+  // background: var(--text_1);
   cursor: pointer;
   // color: #fff !important;
   &:hover{
-    // color:  var(--text-primary) !important;
-    // background:var(--text-primary) !important;
+    // color:  var(--text_1) !important;
+    // background:var(--text_1) !important;
   }
 }
 .indicatorPrimary{

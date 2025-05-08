@@ -122,7 +122,7 @@ const Index = ({}: {}) => {
       </div>
       <style jsx>{`
         .swap-trade-guide-bar {
-          background-color: var(--bg-1);
+          background-color: var(--fill_bg_1);
           border-radius: var(--theme-trade-layout-radius);
           margin-bottom: var(--theme-trade-layout-gap);
           padding: 0 10px;
@@ -199,7 +199,7 @@ const Index = ({}: {}) => {
                 transform: rotate(-45deg);
                 border-top: 42px solid transparent;
                 border-left: 42px solid transparent;
-                border-right: 42px solid var(--bg-1);
+                border-right: 42px solid var(--fill_bg_1);
               }
               :global(> div.right-arrow) {
                 z-index: 0;

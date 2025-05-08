@@ -78,7 +78,7 @@ export const MarkPrice = () => {
           .price {
             margin-left: 4px;
             /* border-bottom: 1px dashed var(--theme-trade-text-color-2); */
-            color: var(--text-secondary, #A5A8AC);
+            color: var(--text_2, #A5A8AC);
             font-family: "HarmonyOS Sans SC";
             font-size: 16px;
             font-weight: 400;
@@ -89,11 +89,11 @@ export const MarkPrice = () => {
             font-size: 12px;
             padding: 16px;
             font-weight: 400;
-            background-color: var(--fill-pop);
+            background-color: var(--fill_pop);
             color: var(--theme-font-color-1);
           }
           :global(.ant-tooltip-arrow::before) {
-            background: var(--fill-pop);
+            background: var(--fill_pop);
           }
         }
       `}</style>

@@ -128,7 +128,7 @@ const styles = css`
       margin-top: 1rem;
       height: 2rem;
       line-height: 2rem;
-      border-bottom: 1px solid var(--line-1);
+      border-bottom: 1px solid var(--fill_line_1);
       span {
         // width: 45px;
         // height: 20px;
@@ -154,7 +154,7 @@ const styles = css`
       display: flex;
       flex-direction: column;
       padding-bottom: 8px;
-      border-bottom: 1px solid var(--line-1);
+      border-bottom: 1px solid var(--fill_line_1);
     }
   }
 `;

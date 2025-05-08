@@ -120,7 +120,7 @@ const styles = css`
     align-self: stretch;
     gap: 16px;
     .label {
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-size: 14px;
       font-style: normal;
       font-weight: 500;
@@ -133,7 +133,7 @@ const styles = css`
       height: 40px;
       border-radius: 8px;
       padding: 0 10px;
-      background: var(--fill-3);
+      background: var(--fill_3);
       border: 1px solid transparent;
       &:hover {
         border-color: var(--brand) !important;
@@ -144,9 +144,9 @@ const styles = css`
       input {
         flex: 1;
         text-align: left;
-        background: var(--fill-3);
+        background: var(--fill_3);
         padding-right: 10px;
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 14px;
         font-style: normal;
         font-weight: 500;
@@ -158,7 +158,7 @@ const styles = css`
         input::placeholder,
         input::-webkit-input-placeholder,
         &::-webkit-input-placeholder {
-          color: var(--text-tertiary);
+          color: var(--text_3);
         }
       }
     }

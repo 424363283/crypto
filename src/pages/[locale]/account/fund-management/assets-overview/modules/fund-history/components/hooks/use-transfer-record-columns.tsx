@@ -74,9 +74,10 @@ export const useTransferRecordColumns = () => {
     {
       title: LANG('输入/出金额'),
       render: (val: any, item: TransferRecord) => {
+        const isOut = item.type === 100;
         return (
-          <div className='fw-300'>
-            {item.amount?.toFormat()} {item.currency}
+          <div className={ clsx('fw-300', isOut ? 'main-red' : 'main-green') }>
+            {isOut ? '-' : '+'}{item.amount?.toFormat()} {item.currency}
           </div>
         );
       },

@@ -6,6 +6,7 @@ import { checkIsUsdtType } from '../../../assets-overview/helper';
 import { SWAP_FUNDS_TYPES } from '../constants';
 
 import { isSwapDemo } from '@/core/utils/src/is';
+import { WalletName } from '@/components/order-list/swap/media/desktop/components/wallet-name';
 type SwapAssetsFlowItem = {
   amount: string;
   currency: string;
@@ -23,16 +24,6 @@ export const useAssetsFlowColumns = () => {
   const perpetualText = isUsdtType ? LANG('U本位合约') : LANG('币本位合约');
   return [
     {
-      title: LANG('时间'),
-      dataIndex: 'time',
-      render: (time: number) => (
-        <div className='ctime'>
-          <div className='date'>{dayjs(time).format('YYYY-MM-DD')}</div>
-          <div className='time'>{dayjs(time).format('HH:mm:ss')}</div>
-        </div>
-      ),
-    },
-    {
       title: LANG('合约'),
       dataIndex: 'symbol',
       render: (code: string) => (
@@ -42,19 +33,16 @@ export const useAssetsFlowColumns = () => {
         </div>
       ),
     },
-    // {
-    //   title: LANG('子钱包账户'),
-    //   dataIndex: 'subWallet',
-    //   render: (v: string, item: any) => {
-    //     return (
-    //       <span>
-    //         {_isSwapDemo
-    //           ? LANG('模拟交易账户')
-    //           : item?.alias || Swap.Assets.getWallet({ walletId: v, usdt: isUsdtType, withHooks: false })?.alias}
-    //       </span>
-    //     );
-    //   },
-    // },
+    {
+      title: LANG('账户'),
+      dataIndex: 'subWallet',
+      render: (v: any, item: any) => {
+        const walletData = Swap.Assets.getWallet({ walletId: item.subWallet, usdt: isUsdtType, withHooks: false });
+        return (
+          <WalletName> {LANG(walletData?.alias)} </WalletName>
+        );
+      },
+    },
     {
       title: LANG('类型'),
       dataIndex: 'type',
@@ -74,7 +62,7 @@ export const useAssetsFlowColumns = () => {
       dataIndex: 'amount',
       render: (amount: number, item: SwapAssetsFlowItem) => {
         const formatNum = isUsdtType ? amount : amount.toFixed(Number(item.basePrecision));
-        if(item.type === 'taker_fee' || item.type === 'maker_fee') {
+        if (item.type === 'taker_fee' || item.type === 'maker_fee') {
           return formatNum;
         }
         return <span style={{ color: Number(formatNum) >= 0 ? 'var(--color-green)' : 'var(--color-red)' }}>
@@ -90,5 +78,16 @@ export const useAssetsFlowColumns = () => {
         return currency;
       },
     },
+    {
+      title: LANG('时间'),
+      dataIndex: 'time',
+      align: 'right',
+      render: (time: number) => (
+        <div className='ctime'>
+          <div className='date'>{dayjs(time).format('YYYY-MM-DD')}</div>
+          <div className='time'>{dayjs(time).format('HH:mm:ss')}</div>
+        </div>
+      ),
+    }
   ];
 };

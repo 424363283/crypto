@@ -112,10 +112,10 @@ export const BaseTableStyle = () => {
               padding: 2px 5px !important;
               padding-left: 0px !important;
               font-size: 14px;
-              color: var(--text-primary) !important;
+              color: var(--text_1) !important;
               font-weight: 500;
               height: 46px;
-              background: var(--bg-1);
+              background: var(--fill_bg_1);
               &:first-child {
                 padding-left: 24px !important;
               }
@@ -177,7 +177,7 @@ export const BaseTableStyle = () => {
           :global(.revoke-btn) {
             border: none;
             outline: none;
-            background: var(--fill-3);
+            background: var(--fill_3);
             padding: 6px 16px;
             border-radius: 22px;
             color: var(--theme-font-color-1);
@@ -188,11 +188,11 @@ export const BaseTableStyle = () => {
         }
         :global(.dark .ant-table-row) {
           :global(td) {
-            color: var(--text-primary) !important;
+            color: var(--text_1) !important;
           }
         }
         :global(.ant-dropdown .menus) {
-          background: var(--fill-3);
+          background: var(--fill_3);
           // box-shadow: var(--theme-trade-select-shadow);
           border-radius: 4px;
           top: 100%;

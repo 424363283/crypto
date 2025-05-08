@@ -9,6 +9,7 @@ type Props = {
   active?: boolean;
   image?: string;
   text?: string;
+  imagestyle?:any,
   className?: string;
   size?: 'small' | 'large' | 'default';
 } & EmptyProps;
@@ -22,7 +23,7 @@ export const EmptyComponent = ({
                                  prefixCls,
                                  rootClassName,
                                  style,
-                                 imageStyle,
+                                 imagestyle,
                                  description,
                                  children,
                                }: Props) => {
@@ -30,7 +31,7 @@ export const EmptyComponent = ({
     prefixCls,
     rootClassName,
     style,
-    imageStyle,
+    imagestyle,
     description: text || description,
     children,
   };
@@ -67,7 +68,7 @@ const styles = css`
     }
     :global(.ant-empty-description) {
       font-size: 12px;
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-weight: 400;
     }
     &.md {

@@ -4,7 +4,7 @@ import css from 'styled-jsx/css';
 const { className, styles: _styles } = css.resolve`
   .input-view {
     > .title {
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-size: 12px;
       font-weight: 400;
       margin-bottom: 8px;
@@ -26,7 +26,7 @@ const { className, styles: _styles } = css.resolve`
         cursor: pointer;
         font-size: 12px;
         font-weight: 400;
-        color: var(--text-brand);
+        color: var(--text_brand);
         margin-right: 0px;
         white-space: nowrap;
         @media ${MediaInfo.mobile} {

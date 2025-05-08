@@ -59,10 +59,10 @@ const { className, styles } = css.resolve`
       align-items: center;
       font-size: 12px;
       font-weight: 400;
-      color: var(--text-secondary);
+      color: var(--text_2);
       :global(.icon-radio) {
         :global(.info-hover.checked) {
-          color: var(--text-primary);
+          color: var(--text_1);
         }
         @media ${MediaInfo.mobile} {
           :global(.info-hover) {

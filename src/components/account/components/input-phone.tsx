@@ -56,7 +56,7 @@ const styles = css`
       font-size: 14px;
       font-weight: 400;
       line-height: 16px;
-      color: var(--text-tertiary);
+      color: var(--text_3);
       margin-bottom: 12px;
     }
     .input-row {

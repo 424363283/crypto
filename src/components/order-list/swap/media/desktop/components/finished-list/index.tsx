@@ -81,12 +81,26 @@ const useColumns = ({ isUsdtType }: any) => {
           <div className={clsx('code')}>
             <div className='multi-line-item'>
               <div className={clsx('code-text')}>
-                {Swap.Info.getCryptoData(item.symbol, { withHooks: false }).name} {LANG('永续')}
+                {Swap.Info.getCryptoData(item.symbol, { withHooks: false }).name}
+                {!!Number(leverageLevel) && <LeverItem lever={leverageLevel} />}
+              </div>
+              <div>
+                {item.marginType === 1 ? LANG('全仓') : LANG('逐仓')}{' '}
               </div>
             </div>
           </div>
         );
       },
+    },
+    {
+      title: LANG('账户'),
+      dataIndex: 'subWallet',
+      render: (side: any, item: any) => {
+        const walletData = Swap.Assets.getWallet({ walletId: item.subWallet, usdt: isUsdtType, withHooks: false });
+        return (
+          <WalletName> {LANG(walletData?.alias)} </WalletName>
+        );
+      }
     },
     {
       title: LANG('方向'),

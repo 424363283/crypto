@@ -11,6 +11,7 @@ export type CalcSwapAsset = {
   accb: string;
   margin: string;
   totalMargin: string;
+  totalMargin2: string;
   canWithdrawAmount: string;
   unrealisedPNL: string;
   bonusAmount: string;
@@ -60,6 +61,7 @@ export const useCalcSwapAssets = ({ isSwapU }: { isSwapU: boolean }) => {
       accb: '0',
       margin: '0',
       totalMargin: '0',
+      totalMargin2: '0',
       canWithdrawAmount: '0',
       unrealisedPNL: '0',
       bonusAmount: '0',
@@ -107,6 +109,7 @@ export const useCalcSwapAssets = ({ isSwapU }: { isSwapU: boolean }) => {
       data.accb = data.accb.add(getUsdValue(crypto.accb)).toFixed(usdtDigit);
       data.margin = data.margin.add(getUsdValue(crypto.margin)).toFixed(usdtDigit);
       data.totalMargin = data.totalMargin.add(getUsdValue(isSwapU ? account.accb.sub(account.frozen) : crypto.accb)).toFixed(usdtDigit);
+      data.totalMargin2 = data.totalMargin.add(incomeTotal);
       data.canWithdrawAmount = data.canWithdrawAmount.add(getUsdValue(crypto.canWithdrawAmount)).toFixed(usdtDigit);
       data.unrealisedPNL = data.unrealisedPNL.add(getUsdValue(crypto.unrealisedPNL)).toFixed(usdtDigit);
       data.voucherAmount = data.voucherAmount.add(getUsdValue(account.voucherAmount)).toFixed(usdtDigit);
@@ -119,7 +122,8 @@ export const useCalcSwapAssets = ({ isSwapU }: { isSwapU: boolean }) => {
     total.accb = total.accb.add(data.accb);
     total.margin = total.margin.add(data.margin);
     total.totalMargin = total.totalMargin.add(data.totalMargin);
-    total.totalMargin2 = total.totalMargin2.add(data.totalMargin).add(incomeTotal);
+    total.totalMargin2 = total.totalMargin2.add(data.totalMargin2);
+    // total.totalMargin2 = total.totalMargin2.add(data.totalMargin).add(incomeTotal);
     total.unrealisedPNL = total.unrealisedPNL.add(data.unrealisedPNL);
     total.voucherAmount = total.voucherAmount.add(data.voucherAmount);
     total.bonusAmount = total.bonusAmount.add(data.bonusAmount);

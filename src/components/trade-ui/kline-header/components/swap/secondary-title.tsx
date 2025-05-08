@@ -20,6 +20,7 @@ const SecondaryTitle = ({
   const tabs1 = tabs.slice(0, TAB_LIMIT);
   const tabs2 = tabs.slice(TAB_LIMIT);
   const [dropdownTab, setDropdownTab] = useState('');
+  console.log('dropdownTab', dropdownTab);
 
   useEffect(() => {
     if (tabs.length > 0) {
@@ -94,7 +95,7 @@ const SecondaryTitle = ({
           align-items: center;
           width: 100%;
           padding-bottom: 8px;
-          border-bottom: 1px solid var(--fill-3);
+          border-bottom: 1px solid var(--fill_3);
           :global(.drop-down-icon) {
             cursor: pointer;
           }
@@ -108,7 +109,7 @@ const SecondaryTitle = ({
           > .item {
             font-size: 14px;
             font-weight: 500;
-            color: var(--text-secondary);
+            color: var(--text_2);
             cursor: pointer;
             border-radius: 5px;
             border: none;
@@ -118,7 +119,7 @@ const SecondaryTitle = ({
             min-width: 56px;
             text-align: left;
             &.active {
-              color: var(--text-brand);
+              color: var(--text_brand);
               background-color: transparent;
             }
             &.etf {
@@ -154,7 +155,7 @@ const SecondaryTitle = ({
             }
             :global(.ant-dropdown-menu-item) {
               &:hover {
-                background: var(--label) !important;
+                background: var(--brand_20) !important;
                 color: var(--brand) !important;
               }
               :global(.active) {

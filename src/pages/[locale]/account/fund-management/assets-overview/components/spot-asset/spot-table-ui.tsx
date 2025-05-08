@@ -25,31 +25,31 @@ const SpotTableUi = (props: SpotTableProps) => {
   const { onInputChange, onCheckChange, checked, columns, tableData } = props;
   const { query } = useRouter();
   const [state, setState] = useImmer({
-    page: 1,
+    page: 1
   });
   const { page } = state;
   // 设置页数
   const _setPage = (page: number) => {
-    setState((draft) => {
+    setState(draft => {
       draft.page = page;
     });
   };
   return (
     <>
-      <div className='spot-table-header'>
-        <p className='title'>{LANG('资产明细')}</p>
+      <div className="spot-table-header">
+        <p className="title">{LANG('资产明细')}</p>
         <DesktopOrTablet>
-          <div className='header-right'>
+          <div className="header-right">
             <SearchInput width={300} onChange={onInputChange} prefix />
-            <MemoCheckBox className='hide-small-asset' checked={checked} onChange={onCheckChange}>
+            <MemoCheckBox className="hide-small-asset" checked={checked} onChange={onCheckChange}>
               {LANG('隐藏小额资产')}
             </MemoCheckBox>
-            <CommonIcon className='hidden' name='common-verticle-line-0' size={16} />
-            <CommonIcon className='hidden' name='common-power-exchange-0' size={16} enableSkin />
+            <CommonIcon className="hidden" name="common-verticle-line-0" size={16} />
+            <CommonIcon className="hidden" name="common-power-exchange-0" size={16} enableSkin />
             <TrLink
-              href='/account/fund-management/assets-overview'
+              href="/account/fund-management/assets-overview"
               query={{ type: query.type, module: 'power-exchange' }}
-              className='exchange-link hidden'
+              className="exchange-link hidden"
             >
               {LANG('小额兑换算力')}
             </TrLink>
@@ -57,9 +57,16 @@ const SpotTableUi = (props: SpotTableProps) => {
         </DesktopOrTablet>
       </div>
       <Mobile>
-        <div className='mobile-spot-header'>
-          <SearchInput onChange={onInputChange} prefix width={240}/>
-          <MemoCheckBox className='hide-small-asset' checked={checked} onChange={onCheckChange}>
+        <div className="mobile-spot-header">
+          <SearchInput onChange={onInputChange} prefix width={240} />
+          <MemoCheckBox
+            className="hide-small-asset"
+            checked={checked}
+            onChange={e => {
+              _setPage(1);
+              onCheckChange(e);
+            }}
+          >
             {LANG('隐藏小额资产')}
           </MemoCheckBox>
         </div>
@@ -77,9 +84,9 @@ const SpotTableUi = (props: SpotTableProps) => {
         </div>
       </Mobile> */}
       <Table
-        className='spot-table'
+        className="spot-table"
         showMobileTable
-        rowClassName='spot-table-row'
+        rowClassName="spot-table-row"
         columns={columns}
         rowKey={(record: any) => record?.code}
         pagination={{
@@ -88,12 +95,12 @@ const SpotTableUi = (props: SpotTableProps) => {
           defaultPageSize: 10,
           hideOnSinglePage: true,
           onChange: _setPage,
-          showSizeChanger: false,
+          showSizeChanger: false
         }}
         dataSource={tableData}
         isHistoryList
       />
-     
+
       <style jsx>{styles}</style>
     </>
   );
@@ -105,15 +112,15 @@ const styles = css`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     @media ${MediaInfo.mobile} {
       height: auto;
-      padding:0;
+      padding: 0;
     }
     .title {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 16px;
       font-weight: 500;
     }
@@ -121,13 +128,12 @@ const styles = css`
       display: flex;
       align-items: center;
       :global(.hide-small-asset) {
-        color: var(--text-tertiary);
+        color: var(--text_3);
         font-size: 14px;
         margin-left: 20px;
-       
-      } 
+      }
       :global(.exchange-link) {
-        color: var(--text-tertiary);
+        color: var(--text_3);
       }
     }
   }
@@ -136,19 +142,19 @@ const styles = css`
     align-items: center;
     justify-content: space-between;
     padding: 24px 0 12px;
-    border-bottom: 1px solid var(--line-1);
+    border-bottom: 1px solid var(--fill_line_1);
     :global(.hide-small-asset) {
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-size: 12px;
       margin-left: 10px;
       flex: 1 0 auto;
-      :global(.ant-checkbox+span) {
-        padding-inline-end:0;
+      :global(.ant-checkbox + span) {
+        padding-inline-end: 0;
       }
     }
   }
   .small-assets {
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     border-radius: 8px;
     height: 37px;
     display: flex;
@@ -157,7 +163,7 @@ const styles = css`
   }
   :global(.spot-table) {
     min-height: calc(100vh - 540px);
-    background-color: var(--bg-1);
+    background-color: var(--fill_bg_1);
     :global(.code-name-header) {
       display: flex;
       align-items: center;
@@ -165,12 +171,12 @@ const styles = css`
     }
 
     :global(.money-box) {
-      display: flex ;
+      display: flex;
       flex-direction: column;
       line-height: normal;
       gap: 8px;
       :global(.target) {
-        color: var(--text-tertiary);
+        color: var(--text_3);
         font-size: 12px;
         font-weight: 400;
       }
@@ -195,7 +201,7 @@ const styles = css`
         height: calc(100vh - 600px);
       }
       :global(td.ant-table-cell-row-hover) {
-        background-color: var(--bg-1) !important;
+        background-color: var(--fill_bg_1) !important;
       }
     }
   }

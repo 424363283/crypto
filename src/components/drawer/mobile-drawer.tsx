@@ -52,7 +52,7 @@ const styles = css`
         }
       }
       :global(.ant-drawer-content) {
-        background-color: var(--bg-1);
+        background-color: var(--fill_bg_1);
       }
       :global(.ant-drawer-body) {
         display: flex;

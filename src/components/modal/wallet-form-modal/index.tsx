@@ -60,20 +60,18 @@ export const WalletFormModal = ({
         onChange={(pic) => setForm((v) => ({ ...v, pic }))}
       />
       <div className={clsx('modal-content')}>
-        {
-          // !isEdit && (
-          //   <div className={clsx('header')}>
-          //     <div className={clsx('tabs')}>
-          //       <div className={clsx('tab', isUsdtType && 'active')} onClick={() => setUsdtTab(true)}>
-          //         {LANG('U本位合约')}
-          //       </div>
-          //       <div className={clsx('tab', !isUsdtType && 'active')} onClick={() => setUsdtTab(false)}>
-          //         {LANG('币本位合约')}
-          //       </div>
-          //     </div>
-          //   </div>
-          // )
-        }
+        {!isEdit && (
+          <div className={clsx('header')}>
+            <div className={clsx('tabs')}>
+              <div className={clsx('tab', isUsdtType && 'active')} onClick={() => setUsdtTab(true)}>
+                {LANG('U本位合约')}
+              </div>
+              <div className={clsx('tab', !isUsdtType && 'active')} onClick={() => setUsdtTab(false)}>
+                {LANG('币本位合约')}
+              </div>
+            </div>
+          </div>
+        )}
         <div className={clsx('content')}>
           <div className={clsx('scroll', isUsdtType && 'usdt')}>
             {!isUsdtType && (
@@ -87,14 +85,12 @@ export const WalletFormModal = ({
                 }}
               />
             )}
-            {
-              // <div className={clsx('avatar-section')}>
-              //   <WalletAvatar type={form.pic} size={48} />
-              //   <div className={clsx('modify')} onClick={() => setAvatarSelectVisible(true)}>
-              //     {LANG('更改')}
-              //   </div>
-              // </div>
-            }
+            <div className={clsx('avatar-section')}>
+              <WalletAvatar type={form.pic} size={48} />
+              <div className={clsx('modify')} onClick={() => setAvatarSelectVisible(true)}>
+                {LANG('更改')}
+              </div>
+            </div>
             <Input
               label={LANG('子钱包名称')}
               placeholder={LANG('请输入子钱包名称')}
@@ -133,15 +129,15 @@ export const WalletFormModal = ({
       };
       const result = await (!isEdit
         ? postSwapCreateWalletApi({
-          contractType: isUsdtType ? 2 : 1,
-          ...params,
-        })
+            contractType: isUsdtType ? 2 : 1,
+            ...params,
+          })
         : updateSwapWalletApi({
-          contractType: isUsdtType ? 2 : 1,
-          ...params,
-          wallet: data['wallet'],
-          // currency: _form['currency'],
-        }));
+            contractType: isUsdtType ? 2 : 1,
+            ...params,
+            wallet: data['wallet'],
+            // currency: _form['currency'],
+          }));
       if (result['code'] == 200) {
         Swap.Assets.fetchBalance(isUsdtType);
 

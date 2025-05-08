@@ -118,13 +118,13 @@ export const Lite = () => {
             flex: 1;
             justify-content: space-between;
             align-items: center;
-            color: var(--text-primary);
+            color: var(--text_1);
             overflow: hidden;
             padding: 16px 24px;
             .line {
               width: 2px;
               height: 19.692px;
-              background: var(--line-1);
+              background: var(--fill_line_1);
             }
             .favorite-wrapper {
               display: flex;
@@ -167,7 +167,7 @@ export const Lite = () => {
                 gap: 8px;
                 >
                 span:nth-child(1) {
-                  color: var(--text-tertiary);
+                  color: var(--text_3);
                 }
                 > span:nth-child(2) {
                 }

@@ -493,7 +493,7 @@ const styles = css`
     font-size: 12px;
     font-style: normal;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--text_1);
   }
   :global(.lite-history-table) {
     :global(.ant-table-fixed-header) {
@@ -502,7 +502,7 @@ const styles = css`
     :global(.ant-table-row) {
       :global(.ant-table-cell) {
         padding: 8px 0 !important;
-        border-bottom: 1px solid var(--line-1) !important;
+        border-bottom: 1px solid var(--fill_line_1) !important;
       }
       :global(td) {
         font-size: 14px;
@@ -516,7 +516,7 @@ const styles = css`
       :global(.first-td) {
         padding-left: 20px;
         :global(span) {
-          color: var(--text-primary, #2b2f33);
+          color: var(--text_1);
           font-family: 'HarmonyOS Sans SC';
           font-size: 12px;
           font-style: normal;
@@ -620,7 +620,7 @@ const styles = css`
         min-width: 52px;
         border-radius: 22px;
         background: var(--brand);
-        color: var(--text-white);
+        color: var(--text_white);
         font-size: 12px;
         font-style: normal;
         font-weight: 400;
@@ -654,7 +654,7 @@ const styles = css`
     }
   }
   :global(.reverse-title, .confirm-title) {
-    color: var(--text-primary);
+    color: var(--text_1);
     text-align: center;
     font-size: 14px;
     font-weight: 400;
@@ -676,6 +676,9 @@ const styles = css`
     margin-top: 14px;
     color: var(--skin-primary-color);
     text-align: center;
+    display: flex ;
+    align-items: center;
+    gap: 4px;
   }
   :global(.dark) {
     :global(.ant-table-row) {
@@ -700,13 +703,13 @@ const styles = css`
       text-align: left !important;
     }
     :global(.ant-modal-close) {
-      color: var(--text-secondary);
+      color: var(--text_2);
       width: 24px;
       height: 24px;
       top: 24px;
       right: 24px;
       &:hover {
-        color: var(--text-secondary);
+        color: var(--text_2);
         background: transparent !important;
       }
     }
@@ -724,13 +727,13 @@ const styles = css`
     }
     :globla(.reverse-title) {
       padding: 24px 0;
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 14px;
       font-weight: 400;
     }
     :global(.reverse-description) {
       margin: 0;
-      color: var(--text-secondary);
+      color: var(--text_2);
       font-size: 14px;
       font-weight: 400;
       line-height: 150%; /* 21px */
@@ -753,8 +756,8 @@ const styles = css`
     }
     :global(.ant-btn-primary) {
       border-radius: 40px;
-      background: var(--text-brand);
-      color: var(--text-white);
+      background: var(--text_brand);
+      color: var(--text_white);
       font-size: 16px;
       font-weight: 500;
     }

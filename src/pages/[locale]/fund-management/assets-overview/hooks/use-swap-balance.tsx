@@ -192,6 +192,7 @@ export const useCalcSwapAssets = ({ isSwapU }: { isSwapU: boolean }) => {
       }
       crypto.margin = crypto.margin.toFixed(digit);
       crypto.canWithdrawAmount = account.canWithdrawAmount.toFixed(digit);
+      console.log('crypto.canWithdrawAmount',crypto.canWithdrawAmount)
       crypto.unrealisedPNL = formatNumber2Ceil(
         `${isSwapU ? calcWallet.allIncome : calcQuote.income}`,
         digit,

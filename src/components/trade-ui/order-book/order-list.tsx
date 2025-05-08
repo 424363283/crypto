@@ -218,11 +218,13 @@ export const OrderList = ({
             font-size: 12px;
             padding: 16px;
             font-weight: 400;
-            background-color: var(--fill-pop);
+            background-color: var(--fill_pop);
             color: var(--theme-font-color-1);
+            border-radius: 16px;
+            box-shadow: 0px 4px 16px 0px var(--dropdown-select-shadow-color) !important;
           }
           :global(.ant-tooltip-arrow::before) {
-            background: var(--fill-pop);
+            background: var(--fill_pop);
           }
           :global(.tooltip-text) {
             cursor: pointer;
@@ -232,7 +234,7 @@ export const OrderList = ({
           height:20px;
         }
         .active {
-          background-color: var(--fill-3);
+          background-color: var(--fill_3);
         }
       `}</style>
     </>

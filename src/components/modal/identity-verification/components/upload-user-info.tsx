@@ -107,6 +107,8 @@ export const UploadIDInfo = () => {
               : '/static/images/account/dashboard/id-card.svg'
           }
           className="id-card-placeholder"
+          width={150}
+          height={100}
           onChange={file => {
             _upImg(file, 0);
           }}
@@ -118,6 +120,8 @@ export const UploadIDInfo = () => {
               ? URL.createObjectURL(new Blob([img_1], { type: 'text/plain' }))
               : '/static/images/account/dashboard/id-reverse.svg'
           }
+          width={150}
+          height={100}
           onChange={file => {
             _upImg(file, 1);
           }}
@@ -233,7 +237,7 @@ const styles = css`
       margin-top: 24px;
       margin-bottom: 12px;
 
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-family: 'HarmonyOS Sans SC';
       font-size: 12px;
       font-style: normal;
@@ -255,7 +259,7 @@ const styles = css`
         flex: 1 0 0;
 
         border-radius: 8px;
-        background: var(--fill-3);
+        background: var(--fill_3);
 
         .icon-wrapper {
           display: flex;
@@ -266,7 +270,7 @@ const styles = css`
           gap: 4px;
         }
         .name {
-          color: var(--text-primary);
+          color: var(--text_1);
           font-family: 'HarmonyOS Sans SC';
           font-size: 14px;
           font-style: normal;
@@ -290,7 +294,7 @@ const styles = css`
       }
     }
     :global(.basic-input-container .label) {
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-family: 'HarmonyOS Sans SC';
       font-size: 12px;
       font-style: normal;
@@ -302,7 +306,7 @@ const styles = css`
       margin-top: 16px;
     }
     .upload-label {
-      color: var(--text-tertiary);
+      color: var(--text_3);
       font-family: 'HarmonyOS Sans SC';
       font-size: 12px;
       font-style: normal;
@@ -314,11 +318,12 @@ const styles = css`
       display: flex;
       margin-top: 12px;
       justify-content: space-between;
+      gap: 12px;
     }
     .warn-tips {
       margin: 6px 0 0;
       border-radius: 8px;
-      background: var(--yellow_tips, rgba(240, 186, 48, 0.1));
+      background: var(--yellow_10);
 
       display: flex;
       padding: 6px 16px;

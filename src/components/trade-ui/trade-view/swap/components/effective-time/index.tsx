@@ -73,13 +73,13 @@ export const EffectiveTime = () => {
 const { className, styles } = css.resolve`
   .label {
     font-size: 12px;
-    color: var(--text-secondary);
+    color: var(--text_2);
   }
   .value {
     position: relative;
     cursor: pointer;
     font-size: 12px;
-    color: var(--text-primary);
+    color: var(--text_1);
 
     display: flex;
     flex-direction: row;

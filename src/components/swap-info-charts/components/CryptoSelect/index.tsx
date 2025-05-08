@@ -69,11 +69,11 @@ const styles = css`
       font-size: 14px;
       font-weight: 400;
       padding: 10px 5px;
-      color: var(--text-secondary);
-      background: var(--fill-3);
+      color: var(--text_2);
+      background: var(--fill_3);
     }
     .active {
-      color: var(--text-brand) !important;
+      color: var(--text_brand) !important;
       font-weight: 500;
     }
   }
@@ -96,9 +96,9 @@ const styles = css`
       height: 40px;
       line-height: 40px;
       font-size: 14px;
-      color: var(--text-primary);
+      color: var(--text_1);
       min-width: 100px;
-      background: var(--fill-3);
+      background: var(--fill_3);
       border-radius: 8px;
 
       &::after {
@@ -111,7 +111,7 @@ const styles = css`
         height: 0;
         border-left: 4px solid transparent;
         border-right: 4px solid transparent;
-        border-top: 5px solid var(--text-tertiary);
+        border-top: 5px solid var(--text_3);
       }
     }
   }
@@ -123,15 +123,15 @@ const styles = css`
       align-items: center;
       gap: 4px;
       border-radius: 8px;
-      background: var(--fill-pop);
-      box-shadow: 0px 0px 8px 0px var(--fill-projection);
+      background: var(--fill_pop);
+      box-shadow: 0px 0px 8px 0px var(--fill_shadow);
       padding: 4px 0;
       .menu {
         height: 1.5rem;
         line-height: 1.5rem;
         font-size: 12px;
         font-weight: 500;
-        color: var(--text-secondary);
+        color: var(--text_2);
         padding: 0;
         background: none;
         &.active {

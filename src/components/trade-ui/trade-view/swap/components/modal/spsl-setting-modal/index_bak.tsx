@@ -246,7 +246,7 @@ const { className, styles } = css.resolve`
     .line {
       height: 1px;
       width: 100%;
-      background-color: var(--line-1);
+      background-color: var(--fill_line_1);
     }
     .input-sections {
       display: flex;

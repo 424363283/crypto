@@ -535,7 +535,7 @@ export const VerifyForm = (props: {
               label={LANG('身份验证器')}
               placeholder={LANG('请输入验证码')}
               type={INPUT_TYPE.CAPTCHA}
-              size={isMobile? Size.XS: Size.XL}
+              size={isMobile ? Size.LG : Size.XL}
               value={gaCode}
               withBorder
               onInputChange={onGaInputChange}
@@ -641,7 +641,7 @@ const styles = css`
     width: 530px;
     margin: auto;
     .title {
-      color: var(--text-primary);
+      color: var(--text_1);
       font-size: 20px;
       font-weight: 700;
       line-height: 20px;
@@ -653,7 +653,7 @@ const styles = css`
     :global( .tab-bar ) {
       margin-bottom: 24px;
       border-bottom-style: solid !important;
-      border-bottom: 1px solid var(--line-2);
+      border-bottom: 1px solid var(--fill_line_2);
       :global(.tabs) {
         :global(.active>div) {
           &::after {
@@ -670,11 +670,11 @@ const styles = css`
         :global(.label) {
           font-size: 14px;
           font-weight: 400;
-          color: var(--text-tertiary);
+          color: var(--text_3);
           margin-bottom: 8px;
           :global(.agree-item .varify-target) {
             font-weight: 500;
-            color: var(--text-primary);
+            color: var(--text_1);
           }
         }
       }
@@ -684,8 +684,8 @@ const styles = css`
         :global(span) {
           font-size: 14px;
           font-weight: 400;
-          color: var(--text-brand);
-          border-bottom: 1px solid var(--text-brand);
+          color: var(--text_brand);
+          border-bottom: 1px solid var(--text_brand);
           cursor: pointer;
         }
       }

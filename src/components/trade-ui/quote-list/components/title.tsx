@@ -55,13 +55,13 @@ const TitleComponent = ({
                 align-items: center;
               }
               .tab-item {
-                color: var(--text-secondary);
+                color: var(--text_2);
                 font-size: 14px;
                 font-style: normal;
                 font-weight: 500;
                 line-height: normal;
                 &.active {
-                  color: var(--text-brand);
+                  color: var(--text_brand);
                   font-size: 14px;
                   font-style: normal;
                   font-weight: 500;

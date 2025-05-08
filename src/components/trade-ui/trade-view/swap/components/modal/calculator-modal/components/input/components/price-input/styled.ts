@@ -15,7 +15,7 @@ const { className, styles: _styles } = css.resolve`
     .new {
       user-select: none;
       cursor: pointer;
-      color: var(--text-brand);
+      color: var(--text_brand);
       margin-right: 3px;
     }
   }

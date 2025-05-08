@@ -94,7 +94,7 @@ export class SwapTradeItem implements Public {
     this.onlineTime = data.onlineTime;
     this.deviationRate = data.deviationRate;
     this.lower = data.lower || 0;
-    this.supportBouns = data.experienceTrade === 1;
+    this.supportBouns = data.supportBonus;
     this.experienceMaxLeverage = data.experienceMaxLeverage || 0;
     this.experienceLeverageConfig = data.experienceLeverageConfig?.split(',')?.map(Number) || [];
     this.minMarketDelegateNum = ![null, undefined].includes(data.minMarketDelegateNum) ? data.minMarketDelegateNum : data.minDelegateNum;

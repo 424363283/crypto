@@ -160,7 +160,7 @@ const styles = css`
         justify-content: end;
       }
       .address-url {
-        color: var(--text-primary);
+        color: var(--text_1);
         font-size: 14px;
         font-style: normal;
         font-weight: 500;

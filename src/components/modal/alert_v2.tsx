@@ -95,7 +95,7 @@ const { className: cssClassName, styles } = css.resolve`
       }
     }
     :global(.ant-modal-header) {
-      background: var(--fill-pop);
+      background: var(--fill_pop);
     }
     :global(.ant-modal-body) {
       display: flex;
@@ -123,7 +123,7 @@ const { className: cssClassName, styles } = css.resolve`
       :global(.ant-btn:nth-child(2)) {
         margin-inline-start: 0;
         margin-right: 0px;
-        background: var(--text-brand);
+        background: var(--text_brand);
         color:#fff;
       }
       :global(.ant-btn-primary:disabled) {
@@ -140,11 +140,11 @@ const { className: cssClassName, styles } = css.resolve`
     }
     :global(.ant-modal-content),
     :global(.ant-modal-body) {
-    background: var(--fill-pop);
+    background: var(--fill_pop);
       color: var(--theme-font-color-1);
     }
     :global(.ant-modal-footer) {
-    background: var(--fill-pop);
+    background: var(--fill_pop);
     }
   }
 `;

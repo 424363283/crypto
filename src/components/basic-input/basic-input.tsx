@@ -179,17 +179,17 @@ const styles = css`
       margin-bottom: 12px;
       @media ${MediaInfo.mobile} {
         font-size: 14px;
-        color: var(--text-tertiary);
+        color: var(--text_3);
       }
     }
     .basic-input-box {
       display: flex;
       align-items: center;
       position: relative;
-      border: 1px solid var(--fill-3);
+      border: 1px solid var(--fill_3);
       &:hover-unused {
         border: 1px solid var(--brand);
-        background-color: var(--bg-1);
+        background-color: var(--fill_bg_1);
       }
       &:hover {
         box-shadow: none;
@@ -214,19 +214,19 @@ const styles = css`
       }
       .basic-input-unused {
         padding-left: 14px;
-        background: var(--fill-3);
+        background: var(--fill_3);
         border-radius: 16px;
         border: none;
-        color: var(--text-primary);
+        color: var(--text_1);
         &:hover {
-          background-color: var(--bg-1);
+          background-color: var(--fill_bg_1);
         }
       }
       input::placeholder {
-        color: var(--text-tertiary);
+        color: var(--text_3);
         @media ${MediaInfo.mobile} {
           font-size: 14px;
-          color: var(--text-primary);
+          color: var(--text_1);
         }
       }
     }
@@ -248,12 +248,12 @@ const styles = css`
       }
     }
     .focused-unused {
-      box-shadow: 0 0 0 1px var(--text-brand);
-      background-color: var(--bg-1);
+      box-shadow: 0 0 0 1px var(--text_brand);
+      background-color: var(--fill_bg_1);
     }
     .focused-border-unused {
-      box-shadow: 0 0 0 1px var(--text-brand);
-      background-color: var(--bg-1);
+      box-shadow: 0 0 0 1px var(--text_brand);
+      background-color: var(--fill_bg_1);
     }
   }
 `;

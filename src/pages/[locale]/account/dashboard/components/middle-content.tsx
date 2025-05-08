@@ -57,12 +57,10 @@ const MiddleComponent = () => {
     };
   
     const onCloseModal = (evt: any) => {
-      evt.preventDefault();
-      evt.stopPropagation();
+      evt?.preventDefault();
+      evt?.stopPropagation();
       setShowVerifyModal(false);
     };
-  
-
 
   const MiddleColumnMap: any = {
     [MAIN_NAV_TYPE.OVERVIEW]: (

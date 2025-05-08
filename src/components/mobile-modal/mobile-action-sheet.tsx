@@ -49,7 +49,7 @@ const MobileBottomSheet = (props: BottomSheetType) => {
                 <div className={'bottom-sheet-box'}>
                     <div className="title">
                         {!!title && <div className="edit-title">{title}</div>}
-                        <Svg src={'/static/icons/primary/common/close.svg'} width={14} fill='var(--text-primary)' onClick={close} />
+                        <Svg src={'/static/icons/primary/common/close.svg'} width={14} fill='var(--text_1)' onClick={close} />
                     </div>
                     <div className={clsx('content', contentClassName)}>{content}</div>
                     {
@@ -92,7 +92,7 @@ const styles = css`
     border-top-right-radius: 24px;
   }
   :global(.adm-action-sheet-extra){
-     background-color:var(--fill-1);
+     background-color:var(--fill_1);
      padding: 24px;
   }
   .bottom-sheet-box{
@@ -106,7 +106,7 @@ const styles = css`
           .edit-title{
               font-size: 16px;
               font-weight: 500;
-              color:var(--text-primary);
+              color:var(--text_1);
           }
       }
       .bottom{

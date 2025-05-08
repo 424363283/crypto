@@ -49,7 +49,7 @@ const _OrderItem = ({
           justify-content: space-between;
           cursor: pointer;
           position: relative;
-          color: var(--text-primary);
+          color: var(--text_1);
           text-align: right;
           font-family: "HarmonyOS Sans SC";
           font-weight: 400;

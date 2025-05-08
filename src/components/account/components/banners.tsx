@@ -82,13 +82,13 @@ export const Banners = ({ items, className }: { items?: Banner[], className?: st
 };
 const styles = css`
 .banners-wrapper  {
-  background-color: var(--fill-2);
+  background-color: var(--fill_2);
   :global(.swiper-pagination-bullet) {
     width: 4px;
     height: 4px;
     display: inline-block;
     border-radius: 50%;
-    background: var(--fill-3);
+    background: var(--fill_3);
     opacity: 1;
   }
   :global(.swiper-pagination-bullet-active) {
@@ -110,7 +110,7 @@ const styles = css`
         align-items: center;
         padding: 24px 0 12px;
         .banner-title {
-          color: var(--text-primary);
+          color: var(--text_1);
           text-align: center;
           font-size: 40px;
           font-weight: 700;
@@ -120,7 +120,7 @@ const styles = css`
         .banner-desc {
           width: 460px;
           height: 48px;
-          color: var(--text-secondary);
+          color: var(--text_2);
           text-align: center;
           font-size: 16px;
           font-weight: 400;
