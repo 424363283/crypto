@@ -81,6 +81,7 @@ class MyDocument extends Document {
         lang={lang}
         >
           <link rel="manifest" href="/manifest.json"></link>
+          <link rel="stylesheet" href="/cryptofont/style.css" type="text/css"></link>
           <Head />
           <script src={theme_js}></script>
           <script src={cookie_js}></script>

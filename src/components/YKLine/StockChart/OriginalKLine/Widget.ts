@@ -44,6 +44,7 @@ import positionOverlay, { cacheTPSLineFigureKey } from './extension/overlays/pos
 import takeProfitOverlay from './extension/overlays/takeProfitOverlay';
 import stopLossOverlay from './extension/overlays/stopLossOverlay';
 import addOverlay from './extension/overlays/addOverlay';
+import popTextFigure from './extension/figures/popText'
 
 import liquidationLine from './extension/liquidationLine';
 
@@ -97,6 +98,7 @@ export interface HistoryOrderMarkOptions {
 
 const cachePositionLineData: any = {};
 let prevPositionIds: number[] = [];
+const overlayViewConfigs:any[] = []
 
 // 修改新版本k线
 const drawOverlay = (index: number, positoinData: any, chart: any, positionOverlayConfig: any, orginalItem: any) => {
@@ -120,6 +122,7 @@ const drawOverlay = (index: number, positoinData: any, chart: any, positionOverl
   //   onCloseSpslModal
   // } = useModalProps();
   const overlayViewConfig = JSON.parse(JSON.stringify(positionOverlayConfig));
+  overlayViewConfigs.push(overlayViewConfig)
 
   let stopProfit = '';
   let stopLoss = '';
@@ -312,6 +315,7 @@ export default class Widget {
     registerOverlay(takeProfitOverlay);
     registerOverlay(stopLossOverlay);
     registerOverlay(positionOverlay);
+    registerFigure(popTextFigure)
 
     //
 
@@ -359,9 +363,10 @@ export default class Widget {
     // 创建加号覆盖物
     this._chart.subscribeAction(ActionType.OnCrosshairChange, (data: any) => {
       addBtnOverlayConfig.point = { x: data.x, y: data.y };
-      // addBtnOverlayConfig.point.y = data.y;
-      //  = {x: data.x, y: data.y}
-      // console.log(addBtnOverlayConfig)
+      // console.log(`crosshair${data.x}-${data.y}`)
+      overlayViewConfigs.forEach(o => {
+        o.crosshairPoint={x:data.x, y:data.y}
+      })
     });
     this.setSymbol(options.symbol, options.interval);
   }

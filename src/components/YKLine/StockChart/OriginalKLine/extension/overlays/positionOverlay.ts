@@ -45,11 +45,13 @@ const positionOverlay: OverlayTemplate = {
     const volume = overlay.extendData.extendsConfig.volume;
 
     const positionText = overlay.extendData.extendsConfig.profitLoss;
-    const changeText = '↑↓';
-    const closePositionText = 'X';
-    const HEIGHT = 22;
+    const changeText = '\ue900';
+    const closePositionText = '\ue901';
+    const HEIGHT = 20;
     let isLongProfit = overlay.extendData.extendsConfig.isLong;
-    const closeColor = isLongProfit ? '#2AB26C' : '#A5A8AC'; //关闭按钮色
+    // const closeColor = isLongProfit ? '#2AB26C' : '#A5A8AC'; //关闭按钮色
+    const closeColor = '#A5A8AC'; //关闭按钮色
+    const changeColor = '#A5A8AC'; //切换按钮色
     const closeBg = isLongProfit ? '#34343B' : '#34343B'; //关闭按钮内容背景色
     let sideBg = isLongProfit ? '#2AB26C' : '#EF454A'; //方向背景
     let sideColor = isLongProfit ? '#FFFFFF' : '#FFFFFF'; //方向颜色
@@ -75,14 +77,18 @@ const positionOverlay: OverlayTemplate = {
     let qtyColor = '#FFFFFF'; //方向颜色
 
     // console.log('profitLossTextWidth', profitLossTextWidth);
+    const crosshairPoint = overlay.extendData.crosshairPoint
+
+    // console.log(overlay.extendData.crosshairPoint)
 
     // 持仓位置固定
     const positionPoint = { x: 30, y: yAxis.convertToPixel(positonExtendData.positionData.value) };
     // console.log(positionPoint)
-    const figures = [];
     const twoWayMode = Swap.Trade.twoWayMode;
 
+    // console.log(`cordinate${coordinates[0].x}-${coordinates[0].y}`)
     // 注意，样式要写全，特别是边框，宽高，边距之类的属性，必须要填值，否则事件检测的时候会出问题
+    // 持仓线--------------------------------------------------
     const positionLineFigure = {
       type: 'line',
       attrs: { coordinates: [positionPoint, { x: bounding.width, y: positionPoint.y }] },
@@ -98,58 +104,27 @@ const positionOverlay: OverlayTemplate = {
       }
     };
 
-    //持仓方向
+    // 持仓方向--------------------------------------------------
 
-    const positionSide = {
+    const positionDirectionBtnFigure = {
       type: 'text',
       // ignoreEvent: ['mouseDownEvent', 'mouseRightClickEvent'],
       attrs: {
-        x: positionPoint.x - 20,
+        x: positionPoint.x,
         y: positionPoint.y,
-        height: HEIGHT,
-        width: 40,
-        align: 'left',
+        // height: HEIGHT,
+        // width: 40,
+        // align: 'left',
         baseline: 'middle',
         text: profitLossText
       },
       styles: {
         style: 'stroke_fill',
         color: sideColor,
-        size: 12,
-        cursor: 'pointer',
-        borderColor: 'transparent',
-        backgroundColor: sideBg,
-        // // 左内边距
-        paddingLeft: 4,
-        // // 右内边距
-        paddingRight: 4,
-        // // 上内边距
-        paddingTop: 4,
-        // // 下内边距
-        paddingBottom: 4,
-        borderRadius: 2
-      }
-    };
-
-    // 持仓按钮--------------------------------------------------
-    const positionBtnFigure = {
-      type: 'text',
-      attrs: {
-        x: positionPoint.x,
-        height: HEIGHT,
-        y: positionPoint.y,
-        text: positionText,
-        baseline: 'middle'
-      },
-      styles: {
-        // 样式，可选项`fill`，`stroke`，`stroke_fill`
-        style: 'fill',
-        // 颜色
-        color: sideColor,
         // 尺寸
-        size: 12,
-        // 字体
-        family: 'Helvetica Neue',
+        size: 10,
+         // 字体
+        family: 'HarmonyOS Sans SC',
         // 粗细
         weight: 'normal',
         // 左内边距
@@ -170,12 +145,69 @@ const positionOverlay: OverlayTemplate = {
         borderDashedValue: [2, 2],
         // 边框圆角值
         borderRadius: [4, 0, 0, 4],
+        // 边框颜色
+        backgroundColor: sideBg
+      }
+    };
+
+    const positionDirectionBtnWidth =
+      positionDirectionBtnFigure.styles.paddingLeft +
+      calcTextWidth(
+        positionDirectionBtnFigure.attrs.text,
+        positionDirectionBtnFigure.styles.size,
+        positionDirectionBtnFigure.styles.weight,
+        positionDirectionBtnFigure.styles.family
+      ) +
+      positionDirectionBtnFigure.styles.paddingRight;
+    positonExtendData.positionDirectionBtnFigure.option = positionDirectionBtnFigure;
+    positonExtendData.positionDirectionBtnFigure.styles.width = positionDirectionBtnWidth;
+
+    
+
+    // 持仓按钮--------------------------------------------------
+    const positionBtnFigure = {
+      type: 'text',
+      attrs: {
+        x: positionPoint.x + positionDirectionBtnWidth,
+        // height: HEIGHT,
+        y: positionPoint.y,
+        text: positionText,
+        baseline: 'middle'
+      },
+      styles: {
+        // 样式，可选项`fill`，`stroke`，`stroke_fill`
+        style: 'fill',
+        // 颜色
+        color: sideColor,
+        // 尺寸
+        size: 10,
+        // 字体
+        family: 'HarmonyOS Sans SC',
+        // 粗细
+        weight: 'normal',
+        // 左内边距
+        paddingLeft: 4,
+        // 右内边距
+        paddingRight: 4,
+        // 上内边距
+        paddingTop: 4,
+        // 下内边距
+        paddingBottom: 4,
+        // 边框样式
+        borderStyle: 'solid',
+        // 边框颜色
+        borderColor: 'transparent',
+        // 边框尺寸
+        borderSize: 0,
+        // 边框虚线参数
+        borderDashedValue: [2, 2],
+        // 边框圆角值
+        borderRadius: 0,
         // 背景色
         backgroundColor: sideBg
       }
     };
 
-    // console.log(positionBtnFigure);
     const positionBtnWidth =
       positionBtnFigure.styles.paddingLeft +
       calcTextWidth(
@@ -185,16 +217,61 @@ const positionOverlay: OverlayTemplate = {
         positionBtnFigure.styles.family
       ) +
       positionBtnFigure.styles.paddingRight;
-    // console.log(positionBtnWidth)
     positonExtendData.positionBtnFigure.option = positionBtnFigure;
     positonExtendData.positionBtnFigure.styles.width = positionBtnWidth;
 
-    // 持仓数量-----
+
+    // 判断是否在本区域内，如果在的话显示tip figure
+    let positionTipFigure = null
+    if (crosshairPoint.x >= positionDirectionBtnFigure.attrs.x && crosshairPoint.x <= positionDirectionBtnFigure.attrs.x + positionDirectionBtnWidth + positionBtnWidth
+     && crosshairPoint.y >= positionDirectionBtnFigure.attrs.y - HEIGHT/2 && crosshairPoint.y <= positionDirectionBtnFigure.attrs.y + HEIGHT/2
+    ){
+      positionTipFigure = {
+        type: 'popText',
+        attrs: {
+          x: positionPoint.x + (positionDirectionBtnWidth + positionBtnWidth)/2,
+          y: positionPoint.y - HEIGHT/2,
+          // 文字内容
+          text: `点击止盈止损`,
+          // 指定宽
+          // width: 20,
+          // 指定高
+          // height: 20,
+          // 对齐方式
+          align: 'center',
+          // 基准
+          baseline: 'middle'
+        },
+        styles: {
+          style: 'fill',
+          size: 10,
+          // 左内边距
+          paddingLeft: 10,
+          paddingTop: 6,
+          paddingRight: 10,
+          paddingBottom: 6,
+          borderColor: '#FFFFFF',
+          borderStyle: 'solid',
+          // 边框样式
+          borderSize: 1,
+          borderDashedValue: [5, 5],
+          color: '#FFFFFF',
+          family: 'HarmonyOS Sans SC',
+          weight: 'normal',
+          borderRadius: 4,
+          backgroundColor: '#F0BA30',
+          placement: 'top',
+          arrowSize: 5
+        }
+      }
+    }
+
+    // 持仓数量--------------------------------------------------
     const positionQtyFigure = {
       type: 'text',
       attrs: {
-        x: positionPoint.x + positionBtnWidth,
-        height: HEIGHT,
+        x: positionPoint.x + positionDirectionBtnWidth + positionBtnWidth,
+        // height: HEIGHT,
         y: positionPoint.y,
         text: volume,
         baseline: 'middle'
@@ -205,11 +282,11 @@ const positionOverlay: OverlayTemplate = {
         // 颜色
         color: qtyColor,
         // 尺寸
-        size: 12,
+        size: 10,
         // 字体
-        family: 'Helvetica Neue',
+        family: 'HarmonyOS Sans SC',
         // 粗细
-        weight: '500',
+        weight: 'normal',
         // 左内边距
         paddingLeft: 4,
         // 右内边距
@@ -241,54 +318,51 @@ const positionOverlay: OverlayTemplate = {
         positionQtyFigure.styles.family
       ) +
       positionQtyFigure.styles.paddingRight;
-    // console.log(positionBtnWidth)
     positonExtendData.positionQtyFigure.option = positionQtyFigure;
-    positonExtendData.positionQtyFigure.styles.width = positionBtnWidth;
-
-    // 反手开仓-----
-    // const positionReverseFigure = {
-    //   key: 'reverse',
-    //   type: 'rect',
-    //   ignoreEvent: ['mouseDownEvent', 'mouseRightClickEvent'],
-    //   attrs: {
-    //     x: positionPoint.x + positionQtyWidth + positionBtnWidth,
-    //     y: positionPoint.y - HEIGHT / 2,
-    //     width: 28,
-    //     height: HEIGHT
-    //   },
-    //   styles: {
-    //     style: 'stroke_fill',
-    //     // borderColor: 'red',
-    //     // color: '#FFFFFF'
-    //   }
-    // };
-    // const positionQtyWidth = positionQtyFigure.styles.paddingLeft + calcTextWidth(positionQtyFigure.attrs.text, positionQtyFigure.styles.size, positionQtyFigure.styles.weight, positionQtyFigure.styles.family) + positionQtyFigure.styles.paddingRight
-    // console.log(positionBtnWidth)
-    // positonExtendData.positionQtyFigure.option = positionQtyFigure
-    // positonExtendData.positionQtyFigure.styles.width = positionBtnWidth
+    positonExtendData.positionQtyFigure.styles.width = positionQtyWidth;
 
     // 切换按钮--------------------------------------------------
     const changeBtnFigure = {
       type: 'text',
       attrs: {
-        x: positionPoint.x + positionBtnWidth + positionQtyWidth,
+        x: positionPoint.x + positionDirectionBtnWidth + positionBtnWidth + positionQtyWidth,
         y: positionPoint.y,
         text: changeText,
-        height: HEIGHT,
-        width: 24,
+        // height: HEIGHT,
+        // width: 20,
         baseline: 'middle'
       },
       styles: {
+        // 样式，可选项`fill`，`stroke`，`stroke_fill`
         style: 'stroke_fill',
-        color: '#FFFFFF',
+        // 颜色
+        color: changeColor,
+        // 尺寸
         size: 12,
-        cursor: 'pointer',
-        borderColor: closeBg,
-        backgroundColor: closeBg,
-        paddingTop: 7,
-        paddingLeft: 7,
-        paddingRight: 7,
-        borderRadius: 0
+        // 字体
+        family: 'cryptofont',
+        // 粗细
+        weight: 'normal',
+        // 左内边距
+        paddingLeft: 4,
+        // 右内边距
+        paddingRight: 4,
+        // 上内边距
+        paddingTop: 3,
+        // 下内边距
+        paddingBottom: 3,
+        // 边框样式
+        borderStyle: 'solid',
+        // 边框颜色
+        borderColor: '#A5A8AC',
+        // 边框尺寸
+        borderSize: 0,
+        // 边框虚线参数
+        borderDashedValue: [2, 2],
+        // 边框圆角值
+        borderRadius: 0,
+        // 背景色
+        backgroundColor: '#121212'
       }
     };
 
@@ -312,65 +386,46 @@ const positionOverlay: OverlayTemplate = {
       type: 'text',
       // ignoreEvent: ['mouseDownEvent', 'mouseRightClickEvent'],
       attrs: {
-        x: positionPoint.x + positionQtyWidth + positionBtnWidth + (twoWayMode ? 0 : 24),
+        x: positionPoint.x + positionDirectionBtnWidth + positionQtyWidth + positionBtnWidth + (twoWayMode ? 0 : changeBtnWidth),
         y: positionPoint.y,
-        height: HEIGHT,
-        width: HEIGHT,
-        align: 'left',
+        // height: HEIGHT,
+        // width: HEIGHT,
+        // align: 'left',
         baseline: 'middle',
-        text: 'X'
+        text: closePositionText
       },
       styles: {
+        // 样式，可选项`fill`，`stroke`，`stroke_fill`
         style: 'stroke_fill',
+        // 颜色
         color: closeColor,
-        size: 12,
-        cursor: 'pointer',
+        // 尺寸
+        size: 16,
+        // 字体
+        family: 'cryptofont',
+        // 粗细
+        weight: 'normal',
+        // 左内边距
+        paddingLeft: 4,
+        // 右内边距
+        paddingRight: 4,
+        // 上内边距
+        paddingTop: 1,
+        // 下内边距
+        paddingBottom: 1,
+        // 边框样式
+        borderStyle: 'solid',
+        // 边框颜色
         borderColor: closeBg,
-        backgroundColor: closeBg,
-        paddingTop: 7,
-        paddingLeft: 7,
-        paddingRight: 7,
-        borderRadius: 0
-      }
-      // type: 'text',
-      // attrs: {
-      //   x: positionPoint.x + positionBtnWidth + changeBtnWidth,
-      //   y: positionPoint.y,
-      //   text: closePositionText,
-      //   baseline: 'middle'
-      // },
-      // styles: {
-      //   // 样式，可选项`fill`，`stroke`，`stroke_fill`
-      //   style: 'fill',
-      //   // 颜色
-      //   color: '#A5A8AC',
-      //   // 尺寸
-      //   size: 12,
-      //   // 字体
-      //   family: 'Helvetica Neue',
-      //   // 粗细
-      //   weight: 'normal',
-      //   // 左内边距
-      //   paddingLeft: 4,
-      //   // 右内边距
-      //   paddingRight: 4,
-      //   // 上内边距
-      //   paddingTop: 4,
-      //   // 下内边距
-      //   paddingBottom: 4,
-      //   // 边框样式
-      //   borderStyle: 'solid',
-      //   // 边框颜色
-      //   borderColor: 'transparent',
-      //   // 边框尺寸
-      //   borderSize: 0,
-      //   // 边框虚线参数
-      //   borderDashedValue: [2, 2],
-      //   // 边框圆角值
-      //   borderRadius: 0,
-      //   // 背景色
-      //   backgroundColor: '#121212'
-      // },
+        // 边框尺寸
+        borderSize: 0,
+        // 边框虚线参数
+        borderDashedValue: [2, 2],
+        // 边框圆角值
+        borderRadius: 0,
+        // 背景色
+        backgroundColor: '#121212'
+      },
     };
     const closePositionBtnWidth =
       closePositionBtnFigure.styles.paddingLeft +
@@ -391,13 +446,18 @@ const positionOverlay: OverlayTemplate = {
 
     positonExtendData.closePositionBtnFigure.styles.width = closePositionBtnWidth;
 
-    const figureElements = [positionLineFigure, positionBtnFigure];
+    const figureElements = [positionLineFigure, positionDirectionBtnFigure, positionBtnFigure];
     if (!twoWayMode) {
       figureElements.push(...figureElements, positionQtyFigure, changeBtnFigure, closePositionBtnFigure);
     } else {
       figureElements.push(...figureElements, positionQtyFigure, closePositionBtnFigure);
     }
     // figureElements.push(...figureElements, positionQtyFigure, changeBtnFigure, closePositionBtnFigure);
+
+    // tip 
+    if (positionTipFigure) {
+      figureElements.push(positionTipFigure)
+    }
     return figureElements;
   },
   onClick: (e: any) => {
@@ -415,6 +475,11 @@ const positionOverlay: OverlayTemplate = {
         { x: e.x, y: e.y },
         positionExtendData.positionBtnFigure.option.attrs,
         positionExtendData.positionBtnFigure.option.styles
+      ) ||
+      textFigure?.prototype.checkEventOnImp(
+        { x: e.x, y: e.y },
+        positionExtendData.positionDirectionBtnFigure.option.attrs,
+        positionExtendData.positionDirectionBtnFigure.option.styles
       )
     ) {
       console.log('点击了持仓按钮');
@@ -515,6 +580,30 @@ const positionOverlay: OverlayTemplate = {
       return true;
     }
     return true;
+  },
+  onMouseEnter: (e:any) => { 
+    const textFigure = getFigureClass('text');
+    const positionExtendData = e.overlay.extendData.positionOverlay;
+    if (
+      textFigure?.prototype.checkEventOnImp(
+        { x: e.x, y: e.y },
+        positionExtendData.positionBtnFigure.option.attrs,
+        positionExtendData.positionBtnFigure.option.styles
+      ) ||
+      textFigure?.prototype.checkEventOnImp(
+        { x: e.x, y: e.y },
+        positionExtendData.positionDirectionBtnFigure.option.attrs,
+        positionExtendData.positionDirectionBtnFigure.option.styles
+      )
+    ) {
+      // 创建tip
+      console.log(111)
+    } else {
+      // 去掉tip
+    }
+  },
+  onMouseLeave: (e:any) => {
+    // 移除tip
   }
 };
 

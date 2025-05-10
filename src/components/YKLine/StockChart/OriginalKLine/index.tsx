@@ -487,15 +487,27 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
 
           let positionOverlayConfig = {
             chart: null,
+            crosshairPoint: {x: 0, y: 0},
             // 仓位覆盖物
-            //位按钮+ ↑↓ 按钮 + 平仓按钮 + 持仓价线
+            //价格位按钮+ ↑↓ 按钮 + 平仓按钮 + 持仓价线
             positionOverlay: {
               id: null,
               // 仓位数据，仓位的坐标用于所有覆盖物做参照点，这样在每个覆盖物中计算值的时候就不会乱
               // 貌似坐标转换的时候是用的dataIndex转换的,dataFeed新增bar时要记得,更新dataIndex, 覆盖物重绘制的时候会自动更新位置
               positionData: { timestamp: position?.orginalItem?.ctime, price: position?.avgPrice, direction: 'long' },
+              // 持仓方向按钮
+              positionDirectionBtnFigure: {
+                show: true,
+                option: null,
+                styles: {
+                  width: 0,
+                  height: 0,
+                  marginLeft: 0
+                }
+                // 添加事件回调callback
+                // onClick: (e) =>{ console.log('positionOverlay positionBtnFigure click')}
+              },
               // 仓位按钮
-
               positionBtnFigure: {
                 show: true,
                 option: null,
@@ -628,7 +640,7 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
               }
             },
             extendsConfig: {
-              profitLoss: `${direction} ${unrealizedPnl} (${position?.profitRate})`,
+              profitLoss: `${unrealizedPnl} (${position?.profitRate})`,
               volume: `${total}`,
               positionId: position.id,
               direction,
