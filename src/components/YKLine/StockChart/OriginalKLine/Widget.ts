@@ -275,13 +275,22 @@ const drawOverlay = (index: number, positoinData: any, chart: any, positionOverl
   }
 };
 
+// todo
 const addBtnOverlayConfig = {
   id: null,
   point: { x: 0, y: 0 },
-  onClick: (data: any) => {
-    setDragOverlayDataFun(data);
-    console.log('点击了加号按钮', data);
-  }
+  ticker: '',
+  addBtnFigure: {
+    show: false,
+    option: null,
+    styles: {
+      width: 0,
+      height: 0,
+      marginLeft: 0
+    }
+                  // onClick: (e) =>{ console.log('stopLossOverlay addBtnFigure click')}
+  },
+  onClick: null
 };
 
 export default class Widget {
@@ -346,6 +355,7 @@ export default class Widget {
       }
     });
 
+    // todo    
     // 创建加号覆盖物
     this._chart.subscribeAction(ActionType.OnCrosshairChange, (data: any) => {
       addBtnOverlayConfig.point = { x: data.x, y: data.y };
@@ -357,6 +367,23 @@ export default class Widget {
   }
 
   private _createAddOverlay() {
+    addBtnOverlayConfig.onClick = (data: any) => {
+      // console.log(this._symbolInfo)
+      const symbol = this._symbolInfo.ticker
+      // const symbol = 'BTC'
+      const tradeType = '限价'
+      const price = data.overlay._prevPressedPoint.value.toFixed(this._symbolInfo.price_precision)
+      const val = {
+        tag: `${symbol}@${price}`,
+        tradeType: tradeType,
+        x: 60,
+        y: data.overlay.extendData.point.y,
+        price: price,
+        volume: data.overlay._prevPressedPoint.value
+      }
+      setDragOverlayDataFun(val);
+      console.log('点击了加号按钮', data);
+    }
     if (this._chart) {
       console.log('执行成功');
       this._chart?.createOverlay({

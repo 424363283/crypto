@@ -68,6 +68,8 @@ const addOverlay: OverlayTemplate = {
         backgroundColor: '#07828B'
       }
     }
+
+    overlay.extendData.addBtnFigure.option = figure
     
     return [figure]
   },

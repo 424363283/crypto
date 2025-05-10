@@ -70,16 +70,21 @@ export function setPositionTpSLInfoFun(TpSlInfo: any) {
 
 //设置十字线数据
 export function setDragOverlayDataFun(dragOverlayData: any) {
-  const { pageX, pageY } = dragOverlayData;
+  // const { x, y } = dragOverlayData;
   kLineStore.setState(state => ({
     ...state,
     dragOverlayData: {
-      pageX,
-      pageY,
-      volume: dragOverlayData.overlay._prevPressedPoint.value
+      tag: dragOverlayData.tag,
+      x: 60,
+      y: dragOverlayData.y,
+      tradeType: dragOverlayData.tradeType,
+      volume: dragOverlayData.volume,
+      price: dragOverlayData.price
     }
   }));
 }
+
+
 export function getKineState() {
   return kLineStore.getState();
 }

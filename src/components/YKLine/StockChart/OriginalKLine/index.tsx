@@ -1133,9 +1133,13 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
     }
   }, [TpSlInfo]);
 
+  // todo
   useEffect(() => {
-    if (dragOverlayData && Account.isLogin && isSwapLink) {
-      const { pageX, pageY } = dragOverlayData;
+    console.log('-----',dragOverlayData)
+    // setShowCreateOrderModal(true);
+    if (dragOverlayData && dragOverlayData.hasOwnProperty("y") && Account.isLogin && isSwapLink) {
+      const { x, y, tag } = dragOverlayData;
+      console.log(dragOverlayData)
       setShowCreateOrderModal(true);
     }
   }, [dragOverlayData]);
@@ -1146,8 +1150,8 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
       {showCreateOrderModal ? (
         <div
           style={{
-            left: dragOverlayData.pageX,
-            top: dragOverlayData.pageY / 2 + 20
+            right: 60,
+            top: dragOverlayData.y - 10
           }}
           className={styles.createOrderOverlay}
           onClick={() => {
@@ -1155,8 +1159,14 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
             setShowCreateOrderModal(false);
           }}
         >
-          <YIcon.addOrderIcon />
-          {LANG('创建交易')}
+          <div className={styles.addTraderBtnTagContainer}>
+            <div className={styles.addTraderBtn}>
+              <YIcon.addOrderIcon />
+              <span>{LANG('创建交易')}</span>
+            </div>
+            <span className={styles.addTraderBtnTag}>{dragOverlayData.tag}</span>
+            <span className={styles.addTradeBtnType}>{dragOverlayData.tradeType}</span>
+          </div>  
         </div>
       ) : null}
       {loading && <Loading />}
