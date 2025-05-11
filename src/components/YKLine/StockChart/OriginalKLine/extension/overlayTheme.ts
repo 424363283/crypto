@@ -37,11 +37,13 @@ export const darkTheme = {
   'takeProfitOverlay.color': '#07828B',
   'takeProfitOverlay.borderColor': '#07828B',
   'takeProfitOverlay.backgroundColor': '#121212',
+  'takeProfitOverlay.lineColor': '#399BA2',
 
   // 止损覆盖物
   'stopLossOverlay.color': '#F0BA30',
   'stopLossOverlay.borderColor': '#F0BA30',
   'stopLossOverlay.backgroundColor': '#121212',
+  'stopLossOverlay.lineColor': '#F0BA30',
 
   
  // 止盈止损收益覆盖物 ---------------------------------------
@@ -112,11 +114,13 @@ export const lightTheme = {
   'takeProfitOverlay.color': '#07828B',
   'takeProfitOverlay.borderColor': '#07828B',
   'takeProfitOverlay.backgroundColor': '#121212',
+  'takeProfitOverlay.lineColor': '#399BA2',
 
   // 止损覆盖物
   'stopLossOverlay.color': '#F0BA30',
   'stopLossOverlay.borderColor': '#F0BA30',
   'stopLossOverlay.backgroundColor': '#121212',
+  'stopLossOverlay.lineColor': '#F0BA30',
 
   
  // 止盈止损收益覆盖物 ---------------------------------------

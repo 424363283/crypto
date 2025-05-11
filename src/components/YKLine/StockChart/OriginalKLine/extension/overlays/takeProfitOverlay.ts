@@ -37,7 +37,12 @@ const takeProfitOverlay: OverlayTemplate = {
     const positonExtendData: any = overlay.extendData.positionOverlay;
     const takeProfitExtendData: any = overlay.extendData.takeProfitOverlay;
     const positionPoint = { x: 50, y: yAxis.convertToPixel(positonExtendData.positionData.value) };
-    console.log('止盈')
+
+    const lineColor = overlay.styles?.takeProfitOverlayLineColor;
+    const color = overlay.styles?.takeProfitOverlayColor;
+    const borderColor = overlay.styles?.takeProfitOverlayBorderColor;
+    const backgroundColor = overlay.styles?.takeProfitOverlayBackgroundColor;
+
 
     const btnSpace = 10;
     // const text = '止盈:' + yAxis?.convertFromPixel(coordinates[0].y).toFixed(2);
@@ -63,7 +68,7 @@ const takeProfitOverlay: OverlayTemplate = {
         // 尺寸
         size: 1,
         // 颜色
-        color: '#399BA2',
+        color: lineColor,
         // 虚线参数
         dashedValue: [5, 5]
       }
@@ -81,7 +86,7 @@ const takeProfitOverlay: OverlayTemplate = {
         // 样式，可选项`fill`，`stroke`，`stroke_fill`
         style: 'stroke_fill',
         // 颜色
-        color: '#07828B',
+        color: color,
         // 尺寸
         size: 10,
         // 字体
@@ -99,7 +104,7 @@ const takeProfitOverlay: OverlayTemplate = {
         // 边框样式
         borderStyle: 'solid',
         // 边框颜色
-        borderColor: '#07828B',
+        borderColor: borderColor,
 
         // 边框尺寸
         borderSize: 1,
@@ -108,7 +113,7 @@ const takeProfitOverlay: OverlayTemplate = {
         // 边框圆角值
         borderRadius: 4,
         // 背景色
-        backgroundColor: '#121212'
+        backgroundColor: backgroundColor
       },
       zLevel: 100
     };

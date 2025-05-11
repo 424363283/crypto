@@ -578,6 +578,7 @@ const positionOverlay: OverlayTemplate = {
           if (!positionExtendData.positionData.stopProfit) {
             const takeProfitOverlay = e.overlay.extendData.chart.createOverlay({
               name: 'takeProfitOverlay',
+              styles: e.overlay.styles,
               ...createOverlayConfig
             });
             takeProfitExtendData.show = true;
@@ -588,6 +589,7 @@ const positionOverlay: OverlayTemplate = {
         if (!positionExtendData.positionData.stopLoss) {
           const stopLossOverlay = e.overlay.extendData.chart.createOverlay({
             name: 'stopLossOverlay',
+            styles: e.overlay.styles,
             ...createOverlayConfig
           });
           stopLossExtendData.show = true;

@@ -63,6 +63,7 @@ import { cancelOrder } from './cancelOrder';
 import YIcon from '@/components/YIcons';
 import { darkTheme, lightTheme } from './extension/overlayTheme';
 import positionLine from './extension/positionLine';
+import stopLossOverlay from './extension/overlays/stopLossOverlay';
 const intlPrefix = 'system.common.klinechart.';
 
 const { Trade } = Spot;
@@ -499,10 +500,12 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
             yAxisMarkBackgroundColor: overlayTheme['positionOverlay.yAxisMarkBackgroundColor'],
 
             // 止盈止损按钮
+            takeProfitOverlayLineColor: overlayTheme['takeProfitOverlay.lineColor'],
             takeProfitOverlayColor: overlayTheme['takeProfitOverlay.color'],
             takeProfitOverlayBorderColor: overlayTheme['takeProfitOverlay.borderColor'],
             takeProfitOverlayBackgroundColor: overlayTheme['takeProfitOverlay.backgroundColor'],
 
+            stopLossOverlayLineColor: overlayTheme['stopLossOverlay.lineColor'],
             stopLossOverlayColor: overlayTheme['stopLossOverlay.color'],
             stopLossOverlayBorderColor: overlayTheme['stopLossOverlay.borderColor'],
             stopLossOverlayBackgroundColor: overlayTheme['stopLossOverlay.backgroundColor'],

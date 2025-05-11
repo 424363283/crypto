@@ -39,6 +39,11 @@ const stopLossOverlay: OverlayTemplate = {
     const stopLossExtendData: any = overlay.extendData.stopLossOverlay;
     const positionPoint = { x: 50, y: yAxis.convertToPixel(positonExtendData.positionData.value) };
 
+    const lineColor = overlay.styles?.stopLossOverlayLineColor;
+    const color = overlay.styles?.stopLossOverlayColor;
+    const borderColor = overlay.styles?.stopLossOverlayBorderColor;
+    const backgroundColor = overlay.styles?.stopLossOverlayBackgroundColor;
+
     const btnSpace = 10;
     // const text = '止损:' + yAxis?.convertFromPixel(coordinates[0].y).toFixed(2);
     const text = LANG('止损');
@@ -65,7 +70,7 @@ const stopLossOverlay: OverlayTemplate = {
         // 尺寸
         size: 1,
         // 颜色
-        color: '#399BA2',
+        color: lineColor,
         // 虚线参数
         dashedValue: [5, 5]
       }
@@ -83,7 +88,7 @@ const stopLossOverlay: OverlayTemplate = {
         // 样式，可选项`fill`，`stroke`，`stroke_fill`
         style: 'stroke_fill',
         // 颜色
-        color: '#F0BA30',
+        color: color,
         // 尺寸
         size: 10,
         // 字体
@@ -101,7 +106,7 @@ const stopLossOverlay: OverlayTemplate = {
         // 边框样式
         borderStyle: 'solid',
         // 边框颜色
-        borderColor: '#F0BA30',
+        borderColor: borderColor,
         // 边框尺寸
         borderSize: 1,
         // 边框虚线参数
@@ -109,7 +114,7 @@ const stopLossOverlay: OverlayTemplate = {
         // 边框圆角值
         borderRadius: 4,
         // 背景色
-        backgroundColor: '#121212'
+        backgroundColor: backgroundColor
       },
       zLevel: 10
     };
