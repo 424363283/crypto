@@ -494,6 +494,9 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
             tipBackgroundColor: overlayTheme['global.tipBackgroundColor'],
             tipBorderColor: overlayTheme['global.tipBorderColor'],
             positionLineColor: overlayTheme['positionLineColor'],
+            yAxisMarkColor: overlayTheme['positionOverlay.yAxisMarkColor'],
+            yAxisMarkBorderColor: overlayTheme['positionOverlay.yAxisMarkBorderColor'],
+            yAxisMarkBackgroundColor: overlayTheme['positionOverlay.yAxisMarkBackgroundColor'],
           }
 
           position.orginalItem.ctime = position?.ctime?.ctime;

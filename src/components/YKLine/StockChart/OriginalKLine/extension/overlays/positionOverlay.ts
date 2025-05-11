@@ -82,8 +82,8 @@ const positionOverlay: OverlayTemplate = {
     // console.log(overlay.extendData.crosshairPoint)
 
     // 持仓位置固定
+    console.log('------', positonExtendData.positionData.value)
     const positionPoint = { x: 30, y: yAxis.convertToPixel(positonExtendData.positionData.value) };
-    // console.log(positionPoint)
     const twoWayMode = Swap.Trade.twoWayMode;
 
     // console.log(`cordinate${coordinates[0].x}-${coordinates[0].y}`)
@@ -452,6 +452,62 @@ const positionOverlay: OverlayTemplate = {
       figureElements.push(positionTipFigure)
     }
     return figureElements;
+  },
+  createYAxisFigures: ({ coordinates, overlay, precision, thousandsSeparator, yAxis}) => {
+    const width = yAxis.getAutoSize()
+    const price = `${utils.formatThousands(overlay.points[0].value!.toFixed(precision.price), thousandsSeparator)}`
+    const textWidth = utils.calcTextWidth(price)
+    // 剩余边距 = 总长度 - 文本长度 - border厚度 - 右边距
+    const padding = (width - textWidth - 2 - 4)/2
+    const yAxisMarkColor = overlay.styles?.yAxisMarkColor
+    const yAxisMarkBorderColor = overlay.styles?.yAxisMarkBorderColor
+    const yAxisMarkBackgroundColor = overlay.styles?.yAxisMarkBackgroundColor
+    console.log(overlay.points[0].value)
+    
+    return [
+      {
+        type: 'text',
+        attrs: {
+          x: 0,
+          y: coordinates[0].y,
+          baseline: 'middle',
+          text: price
+          // text: overlay?.points[0]?.value
+        },
+        styles: {
+          // 样式，可选项`fill`，`stroke`，`stroke_fill`
+          style: 'stroke_fill',
+          // 颜色
+          color: yAxisMarkColor,
+          // 尺寸
+          size: 12,
+          // 字体
+          family: 'HarmonyOS Sans SC',
+          // 粗细
+          weight: 400,
+          // 左内边距
+          paddingLeft: padding,
+          // 右内边距
+          paddingRight: padding,
+          // 上内边距
+          paddingTop: 4,
+          // 下内边距
+          paddingBottom: 4,
+          // 边框样式
+          borderStyle: 'solid',
+          // 边框颜色
+          borderColor: yAxisMarkBorderColor,
+          // 边框尺寸
+          borderSize: 1,
+          // 边框虚线参数
+          borderDashedValue: [2, 2],
+          // 边框圆角值
+          borderRadius: 4,
+          // 背景色
+          backgroundColor: yAxisMarkBackgroundColor
+        }
+      }
+    ];
   },
   onClick: (e: any) => {
     // console.log(e)

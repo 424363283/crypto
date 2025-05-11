@@ -28,6 +28,11 @@ export const darkTheme = {
   // 持仓线颜色
   positionLineColor: '#399BA2',
 
+  // 持仓Y轴标记
+  'positionOverlay.yAxisMarkColor': '#FFFFFF',
+  'positionOverlay.yAxisMarkBorderColor': '#399BA2',
+  'positionOverlay.yAxisMarkBackgroundColor': '#399BA2',
+
   
  // 止盈止损覆盖物 ---------------------------------------
   // 止盈
@@ -87,6 +92,11 @@ export const lightTheme = {
   // 切换持仓按钮颜色
   // 持仓线颜色
   positionLineColor: '#399BA2',
+
+  // 持仓Y轴标记
+  'positionOverlay.yAxisMarkColor': '#FFFFFF',
+  'positionOverlay.yAxisMarkBorderColor': '#399BA2',
+  'positionOverlay.yAxisMarkBackgroundColor': '#399BA2',
 
   
  // 止盈止损覆盖物 ---------------------------------------
