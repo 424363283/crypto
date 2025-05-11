@@ -484,7 +484,6 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
           const tooltipColor = isLight ? '#3B3C45' : '#3B3C45';
           const backgroundColor = isLight ? '#FFFFFF' : '#FFFFFF';
           position.orginalItem.ctime = position?.ctime?.ctime;
-
           let positionOverlayConfig = {
             chart: null,
             crosshairPoint: {x: 0, y: 0},

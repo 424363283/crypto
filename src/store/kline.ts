@@ -71,6 +71,7 @@ export function setPositionTpSLInfoFun(TpSlInfo: any) {
 //设置十字线数据
 export function setDragOverlayDataFun(dragOverlayData: any) {
   // const { x, y } = dragOverlayData;
+  console.log(dragOverlayData)
   kLineStore.setState(state => ({
     ...state,
     dragOverlayData: {

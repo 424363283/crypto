@@ -220,7 +220,6 @@ const positionOverlay: OverlayTemplate = {
     positonExtendData.positionBtnFigure.option = positionBtnFigure;
     positonExtendData.positionBtnFigure.styles.width = positionBtnWidth;
 
-
     // 判断是否在本区域内，如果在的话显示tip figure
     let positionTipFigure = null
     if (crosshairPoint.x >= positionDirectionBtnFigure.attrs.x && crosshairPoint.x <= positionDirectionBtnFigure.attrs.x + positionDirectionBtnWidth + positionBtnWidth
@@ -259,7 +258,7 @@ const positionOverlay: OverlayTemplate = {
           family: 'HarmonyOS Sans SC',
           weight: 'normal',
           borderRadius: 4,
-          backgroundColor: '#F0BA30',
+          backgroundColor: '#26262B',
           placement: 'top',
           arrowSize: 5
         }
@@ -580,30 +579,6 @@ const positionOverlay: OverlayTemplate = {
       return true;
     }
     return true;
-  },
-  onMouseEnter: (e:any) => { 
-    const textFigure = getFigureClass('text');
-    const positionExtendData = e.overlay.extendData.positionOverlay;
-    if (
-      textFigure?.prototype.checkEventOnImp(
-        { x: e.x, y: e.y },
-        positionExtendData.positionBtnFigure.option.attrs,
-        positionExtendData.positionBtnFigure.option.styles
-      ) ||
-      textFigure?.prototype.checkEventOnImp(
-        { x: e.x, y: e.y },
-        positionExtendData.positionDirectionBtnFigure.option.attrs,
-        positionExtendData.positionDirectionBtnFigure.option.styles
-      )
-    ) {
-      // 创建tip
-      console.log(111)
-    } else {
-      // 去掉tip
-    }
-  },
-  onMouseLeave: (e:any) => {
-    // 移除tip
   }
 };
 

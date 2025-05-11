@@ -98,7 +98,8 @@ export interface HistoryOrderMarkOptions {
 
 const cachePositionLineData: any = {};
 let prevPositionIds: number[] = [];
-const overlayViewConfigs:any[] = []
+// 全局覆盖物使用的移动跟踪坐标，不允许直接替换对象，只能替换值
+const crosshairPoint:any = {x: 0, y: 0}
 
 // 修改新版本k线
 const drawOverlay = (index: number, positoinData: any, chart: any, positionOverlayConfig: any, orginalItem: any) => {
@@ -122,7 +123,7 @@ const drawOverlay = (index: number, positoinData: any, chart: any, positionOverl
   //   onCloseSpslModal
   // } = useModalProps();
   const overlayViewConfig = JSON.parse(JSON.stringify(positionOverlayConfig));
-  overlayViewConfigs.push(overlayViewConfig)
+  overlayViewConfig.crosshairPoint = crosshairPoint
 
   let stopProfit = '';
   let stopLoss = '';
@@ -363,10 +364,8 @@ export default class Widget {
     // 创建加号覆盖物
     this._chart.subscribeAction(ActionType.OnCrosshairChange, (data: any) => {
       addBtnOverlayConfig.point = { x: data.x, y: data.y };
-      // console.log(`crosshair${data.x}-${data.y}`)
-      overlayViewConfigs.forEach(o => {
-        o.crosshairPoint={x:data.x, y:data.y}
-      })
+      crosshairPoint.x = data.x
+      crosshairPoint.y = data.y
     });
     this.setSymbol(options.symbol, options.interval);
   }
@@ -743,7 +742,6 @@ export default class Widget {
     // this._chart?.removeOverlay({
     //   name: 'positionOverlay'
     // });
-
     drawOverlay(position.timestamp, position, this._chart, position.positionOverlayConfig);
 
     // const positionOverlayId = this._chart?.createOverlay({
