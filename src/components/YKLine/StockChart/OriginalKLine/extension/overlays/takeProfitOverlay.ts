@@ -27,8 +27,8 @@ const takeProfitOverlay: OverlayTemplate = {
   totalStep: 2,
   // 需要默认的点位图形,选中覆盖物时会有个蓝点，表示选中，这个可以控制蓝点是否显示
   needDefaultPointFigure: false,
-  needDefaultXAxisFigure: true,
-  needDefaultYAxisFigure: true,
+  needDefaultXAxisFigure: false,
+  needDefaultYAxisFigure: false,
   extendData: {
     marginLeft: 10,
     position: { dataIndex: 300, timestamp: 1743688800000, value: 81172.2 }

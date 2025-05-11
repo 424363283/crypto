@@ -497,6 +497,15 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
             yAxisMarkColor: overlayTheme['positionOverlay.yAxisMarkColor'],
             yAxisMarkBorderColor: overlayTheme['positionOverlay.yAxisMarkBorderColor'],
             yAxisMarkBackgroundColor: overlayTheme['positionOverlay.yAxisMarkBackgroundColor'],
+
+            // 止盈止损按钮
+            takeProfitOverlayColor: overlayTheme['takeProfitOverlay.color'],
+            takeProfitOverlayBorderColor: overlayTheme['takeProfitOverlay.borderColor'],
+            takeProfitOverlayBackgroundColor: overlayTheme['takeProfitOverlay.backgroundColor'],
+
+            stopLossOverlayColor: overlayTheme['stopLossOverlay.color'],
+            stopLossOverlayBorderColor: overlayTheme['stopLossOverlay.borderColor'],
+            stopLossOverlayBackgroundColor: overlayTheme['stopLossOverlay.backgroundColor'],
           }
 
           position.orginalItem.ctime = position?.ctime?.ctime;

@@ -33,8 +33,18 @@ export const darkTheme = {
   'positionOverlay.yAxisMarkBorderColor': '#399BA2',
   'positionOverlay.yAxisMarkBackgroundColor': '#399BA2',
 
+    // 止盈覆盖物
+  'takeProfitOverlay.color': '#07828B',
+  'takeProfitOverlay.borderColor': '#07828B',
+  'takeProfitOverlay.backgroundColor': '#121212',
+
+  // 止损覆盖物
+  'stopLossOverlay.color': '#F0BA30',
+  'stopLossOverlay.borderColor': '#F0BA30',
+  'stopLossOverlay.backgroundColor': '#121212',
+
   
- // 止盈止损覆盖物 ---------------------------------------
+ // 止盈止损收益覆盖物 ---------------------------------------
   // 止盈
   'positionTPSLOverlay.takeProfitColor': '#FFFFFF',
   'positionTPSLOverlay.takeProfitBackgroundColor': '#2AB26C',
@@ -98,8 +108,18 @@ export const lightTheme = {
   'positionOverlay.yAxisMarkBorderColor': '#399BA2',
   'positionOverlay.yAxisMarkBackgroundColor': '#399BA2',
 
+    // 止盈覆盖物
+  'takeProfitOverlay.color': '#07828B',
+  'takeProfitOverlay.borderColor': '#07828B',
+  'takeProfitOverlay.backgroundColor': '#121212',
+
+  // 止损覆盖物
+  'stopLossOverlay.color': '#F0BA30',
+  'stopLossOverlay.borderColor': '#F0BA30',
+  'stopLossOverlay.backgroundColor': '#121212',
+
   
- // 止盈止损覆盖物 ---------------------------------------
+ // 止盈止损收益覆盖物 ---------------------------------------
   // 止盈
   'positionTPSLOverlay.takeProfitColor': '#FFFFFF',
   'positionTPSLOverlay.takeProfitBackgroundColor': '#2AB26C',
