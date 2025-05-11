@@ -54,6 +54,7 @@ import { getTheme } from './overrides';
 
 import { WidgetOptions } from '../types';
 import { useModalProps, usePositionActions } from '@/components/order-list/swap/stores/position-list';
+import { darkTheme } from './extension/overlayTheme';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -73,16 +74,13 @@ interface IndicatorInfo {
 export interface PositionLineOptions {
   id?: string;
   direction: string;
-  directionColor: string;
   profitLoss: string;
-  profitLossColor: string;
-  backgroundColor: string;
   price: number;
   volume: string;
   closeTooltip?: string;
   reverseTooltip?: string;
-  tooltipColor?: string;
   positionId?: string;
+  styles: any;
   onReverseClick?: () => void;
   onCloseClick?: () => void;
   onOrderdrag?: (e) => void;
@@ -102,7 +100,7 @@ let prevPositionIds: number[] = [];
 const crosshairPoint:any = {x: 0, y: 0}
 
 // 修改新版本k线
-const drawOverlay = (index: number, positoinData: any, chart: any, positionOverlayConfig: any, orginalItem: any) => {
+const drawOverlay = (index: number, positoinData: any, chart: any, positionOverlayConfig: any, styles: any) => {
   /** 
    你可以在交互组件中把回调函数传到positionView中,
    然后在overlay里面触发事件的时候进行调用
@@ -209,6 +207,7 @@ const drawOverlay = (index: number, positoinData: any, chart: any, positionOverl
       Object.assign(cacheTPSLineFigureKey, {
         takeProfitOverlayId: null,
         stopLossOverlayId: null,
+        styles,
         id: null,
         [positionId]: null
       });
@@ -222,6 +221,7 @@ const drawOverlay = (index: number, positoinData: any, chart: any, positionOverl
     chart?.updateOverlay({
       name: 'stopLossOverlay',
       id: tpslLine?.stopLossOverlayId,
+      styles,
       points: [
         {
           value: positionData.value // 只更新value值
@@ -236,6 +236,7 @@ const drawOverlay = (index: number, positoinData: any, chart: any, positionOverl
       name: 'takeProfitOverlay',
       id: tpslLine?.takeProfitOverlayId,
       extendData: overlayViewConfig,
+      styles,
       points: [
         {
           value: positionData.value // 只更新value值
@@ -265,6 +266,7 @@ const drawOverlay = (index: number, positoinData: any, chart: any, positionOverl
       mode: OverlayMode.Normal,
       points: [{ timestamp: positionData.timestamp, value: positionData.value }],
       extendData: overlayViewConfig,
+      styles,
       onclick: (data: any) => {}
     });
     overlayViewConfig.positionOverlay.id = positionOverlayId;
@@ -274,6 +276,7 @@ const drawOverlay = (index: number, positoinData: any, chart: any, positionOverl
     chart?.overrideOverlay({
       name: 'positionOverlay',
       id: cachePositionLineData[positoinData.orginalItem?.positionId],
+      styles,
       extendData: overlayViewConfig
     });
   }
@@ -742,7 +745,7 @@ export default class Widget {
     // this._chart?.removeOverlay({
     //   name: 'positionOverlay'
     // });
-    drawOverlay(position.timestamp, position, this._chart, position.positionOverlayConfig);
+    drawOverlay(position.timestamp, position, this._chart, position.positionOverlayConfig, position.styles);
 
     // const positionOverlayId = this._chart?.createOverlay({
     //   name: 'positionOverlay',
@@ -918,27 +921,18 @@ export default class Widget {
   createPositionTPSLLine(position: any) {
     const key = `${position.price}`;
     const count = this._positionLineCountMap[key] ?? 0;
-
+    // 获取theme,根据全局获取选择对应的主题
+    const theme = darkTheme
     this._chart?.createOverlay({
       name: 'positionTPTLLine',
       points: [{ value: position.price }],
       extendData: {
         ...position,
-        closeTooltip: '',
-        reverseTooltip: ''
+        closeTooltip: '平仓',
+        reverseTooltip: '',
+        crosshairPoint: crosshairPoint
       },
-      styles: {
-        cursor: 'grab',
-        openDirectionColor: position.openDirectionColor,
-        openDirectionBg: position.openDirectionBg,
-        closeBg: position.closeBg,
-        closeColor: position.closeColor,
-        directionColor: position.directionColor,
-        profitLossColor: position.profitLossColor,
-        tooltipColor: position.tooltipColor,
-        backgroundColor: position.backgroundColor,
-        offsetLeft: 2 + count * 40
-      },
+      styles: position.styles,
       onClick: event => {
         switch (event.figureKey) {
           case PositionTPSLLineFigureKey.Close: {

@@ -61,6 +61,8 @@ import {
 } from '@/core/api';
 import { cancelOrder } from './cancelOrder';
 import YIcon from '@/components/YIcons';
+import { darkTheme, lightTheme } from './extension/overlayTheme';
+import positionLine from './extension/positionLine';
 const intlPrefix = 'system.common.klinechart.';
 
 const { Trade } = Spot;
@@ -477,12 +479,23 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
           const isLong = position?.side === '1';
           const direction = isLong ? LANG('多') : LANG('空'); //持仓方向
           let total = position.volume;
-          const profitLossColor = unrealizedPnl >= 0 ? Color.Green : Color.Red;
-          const openDirectionBg = unrealizedPnl >= 0 ? Color.Green : Color.Red; //开仓内容背景色
-          const directionColor = '#399BA2'; //多/空
           const isLight = theme === 'light';
-          const tooltipColor = isLight ? '#3B3C45' : '#3B3C45';
-          const backgroundColor = isLight ? '#FFFFFF' : '#FFFFFF';
+          const overlayTheme: any = isLight ? lightTheme : darkTheme;
+          const styles:any = {
+            directionColor: isLong ? overlayTheme['positionOverlay.longDirectionColor'] : overlayTheme['positionOverlay.shortDirectionColor'],
+            directionBackgroundColor: isLong ? overlayTheme['positionOverlay.longDirectionBackgroundColor'] : overlayTheme['positionOverlay.shortDirectionBackgroundColor'],
+            profitLossColor: unrealizedPnl >= 0 ? overlayTheme['positionOverlay.profitColor'] : overlayTheme['positionOverlay.lossColor'],
+            profitLossBackgroundColor: unrealizedPnl >= 0 ? overlayTheme['positionOverlay.profitBackgroundColor'] : overlayTheme['positionOverlay.lossBackgroundColor'],
+            volumeColor: overlayTheme['positionOverlay.volumeColor'],
+            volumeBackgroundColor: overlayTheme['positionOverlay.volumeBackgroundColor'],
+            operationColor: overlayTheme['global.operationColor'],
+            operationBackgroundColor: overlayTheme['global.operationBackgroundColor'],
+            tipColor: overlayTheme['global.tipColor'],
+            tipBackgroundColor: overlayTheme['global.tipBackgroundColor'],
+            tipBorderColor: overlayTheme['global.tipBorderColor'],
+            positionLineColor: overlayTheme['positionLineColor'],
+          }
+
           position.orginalItem.ctime = position?.ctime?.ctime;
           let positionOverlayConfig = {
             chart: null,
@@ -648,18 +661,14 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
           };
 
           widgetRef.current?.createPositionLine({
+            styles,
             direction,
-            directionColor,
             positionId: position.id,
             timestamp: position?.orginalItem?.ctime,
-            openDirectionBg,
             positionOverlayConfig,
             profitLoss: `${direction} ${unrealizedPnl} (${position?.profitRate})`,
-            profitLossColor,
             price: +position?.avgPrice,
             volume: `${total}`,
-            tooltipColor,
-            backgroundColor,
             showStopProfitLoss: false,
             closeTooltip: LANG('市价平仓'),
             reverseTooltip: LANG('反手'),
@@ -708,21 +717,42 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
         if (position?.symbol === symbolSwapId) {
           let unrealizedPnl = position.unrealizedPnl;
           const isLong = position?.side === '1';
+
           const direction = isLong ? LANG('多') : LANG('空'); //持仓方向
           const isLongProfit = (isLong && position?.direction != '1') || (!isLong && position?.direction == '1');
           let profitLoss = isLongProfit ? LANG('止盈') : LANG('止损');
 
           let closeTooltip = isLongProfit ? LANG('取消止盈') : LANG('取消止损');
-          const profitLossColor = unrealizedPnl >= 0 ? Color.Green : Color.Red;
-          const directionColor = isLongProfit ? Color.Green : Color.Red; //多/空
-          const openDirectionColor = isLongProfit ? Color.Green : Color.Red; //开仓方向颜色
-          const openDirectionBg = isLongProfit ? '#324D45' : '#47363D'; //开仓内容背景色
-          const closeBg = isLongProfit ? '#34343B' : '#34343B'; //关闭按钮内容背景色
-          const closeColor = isLongProfit ? '#A5A8AC' : '#A5A8AC'; //关闭按钮色
 
           const isLight = theme === 'light';
-          const tooltipColor = isLight ? '#3B3C45' : '#3B3C45';
-          const backgroundColor = isLight ? '#FFFFFF' : '#FFFFFF';
+          // const tooltipColor = isLight ? '#3B3C45' : '#3B3C45';
+          // const backgroundColor = isLight ? '#FFFFFF' : '#FFFFFF';
+          
+          const overlayTheme:any = isLight ? lightTheme : darkTheme
+
+          // 边距线
+          const marginLineColor = isLongProfit ? overlayTheme['positionTPSLOverlay.takeProfitMarginLineColor'] : overlayTheme['positionTPSLOverlay.stopLossMarginLineColor']
+          // 止盈止损
+          const profitLossBackgroundColor = isLongProfit ? overlayTheme['positionTPSLOverlay.takeProfitBackgroundColor'] : overlayTheme['positionTPSLOverlay.stopLossBackgroundColor']
+          const profitLossColor = isLongProfit ? overlayTheme['positionTPSLOverlay.takeProfitColor'] : overlayTheme['positionTPSLOverlay.stopLossColor']
+          // 预计止盈/预计止损
+          const expectProfitLossBackgroundColor = isLongProfit ? overlayTheme['positionTPSLOverlay.expectTakeProfitBackgroundColor'] : overlayTheme['positionTPSLOverlay.expectStopLossBackgroundColor']
+          const expectProfitLossColor = isLongProfit ? overlayTheme['positionTPSLOverlay.expectTakeProfitColor'] : overlayTheme['positionTPSLOverlay.expectStopLossColor']
+          
+          // 平仓按钮
+          const closeColor = overlayTheme['global.operationColor']
+          const closeBackgroundColor=overlayTheme['global.operationBackgroundColor']
+          // tip
+          const tipColor = overlayTheme['global.tipColor']
+          const tipBorderColor = overlayTheme['global.tipBorderColor']
+          const tipBackgroundColor = overlayTheme['global.tipBackgroundColor']
+
+          // 止盈Y轴价格标记/
+          const profitLossYAxisMarkColor = isLongProfit ? overlayTheme['positionTPSLOverlay.takeProfitYAxisMarkColor'] : overlayTheme['positionTPSLOverlay.stopLossYAxisMarkColor']
+          const profitLossYAxisMarkBorderColor = isLongProfit ? overlayTheme['positionTPSLOverlay.takeProfitYAxisMarkBorderColor'] : overlayTheme['positionTPSLOverlay.stopLossYAxisMarkBorderColor']
+          const profitLossYAxisMarkBackgroundColor = isLongProfit ? overlayTheme['positionTPSLOverlay.takeProfitYAxisMarkBackgroundColor'] : overlayTheme['positionTPSLOverlay.stopLossYAxisMarkBackgroundColor']
+
+
           let price = Number(triggerPrice);
 
           const code = orginalItem?.symbol?.toUpperCase();
@@ -765,17 +795,23 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
             : `${LANG('预计止损')}${isLong ? LANG('平多') : LANG('平空')}(${roe}%)`;
           widgetRef.current?.createPositionTPSLLine({
             direction,
-            directionColor,
-            openDirectionColor,
-            closeColor,
-            openDirectionBg,
-            closeBg,
+            styles: { marginLineColor,
+                      profitLossBackgroundColor,
+                      profitLossColor,
+                      expectProfitLossBackgroundColor,
+                      expectProfitLossColor,
+                      closeColor,
+                      closeBackgroundColor,
+                      tipColor,
+                      tipBackgroundColor,
+                      profitLossYAxisMarkColor,
+                      profitLossYAxisMarkBorderColor,
+                      profitLossYAxisMarkBackgroundColor
+                    },
             profitLoss: profitLoss,
             profitLossColor,
             price: price,
             volume: `${total}`,
-            tooltipColor,
-            backgroundColor,
             orginalItem,
             closeTooltip: closeTooltip,
             reverseTooltip: LANG('反手'),

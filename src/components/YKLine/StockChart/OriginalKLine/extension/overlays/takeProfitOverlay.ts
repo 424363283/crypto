@@ -37,6 +37,7 @@ const takeProfitOverlay: OverlayTemplate = {
     const positonExtendData: any = overlay.extendData.positionOverlay;
     const takeProfitExtendData: any = overlay.extendData.takeProfitOverlay;
     const positionPoint = { x: 50, y: yAxis.convertToPixel(positonExtendData.positionData.value) };
+    console.log('止盈')
 
     const btnSpace = 10;
     // const text = '止盈:' + yAxis?.convertFromPixel(coordinates[0].y).toFixed(2);

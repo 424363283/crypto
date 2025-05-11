@@ -41,42 +41,42 @@ const positionOverlay: OverlayTemplate = {
   needDefaultYAxisFigure: true,
   createPointFigures: ({ coordinates, bounding, overlay, xAxis, yAxis }) => {
     const positonExtendData: any = overlay.extendData.positionOverlay;
-    // const profitLoss=overlay.extendData.extendsConfig.profitLoss
     const volume = overlay.extendData.extendsConfig.volume;
+
+    // 方向
+    const directionColor = overlay.styles?.directionColor;
+    const directionBackgroundColor = overlay.styles?.directionBackgroundColor;
+    // 收益
+    const profitLossColor = overlay.styles?.profitLossColor;
+    const profitLossBackgroundColor = overlay.styles?.profitLossBackgroundColor;
+    // 持仓量
+    const volumeColor = overlay.styles?.volumeColor;
+    const volumeBackgroundColor = overlay.styles?.volumeBackgroundColor;
+    // 操作按钮
+    const operationColor = overlay.styles?.operationColor;
+    const operationBackgroundColor = overlay.styles?.operationBackgroundColor;
+    // 提示
+    const tipColor = overlay.styles?.tipColor;
+    const tipBorderColor = overlay.styles?.tipBorderColor;
+    const tipBackgroundColor = overlay.styles?.tipBackgroundColor;
+
+    //持仓线
+    const positionLineColor = overlay.styles?.positionLineColor;
+
 
     const positionText = overlay.extendData.extendsConfig.profitLoss;
     const changeText = '\ue900';
     const closePositionText = '\ue901';
     const HEIGHT = 20;
     let isLongProfit = overlay.extendData.extendsConfig.isLong;
-    // const closeColor = isLongProfit ? '#2AB26C' : '#A5A8AC'; //关闭按钮色
-    const closeColor = '#A5A8AC'; //关闭按钮色
-    const changeColor = '#A5A8AC'; //切换按钮色
-    const closeBg = isLongProfit ? '#34343B' : '#34343B'; //关闭按钮内容背景色
-    let sideBg = isLongProfit ? '#2AB26C' : '#EF454A'; //方向背景
-    let sideColor = isLongProfit ? '#FFFFFF' : '#FFFFFF'; //方向颜色
-
-    const PADDING = 8;
-    const backgroundColor = overlay.styles?.backgroundColor;
-    const directionColor = overlay.styles?.directionColor;
-    const profitLossColor = overlay.styles?.profitLossColor;
-    const tooltipColor = overlay.styles?.tooltipColor;
-    const openDirectionBg = overlay.styles?.openDirectionBg;
+    const PADDING = 4;
+   
     const offsetLeft = overlay.styles?.offsetLeft ?? 2;
     const { y } = coordinates[0];
     const profitLossText = overlay.extendData.extendsConfig.direction;
     //  overlay.extendData.extendsConfig.direction;
-    const profitLossTextWidth = utils.calcTextWidth(profitLossText);
     const volumeText = `${overlay.extendData.volume ?? 0}`;
-    const volumeTextWidth = utils.calcTextWidth(volumeText);
-    const volumeTextRectWidth = Math.max(volumeTextWidth + PADDING * 2, 22);
-    const openDirectionColor = overlay.styles?.openDirectionColor;
-    // const profitLossTextWidth = utils.calcTextWidth(profitLossText) + PADDING * 2;
 
-    let qtyBg = '#121212'; //方向背景
-    let qtyColor = '#FFFFFF'; //方向颜色
-
-    // console.log('profitLossTextWidth', profitLossTextWidth);
     const crosshairPoint = overlay.extendData.crosshairPoint
 
     // console.log(overlay.extendData.crosshairPoint)
@@ -88,21 +88,7 @@ const positionOverlay: OverlayTemplate = {
 
     // console.log(`cordinate${coordinates[0].x}-${coordinates[0].y}`)
     // 注意，样式要写全，特别是边框，宽高，边距之类的属性，必须要填值，否则事件检测的时候会出问题
-    // 持仓线--------------------------------------------------
-    const positionLineFigure = {
-      type: 'line',
-      attrs: { coordinates: [positionPoint, { x: bounding.width, y: positionPoint.y }] },
-      styles: {
-        // 样式，可选项`solid`，`dashed`
-        style: 'solid',
-        // 尺寸
-        size: 1,
-        // 颜色
-        color: '#399BA2',
-        // 虚线参数
-        dashedValue: [5, 5]
-      }
-    };
+    
 
     // 持仓方向--------------------------------------------------
 
@@ -112,15 +98,12 @@ const positionOverlay: OverlayTemplate = {
       attrs: {
         x: positionPoint.x,
         y: positionPoint.y,
-        // height: HEIGHT,
-        // width: 40,
-        // align: 'left',
         baseline: 'middle',
         text: profitLossText
       },
       styles: {
-        style: 'stroke_fill',
-        color: sideColor,
+        style: 'fill',
+        color: directionColor,
         // 尺寸
         size: 10,
          // 字体
@@ -128,17 +111,17 @@ const positionOverlay: OverlayTemplate = {
         // 粗细
         weight: 'normal',
         // 左内边距
-        paddingLeft: 4,
+        paddingLeft: PADDING,
         // 右内边距
-        paddingRight: 4,
+        paddingRight: PADDING,
         // 上内边距
-        paddingTop: 4,
+        paddingTop: PADDING,
         // 下内边距
-        paddingBottom: 4,
+        paddingBottom: PADDING,
         // 边框样式
         borderStyle: 'solid',
         // 边框颜色
-        borderColor: 'transparent',
+        borderColor: directionBackgroundColor,
         // 边框尺寸
         borderSize: 0,
         // 边框虚线参数
@@ -146,7 +129,7 @@ const positionOverlay: OverlayTemplate = {
         // 边框圆角值
         borderRadius: [4, 0, 0, 4],
         // 边框颜色
-        backgroundColor: sideBg
+        backgroundColor: directionBackgroundColor
       }
     };
 
@@ -164,7 +147,7 @@ const positionOverlay: OverlayTemplate = {
 
     
 
-    // 持仓按钮--------------------------------------------------
+    // 收益--------------------------------------------------
     const positionBtnFigure = {
       type: 'text',
       attrs: {
@@ -178,7 +161,7 @@ const positionOverlay: OverlayTemplate = {
         // 样式，可选项`fill`，`stroke`，`stroke_fill`
         style: 'fill',
         // 颜色
-        color: sideColor,
+        color: profitLossColor,
         // 尺寸
         size: 10,
         // 字体
@@ -186,17 +169,17 @@ const positionOverlay: OverlayTemplate = {
         // 粗细
         weight: 'normal',
         // 左内边距
-        paddingLeft: 4,
+        paddingLeft: PADDING,
         // 右内边距
-        paddingRight: 4,
+        paddingRight: PADDING,
         // 上内边距
-        paddingTop: 4,
+        paddingTop: PADDING,
         // 下内边距
-        paddingBottom: 4,
+        paddingBottom: PADDING,
         // 边框样式
         borderStyle: 'solid',
         // 边框颜色
-        borderColor: 'transparent',
+        borderColor: profitLossBackgroundColor,
         // 边框尺寸
         borderSize: 0,
         // 边框虚线参数
@@ -204,7 +187,7 @@ const positionOverlay: OverlayTemplate = {
         // 边框圆角值
         borderRadius: 0,
         // 背景色
-        backgroundColor: sideBg
+        backgroundColor: profitLossBackgroundColor
       }
     };
 
@@ -232,11 +215,6 @@ const positionOverlay: OverlayTemplate = {
           y: positionPoint.y - HEIGHT/2,
           // 文字内容
           text: `点击止盈止损`,
-          // 指定宽
-          // width: 20,
-          // 指定高
-          // height: 20,
-          // 对齐方式
           align: 'center',
           // 基准
           baseline: 'middle'
@@ -249,16 +227,16 @@ const positionOverlay: OverlayTemplate = {
           paddingTop: 6,
           paddingRight: 10,
           paddingBottom: 6,
-          borderColor: '#FFFFFF',
+          borderColor: tipBorderColor,
           borderStyle: 'solid',
           // 边框样式
           borderSize: 1,
           borderDashedValue: [5, 5],
-          color: '#FFFFFF',
+          color: tipColor,
           family: 'HarmonyOS Sans SC',
           weight: 'normal',
           borderRadius: 4,
-          backgroundColor: '#26262B',
+          backgroundColor: tipBackgroundColor,
           placement: 'top',
           arrowSize: 5
         }
@@ -279,7 +257,7 @@ const positionOverlay: OverlayTemplate = {
         // 样式，可选项`fill`，`stroke`，`stroke_fill`
         style: 'fill',
         // 颜色
-        color: qtyColor,
+        color: volumeColor,
         // 尺寸
         size: 10,
         // 字体
@@ -287,17 +265,17 @@ const positionOverlay: OverlayTemplate = {
         // 粗细
         weight: 'normal',
         // 左内边距
-        paddingLeft: 4,
+        paddingLeft: PADDING,
         // 右内边距
-        paddingRight: 4,
+        paddingRight: PADDING,
         // 上内边距
-        paddingTop: 4,
+        paddingTop: PADDING,
         // 下内边距
-        paddingBottom: 4,
+        paddingBottom: PADDING,
         // 边框样式
         borderStyle: 'solid',
         // 边框颜色
-        borderColor: 'transparent',
+        borderColor: volumeBackgroundColor,
         // 边框尺寸
         borderSize: 0,
         // 边框虚线参数
@@ -305,7 +283,7 @@ const positionOverlay: OverlayTemplate = {
         // 边框圆角值
         borderRadius: 0,
         // 背景色
-        backgroundColor: qtyBg
+        backgroundColor: volumeBackgroundColor
       }
     };
     const positionQtyWidth =
@@ -335,7 +313,7 @@ const positionOverlay: OverlayTemplate = {
         // 样式，可选项`fill`，`stroke`，`stroke_fill`
         style: 'stroke_fill',
         // 颜色
-        color: changeColor,
+        color: operationColor,
         // 尺寸
         size: 12,
         // 字体
@@ -343,9 +321,9 @@ const positionOverlay: OverlayTemplate = {
         // 粗细
         weight: 'normal',
         // 左内边距
-        paddingLeft: 4,
+        paddingLeft: PADDING,
         // 右内边距
-        paddingRight: 4,
+        paddingRight: PADDING,
         // 上内边距
         paddingTop: 3,
         // 下内边距
@@ -353,7 +331,7 @@ const positionOverlay: OverlayTemplate = {
         // 边框样式
         borderStyle: 'solid',
         // 边框颜色
-        borderColor: '#A5A8AC',
+        borderColor: operationBackgroundColor,
         // 边框尺寸
         borderSize: 0,
         // 边框虚线参数
@@ -361,7 +339,7 @@ const positionOverlay: OverlayTemplate = {
         // 边框圆角值
         borderRadius: 0,
         // 背景色
-        backgroundColor: '#121212'
+        backgroundColor: operationBackgroundColor
       }
     };
 
@@ -397,7 +375,7 @@ const positionOverlay: OverlayTemplate = {
         // 样式，可选项`fill`，`stroke`，`stroke_fill`
         style: 'stroke_fill',
         // 颜色
-        color: closeColor,
+        color: operationColor,
         // 尺寸
         size: 16,
         // 字体
@@ -405,9 +383,9 @@ const positionOverlay: OverlayTemplate = {
         // 粗细
         weight: 'normal',
         // 左内边距
-        paddingLeft: 4,
+        paddingLeft: 1,
         // 右内边距
-        paddingRight: 4,
+        paddingRight: 1,
         // 上内边距
         paddingTop: 1,
         // 下内边距
@@ -415,7 +393,7 @@ const positionOverlay: OverlayTemplate = {
         // 边框样式
         borderStyle: 'solid',
         // 边框颜色
-        borderColor: closeBg,
+        borderColor: operationBackgroundColor,
         // 边框尺寸
         borderSize: 0,
         // 边框虚线参数
@@ -423,7 +401,7 @@ const positionOverlay: OverlayTemplate = {
         // 边框圆角值
         borderRadius: 0,
         // 背景色
-        backgroundColor: '#121212'
+        backgroundColor: operationBackgroundColor
       },
     };
     const closePositionBtnWidth =
@@ -444,6 +422,22 @@ const positionOverlay: OverlayTemplate = {
     positonExtendData.changeBtnFigure.styles.width = changeBtnWidth;
 
     positonExtendData.closePositionBtnFigure.styles.width = closePositionBtnWidth;
+
+    // 持仓线--------------------------------------------------
+    const positionLineFigure = {
+      type: 'line',
+      attrs: { coordinates: [{x: closePositionBtnFigure.attrs.x + closePositionBtnWidth, y: positionPoint.y}, { x: bounding.width, y: positionPoint.y }] },
+      styles: {
+        // 样式，可选项`solid`，`dashed`
+        style: 'solid',
+        // 尺寸
+        size: 1,
+        // 颜色
+        color: positionLineColor,
+        // 虚线参数
+        dashedValue: [5, 5]
+      }
+    };
 
     const figureElements = [positionLineFigure, positionDirectionBtnFigure, positionBtnFigure];
     if (!twoWayMode) {

@@ -42,7 +42,6 @@ const stopLossOverlay: OverlayTemplate = {
     const btnSpace = 10;
     // const text = '止损:' + yAxis?.convertFromPixel(coordinates[0].y).toFixed(2);
     const text = LANG('止损');
-
     const marginLeft =
       positonExtendData.positionBtnFigure.styles.width +
       positonExtendData.changeBtnFigure.styles.width +
