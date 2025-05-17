@@ -4,6 +4,8 @@ import {
   utils,
   Coordinate
 } from '@/components/YKLine/StockChart/OriginalKLine/index.esm';
+import { buildYAxisFigures } from '../common/figureBuilder';
+import { color } from 'echarts';
 
 //爆仓线
 const liquidationLine: OverlayTemplate = {
@@ -12,117 +14,177 @@ const liquidationLine: OverlayTemplate = {
   createPointFigures: ({ coordinates, bounding, overlay }) => {
     const PADDING = 4;
     const HEIGHT = 20;
-    const backgroundColor = overlay.styles?.backgroundColor;
-    const directionColor = overlay.styles?.directionColor;
-    const profitLossColor = overlay.styles?.profitLossColor;
-    const tooltipColor = overlay.styles?.tooltipColor;
-    const offsetLeft = overlay.styles?.offsetLeft ?? 2;
+    // const backgroundColor = overlay.styles?.backgroundColor;
+    // const directionColor = overlay.styles?.directionColor;
+    // const profitLossColor = overlay.styles?.profitLossColor;
+    // const tooltipColor = overlay.styles?.tooltipColor;
+    // const offsetLeft = overlay.styles?.offsetLeft ?? 2;
     const { y } = coordinates[0];
-    const profitLossText = `${overlay.extendData.profitLoss}`;
-    const profitLossTextWidth = utils.calcTextWidth(profitLossText) + PADDING * 2;
-    const volumeText = `${overlay.extendData.volume ?? 0}`;
-    const volumeTextWidth = utils.calcTextWidth(volumeText);
-    const volumeTextRectWidth = Math.max(volumeTextWidth + PADDING * 2, 22);
+    // const profitLossText = `${overlay.extendData.profitLoss}`;
+    // const profitLossTextWidth = utils.calcTextWidth(profitLossText) + PADDING * 2;
+    // const volumeText = `${overlay.extendData.volume ?? 0}`;
+    // const volumeTextWidth = utils.calcTextWidth(volumeText);
+    // const volumeTextRectWidth = Math.max(volumeTextWidth + PADDING * 2, 22);
 
-    const reverseTooltip = overlay.extendData.reverseTooltip;
-    const closeTooltip = overlay.extendData.closeTooltip;
-    let tipsWidth = bounding.width - volumeTextRectWidth - 68; // 爆仓文案的距离左边边的距离
-    let tpSlWidth = bounding.width - (volumeTextRectWidth + 68 + profitLossTextWidth); // 爆仓文案方向距离左边的距离
+    // const reverseTooltip = overlay.extendData.reverseTooltip;
+    // const closeTooltip = overlay.extendData.closeTooltip;
+    // let tipsWidth = bounding.width - volumeTextRectWidth - 68; // 爆仓文案的距离左边边的距离
+    // let tpSlWidth = bounding.width - (volumeTextRectWidth + 68 + profitLossTextWidth); // 爆仓文案方向距离左边的距离
 
-    let figures: OverlayFigure[] = [
-      {
-        type: 'text',
-        ignoreEvent: true,
-        attrs: {
-          x: tpSlWidth,
-          y: y,
-          width: profitLossTextWidth,
-          height: HEIGHT,
-          align: 'left',
-          baseline: 'middle',
-          text: profitLossText
-        },
-        styles: {
-          style: 'stroke_fill',
-          borderStyle: 'solid',
-          borderColor: 'none',
-          color: '#fff',
-          backgroundColor,
-          borderRadius: '0',
-          paddingTop: 5,
-          paddingLeft: PADDING,
-          paddingRight: PADDING,
-          borderRadius: [4, 0, 0, 4],
-          fontFamily: 'HarmonyOS Sans SC',
-          fontSize: 10
-        }
-      },
-      // 数量
-      {
-        type: 'text',
-        ignoreEvent: true,
-        attrs: {
-          x: tipsWidth,
-          y: y,
-          width: volumeTextRectWidth,
-          height: HEIGHT,
-          align: 'left',
-          baseline: 'middle',
-          text: volumeText
-        },
-        styles: {
-          style: 'stroke_fill',
-          borderColor: '#47413A',
-          backgroundColor: '#47413A',
-          color: '#F0BA30',
-          borderRadius: 0,
-          paddingTop: 5,
-          paddingLeft: (volumeTextRectWidth - volumeTextWidth) / 2,
-          paddingRight: (volumeTextRectWidth - volumeTextWidth) / 2
-        }
-      },
-      {
+    // 公共部分
+    const borderSize = 1;
+    const fontSize = 10;
+    const paddingTopBottom = (HEIGHT - borderSize - fontSize)/2
+
+    // 边距线
+    const marginLineColor = overlay.styles?.marginLineColor
+    const marginLineWidth = 68
+
+    // 方向
+    const directionColor = overlay.styles?.directionColor;
+    const directionBorderColor = overlay.styles?.directionBorderColor;
+    const directionBackgroundColor = overlay.styles?.directionBackgroundColor;
+    const directionText = overlay.extendData.direction;
+
+    // 强平
+    const descriptionColor = overlay.styles?.descriptionColor;
+    const descriptionBorderColor = overlay.styles?.descriptionBorderColor;
+    const descriptionBackgroundColor = overlay.styles?.descriptionBackgroundColor;
+    const descriptionText = overlay.extendData.description;
+    
+
+    const figures:OverlayFigure[] = []
+    // 边距线-----------------------------------------
+    const marginLineFigure = {
         type: 'line',
-        ignoreEvent: true,
         attrs: {
           coordinates: [
-            { x: tipsWidth + volumeTextRectWidth, y },
+            { x: bounding.width - marginLineWidth, y },
             { x: bounding.width, y }
           ]
         },
         styles: {
-          color: directionColor
+          cursor: 'pointer',
+          color: marginLineColor
         }
       }
-    ];
+    
+    // 描述信息-----------------------------------------
+    const descriptionFigure = {
+      type: 'text',
+      attrs: {
+        x: 0,
+        y: y,
+        baseline: 'middle',
+        text: descriptionText
+      },
+      styles: {
+        style: 'stroke_fill',
+        color: descriptionColor,
+        // 尺寸
+        size: 10,
+         // 字体
+        family: 'HarmonyOS Sans SC',
+        // 粗细
+        weight: 'normal',
+        // 左内边距
+        paddingLeft: PADDING,
+        // 右内边距
+        paddingRight: PADDING,
+        // 上内边距
+        paddingTop: paddingTopBottom,
+        // 下内边距
+        paddingBottom: paddingTopBottom,
+        // 边框样式
+        borderStyle: 'solid',
+        // 边框颜色
+        borderColor: descriptionBorderColor,
+        // 边框尺寸
+        borderSize: 0,
+        // 边框虚线参数
+        borderDashedValue: [2, 2],
+        // 边框圆角值
+        borderRadius: [4, 0, 0, 4],
+        // 边框颜色
+        backgroundColor: descriptionBackgroundColor
+      }
+    };
+
+    const descriptionWidth =
+      descriptionFigure.styles.paddingLeft +
+      utils.calcTextWidth(
+        descriptionFigure.attrs.text,
+        descriptionFigure.styles.size,
+        descriptionFigure.styles.weight,
+        descriptionFigure.styles.family
+      ) +
+      descriptionFigure.styles.paddingRight;
+    descriptionFigure.attrs.x = bounding.width - (marginLineWidth + descriptionWidth)
+
+    // 方向-----------------------------------------
+
+    const directionFigure = {
+      type: 'text',
+      // ignoreEvent: ['mouseDownEvent', 'mouseRightClickEvent'],
+      attrs: {
+        x: 0,
+        y: y,
+        baseline: 'middle',
+        text: directionText
+      },
+      styles: {
+        style: 'fill',
+        color: directionColor,
+        // 尺寸
+        size: fontSize,
+         // 字体
+        family: 'HarmonyOS Sans SC',
+        // 粗细
+        weight: 'normal',
+        // 左内边距
+        paddingLeft: PADDING,
+        // 右内边距
+        paddingRight: PADDING,
+        // 上内边距
+        paddingTop: paddingTopBottom,
+        // 下内边距
+        paddingBottom: paddingTopBottom,
+        // 边框样式
+        borderStyle: 'solid',
+        // 边框颜色
+        borderColor: directionBorderColor,
+        // 边框尺寸
+        borderSize: 0,
+        // 边框虚线参数
+        borderDashedValue: [2, 2],
+        // 边框圆角值
+        borderRadius: [4, 0, 0, 4],
+        // 边框颜色
+        backgroundColor: directionBackgroundColor
+      }
+    };
+    const directionWidth =
+      directionFigure.styles.paddingLeft +
+      utils.calcTextWidth(
+        directionFigure.attrs.text,
+        directionFigure.styles.size,
+        directionFigure.styles.weight,
+        directionFigure.styles.family
+      ) +
+      directionFigure.styles.paddingRight;
+    directionFigure.attrs.x = bounding.width - (marginLineWidth + descriptionWidth + directionWidth)
+    
+    figures.push(marginLineFigure, descriptionFigure, directionFigure)
 
     return figures;
   },
-  createYAxisFigures: ({ coordinates, overlay, precision, thousandsSeparator }) => {
-    const color = overlay.styles?.directionColor;
-    return [
-      {
-        type: 'text',
-        ignoreEvent: true,
-        attrs: {
-          x: 0,
-          y: coordinates[0].y,
-          baseline: 'middle',
-          // text: `${utils.formatThousands(overlay.points[0].value!.toFixed(precision.price), thousandsSeparator)}`
-          text: overlay?.points[0]?.value
-        },
-        styles: {
-          style: 'fill',
-          color: '#ffffff',
-          backgroundColor: color,
-          borderRadius: 2,
-          paddingLeft: 4,
-          paddingTop: 4,
-          paddingRight: 4,
-          paddingBottom: 4
-        }
-      }
-    ];
+  createYAxisFigures: ({ coordinates, overlay, precision, thousandsSeparator, yAxis }) => {
+    const styles = {
+      color: overlay.styles?.yAxisMarkColor,
+      borderColor: overlay.styles?.yAxisMarkBorderColor,
+      backgroundColor: overlay.styles?.yAxisMarkBackgroundColor
+    }
+    return buildYAxisFigures(coordinates[0], overlay, precision, yAxis, thousandsSeparator, styles)
   }
 };
 

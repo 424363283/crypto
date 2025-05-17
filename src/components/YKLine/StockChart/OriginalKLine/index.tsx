@@ -998,23 +998,35 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
 
   // 创建强平线
   useEffect(() => {
+    const isLight = theme === 'light';
+    const overlayTheme: any = isLight ? lightTheme : darkTheme;
     if (widgetRef.current && showLiquidationLine && isSwapLink) {
       positionList.forEach(position => {
         if (position.symbolId === symbolSwapId) {
           try {
             const isLong = position?.side === '1';
             const direction = isLong ? LANG('多') : LANG('空'); //持仓方向
-            const directionBg = isLong ? Color.Green : Color.Red; //持仓方向
 
             widgetRef.current?.createLiquidationLine({
               id: position.id,
               direction,
-              directionColor: '#F0BA30',
-              profitLoss: direction,
-              profitLossColor: '##F0BA30',
               price: +position.liquidationPrice,
-              volume: LANG('预估强平价格'),
-              backgroundColor: directionBg
+              description: LANG('预估强平价格'),
+              styles: {
+                directionColor: isLong ? overlayTheme['liquidationLineOverlay.longDirectionColor'] : overlayTheme['liquidationLineOverlay.shortDirectionColor'],
+                directionBackgroundColor: isLong ? overlayTheme['liquidationLineOverlay.longDirectionBackgroundColor'] : overlayTheme['liquidationLineOverlay.shortDirectionBackgroundColor'],
+                directionBorderColor: isLong ? overlayTheme['liquidationLineOverlay.longDirectionBorderColor'] : overlayTheme['liquidationLineOverlay.shortDirectionBorderColor'],
+                descriptionColor: overlayTheme['liquidationLineOverlay.descriptionColor'],
+                descriptionBackgroundColor: overlayTheme['liquidationLineOverlay.descriptionBackgroundColor'],
+                descriptionBorderColor: overlayTheme['liquidationLineOverlay.descriptionBorderColor'],
+                marginLineColor: overlayTheme['liquidationLineOverlay.marginLineColor'],
+                tipColor: overlayTheme['global.tipColor'],
+                tipBackgroundColor: overlayTheme['global.tipBackgroundColor'],
+                tipBorderColor: overlayTheme['global.tipBorderColor'],
+                yAxisMarkColor: overlayTheme['liquidationLineOverlay.yAxisMarkColor'],
+                yAxisMarkBorderColor: overlayTheme['liquidationLineOverlay.yAxisMarkBorderColor'],
+                yAxisMarkBackgroundColor: overlayTheme['liquidationLineOverlay.yAxisMarkBackgroundColor'],
+              }
             });
           } catch (error) {}
         }

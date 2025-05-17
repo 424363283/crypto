@@ -7,6 +7,7 @@ import {
   Coordinate
 } from '@/components/YKLine/StockChart/OriginalKLine/index.esm';
 import { calcTextWidth } from '../common/utils/canvas';
+import { buildYAxisFigures } from '../common/figureBuilder';
 export const PositionTPSLLineFigureKey = {
   Close: 'close',
   Reverse: 'reverse'
@@ -328,60 +329,12 @@ const positionTPTLLine: OverlayTemplate = {
     return figures;
   },
   createYAxisFigures: ({ coordinates, overlay, precision, thousandsSeparator, yAxis}) => {
-    const width = yAxis.getAutoSize()
-    const price = `${utils.formatThousands(overlay.points[0].value!.toFixed(precision.price), thousandsSeparator)}`
-    const textWidth = utils.calcTextWidth(price)
-    // 剩余边距 = 总长度 - 文本长度 - border厚度 - 右边距
-    const padding = (width - textWidth - 2 - 4)/2
-    const profitLossYAxisMarkColor = overlay.styles?.profitLossYAxisMarkColor
-    const profitLossYAxisMarkBorderColor = overlay.styles?.profitLossYAxisMarkBorderColor
-    const profitLossYAxisMarkBackgroundColor = overlay.styles?.profitLossYAxisMarkBackgroundColor
-    console.log(overlay.points[0].value)
-    
-    return [
-      {
-        type: 'text',
-        attrs: {
-          x: 0,
-          y: coordinates[0].y,
-          baseline: 'middle',
-          text: price
-          // text: overlay?.points[0]?.value
-        },
-        styles: {
-          // 样式，可选项`fill`，`stroke`，`stroke_fill`
-          style: 'stroke_fill',
-          // 颜色
-          color: profitLossYAxisMarkColor,
-          // 尺寸
-          size: 12,
-          // 字体
-          family: 'HarmonyOS Sans SC',
-          // 粗细
-          weight: 400,
-          // 左内边距
-          paddingLeft: padding,
-          // 右内边距
-          paddingRight: padding,
-          // 上内边距
-          paddingTop: 4,
-          // 下内边距
-          paddingBottom: 4,
-          // 边框样式
-          borderStyle: 'solid',
-          // 边框颜色
-          borderColor: profitLossYAxisMarkBorderColor,
-          // 边框尺寸
-          borderSize: 1,
-          // 边框虚线参数
-          borderDashedValue: [2, 2],
-          // 边框圆角值
-          borderRadius: 4,
-          // 背景色
-          backgroundColor: profitLossYAxisMarkBackgroundColor
+    const styles = {
+          color: overlay.styles?.profitLossYAxisMarkColor,
+          borderColor: overlay.styles?.profitLossYAxisMarkBorderColor,
+          backgroundColor: overlay.styles?.profitLossYAxisMarkBackgroundColor
         }
-      }
-    ];
+    return buildYAxisFigures(coordinates[0], overlay, precision, yAxis, thousandsSeparator, styles)
   }
 };
 

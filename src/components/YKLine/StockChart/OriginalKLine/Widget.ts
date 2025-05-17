@@ -55,6 +55,7 @@ import { getTheme } from './overrides';
 import { WidgetOptions } from '../types';
 import { useModalProps, usePositionActions } from '@/components/order-list/swap/stores/position-list';
 import { darkTheme } from './extension/overlayTheme';
+import { direction } from 'html2canvas/dist/types/css/property-descriptors/direction';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -74,11 +75,12 @@ interface IndicatorInfo {
 export interface PositionLineOptions {
   id?: string;
   direction: string;
-  profitLoss: string;
+  description: string;
+  // profitLoss: string;
   price: number;
-  volume: string;
-  closeTooltip?: string;
-  reverseTooltip?: string;
+  // volume: string;
+  // closeTooltip?: string;
+  // reverseTooltip?: string;
   positionId?: string;
   styles: any;
   onReverseClick?: () => void;
@@ -1019,16 +1021,12 @@ export default class Widget {
       points: [{ value: position.price }],
       extendData: {
         ...position,
+        direction: position.direction,
+        description: position.description,
         closeTooltip: '',
         reverseTooltip: ''
       },
-      styles: {
-        directionColor: position.directionColor,
-        profitLossColor: position.profitLossColor,
-        tooltipColor: position.tooltipColor,
-        backgroundColor: position.backgroundColor,
-        offsetLeft: 2 + count * 40
-      }
+      styles: position.styles,
     });
     this._positionLineCountMap[key] = (this._positionLineCountMap[key] ?? 0) + 1;
   }

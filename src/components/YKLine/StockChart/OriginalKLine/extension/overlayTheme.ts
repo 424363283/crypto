@@ -73,6 +73,31 @@ export const darkTheme = {
   'positionTPSLOverlay.stopLossYAxisMarkColor': '#F0BA30',
   'positionTPSLOverlay.stopLossYAxisMarkBorderColor': '#F0BA30',
   'positionTPSLOverlay.stopLossYAxisMarkBackgroundColor': '#121212',
+
+ // 爆仓覆盖物 ---------------------------------------
+  // 边距线颜色
+  'liquidationLineOverlay.marginLineColor': '#F0BA30',
+
+  // 描述信息颜色
+  'liquidationLineOverlay.descriptionColor': '#F0BA30',
+  'liquidationLineOverlay.descriptionBorderColor': 'rgba(240, 186, 48, 0.10)',
+  'liquidationLineOverlay.descriptionBackgroundColor': 'rgba(240, 186, 48, 0.10)',
+
+  // 方向
+  'liquidationLineOverlay.longDirectionColor': '#FFFFFF',
+  'liquidationLineOverlay.longDirectionBorderColor': '#2AB26C',
+  'liquidationLineOverlay.longDirectionBackgroundColor': '#2AB26C',
+
+  'liquidationLineOverlay.shortDirectionColor': '#FFFFFF',
+  'liquidationLineOverlay.shortDirectionBorderColor': '#EF454A',
+  'liquidationLineOverlay.shortDirectionBackgroundColor': '#EF454A',
+
+    // 持仓Y轴标记
+  'liquidationLineOverlay.yAxisMarkColor': '#000000',
+  'liquidationLineOverlay.yAxisMarkBorderColor': '#F0BA30',
+  'liquidationLineOverlay.yAxisMarkBackgroundColor': '#F0BA30',
+  
+
 }
 
 export const lightTheme = {
