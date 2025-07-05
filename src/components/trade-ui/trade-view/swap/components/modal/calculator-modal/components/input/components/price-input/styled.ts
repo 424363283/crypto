@@ -5,6 +5,7 @@ const { className, styles: _styles } = css.resolve`
   .suffix {
     display: flex;
     flex-direction: row;
+    align-items: center;
     > * {
       white-space: nowrap;
       line-height: 12px;
@@ -14,7 +15,7 @@ const { className, styles: _styles } = css.resolve`
     .new {
       user-select: none;
       cursor: pointer;
-      color: var(--theme-font-color-small-yellow);
+      color: var(--text_brand);
       margin-right: 3px;
     }
   }

@@ -103,23 +103,23 @@ export const useWithdrawColumns = () => {
     {
       title: LANG('提币地址'),
       render: (val: WithdrawItem, item: any, index: number) => {
-        const { web, url } = switchBlockUrl(item);
-        let arrowFunction = web === '' ? () => {} : () => window.open(web + '?from=y-mex', '_blank');
+        const transactionDetailsUrl = item.txUrl + item.txid;
+        const addressDetailUrl = item.addressUrl + item.address;
         const bankCard = formatBankCard(item?.address) || '--';
         return (
           <div className={'addressBox'} style={{ fontSize: '12px' }}>
             <div className={'address fw-300'} style={{ whiteSpace: 'nowrap' }}>
-              {bankCard}
+              <span className='address-url' onClick={() => { addressDetailUrl && window.open(addressDetailUrl, '_blank') }} >{bankCard}</span>
               {item.address && (
                 <CopyToClipboard text={item.address} onCopy={(_text, bool) => onCopy(_text, bool, item?.address)}>
                   <div className='copy-btn'>
-                    <CommonIcon name='common-copy-2-grey-0' size={8} />
+                    <CommonIcon size={16} name='common-copy'  />
                   </div>
                 </CopyToClipboard>
               )}
             </div>
-            {item.address && item.status === 1 && item?.txid?.length !== 32 && url && (
-              <BlockUrl onBlockUrlClick={arrowFunction} url={url} />
+            {item.address && item.status === 1 && item?.txid?.length !== 32 && (
+              <BlockUrl onBlockUrlClick={ () => transactionDetailsUrl && window.open(transactionDetailsUrl, '_blank') } url='' />
             )}
             <style jsx>{styles}</style>
           </div>
@@ -151,21 +151,36 @@ export const useWithdrawColumns = () => {
   return columns;
 };
 const styles = css`
-  .addressBox .address {
-    display: flex;
-    align-items: center;
-    @media ${MediaInfo.mobileOrTablet} {
-      justify-content: end;
-    }
-    .copy-btn {
+  .addressBox {
       display: flex;
-      cursor: pointer;
+    .address {
+      display: flex;
       align-items: center;
-      justify-content: center;
-      margin-left: 6px;
-      padding: 4px;
-      border-radius: 6px;
-      background-color: var(--theme-background-color-disabled-light);
+      @media ${MediaInfo.mobileOrTablet} {
+        justify-content: end;
+      }
+      .address-url {
+        color: var(--text_1);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 14px; /* 100% */
+        text-decoration-line: underline;
+        text-decoration-style: solid;
+        text-decoration-skip-ink: auto;
+        text-decoration-thickness: auto;
+        text-underline-offset: auto;
+        text-underline-position: from-font;
+        cursor: pointer;
+      }
+      .copy-btn {
+        display: flex;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        margin-left: 8px;
+        border-radius: 6px;
+      }
     }
   }
 `;

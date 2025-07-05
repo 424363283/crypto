@@ -5,42 +5,56 @@ import { Account, LoadingType, Spot, SpotListItem } from '@/core/shared';
 import { useEffect, useMemo } from 'react';
 import RecordList from '../../components/record-list';
 import { BaseTableStyle } from './base-table-style';
-
+import CoinLogo, { SafeNumber } from '@/components/coin-logo';
 const { Position } = Spot;
 
 const columns = [
   {
     title: LANG('币种'),
     dataIndex: 'fullname',
-    render: (_: any, { fullname }: SpotListItem) => fullname,
+    minWidth: 100,
+    // render: (_: any, { fullname }: SpotListItem) => fullname,
+    render: (_: any, { fullname, frozen, currency }: SpotListItem) => {
+      console.log;
+      return (
+        <div className="spot_fundsContent">
+          <CoinLogo coin={currency} width={16} height={16} alt="coin-icon" />
+          <span style={{ marginLeft: '8px' }}>{currency}</span>
+        </div>
+      );
+    }
   },
   {
     title: LANG('总额'),
     dataIndex: 'total',
-    render: (_: any, { balance, frozen }: SpotListItem) => balance.add(frozen).toFormat(),
+    minWidth: 100,
+    render: (_: any, { balance, frozen }: SpotListItem) => balance.add(frozen).toFormat()
   },
   {
     title: LANG('可用资产'),
     dataIndex: 'balance',
-    render: (balance: number) => balance.toFormat(),
+    minWidth: 100,
+    render: (balance: number) => balance.toFormat()
   },
   {
     title: LANG('下单锁定'),
     dataIndex: 'frozen',
-    render: (frozen: number) => frozen.toFormat(),
+    minWidth: 100,
+    render: (frozen: number) => frozen.toFormat()
   },
   {
     title: LANG('BTC估值'),
     align: 'right',
     dataIndex: 'value',
+    minWidth: 100,
     render: (_: any, { balance, frozen, currency }: SpotListItem) => {
       return (
         <span style={{ marginRight: '4px' }}>
-          <RateText money={balance.add(frozen)} currency={currency} exchangeRateCurrency='BTC' scale={8} />
+          <RateText money={balance.add(frozen)} currency={currency} exchangeRateCurrency="BTC" scale={8} />
         </span>
       );
-    },
-  },
+    }
+  }
 ];
 
 const FundsTable = () => {
@@ -64,7 +78,7 @@ const FundsTable = () => {
 
   useEffect(() => {
     Position.fetchSpotAssetsList(LoadingType.Show);
-    setTimeout(() => Position.pollingAssets.start(), 2000);
+    setTimeout(() => Position.pollingAssets.start(), 1000);
     return () => {
       Position.pollingAssets.stop();
     };
@@ -72,7 +86,7 @@ const FundsTable = () => {
 
   return (
     <>
-      <div className='container'>
+      <div className="container">
         <RecordList
           loading={loading}
           columns={columns}

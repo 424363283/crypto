@@ -66,7 +66,7 @@ export const ClosePositionBtn = ({ position, pending, profit }: { position?: any
       </div>
       {position && (
         <div className={clsx('button', 'pc-v2-btn', !position?.length && 'disabled')} onClick={_closeAll}>
-          {LANG('一键平仓')}
+          {LANG('一键全平')}
         </div>
       )}
       {pending && (

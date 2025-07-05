@@ -4,7 +4,7 @@ import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
 import { SWAP_BOUNS_WALLET_KEY } from '@/core/shared/src/swap/modules/assets/constants';
 import { clsx } from '@/core/utils';
-import { showInfoToast } from '../../../modal/wallet-select-modal/components/info-alert';
+import { showInfoToast } from '../modal/wallet-select-modal/components/info-alert';
 
 export const Popover = ({
   content,
@@ -114,7 +114,7 @@ export const Popover = ({
             margin-top: 4px;
 
             :global(.button) {
-              background-color: var(--theme-trade-bg-color-2);
+              background-color: var(--fill_bg_1);
               color: var(--theme-font-color-1);
               height: 24px;
               font-size: 12px;

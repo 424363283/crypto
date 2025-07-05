@@ -1,5 +1,5 @@
 import { LANG } from '@/core/i18n';
-import { clsx } from '@/core/utils';
+import { clsx, MediaInfo } from '@/core/utils';
 import { Dropdown } from 'antd';
 import { useState } from 'react';
 import css from 'styled-jsx/css';
@@ -38,8 +38,12 @@ const CryptoSelect = ({ options: data, value, onChange }: any) => {
 
   return (
     <div className={'content'}>
-      <div className={'label'}>{LANG('合约')}</div>
-      <Dropdown dropdownRender={(menu) => overlay} open={visible}>
+      {/* <div className={'label'}>{LANG('合约')}</div> */}
+      <Dropdown
+        dropdownRender={menu => overlay}
+        open={visible}
+        // open={true}
+      >
         <div className={'select'} tabIndex={1} onFocus={_focus} onBlur={_blur}>
           {value}
         </div>
@@ -57,7 +61,7 @@ const styles = css`
     max-height: 250px;
     overflow: scroll;
     background: var(--theme-background-color-3-2);
-    margin-left: -10px;
+    /* margin-left: -10px; */
     .menu {
       cursor: pointer;
       text-align: center;
@@ -65,10 +69,11 @@ const styles = css`
       font-size: 14px;
       font-weight: 400;
       padding: 10px 5px;
-      color: var(--theme-font-color-3);
+      color: var(--text_2);
+      background: var(--fill_3);
     }
     .active {
-      color: var(--skin-primary-color) !important;
+      color: var(--text_brand) !important;
       font-weight: 500;
     }
   }
@@ -79,7 +84,6 @@ const styles = css`
     align-items: center;
     background: var(--theme-background-color-3-2);
     border-radius: 3px;
-    padding-left: 10px;
     .label {
       font-size: 14px;
       color: var(--theme-font-color-1);
@@ -88,22 +92,50 @@ const styles = css`
       position: relative;
       cursor: pointer;
       padding: 0 30px 0 15px;
-      height: 30px;
-      line-height: 30px;
+      height: 40px;
+      line-height: 40px;
       font-size: 14px;
-      color: var(--theme-font-color-3);
+      color: var(--text_1);
       min-width: 100px;
+      background: var(--fill_3);
+      border-radius: 8px;
+
       &::after {
         content: '';
         display: block;
         position: absolute;
-        top: 13px;
+        top: 18px;
         right: 10px;
         width: 0;
         height: 0;
         border-left: 4px solid transparent;
         border-right: 4px solid transparent;
-        border-top: 5px solid rgba(123, 130, 148, 0.5);
+        border-top: 5px solid var(--text_3);
+      }
+    }
+  }
+  @media ${MediaInfo.mobile} {
+    .crypto-select-menus {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 4px;
+      border-radius: 8px;
+      background: var(--fill_pop);
+      box-shadow: 0px 0px 8px 0px var(--fill_shadow);
+      padding: 4px 0;
+      .menu {
+        height: 1.5rem;
+        line-height: 1.5rem;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text_2);
+        padding: 0;
+        background: none;
+        &.active {
+          color: var(--brand);
+        }
       }
     }
   }

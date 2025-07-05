@@ -1,7 +1,7 @@
 import { resso } from '@/core/resso';
 import { SpotItem } from '../../account/assets/types';
 import { SpotTradeItem } from '../../trade/trade-map';
-import { TRADE_TAB } from './types';
+import { SpotOrderType, TRADE_TAB } from './types';
 
 const _state = {
   /**
@@ -44,6 +44,10 @@ const _state = {
    * 当前选择的 tab
    */
   tradeTab: TRADE_TAB.SPOT,
+  /**
+   * 当前选择的交易类型下拉菜单值
+   */
+  downMenuValue: SpotOrderType.LIMIT_PLAN,
 };
 
 export const state = resso(_state);

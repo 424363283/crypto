@@ -19,6 +19,7 @@ import { useImmer } from 'use-immer';
 import { checkIsUsdtType } from '../../../assets-overview/helper';
 import { SWAP_HISTORY_COMMISSION_TYPES } from '../constants';
 import { SWAP_HISTORY_ORDER_TYPE } from '../types';
+import { useResponsive } from '@/core/hooks';
 const CommonFundHistoryTable = dynamic(() => import('./swap-common-table'));
 
 type SwapFilterBarProps = {
@@ -52,7 +53,7 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
 
   const [state, setState] = useImmer({
     codeOptions: [{ label: '', value: '' }],
-    type: { label: LANG('全部'), value: '' }, // "全部" 不传参，value为空
+    type: { label: LANG('全部'), value: '' },
     code: { label: LANG('全部'), value: '' },
     coin: { label: LANG('全部'), value: '' },
     coinOptions: [{ label: '', value: '' }],
@@ -62,7 +63,9 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
     loading: false,
     data: { pageData: [], totalCount: 0, currentPage: 1, pageSize: 13 },
   });
+
   const { type, code, codeOptions, coin, startDate, endDate, loading, data, page } = state;
+
   const handleTypeOptionsByRouteId = () => {
     if (tabKey === '0') {
       const newOptions = [...SWAP_HISTORY_COMMISSION_TYPES];
@@ -86,6 +89,7 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
       ];
     });
   }, []);
+
   const typeOptions =
     tabKey === SWAP_HISTORY_ORDER_TYPE.ASSET_FLOW
       ? // 资金流水
@@ -94,17 +98,21 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
           value: v,
         }))
       : handleTypeOptionsByRouteId();
+  
   const newTypeOptions = filterAndConcatOptions(typeOptions);
+
   const onChangeContract = (v: { label: string; value: string }) => {
     setState((draft) => {
       draft.code = v;
     });
   };
+
   const onChangeType = (v: { label: string; value: string }) => {
     setState((draft) => {
       draft.type = v;
     });
   };
+
   useEffect(() => {
     const isUsdtType = checkIsUsdtType();
     const getSwapCoinIds = async () => {
@@ -119,6 +127,7 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
     };
     getSwapCoinIds();
   }, []);
+
   const handleAssetsFlowSearch = async (page: number = 1) => {
     setState((draft) => {
       draft.loading = true;
@@ -140,6 +149,7 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
       params.currency = coin.value;
     }
     const res = await getSwapAssetsTransactionApi(params, isSwapU);
+
     setState((draft) => {
       draft.loading = false;
       if (res.code == 200) {
@@ -147,13 +157,12 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
       }
     });
   };
+
   const handleCurrentCommissionSearch = async (page: number = 1) => {
     setState((draft) => {
       draft.loading = true;
     });
-    const params: { [key: string]: string | number } = {
-      page,
-    };
+    const params: { [key: string]: string | number } = { page };
     if (code.value) {
       params.symbol = code.value.toLowerCase();
     }
@@ -235,31 +244,36 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
     [SWAP_HISTORY_ORDER_TYPE.HISTORY_COMMISSIONS]: handleHistoryCommissionSearch,
     [SWAP_HISTORY_ORDER_TYPE.HISTORY_TRANSACTION]: handleHistoryTransactionSearch,
   };
+
   const handleSearchTableData = async (page: number = 1) => {
     await onTabletDataSearch[tabKey](page);
   };
+
   useEffect(() => {
     handleSearchTableData();
   }, [tabKey]);
+
   const onChangeDate = ([start, end]: any) => {
-    if (!start || !end) {
-      return;
-    }
+    if (!start || !end) return;
     setState((draft) => {
       draft.startDate = start.startOf('day').format('YYYY-MM-DD H:m:s');
       draft.endDate = end.endOf('day').format('YYYY-MM-DD H:m:s');
     });
   };
+
   const onSearchTableData = async (page: number) => {
     await handleSearchTableData(page);
   };
+  const { isMobile } = useResponsive();
+
   return (
     <div className='swap-common-record'>
+      <Desktop>
       <div className='swap-filter-bar'>
         <div className='box'>
           {tabKey !== SWAP_HISTORY_ORDER_TYPE.ASSET_FLOW ? (
             <Select
-              width={125}
+              width={isMobile? 85 : 125}
               vertical
               label={LANG('合约')}
               wrapperClassName='contract-select'
@@ -268,10 +282,9 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
               onChange={([v]) => onChangeContract(v)}
             />
           ) : null}
-
           <Select
             vertical
-            width={140}
+            width={isMobile ? 85 : 140}
             label={LANG('类型')}
             options={[{ label: LANG('全部'), value: '' }, ...newTypeOptions]}
             values={[type]}
@@ -293,6 +306,7 @@ function SwapFilterWithTable(props: SwapFilterBarProps) {
         </div>
         <style jsx>{styles}</style>
       </div>
+      </Desktop>
       <CommonFundHistoryTable
         tabKey={tabKey}
         page={page}
@@ -308,7 +322,7 @@ export default memo(SwapFilterWithTable);
 const styles = css`
   .swap-filter-bar {
     height: 55px;
-    background-color: var(--theme-background-color-2);
+    background-color: var(--fill_bg_1);
     @media ${MediaInfo.mobile} {
       padding: 0 10px;
       overflow-x: auto;
@@ -322,7 +336,6 @@ const styles = css`
       flex-direction: row;
       align-items: center;
       @media ${MediaInfo.mobile} {
-        height: 440px;
         position: absolute;
         align-items: flex-start;
         right: 10px;

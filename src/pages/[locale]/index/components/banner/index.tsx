@@ -1,258 +1,295 @@
-import Image from '@/components/image';
-import { NoSSR } from '@/components/no-ssr';
-import TypeWriter from '@/components/type-writer';
-import { useResponsiveClsx } from '@/core/hooks/src/use-responsive';
-import { useRouter } from '@/core/hooks/src/use-router';
 import { LANG } from '@/core/i18n';
 import { TrLink } from '@/core/i18n/src/components/tr-link';
-import { useAppContext } from '@/core/store';
 import { clsx } from '@/core/utils/src/clsx';
-import { MediaInfo } from '@/core/utils/src/media-info';
-import { message } from '@/core/utils/src/message';
-import { memo, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
+import { MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
+import { useTheme } from '@/core/hooks';
+
+import YIcon from '@/components/YIcons';
+import { LOCAL_KEY, useLoginUser } from '@/core/store';
+import { Button } from '@/components/button';
+import { Size } from '@/components/constants';
+import { DesktopOrTablet, Mobile } from '@/components/responsive';
+import { useResponsive } from '@/core/hooks';
 
 function HeaderBanner() {
-  const [email, setEmail] = useState('');
-  const { isLogin } = useAppContext();
-  const router = useRouter();
-  const { setResponsiveClsx } = useResponsiveClsx();
+  const { user } = useLoginUser();
+  const { isMobile } = useResponsive();
+  const { isDark } = useTheme();
+  const isLogin = user?.uid;
+  const videoRef1 = useRef<HTMLVideoElement>(null);
+  const videoRef2 = useRef<HTMLVideoElement>(null);
+  const [isVideo2Ready, setIsVideo2Ready] = useState(false);
+  const isVideo2ReadyRef = useRef(false);
 
-  const register = () => {
-    const url = `/register?email=${email}`;
-    if (
-      /^[a-z0-9A-Z]+([._\\-]*[a-z0-9A-Z_])*@([a-z0-9A-Z]+[-a-z0-9A-Z]*[a-z0-9A-Z]+.){1,63}[a-z0-9A-Z]+$/.test(email)
-    ) {
-      router.push(url);
-    } else {
-      message.error(LANG('邮箱格式错误'));
+  // 计算视频路径
+  const videoBase = `/static/images/home/video/${isMobile ? 'H5' : 'PC'}`;
+  const prefix = isDark ? '' : 'light_';
+  const notLoopingVideo = `${videoBase}/${prefix}notLooping_video.webm`;
+  const loopingVideo = `${videoBase}/${prefix}looping_video.webm`;
+  const fallbackImage = `${videoBase}/${prefix}fallback_image.jpg`; // 备用封面图路径
+
+  // 命名事件处理函数
+  const handleVideo2Ready = () => {
+    setIsVideo2Ready(true);
+    isVideo2ReadyRef.current = true;
+  };
+
+  const handleTimeUpdate = () => {
+    if (videoRef1.current && videoRef2.current && isVideo2ReadyRef.current) {
+      const remainingTime = videoRef1.current.duration - videoRef1.current.currentTime;
+      if (remainingTime <= 1) {
+        videoRef2.current.currentTime = 0;
+        videoRef2.current.play().catch(() => {});
+      }
     }
   };
-  const renderBannerButton = () => {
-    return isLogin ? (
-      <TrLink href={`/swap/btc-usdt`} className='trade_link'>
-        {LANG('Start Trading Now')}
-      </TrLink>
-    ) : (
-      <div className='email_input'>
-        <input
-          type='text'
-          placeholder={LANG('请输入邮箱')}
-          onChange={(e) => {
-            setEmail(e.target.value);
-          }}
-          value={email}
-        />
-        <button onClick={register}>{LANG('注册')}</button>
-      </div>
-    );
-  };
+
+  useEffect(() => {
+    if (videoRef1.current && videoRef2.current) {
+      videoRef1.current.preload = 'auto';
+      videoRef2.current.preload = 'auto';
+
+      // 加载第一个视频
+      const loadFirstVideo = new Promise<void>((resolve) => {
+        videoRef1.current!.addEventListener('canplaythrough', () => resolve(), { once: true });
+      });
+
+      // 加载第二个视频并标记为已准备好
+      videoRef2.current.addEventListener('canplaythrough', handleVideo2Ready, { once: true });
+
+      // 播放第一个视频
+      loadFirstVideo.then(() => {
+        videoRef1.current!.play().catch(() => {});
+      });
+
+      // 第一个视频播放到最后 1 秒时，准备第二个视频
+      videoRef1.current.addEventListener('timeupdate', handleTimeUpdate);
+
+      // 第一个视频播放结束时切换到第二个视频
+      videoRef1.current.onended = () => {
+        if (isVideo2ReadyRef.current && videoRef1.current && videoRef2.current) {
+          videoRef2.current.style.display = 'block';
+          videoRef2.current.style.opacity = '1';
+          videoRef1.current.style.opacity = '0';
+
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              videoRef1.current!.style.display = 'none';
+            }, 100); // 缩短过渡时间，避免视觉延迟
+          });
+        }
+      };
+
+      return () => {
+        if (videoRef1.current) {
+          videoRef1.current.removeEventListener('timeupdate', handleTimeUpdate);
+        }
+        if (videoRef2.current) {
+          videoRef2.current.removeEventListener('canplaythrough', handleVideo2Ready);
+        }
+      };
+    }
+  }, []);
+
+  // 监听 isDark 和 isMobile 变化，重置视频状态
+  useEffect(() => {
+    if (videoRef1.current && videoRef2.current) {
+      setIsVideo2Ready(false);
+      isVideo2ReadyRef.current = false;
+      videoRef1.current.style.display = 'block';
+      videoRef1.current.style.opacity = '1';
+      videoRef2.current.style.display = 'none';
+      videoRef2.current.style.opacity = '0';
+      videoRef1.current.load();
+      videoRef1.current.currentTime = 0;
+      videoRef1.current.play().catch(() => {});
+      videoRef2.current.load();
+      videoRef2.current.currentTime = 0;
+    }
+  }, [isDark, isMobile]);
+
   return (
-    <div className='container'>
-      <div className={clsx('top', setResponsiveClsx('top-pc', 'top-pad', 'top-phone'))}>
-        <i className={clsx('l-border')} />
-        <i className={clsx('c-border')} />
-        <i className={clsx('r-border')} />
-        <div className='top_left'>
-          <div className='title'>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <TypeWriter text='YMEX' speed={300} className='buidl-text' />
-               一站式
-            </div>
-            <p>金融娱乐平台</p>
+    <div className="container">
+      <div className={clsx('banner')}>
+        <video
+          ref={videoRef1}
+          className="video-background"
+          muted
+          autoPlay
+          playsInline
+          webkit-playsinline="true"
+          preload="auto"
+          src={notLoopingVideo}
+          poster={fallbackImage} // 添加备用封面图
+        />
+        <video
+          ref={videoRef2}
+          className="video-background"
+          muted
+          playsInline
+          webkit-playsinline="true"
+          loop
+          preload="auto"
+          style={{ display: 'none', opacity: 0 }}
+          src={loopingVideo}
+          poster={fallbackImage} // 添加备用封面图
+        />
+        <div className={clsx('banner-content')}>
+          <div className={clsx('slogon')}>
+            <DesktopOrTablet>
+              <h1 dangerouslySetInnerHTML={{ __html: LANG('让你成为巨鲸').replace('<br/>', ' ') }} />
+            </DesktopOrTablet>
+            <Mobile>
+              <h1 dangerouslySetInnerHTML={{ __html: LANG('让你成为巨鲸') }} />
+            </Mobile>
           </div>
-          <h1 className='text'>Buy and sell BTC, ETH, LTC, DOGE, and other altcoins</h1>
-          <NoSSR>{renderBannerButton()}</NoSSR>
-        </div>
-        <div className='top_right'>
-          {/* <Image src='/static/images/home/bg.png' width={522} height={510} enableSkin /> */}
+
+          <div className={clsx('register-tips')}>
+            <p>{LANG('买卖比特币、以太币、泰达币、狗狗币等热门加密货币')}</p>
+          </div>
+
+          <div className={clsx('button-groups')}>
+            <TrLink href={`/account/fund-management/asset-account/recharge`} className={clsx('button-item')}>
+              <Button size={Size.MD} type="reverse" hover={false} outlined rounded>
+                {LANG('充值')}
+              </Button>
+            </TrLink>
+
+            {isLogin ? (
+              <TrLink href={`/swap/btc-usdt`} className={clsx('button-item')}>
+                <Button size={Size.MD} type="reverse" rounded>
+                  {LANG('去交易')}
+                </Button>
+              </TrLink>
+            ) : (
+              <TrLink href={`/register`} className={clsx('button-item')}>
+                <Button size={Size.MD} type="reverse" rounded>
+                  {LANG('注册')}
+                </Button>
+              </TrLink>
+            )}
+          </div>
         </div>
       </div>
       <style jsx>{styles}</style>
     </div>
   );
 }
-export default memo(HeaderBanner);
-const styles = css`
-  .container {
-    width: 100%;
-    /* background: var(--theme-secondary-bg-color); */
-    background: var(--newtheme-home-bg-color);
 
+export default memo(HeaderBanner);
+
+const styles = css`
+  video {
+    will-change: opacity;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+  }
+  .banner {
+    position: relative;
+    height: 560px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
-    p {
-      padding: 0;
-      margin: 0;
+
+    @media ${MediaInfo.mobile} {
+      height: 320px;
     }
-    .top {
-      max-width: var(--const-max-page-width);
+
+    .video-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      transition: opacity 0.2s ease-in-out; /* 缩短过渡时间 */
+    }
+
+    &-content {
+      width: 1200px;
       margin: 0 auto;
-      padding: 30px 0 110px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
       position: relative;
-      .l-border,
-      .c-border,
-      .r-border {
-        position: absolute;
-        width: 1px;
-        height: 100%;
-        display: none;
-        background: var(--skin-border-color-1);
-        top: 0;
-      }
-      .l-border {
-        left: -100px;
-      }
-      .c-border {
-        left: 630px;
-      }
-      .r-border {
-        right: -100px;
-      }
-      .top_right {
-        :global(img) {
-          width: 522px;
-          height: auto;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      h1 {
+        color: var(--text_1);
+        text-align: left;
+        font-size: 64px;
+        font-weight: 600;
+        @media ${MediaInfo.mobile} {
+          font-size: 32px;
+          text-align: center;
         }
       }
-      .top_left {
-        padding-top: 50px;
-      }
-      .title {
-        margin: 0;
-        padding: 0;
-        font-size: 80px;
-        font-weight: 700;
-        line-height: 1.2;
-        white-space: nowrap;
-        color: var(--theme-font-color-1);
-        span {
-          color: var(--skin-color-active);
-        }
-        > * {
-          font-family: DINPro !important;
-        }
-      }
-      .text {
-        margin: 0;
-        padding: 0;
-        font-size: 25px;
+      .slogon {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-self: stretch;
+        color: var(--text_1);
+        font-size: 18px;
         font-weight: 500;
-        line-height: 1.5;
-        padding: 28px 0 24px;
-        width: 392px;
-        color: var(--theme-font-color-1);
+        padding: 0 0 16px;
+
+        @media ${MediaInfo.mobile} {
+          font-size: 14px;
+          align-items: center;
+        }
       }
-      :global(.trade_link) {
-        background: var(--skin-primary-color);
+      .register-tips {
+        color: var(--text_1);
+        font-size: 18px;
         font-weight: 400;
-        min-width: 250px;
-        border-radius: 6px;
-        text-align: center;
-        margin-right: 10px;
-        font-size: 20px;
-        font-weight: 500;
-        color: var(--skin-font-color);
-        padding: 12px 20px;
-        display: inline-block;
-        cursor: pointer;
-        &:active {
-          transform: translateY(1px);
+        display: flex;
+        justify-content: flex-start;
+        p {
+          display: flex;
+          align-items: center;
+          text-align: center;
         }
-        &:disabled,
-        &.disabled {
-          opacity: 0.6;
-          pointer-events: none;
-          cursor: not-allowed;
-          opacity: 0.4;
+
+        @media ${MediaInfo.mobile} {
+          font-size: 16px;
+          padding: 0 16px 40px;
+          p {
+            line-height: 24px;
+            :global(svg) {
+              vertical-align: middle;
+            }
+          }
+        }
+        svg {
+          margin: 0 8px 0 0;
         }
       }
-      :global(.email_input) {
-        height: 60px;
+      .button-groups {
         display: flex;
         align-items: center;
-        border-radius: 6px;
-        background: #fff;
-        position: relative;
-        overflow: hidden;
-        :global(input) {
-          outline: none;
-          border: none;
-          background: #fff;
-          &:focus {
-            border: none;
-          }
-          flex: 1;
-          height: 100%;
-          padding: 0 8px 0 24px;
-          font-size: 16px;
-          font-weight: 500;
-          color: #333;
+        justify-content: flex-start;
+        gap: 16px;
+        width: 100%;
+        padding: 80px 0 0;
+        @media ${MediaInfo.mobile} {
+          padding: 0 16px;
+          box-sizing: border-box;
+          justify-content: center;
         }
-        :global(button) {
-          cursor: pointer;
-          border: none;
-          min-width: 120px;
-          border-radius: 6px;
-          background: var(--skin-primary-color);
-          text-align: center;
-          margin-right: 10px;
-          font-size: 16px;
-          font-weight: 500;
-          color: var(--skin-font-color);
-          display: inline-block;
-          padding: 10px 24px;
-        }
-      }
-      @media ${MediaInfo.tablet} {
-        flex-direction: column;
-        padding-bottom: 0;
-        padding: 0 32px;
-        .top_right {
-          padding-top: 15px;
-          width: 100%;
-          :global(img) {
-            width: 100%;
-            height: auto;
-          }
-        }
-      }
-      @media ${MediaInfo.mobile} {
-        padding: 0 16px 60px;
-        .top_right {
-          display: none;
-        }
-        .top_left {
-          padding-top: 30px;
-        }
-        .title {
-          font-size: 35px;
-        }
-        .text {
-          font-size: 14px;
-          font-weight: 500;
-          width: 210px;
-          padding: 15px 0;
-        }
-        :global(.trade_link) {
-          font-size: 12px;
-          font-weight: 500;
-          min-width: 100px;
-          padding: 6px 10px;
-        }
-        :global(.email_input) {
-          height: 38px;
-          padding: 0 4px 0 12px;
-          :global(input) {
-            padding-left: 0;
-            font-size: 12px;
-          }
+        :global(.button-item) {
+          min-width: 200px;
           :global(button) {
-            min-width: 80px;
-            padding: 5px 12px;
-            font-size: 12px;
+            width: 100%;
+          }
+
+          @media ${MediaInfo.mobile} {
+            width: 50%;
+            min-width: auto;
+            white-space: nowrap;
+            overflow: hidden;
           }
         }
       }

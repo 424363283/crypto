@@ -99,7 +99,7 @@ const styles = css`
       &:hover {
         background-color: var(--theme-background-color-3);
         .name {
-          color: var(--skin-hover-font-color);
+          color: var(--brand);
         }
         :global(.icon-arrow) {
           display: inline-block;

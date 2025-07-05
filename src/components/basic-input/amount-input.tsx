@@ -1,9 +1,10 @@
-import { useCurrencyScale } from '@/core/hooks';
+import { useCurrencyScale, useResponsive } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
-import { clsx } from '@/core/utils';
+import { clsx, MediaInfo } from '@/core/utils';
 import { InputHTMLAttributes, useState } from 'react';
 import css from 'styled-jsx/css';
-import { DecimalInput } from '../numeric-input';  
+import { DecimalInput } from '../numeric-input';
+import { Size } from '../constants';
 export interface AmountInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   placeholder?: string;
@@ -33,6 +34,7 @@ export const AmountInput = (props: AmountInputProps) => {
     digit,
     ...rest
   } = props;
+  const { isMobile } = useResponsive();
   const { scale } = useCurrencyScale(currency);
   const handleInputChange = (value: string) => {
     let newValue = value;
@@ -59,8 +61,8 @@ export const AmountInput = (props: AmountInputProps) => {
 
   const [focus, setFocus] = useState(false);
   return (
-    <div className='amount-input-wrapper'>
-      {label ? <h3 className='label'>{label}</h3> : null}
+    <div className="amount-input-wrapper">
+      {label ? <h3 className="label">{label}</h3> : null}
       <div
         className={clsx(
           'input-container',
@@ -70,6 +72,7 @@ export const AmountInput = (props: AmountInputProps) => {
       >
         <DecimalInput
           className={clsx('basic-input')}
+          style={{ height: isMobile ? '40px' : '56px' }}
           placeholder={placeholder}
           onChange={handleInputChange}
           onFocus={() => setFocus(true)}
@@ -80,11 +83,11 @@ export const AmountInput = (props: AmountInputProps) => {
           digit={digit || scale}
           value={value}
           max={max}
-          type='number'
+          type="number"
           {...rest}
         />
         {showBtn && (
-          <span className='all-btn' onClick={onClickFillAllAmount}>
+          <span className="all-btn" onClick={onClickFillAllAmount}>
             {LANG('全部')}
           </span>
         )}
@@ -96,6 +99,9 @@ export const AmountInput = (props: AmountInputProps) => {
 const styles = css`
   .amount-input-wrapper {
     margin-top: 30px;
+    @media ${MediaInfo.mobile} {
+      margin-top: 0;
+    }
     .label {
       display: flex;
       flex-direction: row;
@@ -109,30 +115,45 @@ const styles = css`
       display: flex;
       align-items: center;
       position: relative;
+      &:hover,
+      &.active {
+        box-shadow: 0 0 0 1px var(--brand);
+      }
       .all-btn {
         display: flex;
         align-items: center;
       }
     }
     .basic-input-bordered {
-      background: var(--theme-background-color-8);
+      border-radius: 16px;
+      background: var(--fill_input_1);
+      @media ${MediaInfo.mobile}{
+        border-radius: 8px;
+      }
       :global(.basic-input) {
-        border-radius: 6px;
+        border-radius: 16px;
         padding: 0 20px;
-        background: var(--theme-background-color-8);
+        background: var(--fill_input_1);
+        @media ${MediaInfo.mobile} {
+          font-size: 14px;
+        }
       }
       .all-btn {
         margin-right: 20px;
         flex-shrink: 0;
-        color: #f8bb37;
+        color: var(--text_brand);
         cursor: pointer;
+        @media ${MediaInfo.mobile} {
+          font-size: 12px;
+        }
       }
     }
     .none-bordered {
       border: none;
     }
+
     .focused {
-      border: 1px solid #ffb627;
+      box-shadow: 0 0 0 1px var(--brand);
     }
   }
 `;

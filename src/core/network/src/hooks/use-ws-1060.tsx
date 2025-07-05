@@ -28,7 +28,7 @@ export const useWs1060Position = (callback: fun, deps?: DependencyList, { open }
   useWs1060(
     (data) => { 
       if (data?.params.channel === SWAP_SUBSCRIBE_TYPES.ws_subscribe_position) {
-        return callback(data);
+        return callback(data.data);
       }
     },
     deps,

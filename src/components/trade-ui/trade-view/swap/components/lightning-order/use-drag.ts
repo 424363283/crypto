@@ -36,7 +36,7 @@ export const useDrag = ({
     if (dragElement) {
       const { maxX, maxY } = getElementMax();
       if (state.pos.x === 0 && state.pos.y === 0) {
-        state.pos = { y: 220, x: maxX - 550 };
+        state.pos = { y: 220, x: maxX - 750 };
       }
     }
   }, [dragElement]);

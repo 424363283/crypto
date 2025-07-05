@@ -11,10 +11,10 @@ interface FiatCurrencyProps {
   oIndex: number;
 }
 const logoArr = [
-  '/static/images/account/fund/logo_0.png',
-  '/static/images/account/fund/logo_1.png',
-  '/static/images/account/fund/logo_2.png',
-  '/static/images/account/fund/logo_3.png',
+  '/static/images/account/fund/logo_0.webp',
+  '/static/images/account/fund/logo_1.webp',
+  '/static/images/account/fund/logo_2.webp',
+  '/static/images/account/fund/logo_3.webp',
 ];
 const currencyArr = [
   'USDT',
@@ -39,7 +39,7 @@ const FiatCurrency: React.FC<FiatCurrencyProps> = ({ options = [], oIndex = 0 })
   const { isDark } = useTheme();
   return (
     <>
-      {currencyArr?.includes(currentCoin) && (
+      {/* {currencyArr?.includes(currentCoin) && (
         <TrLink className='fiat-currency' href='/fiat-crypto' native query={{ code: currentCoin?.toLowerCase() }}>
           <div className='fiat-title'>
             <span style={{ marginRight: '6px' }}>{LANG('购买')}</span>
@@ -54,7 +54,7 @@ const FiatCurrency: React.FC<FiatCurrencyProps> = ({ options = [], oIndex = 0 })
             </div>
             <div className='right'>
               <Image
-                src={isDark ? '/static/images/account/fund/banxa.png' : '/static/images/account/fund/logo_3.png'}
+                src={isDark ? '/static/images/account/fund/banxa.png' : '/static/images/account/fund/logo_3.webp'}
                 alt=''
                 width={80}
                 height={15}
@@ -63,7 +63,7 @@ const FiatCurrency: React.FC<FiatCurrencyProps> = ({ options = [], oIndex = 0 })
           </div>
           <style jsx>{styles}</style>
         </TrLink>
-      )}
+      )} */}
     </>
   );
 };

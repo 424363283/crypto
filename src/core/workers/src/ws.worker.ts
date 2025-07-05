@@ -87,11 +87,13 @@ const wsWorkerApi: WsWorkerApi = {
     const getSpotIds = [];
     const getSwapIds = [];
     const getLiteIds = [];
+    const getLiteQuoteIds = [];
     const getSwapSLIds = [];
 
     const priceDigit: any = {};
     const volumeDigit: any = {};
-
+    const liteQuote: any = {};
+ 
     // 新币
     for (const item of new_symbols) {
       for (const id of item?.list) {
@@ -108,38 +110,46 @@ const wsWorkerApi: WsWorkerApi = {
 
     // 简单合约
     for (const item of lite_symbols) {
-      const { code, name, digit, zone, unit, type, copy, volumeScale: volDigit, onlineTime, fullname } = item as any;
+      const { code, name, digit, zone, quoteCode, quoteCoin, unit, type, copy, volumeScale: volDigit, onlineTime, fullname } = item as any;
       // TODO: 临时处理!! 简单合约计价单位USDT,后续如果存在 那么请增加，或者后续接口提供 baseCoin 和 quoteCoin
-      const quoteCoin = 'USDT';
+      // const quoteCoin = 'USDT';
       const coin = code.replace(RegExp(`${quoteCoin}$`), '');
       liteQuoteCoinList.add(quoteCoin);
-      lite_list.push(new GroupItem({ id: code, name, digit, volumeDigit: volDigit, coin, zone, unit, type, copy, onlineTime, fullname, symbolType: 'Lite' }));
+    
+      liteQuote[code] = quoteCode;
+
+      lite_list.push(new GroupItem({ id: code, name, digit, volumeDigit: volDigit, coin, quoteCode, quoteCoin, zone, unit, type, copy, onlineTime, fullname, symbolType: 'Lite' }));
       getLiteIds.push(code);
+      getLiteQuoteIds.push(quoteCode);
+
       priceDigit[code] = digit;
-      volumeDigit[code] = volDigit;
+      volumeDigit[code] = volDigit || digit;
     }
 
     // 现货合约
     for (const item of spot_symbols) {
-      const { code, name, baseCoin, quoteCoin, digit, type, zone, unit, volumeScale: volDigit, onlineTime, fullname } = item as any;
-      spotQuoteCoinList.add(quoteCoin);
-      if (type === 'ETF') {
-        let str = code.match(/\d+(L|S)_/)[0];
-        // const coin = baseCoin.replace(/\d+(L|S)$/, '');
-        let lever;
-        let isBuy;
-        if (str) {
-          const _str = str.split('_')[0];
-          lever = Number(_str.substring(0, 1));
-          isBuy = _str.substring(1, 2) == 'L';
-        }
-        spot_list.push(new GroupItem({ id: code, name, digit, volumeDigit: volDigit, coin: baseCoin, quoteCoin, lever, isBuy, type, zone, unit, onlineTime, fullname, symbolType: 'Spot' }));
-      } else {
-        spot_list.push(new GroupItem({ id: code, name, digit, volumeDigit: volDigit, coin: baseCoin, quoteCoin, type, zone, unit, onlineTime, fullname, symbolType: 'Spot' }));
+      if(item.visible){
+          const { code, name, baseCoin, quoteCoin, digit, type, zone, unit, volumeScale: volDigit, onlineTime, fullname } = item as any;
+          spotQuoteCoinList.add(quoteCoin);
+ 
+          if (type === 'ETF') {
+            let str = code.match(/\d+(L|S)_/)[0];
+            // const coin = baseCoin.replace(/\d+(L|S)$/, '');
+            let lever;
+            let isBuy;
+            if (str) {
+              const _str = str.split('_')[0];
+              lever = Number(_str.substring(0, 1));
+              isBuy = _str.substring(1, 2) == 'L';
+            }
+            spot_list.push(new GroupItem({ id: code, name, digit, volumeDigit: volDigit, coin: baseCoin, quoteCoin, quoteCode: code, lever, isBuy, type, zone, unit, onlineTime, fullname, symbolType: 'Spot' }));
+          } else {
+            spot_list.push(new GroupItem({ id: code, name, digit, volumeDigit: volDigit, coin: baseCoin, quoteCoin, quoteCode: code, type, zone, unit, onlineTime, fullname, symbolType: 'Spot' }));
+          }
+          getSpotIds.push(code);
+          priceDigit[code] = digit;
+          volumeDigit[code] = volDigit;
       }
-      getSpotIds.push(code);
-      priceDigit[code] = digit;
-      volumeDigit[code] = volDigit;
     }
 
     //  永续合约
@@ -148,9 +158,10 @@ const wsWorkerApi: WsWorkerApi = {
       code = code.toUpperCase();
       const [coin, quoteCoin] = code.split('-');
       swapQuoteCoinList.add(quoteCoin);
-      swap_list.push(new GroupItem({ id: code, name, digit, volumeDigit: volDigit, coin, quoteCoin, onlineTime, fullname, symbolType: 'Swap' }));
-      swapIM_list.push(new GroupItem({ id: 'i' + code, name, digit, volumeDigit: volDigit, coin, quoteCoin, onlineTime, fullname, symbolType: 'Swap' }));
-      swapIM_list.push(new GroupItem({ id: 'm' + code, name, digit, volumeDigit: volDigit, coin, quoteCoin, onlineTime, fullname, symbolType: 'Swap' }));
+ 
+      swap_list.push(new GroupItem({ id: code, name, digit, volumeDigit: volDigit, coin, quoteCoin, quoteCode:code,onlineTime, fullname, symbolType: 'Swap' }));
+      swapIM_list.push(new GroupItem({ id: 'i' + code, name, digit, volumeDigit: volDigit, coin, quoteCoin,quoteCode:'i' + code, onlineTime, fullname, symbolType: 'Swap' }));
+      swapIM_list.push(new GroupItem({ id: 'm' + code, name, digit, volumeDigit: volDigit, coin, quoteCoin,quoteCode:'m' + code, onlineTime, fullname, symbolType: 'Swap' }));
       getSwapIds.push(code);
       priceDigit[code] = digit;
       volumeDigit[code] = volDigit;
@@ -162,7 +173,7 @@ const wsWorkerApi: WsWorkerApi = {
       code = code.toUpperCase();
       const [coin, quoteCoin] = code.split('-');
       swapSLQuoteCoinList.add(quoteCoin);
-      swapSL_list.push(new GroupItem({ id: code, name, digit, volumeDigit: volDigit, coin, quoteCoin, onlineTime, fullname, symbolType: 'Swap' }));
+      swapSL_list.push(new GroupItem({ id: code, name, digit, volumeDigit: volDigit, coin, quoteCoin,quoteCode:code, onlineTime, fullname, symbolType: 'Swap' }));
       getSwapSLIds.push(code);
       priceDigit[code] = digit;
       volumeDigit[code] = volDigit;
@@ -181,6 +192,7 @@ const wsWorkerApi: WsWorkerApi = {
       getSpotIds,
       getSwapIds,
       getLiteIds,
+      getLiteQuoteIds,
       getSwapSLIds,
       getNewIds,
       getHotIds,
@@ -192,6 +204,7 @@ const wsWorkerApi: WsWorkerApi = {
       swap_zones,
       priceDigit,
       volumeDigit,
+      liteQuote,
     };
   },
 };

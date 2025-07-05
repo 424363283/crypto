@@ -141,7 +141,7 @@ class WS {
   private getWsUrl(): string {
     const path = !isSwapDemo() ? 'swap/v1/socket' : 'swap/v1/socket';
     if (process.env.NODE_ENV === 'development') {
-      return `wss://xkh5-uat-swap.fxhhwm.com/${path}`;
+      return `wss://webdev.83uvgv.com/${path}`;
     }
 
     return `wss://${window.location.host}/${path}`;

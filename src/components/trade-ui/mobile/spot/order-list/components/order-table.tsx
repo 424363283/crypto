@@ -1,4 +1,3 @@
-import { CircularProgress } from '@/components/circular-progress';
 import { ListView } from '@/components/order-list/swap/media/tablet/components/list-view';
 import { closeSpotOrderApi } from '@/core/api';
 import { useRouter } from '@/core/hooks';
@@ -8,6 +7,7 @@ import { useAppContext } from '@/core/store';
 import { message } from '@/core/utils';
 import dayjs from 'dayjs';
 import { useCallback, useMemo } from 'react';
+import ClipboardItem from '@/components/clipboard-item';
 
 const { Position } = Spot;
 
@@ -24,95 +24,174 @@ const Item = ({ data: item }: { data: SpotPositionListItem }) => {
 
   return (
     <>
-      <div className='container'>
-        <div className='left'>
-          <div>
-            <span className='pair'>{item.symbol.replace('_', '/')}</span>
-            {item.side === SideType.BUY ? (
-              <span className='name main-raise'>
-                {LANG('买入____2')}/{item.type === SpotOrderType.LIMIT ? LANG('限价') : LANG('市价')}
-              </span>
-            ) : (
-              <span className='name main-fall'>
-                {LANG('卖出____2')}/{item.type === SpotOrderType.LIMIT ? LANG('限价') : LANG('市价')}
-              </span>
-            )}
+      <div className="container">
+        <div className="header">
+          <div className="item">
+            <div className="code">
+              <span>{item.symbol.split('_')[0]}</span>/{item.symbol.split('_')[1]}
+            </div>
+            <div className="type">
+              <div className={item.side === SideType.BUY ? 'buy' : 'sell'}>
+                {LANG(item.side === SideType.BUY ? '买入' : '卖出')}
+              </div>
+              <span>{LANG(item.type === SpotOrderType.LIMIT ? '限价' : '市价')}</span>
+            </div>
           </div>
-          <div className='count-wrapper'>
-            <div className='percent-wrapper'>
-              <CircularProgress
-                buy={item.side === SideType.BUY}
-                rate={Number(item.dealVolume.div(item.volume))}
-                size={36}
-              />
-            </div>
-            <div>
-              <div className='sub-font'>
-                {LANG('委托量')} <span>{item.dealVolume.toFormat()}</span> / {item.volume.toFormat()}
-              </div>
-              <div className='sub-font'>
-                {LANG('委托价')} <span>{item.price.toFormat()}</span>
-              </div>
-            </div>
+          <div className="revoke" onClick={() => onRevokePositionClicked(item.id)}>
+            {LANG('撤单')}
           </div>
         </div>
-        <div className='right'>
-          <div className='sub-font'>{dayjs(item.orderTime).format('MM-DD HH:mm:ss')}</div>
-          <button onClick={() => onRevokePositionClicked(item.id)}>{LANG('撤单')}</button>
+        <div className="info">
+          <div className="row">
+            <div className="item">
+              <span> {LANG('委托价格')}</span>
+              <span>{item.price.toFormat()}</span>
+            </div>
+            <div className="item">
+              <span> {LANG('委托数量')}</span>
+              <span>{item.volume.toFormat()}</span>
+            </div>
+            <div className="item">
+              <span> {LANG('委托金额')}</span>
+              <span>{item.amount.toFormat()}</span>
+            </div>
+          </div>
+          <div className="row">
+            <div className="item">
+              <span> {LANG('已成交')}</span>
+              <span>{item.dealVolume.toFormat()}</span>
+            </div>
+            <div className="item">
+              <span> {LANG('未成交')}</span>
+              <span>{item.volume.sub(item.dealVolume).toFormat()}</span>
+            </div>
+            <div className="item">
+              <span> {LANG('状态')}</span>
+              <span>{LANG('委托中')}</span>
+            </div>
+          </div>
+          <div className="row">
+            <div className="item">
+              <span> {LANG('委托时间')}</span>
+              <span>{dayjs(item.orderTime).format('YYYY-MM-DD HH:mm:ss')}</span>
+            </div>
+            <div className="item" />
+            <div className="item">
+              <span> {LANG('订单编号')}</span>
+              <span>
+                <ClipboardItem text={item.id} />
+              </span>
+            </div>
+          </div>
         </div>
       </div>
       <style jsx>{`
         .container {
           display: flex;
-          padding: 16px;
-          border-bottom: 1px solid var(--theme-border-color-2);
-          &:first-child {
-            padding-top: 0;
-          }
-          .left {
-            flex: 2;
-            .pair {
-              font-size: 16px;
-              font-weight: 500;
-              color: var(--theme-font-color-1);
-            }
-            .name {
-              font-size: 12px;
-              margin-left: 8px;
-            }
-            .count-wrapper {
-              width: 100%;
-              margin-top: 16px;
-              display: flex;
-              align-items: center;
-              height: 42px;
-              .percent-wrapper {
-                margin-right: 20px;
+          flex-direction: column;
+          gap: 12px;
+          border-bottom: 1px solid var(--fill_line_1);
+          font-size: 14px;
+          color: var(--text_1);
+          font-weight: 500;
+          .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .code {
+              color: var(--text_2);
+              span {
+                font-size: 16px;
+                color: var(--text_1);
               }
             }
-          }
-          .right {
-            flex: 1;
-            text-align: right;
-            button {
-              margin-top: 30px;
-              outline: none;
-              border: none;
-              border-radius: 6px;
-              height: 25px;
-              color: var(--theme-font-color-1);
+            .type {
+              display: flex;
+              align-items: center;
+              justify-content: flex-start;
+              gap: 4px;
+              span {
+                width: 48px;
+                height: 20px;
+                font-size: 12px;
+                line-height: 20px;
+                text-align: center;
+                color: var(--text_2);
+                border-radius: 4px;
+                background: var(--fill_3);
+              }
+            }
+            .buy,
+            .sell {
+              width: 3rem;
+              height: 1.25rem;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 10px;
+              border-radius: 4px;
+              color: var(--text_white);
               font-size: 12px;
-              padding: 0 12px;
-              background: var(--theme-background-color-3-2);
-              margin-right: 10px;
+              font-weight: 400;
+            }
+            .buy {
+              background: var(--color-green);
+            }
+            .sell {
+              background: var(--color-red);
+            }
+            .revoke {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 5.5rem;
+              height: 2rem;
+              border-radius: 1.5rem;
+              background: var(--text_brand);
+              color: var(--text_white);
+              font-size: 12px;
+              font-weight: 400;
             }
           }
-          .sub-font {
-            font-size: 12px;
-            color: var(--theme-font-color-3);
-            span {
-              margin-left: 8px;
-              color: var(--theme-font-color-1);
+          .item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+          }
+          .info {
+            padding-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+            .row {
+              width: 100%;
+              display: flex;
+              .item {
+                flex: 1;
+                &:nth-child(1),
+                &:nth-child(2) {
+                  align-items: start;
+                }
+                &:nth-child(3) {
+                  align-items: end;
+                  text-align: right;
+                }
+                span {
+                  width: 100%;
+                  font-size: 12px;
+                  font-weight: 400;
+                  white-space: nowrap;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                  &:first-child {
+                    color: var(--text_3);
+                  }
+                  :global(.copy-content) {
+                    justify-content: flex-end;
+                  }
+                }
+              }
             }
           }
         }
@@ -144,9 +223,9 @@ const OrderTable = () => {
 
   return (
     <>
-      <div className='container'>
+      <div className="container">
         <ListView data={filterOrderList} loading={!filterOrderList.length && loading}>
-          {(index) => {
+          {index => {
             const item = filterOrderList[index];
 
             return <Item key={index} data={item} />;

@@ -1,5 +1,6 @@
 import { memo, useEffect, useState } from 'react';
 import CommonIcon from '.';
+import { Svg } from '../svg';
 
 /**
  * 切换资产余额的隐藏/显示
@@ -28,10 +29,18 @@ export const AssetValueToggleIcon = memo(
       setEyeOpen(show);
     }, [show]);
     return (
+      // <Svg
+      //   src={eyeOpen ?'/static/icons/primary/common/eye-open-icon.svg':'/static/icons/primary/common/eye-close-icon.svg'}
+      //   width={16}
+      //   height={16}
+      //   onClick={onEyeIconClick}
+      //   color='var(--text_1)'
+      //   style={{cursor: 'pointer'}}
+      // />
       <CommonIcon
-        name={eyeOpen ? 'common-eye-open-icon-0' : 'common-eye-close-icon-0'}
+        name={eyeOpen ? 'common-eye-open-icon' : 'common-eye-close-icon'}
         className={className}
-        size={size}
+        size={24}
         onClick={onEyeIconClick}
       />
     );

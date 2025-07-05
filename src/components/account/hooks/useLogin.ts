@@ -67,22 +67,24 @@ export const useLogin = (onLoginSuccess: () => void) => {
     const res = await Account.login(loginParam);
     if (res.code === 200) {
       if (res.data.next) {
-        // const { email, phone, countryCode } = res.data;
-        // store.email = email || '';
-        // store.phone = removeCountryCode(countryCode, phone || '');
-        // store.countryCode = countryCode || '';
-        // const options = await Account.securityVerify.getSecurityOptions({
-        //   vHash: loginVhash,
-        //   account: account,
-        //   sence: SENCE.LOGIN,
-        // });
-        // if (options.code === 200) {
-        //   store.securityOptions = options.data;
-        //   store.showVerifyModal = true;
-        //   store.closeVerify = true;
-        // } else {
-        //   message.error(options.message);
-        // }
+        const { email, phone, countryCode, account } = res.data;
+        const _account = res.data['account'];
+
+        store.email = email || '';
+        store.phone = removeCountryCode(countryCode, phone || '');
+        store.countryCode = countryCode || '';
+        const options = await Account.securityVerify.getSecurityOptions({
+          vHash: loginVhash,
+          account: _account,
+          sence: SENCE.LOGIN,
+        });
+        if (options.code === 200) {
+          store.securityOptions = options.data;
+          store.showVerifyModal = true;
+          store.closeVerify = true;
+        } else {
+          message.error(options.message);
+        }
       } else {
         await Account.refreshUserInfo();
 

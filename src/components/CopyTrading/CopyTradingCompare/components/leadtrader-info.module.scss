@@ -1,0 +1,600 @@
+// @import '@/styles/size-variables.scss';
+$sm: 768px;
+.copyTradingTradingList {
+}
+.copyContainer {
+  margin-bottom: 120px;
+  background: var(--fill_bg_1);
+}
+.leadtraderItem {
+  @media (max-width: $sm) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+.contentBox {
+  background: var(--fill_pop) !important;
+}
+.closeBox {
+  cursor: pointer;
+}
+.mt10 {
+  margin-top: 10px;
+}
+.userInfo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.copyHeader {
+  height: 400px;
+  background: var(--brand_20);
+  padding-top: 62px;
+  padding-bottom: 63px;
+  .copyApply {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    color: var(--text_1);
+     font-family: "Lexend";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    gap: 16px;
+    margin-bottom: 16px;
+    margin-right: 80px;
+  }
+}
+
+.container {
+  width: 1200px;
+  margin: 0 auto;
+  @media (max-width: $sm) {
+    width: 100%;
+  }
+}
+.copyHeaderContainer {
+  .title {
+    color: var(--text_black);
+     font-family: "Lexend";
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 52px;
+  }
+  @media (max-width: $sm) {
+    .title {
+      font-size: 32px;
+    }
+  }
+}
+.copyMine {
+  display: flex;
+  padding: 16px 24px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  align-self: stretch;
+  border-radius: 24px;
+  background: var(--fill_bg_1);
+}
+.copyInfo {
+  width: 100%;
+}
+.myIncome {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+  color: var(--text_2);
+   font-family: "Lexend";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+@media (max-width: $sm) {
+  .copyMine {
+    border-radius: 0;
+  }
+}
+.textRight {
+  text-align: right;
+}
+.myInTitle {
+  color: var(--text_1);
+   font-family: "Lexend";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-bottom: 8px;
+}
+.searchBox {
+  margin-top: 78px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .title {
+    color: var(--brand);
+     font-family: "Lexend";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+  @media (max-width: $sm) {
+    .title {
+      font-size: 18px;
+    }
+  }
+  .inputSearch {
+    width: 240px;
+    height: 40px;
+    border: none;
+    border-radius: 40px;
+    background: var(--fill_3);
+  }
+}
+@media (max-width: $sm) {
+  .searchBox {
+    margin-top: 24px;
+    padding: 0 16px;
+    border-top: 1px solid var(--fill_line_1);
+    border-bottom: 1px solid var(--fill_line_1);
+    padding-top: 24px;
+    padding-bottom: 8px;
+  }
+}
+.tabsBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .tabList {
+    display: flex;
+    align-items: center;
+    margin: 40px 0;
+    overflow-y: auto;
+
+    .tabItem {
+      color: var(--text_3);
+       font-family: "Lexend";
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      margin-right: 24px;
+      word-break: keep-all;
+      cursor: pointer;
+      &.active {
+        color: var(--brand);
+      }
+    }
+  }
+  @media (max-width: $sm) {
+    .tabList {
+      padding: 0;
+      margin: 0;
+    }
+  }
+  .filterBox {
+    display: flex;
+    width: 80px;
+    height: 32px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 24px;
+    background: var(--text_brand);
+    color: var(--text_white);
+     font-family: "Lexend";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    cursor: pointer;
+    .filterIcon {
+      margin-right: 4px;
+    }
+  }
+  @media (max-width: $sm) {
+    .filterBox {
+      background: transparent;
+      width: auto;
+      border: none;
+    }
+  }
+}
+@media (max-width: $sm) {
+  .tabsBox {
+    margin: 0 16px;
+    margin-top: 24px;
+  }
+}
+.copyBox {
+  margin: 40px 0;
+  .copyTradingList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 24px;
+    grid-row-gap: 24px;
+  }
+  @media (max-width: $sm) {
+    margin: 24px 0;
+    .copyTradingList {
+      grid-template-columns: repeat(1, 1fr);
+      margin: 0 16px;
+    }
+  }
+}
+.copyItem {
+   font-family: "Lexend";;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16.41px;
+  color: var(--text_3);
+  border-radius: 24px;
+  border: 1px solid var(--fill_line_2);
+  padding: 24px;
+  margin-bottom: 24px;
+  .assetCol {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-row-gap: 24px;
+    flex: 1;
+    @media (max-width: $sm) {
+      grid-template-columns: repeat(2, 1fr);
+      width: 100%;
+    }
+  }
+  .assetItem {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    @media (max-width: $sm) {
+      &:nth-child(2n) {
+        text-align: right;
+      }
+    }
+    .copyCount {
+      color: var(--text_1);
+      font-weight: 500;
+    }
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    margin-right: 8px;
+  }
+  .copyName {
+    color: var(--text_1);
+     font-family: "Lexend";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-bottom: 4px;
+  }
+  .currentAmount {
+    color: var(--text_1);
+  }
+  .copyIncome {
+    color: var(--text_green);
+     font-family: "Lexend";
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-top: 8px;
+  }
+  .copyCount {
+    color: var(--text_1);
+    font-weight: 500;
+  }
+  .copyLine {
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--fill_line_2);
+  }
+  .symbolBox {
+    gap: 4px;
+  }
+  .copySymbol {
+    width: 24px;
+    height: 24px;
+  }
+
+  .copyEarn {
+    width: 20px;
+    height: 20px;
+  }
+  .copyItemSubmit {
+    display: flex;
+    height: 48px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 40px;
+    color: var(--text_brand);
+    border: 1px solid var(--brand);
+    text-align: center;
+     font-family: "Lexend";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    cursor: pointer;
+    &:hover {
+      background: var(--brand);
+      color: var(--text_white);
+    }
+  }
+}
+@media (max-width: $sm) {
+  .copyItem {
+    height: auto;
+  }
+}
+
+.gap4 {
+  gap: 4px;
+}
+.flexCenter {
+  display: flex;
+  align-items: center;
+}
+.flexSpan {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.flexCol {
+  justify-content: flex-start;
+  flex-direction: column;
+}
+.flexAround {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.mt24 {
+  margin-top: 24px;
+}
+.mb24 {
+  margin-bottom: 24px;
+}
+.mb32 {
+  margin-bottom: 24px;
+}
+.my16 {
+  margin: 16px 0;
+}
+.mb16 {
+  margin-bottom: 16px;
+}
+
+.pl8 {
+  padding-left: 8px;
+}
+.amontItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.setBox {
+  color: var(--text_2);
+   font-family: "Lexend";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  .setHeader {
+    margin-bottom: 40px;
+  }
+  .setTitle {
+    color: var(--text_1);
+     font-family: "Lexend";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+}
+.setMutitle {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  .multipleItem {
+     font-family: "Lexend";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 0.5px solid var(--fill_line_3);
+    height: 24px;
+    justify-content: center;
+    &.itemSelect {
+      color: var(--text_brand);
+      border: 0.5px solid var(--text_brand);
+    }
+  }
+  .usertag {
+    height: 32px;
+  }
+}
+.contractSearch {
+  width: 132px;
+  height: 32px;
+  border: 1px solid var(--skin-primary-color);
+  border-radius: 40px;
+  background: var(--fill_3);
+  &.w240 {
+    width: 240px;
+  }
+}
+.contractSelect {
+  margin-bottom: 16px;
+  .currencyOpt {
+    color: var(--text_1);
+    margin-left: 16px;
+  }
+}
+.copySubmit {
+  margin-top: 16px;
+  margin-bottom: 51px;
+  gap: 16px;
+  .copyBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    text-align: center;
+     font-family: "Lexend";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    border-radius: 24px;
+    border: 1px solid var(--brand);
+  }
+  .copyReset {
+    color: var(--text_brand);
+    width: 40%;
+  }
+  .copyConfirm {
+    color: var(--text_white);
+    background: var(--brand);
+    width: 50%;
+  }
+}
+
+.symbolList {
+  .symbolHeaderItem {
+    display: flex;
+    align-items: center;
+    .symbolLogoImg {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+    .symbolName {
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 700;
+      color: var(--text_1);
+    }
+    .symbolType {
+      color: var(--text_1);
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+    .symbolTadingType {
+      display: flex;
+      padding: 4.5px 16px;
+      align-items: center;
+      border-radius: 4px;
+      background: var(--fill_3);
+      color: var(--text_2);
+      margin-left: 8px;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+    }
+    .symbolLeverage {
+      display: flex;
+      padding: 4.5px 16px;
+      align-items: center;
+      border-radius: 4px;
+      background: var(--green_10);
+      color: var(--color-green);
+      margin-left: 8px;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+    }
+    .symbolLeverageUp {
+      margin-right: 8px;
+    }
+    .symbolTadingTime {
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      color: var(--text_3);
+      margin-left: 8px;
+    }
+  }
+  .symbolItemContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    margin-right: 40px;
+  }
+  .symbolListInfo {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    color: var(--text_1);
+  }
+  .symbolListTitle {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    color: var(--text_3);
+    margin-bottom: 26px;
+    &:nth-of-type(2) {
+      margin-bottom: 0px;
+    }
+  }
+  .symbolListDesc {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    margin-bottom: 26px;
+    &:nth-of-type(2) {
+      margin-bottom: 0px;
+    }
+  }
+  .symbolListTitleInfo {
+    margin-right: 8px;
+    color: var(--text_3);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+  }
+  .symbolListware {
+    display: flex;
+    align-items: flex-start;
+  }
+  .symbolTradingBtn {
+    padding: 10px 52px;
+    border-radius: 24px;
+    background: var(--brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text_white);
+    cursor: pointer;
+  }
+  .symbolItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 24px;
+  }
+}
+
+.textPrimary {
+  color: var(--text_1);
+  &:hover {
+    color: var(--text_1);
+  }
+}

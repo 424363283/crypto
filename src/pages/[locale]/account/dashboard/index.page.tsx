@@ -9,7 +9,7 @@ const DashboardContainer = dynamic(() => import('./container'), {
 
 function Dashboard() {
   return (
-    <UniversalLayout hideFooter bgColor='var(--theme-secondary-bg-color)'>
+    <UniversalLayout bgColor='var(--theme-secondary-bg-color)'>
       <DashboardContainer />
     </UniversalLayout>
   );

@@ -69,7 +69,7 @@ export const RegisterButton = (props: { shouldDisableBtn: boolean; type: LOCAL_K
       ...params,
     });
     if (registerResult?.code === 200) {
-      const res = await Account.login(loginParam);
+      const res = await Account.login({ ...loginParam,  countryCode});
       if (res.code === 200) {
         router.push('/');
         onRegisterDone();
@@ -130,8 +130,7 @@ export const RegisterButton = (props: { shouldDisableBtn: boolean; type: LOCAL_K
     <Button
       type='primary'
       className={shouldDisableBtn ? 'disabled' : ''}
-      height={50}
-      style={{ width: '100%' }}
+      style={{ width: '100%', height: '50px', borderRadius: '56px'}}
       onClick={handleRegisterUser}
     >
       {LANG('注册')}

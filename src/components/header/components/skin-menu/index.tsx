@@ -16,7 +16,7 @@ const SKinMenuContent = (props: any) => {
         <p className='label'>{LANG('主题色')}</p>
         <ThemeModeSwitch onChange={onSwitchChange} checked={isDark} />
       </div>
-      <SkinToggle />
+      {/* <SkinToggle /> */}
       <style jsx>{styles}</style>
     </div>
   );
@@ -28,15 +28,15 @@ const styles = css`
     cursor: default;
     user-select: none;
     width: 238px;
-    height: 158px;
-    color: var(--theme-font-color-1);
+    height: 58px;
+    color: var(--text_1);
     .header-menu {
       display: flex;
       align-items: center;
       justify-content: space-between;
       width: 100%;
       padding: 14px 11px;
-      border: 1px solid var(--theme-border-color-2);
+      // border: 1px solid var(--theme-border-color-2);
     }
     :global(.skin-option-container) {
       padding: 14px 11px;

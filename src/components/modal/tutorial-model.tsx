@@ -52,7 +52,7 @@ const TutorialModel = ({ type = 'spot', ...props }: any) => {
         title: LANG('杠杆与保证金模式'),
         text: [
           LANG(
-            '根据自身喜好选择保证金模式（全仓或逐仓），同时根据自身的风险承受能力选择合适的杠杆倍数；XK最高支持200倍杠杆倍数。'
+            '根据自身喜好选择保证金模式（全仓或逐仓），同时根据自身的风险承受能力选择合适的杠杆倍数；YMEX最高支持200倍杠杆倍数。'
           ),
         ],
         prompt: LANG('新手用户建议使用10倍以下杠杆'),
@@ -69,7 +69,7 @@ const TutorialModel = ({ type = 'spot', ...props }: any) => {
         title: LANG('平仓'),
         text: [LANG('持有仓位后，您可以在持有仓位区域平仓。')],
         textBtn: (
-          <Zendesk className='more' href='/sections/5692040237583-Perpetual-Contracts-USDT-M-'>
+          <Zendesk className='more' href='/categories/11309463310991-%E6%B0%B8%E7%BA%8C%E5%90%88%E7%B4%84'>
             {LANG('了解更多')}
           </Zendesk>
         ),
@@ -98,6 +98,7 @@ const TutorialModel = ({ type = 'spot', ...props }: any) => {
                   router.push('/login');
                 }
               }}
+              className='TransferButton'
             >
               {LANG('划转')}
             </div>
@@ -112,7 +113,7 @@ const TutorialModel = ({ type = 'spot', ...props }: any) => {
         title: LANG('买入现货'),
         text: [
           LANG(
-            '在买入区域输入您预期的买入价格与数量，并点击下方买入，当市场价格与您设置的价格相符时，则完成率一笔买入交易。'
+            '在买入区域输入您预期的买入价格与数量，并点击下方买入，当市场价格与您设置的价格相符时，则完成了一笔买入交易。'
           ),
         ],
       },
@@ -124,7 +125,7 @@ const TutorialModel = ({ type = 'spot', ...props }: any) => {
         title: LANG('卖出现货'),
         text: [
           LANG(
-            '在卖出区域输入您预期的买入价格与数量，并点击下方卖出，当市场价格与您设置的价格相符时，则完成了一笔卖交易。'
+            '在卖出区域输入您预期的卖出价格与数量，并点击下方卖出，当市场价格与您设置的价格相符时，则完成了一笔卖出交易。'
           ),
         ],
       },
@@ -134,14 +135,29 @@ const TutorialModel = ({ type = 'spot', ...props }: any) => {
   const _onCloseTransferModal = () => {
     setTransferModalVisible(false);
   };
+
+ let langMap={
+  'zh':'zh_cn',
+  'zh-tw':'zh_tw',
+  'en':'en_us',
+  
+ }
+ const getLang=langMap[lang]
+
+  // console.log('获取图片地址',iconsUrl,)
+  // console.log('type',type,)
+  // console.log('lang',lang,theme,index)
+
+
+
   return (
     <>
-      <BasicModal width={720} {...props} footer={null}>
+      <BasicModal className={clsx('tutorial-modal', type) } width={720} {...props} footer={null}>
         <div className='box'>
           <div className='left'>
             {arr[type]?.map((item: any, key: number) => {
               return (
-                <div key={key} className={clsx('item', index === key && 'active')} onClick={() => setIndex(key)}>
+                <div key={key} className={clsx('item', index === key && 'active', 'bg')} onClick={() => setIndex(key)}>
                   <div className='title'>
                     {key + 1}.{item.title}
                   </div>
@@ -162,71 +178,118 @@ const TutorialModel = ({ type = 'spot', ...props }: any) => {
                     />
                   )}
                   {item.btn}
+                  {(index === key && index < (arr[type]?.length - 1)) && <div className='line' />}
                 </div>
               );
             })}
           </div>
           <div className='right'>
             <Image
-              src={`${iconsUrl}tutorial/${type}_${lang}_${theme}_${index + 1}.png`}
+              src={`${iconsUrl}tutorial/${type}_${getLang}_${theme}_${index + 1}.png`}
+              // src={'/static/images/swap-info/Transfer.png'}   
               alt=''
-              width={325}
+              width={316}
               height={416}
             />
           </div>
           <style jsx>{styles}</style>
         </div>
       </BasicModal>
-      <TransferModal
+     {transferModalVisible &&  <TransferModal
         open={transferModalVisible}
         defaultSourceAccount={ACCOUNT_TYPE.SWAP_U}
         defaultTargetAccount={ACCOUNT_TYPE.SPOT}
         onCancel={_onCloseTransferModal}
-      />
+      />}
     </>
   );
 };
 
 const styles = css`
+  :global(.tutorial-modal) {
+    :global(.ant-modal-content) {
+      :global(.ant-modal-header .ant-modal-title) {
+        padding: 0 24px 20px;
+      }
+      :global(.ant-modal-body .basic-content) {
+        padding: 8px 24px;
+      }
+    }
+
+  }
+  .TransferButton{
+    background: var(--fill_shadow);
+  }
   .box {
     display: flex;
     .left {
+      display: flex ;
+      flex-direction: column;
+      gap: 40px;
+      :global(.spot) & {
+        gap: 24px;
+      }
       flex: 1;
       .item {
         cursor: pointer;
-        margin-bottom: 15px;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 16px;
+        :global(.spot) & {
+          gap: 8px;
+        }
+        :last-child{
+          margin-bottom: 0px;
+        }
+ 
         .title {
+          color: var(--text_1);
           font-size: 16px;
+          font-style: normal;
           font-weight: 500;
-          color: var(--theme-font-color-3);
+          line-height: normal;
           display: block;
+          :global(.spot) & {
+            font-size: 14px;
+            color: var(--text_2);
+          }
         }
         .text {
+          color: var(--text_1);
           font-size: 14px;
+          :global(.spot) & {
+            color: var(--text_2);
+            font-size: 12px;
+          }
+          font-style: normal;
           font-weight: 400;
-          color: var(--theme-font-color-1);
+          line-height: 150%;
           :global(.more) {
-            color: var(--color-active-yellow);
-            text-decoration: underline;
+            color: var(--text_brand);
           }
         }
         .prompt {
           font-size: 14px;
           font-weight: 400;
-          color: var(--color-error);
+          color: var(--text_red);
         }
         & > :global(div) {
           display: none;
         }
         &.active {
-          background: var(--theme-background-color-8);
-          border-radius: 8px;
-          padding: 10px;
+          :global(.spot) & {
+            padding: 16px;
+          }
           .title {
-            color: var(--color-active-yellow);
+            color: var(--text_brand);
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+            :global(.spot) & {
+              color: var(--text_1);
+              font-size: 14px;
+            }
           }
           & > :global(div) {
             display: block;
@@ -234,47 +297,65 @@ const styles = css`
           :global(.button) {
             display: flex;
             align-items: center;
-            gap: 10px;
+            margin-top: 8px;
+            gap: 24px;
             & > :global(div),
             & > :global(a) {
               line-height: 30px;
-              border-radius: 6px;
+              border-radius: 4px;
               min-width: 90px;
-              background: var(--color-yellow);
+              width: 100%;
+              background: var(--brand);
               text-align: center;
               display: inline-block;
               font-size: 14px;
               font-weight: 500;
-              color: #141717;
+              color: #fff;
               &:nth-child(2) {
-                background: var(--theme-background-color-2);
-                color: var(--theme-font-color-1);
+                background: var(--fill_pop);
+                color: var(--text_1);
               }
+            }
+          }
+          &.bg {
+            :global(.spot) & {
+              border-radius: 8px;
+              background: var(--fill_3);
             }
           }
         }
         :global(.btn) {
           width: 100%;
           :global(span) {
-            line-height: 30px;
+            line-height: 48px;
             border-radius: 6px;
             width: 100%;
-            background: var(--color-yellow);
+            background: var(--brand);
+            border-radius: 40px;
             text-align: center;
             display: inline-block;
             font-size: 14px;
             font-weight: 500;
-            color: #141717;
+            color: #fff;
           }
+        }
+      }
+      .line {
+        width: 324px;
+        height: 1px;
+        margin-top: 24px;
+        background: var(--fill_line_2);
+        :global(.spot) & {
+          display: none!important;
         }
       }
     }
     .right {
-      padding-left: 35px;
+      padding-left: 24px;
       :global(img) {
-        border: 2px solid var(--color-yellow);
-        border-radius: 16px;
-        width: 325px;
+        /* border: 2px solid var(--brand); */
+        /* border-radius: 16px; */
+        width: 316px;
         height: auto;
       }
     }

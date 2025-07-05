@@ -56,10 +56,10 @@ export default function Slide() {
                 <Link href={key} target='_blank' className='item' rel='preconnect'>
                   {url && (
                     <Image
-                      src={`${url}?x-oss-process=image/resize,h_213,w_444,limit_0`}
+                      src={`${url}?x-oss-process=image/resize,h_160,w_288,limit_0`}
                       alt=''
-                      width={285}
-                      height={140}
+                      width={288}
+                      height={160}
                       priority
                       loading='eager'
                     />
@@ -88,10 +88,10 @@ export default function Slide() {
             <Link key={index} href={key} target='_blank' className='item' rel='preconnect'>
               {url && (
                 <Image
-                  src={`${url}?x-oss-process=image/resize,h_213,w_444,limit_0`}
+                  src={`${url}?x-oss-process=image/resize,h_160,w_288,limit_0`}
                   alt=''
-                  width={285}
-                  height={140}
+                  width={288}
+                  height={160}
                   loading='eager'
                   priority
                 />
@@ -105,9 +105,6 @@ export default function Slide() {
   return (
     <div className={clsx('container', setResponsiveClsx('c-pc', 'c-pad', 'c-phone'))}>
       <Desktop forceInitRender={false}>{renderBannerSlide()}</Desktop>
-      <MobileOrTablet forceInitRender={false}>
-        <ScrollXWrapBanner />
-      </MobileOrTablet>
       <style jsx>{styles}</style>
     </div>
   );
@@ -119,8 +116,9 @@ const styles = css`
     align-items: center;
     justify-content: space-between;
     position: relative;
-    margin: 0 auto;
-    height: 140px;
+    width:1200px;
+    margin: 40px auto 0;
+    height: 160px;
     :global(.prev),
     :global(.next) {
       display: none !important;
@@ -139,27 +137,30 @@ const styles = css`
     }
     :global(.item) {
       display: inline-block;
-      margin-right: 15px;
-      background-color: var(--theme-background-color-2);
+      margin-right: 16px;
       border-radius: 8px;
-      height: 140px;
-      width: 284px;
+      height: 160px;
+      width: 288px;
       :global(img) {
-        width: auto;
-        height: 140px;
+        width: 100%;
+        height: 160px;
         overflow: hidden;
         border-radius: 8px;
       }
     }
+
+
+
     .left,
     .right {
       position: absolute;
       top: 0;
-      height: 140px;
+      bottom:0;
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 9;
+      display:none;
       .round {
         display: flex;
         align-items: center;
@@ -180,32 +181,6 @@ const styles = css`
     }
     .right {
       right: 0px;
-    }
-    &.c-pc {
-      max-width: var(--const-max-page-width);
-      margin: -72px auto 0;
-      padding: 0;
-
-      .left,
-      .right {
-        display: flex;
-      }
-      :global(.item) {
-        margin-right: 0;
-        display: flex;
-        justify-content: flex-start;
-      }
-    }
-    &.c-phone {
-      padding: 0 0 0 16px;
-    }
-    &.c-pad {
-      padding: 0 0 0 32px;
-      :global(.item) {
-        &:last-child {
-          margin-right: 0;
-        }
-      }
     }
   }
 `;

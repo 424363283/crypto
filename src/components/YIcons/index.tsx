@@ -6,10 +6,13 @@ import { muiIcon } from './muiIcon';
 import { KlineIcon } from './kline';
 import arrowBox from './arrowBox';
 import CtShare from './CtShare';
+import positionIcon from './positionIcon';
+import homePage from './homePage'
+import { liteIcon } from './lite';
 export { default as UserAvatar } from './UserAvatar';
-import { omit } from 'lodash';
+import omit from 'lodash/omit';
 
-export function Icon(props: { name: string; [key: string]: any }) {
+export function Icon(props: { name: string;[key: string]: any }) {
   const { size, width = 24, height = 24, value } = props || {};
   const viewBox = `0 0 ${size > 0 ? size : width} ${size > 0 ? size : height}`;
 
@@ -25,7 +28,7 @@ export function Icon(props: { name: string; [key: string]: any }) {
     />
   );
 }
-const IconsMap = Object.assign({}, common, config, muiIcon, KlineIcon, arrowBox, insufficient, CtShare);
+const IconsMap = Object.assign({}, common, config, muiIcon, KlineIcon, arrowBox, insufficient, CtShare, positionIcon, homePage, liteIcon);
 
 const Icons: { [key: string]: any } = {
   ...Object.keys(IconsMap).reduce(
@@ -44,8 +47,8 @@ const Icons: { [key: string]: any } = {
   )
 };
 
-export const BVIcon = {
+export const YIcon = {
   ...Icons
 };
 
-export default BVIcon;
+export default YIcon;

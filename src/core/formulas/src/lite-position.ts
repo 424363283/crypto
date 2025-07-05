@@ -17,7 +17,7 @@ export const LITE_POSITION = {
   positionProfitAndLoss(type: PositionSide, price: number | string, opPrice: number | string, leverage: number, margin: number | string): number {
     let income = 0;
     if (type === PositionSide.LONG) {
-      income = Number(price.sub(opPrice).div(opPrice).mul(leverage).mul(margin));
+      income = Number(price?.sub(opPrice).div(opPrice).mul(leverage).mul(margin));
     } else {
       income = Number(opPrice.sub(price).div(opPrice).mul(leverage).mul(margin));
     }

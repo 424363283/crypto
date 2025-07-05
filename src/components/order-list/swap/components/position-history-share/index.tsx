@@ -61,6 +61,8 @@ export const PositionHistoryShare = ({
     <OrderShare
       visible={visible}
       title={LANG('仓位记录')}
+      symbol={data.symbol}
+      settleCoin={Swap.Info.getCryptoData(data.symbol, { withHooks: false })?.settleCoin}
       code={cryptoData.name}
       onClose={onClose}
       rate={rateOfReturn.toFixed(2)}
@@ -68,8 +70,8 @@ export const PositionHistoryShare = ({
       isBuy={isBuy}
       incomeText={LANG('已结算盈亏金额')}
       items={[
-        [LANG('开仓均价'), positionAvgPrice.toFixed(priceScale)],
-        [LANG('平仓价格'), price.toFixed(priceScale)],
+        [positionAvgPrice.toFixed(priceScale)],
+        [price.toFixed(priceScale)],
       ]}
     />
   );

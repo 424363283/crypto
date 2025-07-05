@@ -1,11 +1,11 @@
 import { ModalClose } from '@/components/trade-ui/common/modal';
 import Slider from '@/components/trade-ui/trade-view/components/slider';
 import { FORMULAS } from '@/core/formulas';
-import { useRouter, useTheme } from '@/core/hooks';
+import { useRouter, useTheme, useResponsive } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { SUBSCRIBE_TYPES, useWs } from '@/core/network';
 import { Account, LiteTradeItem, MarketsMap, PositionSide, TradeMap } from '@/core/shared';
-import { Modal } from 'antd';
+import { Modal as AntModal } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
@@ -13,6 +13,12 @@ import CalculatorResult, { ResultItem } from '../calculator-result';
 import CalculatorInput from '../input/calculator-input';
 import QuoteSelect from '../input/quote-select';
 import TransactionTypeButton from '../transaction-type-button';
+import Modal, { ModalFooter, ModalTitle } from '@/components/trade-ui/common/modal';
+import { Button } from '@/components/button';
+import { Layer, Size } from '@/components/constants';
+import { BottomModal, MobileModal } from '@/components/mobile-modal';
+
+import { MediaInfo } from '@/core/utils';
 
 interface Props {
   open: boolean;
@@ -21,13 +27,14 @@ interface Props {
 
 const CalculatorModal = ({ open, onClose }: Props) => {
   const { theme, isDark } = useTheme();
+  const { isMobile } = useResponsive();
 
   const [sliderData, setSliderData] = useImmer({
     type: 'range',
     step: 1,
     value: 10,
     min: 5,
-    max: 50,
+    max: 50
   });
 
   const [liteMap, setLiteMap] = useState<Map<string, LiteTradeItem>>();
@@ -47,30 +54,30 @@ const CalculatorModal = ({ open, onClose }: Props) => {
     leverRange: [] as number[],
     marginRange: [] as number[],
     income: '--',
-    incomeRate: '--',
+    incomeRate: '--'
   });
 
-  useWs(SUBSCRIBE_TYPES.ws3001, async (detail) => {
+  useWs(SUBSCRIBE_TYPES.ws3001, async detail => {
     setMarketMap(detail);
   });
 
   useEffect(() => {
     if (id) {
-      TradeMap.getLiteTradeMap().then(async (list) => {
+      TradeMap.getLiteTradeMap().then(async list => {
         setLiteMap(list);
-        const data = list.get(id);
+        const data = list?.get(id);
         if (data) {
-          setState((draft) => {
+          setState(draft => {
             draft.selectList = [...list.values()]
               .sort((a, b) => a.id.charCodeAt(0) - b.id.charCodeAt(0))
-              .map((item) => {
+              .map(item => {
                 return {
                   id: item.id,
-                  name: item.name,
+                  name: item.name
                 };
               });
             draft.selectValue = data?.name;
-            draft.selectId = data?.id;
+            draft.selectId = data?.quoteCode;
           });
         }
       });
@@ -84,7 +91,7 @@ const CalculatorModal = ({ open, onClose }: Props) => {
   }, [open]);
 
   const initUIState = useCallback(() => {
-    setState((draft) => {
+    setState(draft => {
       draft.positionSide = PositionSide.LONG;
       draft.margin = '';
       draft.opPrice = '';
@@ -92,33 +99,33 @@ const CalculatorModal = ({ open, onClose }: Props) => {
       draft.income = '--';
       draft.incomeRate = '--';
     });
-    setSliderData((draft) => {
+    setSliderData(draft => {
       draft.value = state.leverRange[0];
     });
   }, [state.leverRange]);
 
   const onQuoteSelectChange = async (selectId: string) => {
+    initUIState();
     const data = liteMap?.get(selectId);
     setLiteItem(data);
-
     if (data) {
       const { lever0List, lever2List, margin0List, margin2List, maxAmountOne } = data;
       const { identityPhotoValid } = (await Account.getUserInfo()) || {};
       const leverList = identityPhotoValid ? lever2List : lever0List;
       const marginList = identityPhotoValid ? margin0List : margin2List;
-      setSliderData((draft) => {
+      setSliderData(draft => {
         draft.value = leverList[0];
         draft.min = leverList[0];
         draft.max = leverList[leverList.length - 1];
       });
-      setState((draft) => {
+      setState(draft => {
         draft.leverRange = leverList;
-        draft.marginRange = [marginList[0], Math.trunc(Number(maxAmountOne.div(leverList[0])))];
+        draft.marginRange = [marginList[0], marginList[1]];
         draft.opPrice = '';
       });
-      setState((draft) => {
+      setState(draft => {
         draft.selectValue = data?.name;
-        draft.selectId = data?.id;
+        draft.selectId = data?.quoteCode;
       });
     }
   };
@@ -133,12 +140,14 @@ const CalculatorModal = ({ open, onClose }: Props) => {
   }, [sliderData]);
 
   const onLeverChanged = (val: number) => {
-    setSliderData((draft) => {
+    setSliderData(draft => {
       draft.value = val;
     });
     if (liteItem) {
-      setState((draft) => {
-        draft.marginRange = [state.marginRange[0], Math.trunc(Number(liteItem.maxAmountOne.div(val)))];
+      setState(draft => {
+        const { margin0List, leverList } = liteItem;
+        const max = FORMULAS.LITE.maxLevelMargin(margin0List, leverList, val);
+        draft.marginRange = [state.marginRange[0], max];
       });
     }
   };
@@ -161,7 +170,7 @@ const CalculatorModal = ({ open, onClose }: Props) => {
       state.margin
     );
     const incomeRate = income.div(state.margin).mul(100) || 0;
-    setState((draft) => {
+    setState(draft => {
       draft.income = income.toFixed(2);
       draft.incomeRate = incomeRate.toFixed(2);
     });
@@ -170,46 +179,209 @@ const CalculatorModal = ({ open, onClose }: Props) => {
   const results: ResultItem[] = useMemo(() => {
     return [
       [LANG('收益'), `${state.income} USDT`],
-      [LANG('回报率'), `${state.incomeRate} %`],
+      [LANG('回报率'), `${state.incomeRate} %`]
     ];
-  }, [state.income, state.incomeRate]);
-
+  }, [state.income, state.incomeRate, state.positionSide]);
+  const handleChangeSide = (positionSide: any) => {
+    initUIState();
+    setState(draft => {
+      draft.positionSide = positionSide;
+    });
+  };
+  const content = (
+    <div className={`calculator-content ${theme}`}>
+      <div className="content">
+        <div className="left">
+          <QuoteSelect
+            layer={Layer.Overlay}
+            value={state.selectValue}
+            list={state.selectList}
+            onChange={onQuoteSelectChange}
+            label=""
+          />
+          <TransactionTypeButton
+            positionSide={state.positionSide}
+            greenText={LANG('买多')}
+            redText={LANG('卖空')}
+            onChange={handleChangeSide}
+          />
+          <div className={'slider-container'}>
+            <Slider
+              railBgColor="var(--fill_3)"
+              percent={percent}
+              isDark={isDark}
+              grid={state.leverRange.length - 1 > 0 ? state.leverRange.length - 1 : 0}
+              grids={state.leverRange}
+              onChange={(val: number) => onLeverChanged(val)}
+              renderText={() => `${sliderData.value}x`}
+              renderMarkText={(value: number | string) => `${value}x`}
+              {...sliderData}
+            />
+            {/* <div className='slider-label'>
+              {state.leverRange.map((v, i) => {
+                const active = sliderData.value >= v;
+                const left = 100 / (state.leverRange.length - 1);
+                return (
+                  <div key={i} style={{ left: `${i * left}%` }} className={`item ${active && 'active'}`}>
+                    {v}X
+                  </div>
+                );
+              })}
+            </div> */}
+          </div>
+          <div className="inputContainer">
+            <CalculatorInput
+              isNegative
+              decimal={2}
+              value={state.margin}
+              label={LANG('保证金')}
+              placeholder={`${state.marginRange[0]}~${state.marginRange[1]}`}
+              max={state.marginRange[1]}
+              suffix={<div className="unit">USDT</div>}
+              onChange={val => {
+                setState(draft => {
+                  draft.margin = val;
+                });
+              }}
+              onBlur={() => {
+                if (Number(state.margin) < state.marginRange[0]) {
+                  setState(draft => {
+                    draft.margin = state.marginRange[0];
+                  });
+                }
+              }}
+            />
+            <CalculatorInput
+              decimal={(liteItem && liteItem?.digit) || 4}
+              value={state.opPrice}
+              label={LANG('开仓价')}
+              max={9999999999}
+              suffix={
+                <>
+                  <div
+                    className="new"
+                    onClick={() =>
+                      setState(draft => {
+                        draft.opPrice =
+                          (marketMap && Number(marketMap[state.selectId]?.price.toFixed(liteItem?.digit))) || 0;
+                      })
+                    }
+                  >
+                    {LANG('最新价格')}
+                  </div>
+                  <div className="unit">USDT</div>
+                </>
+              }
+              onChange={val => {
+                setState(draft => {
+                  draft.opPrice = val;
+                });
+              }}
+              onBlur={() => {
+                if (state.opPrice === '-') {
+                  setState(draft => {
+                    draft.opPrice = '';
+                  });
+                }
+              }}
+            />
+            <CalculatorInput
+              decimal={(liteItem && liteItem?.digit) || 4}
+              value={state.cpPrice}
+              label={LANG('平仓价格')}
+              max={9999999999}
+              suffix={<div className="unit">USDT</div>}
+              onChange={val => {
+                setState(draft => {
+                  draft.cpPrice = val;
+                });
+              }}
+              onBlur={() => {
+                if (state.opPrice === '-') {
+                  setState(draft => {
+                    draft.cpPrice = '';
+                  });
+                }
+              }}
+            />
+          </div>
+          {!isMobile && (
+            <Button type="primary" rounded size={Size.LG} disabled={!canSubmit} onClick={onCalculateBtnClicked}>
+              {LANG('计算')}
+            </Button>
+          )}
+        </div>
+        <CalculatorResult results={results} />
+      </div>
+      <style jsx>{styles}</style>
+    </div>
+  );
+  if (isMobile) {
+    return (
+      <MobileModal visible={open} onClose={onClose} type="bottom">
+        <BottomModal
+          title={LANG('计算器')}
+          confirmText={LANG('计算')}
+          onConfirm={onCalculateBtnClicked}
+          disabledConfirm={!canSubmit}
+        >
+          {content}
+        </BottomModal>
+      </MobileModal>
+    );
+  }
   return (
     <>
       <Modal
+        visible={open}
+        className="modal"
+        contentClassName={'calculator-modal'}
+        modalContentClassName={'calculator-modal-content'}
+        onClose={onClose}
+      >
+        <ModalTitle title={LANG('计算器')} onClose={onModalClosed} />
+        {content}
+      </Modal>
+    </>
+  );
+  return (
+    <>
+      <AntModal
         open={open}
         footer={null}
         closeIcon={null}
         onCancel={onModalClosed}
-        className='modal'
+        className="modal"
         closable={false}
         destroyOnClose
       >
-        <div className={`modal-content ${theme}`}>
-          <div className='title'>
+        <div className={`calculator-content ${theme}`}>
+          <div className="title">
             {LANG('计算器')}
-            <ModalClose className='close-icon' onClose={onClose} />
+            <ModalClose className="close-icon" onClose={onClose} />
           </div>
-          <div className='content'>
-            <div className='left'>
+          <div className="content">
+            <div className="left">
               <QuoteSelect
+                layer={Layer.Overlay}
                 value={state.selectValue}
                 list={state.selectList}
                 onChange={onQuoteSelectChange}
-                label={LANG('简单合约')}
               />
               <TransactionTypeButton
                 positionSide={state.positionSide}
                 greenText={LANG('买多')}
                 redText={LANG('卖空')}
-                onChange={(positionSide) =>
-                  setState((draft) => {
+                onChange={positionSide =>
+                  setState(draft => {
                     draft.positionSide = positionSide;
                   })
                 }
               />
               <div className={'slider-container'}>
                 <Slider
+                  layer={Layer.Overlay}
+                  railBgColor="var(--fill_3)"
                   percent={percent}
                   isDark={isDark}
                   grid={state.leverRange.length - 1 > 0 ? state.leverRange.length - 1 : 0}
@@ -220,7 +392,7 @@ const CalculatorModal = ({ open, onClose }: Props) => {
                   min={state.leverRange[0]}
                   max={state.leverRange[state.leverRange.length - 1]}
                 />
-                <div className='slider-label'>
+                <div className="slider-label">
                   {state.leverRange.map((v, i) => {
                     const active = sliderData.value >= v;
                     const left = 100 / (state.leverRange.length - 1);
@@ -232,7 +404,7 @@ const CalculatorModal = ({ open, onClose }: Props) => {
                   })}
                 </div>
               </div>
-              <div className='inputContainer'>
+              <div className="inputContainer">
                 <CalculatorInput
                   isNegative
                   decimal={2}
@@ -240,15 +412,15 @@ const CalculatorModal = ({ open, onClose }: Props) => {
                   label={LANG('保证金')}
                   placeholder={`${state.marginRange[0]}~${state.marginRange[1]}`}
                   max={state.marginRange[1]}
-                  suffix={<div className='unit'>USDT</div>}
-                  onChange={(val) => {
-                    setState((draft) => {
+                  suffix={<div className="unit">USDT</div>}
+                  onChange={val => {
+                    setState(draft => {
                       draft.margin = val;
                     });
                   }}
                   onBlur={() => {
                     if (Number(state.margin) < state.marginRange[0]) {
-                      setState((draft) => {
+                      setState(draft => {
                         draft.margin = state.marginRange[0];
                       });
                     }
@@ -262,9 +434,9 @@ const CalculatorModal = ({ open, onClose }: Props) => {
                   suffix={
                     <>
                       <div
-                        className='new'
+                        className="new"
                         onClick={() =>
-                          setState((draft) => {
+                          setState(draft => {
                             draft.opPrice =
                               (marketMap && marketMap[state.selectId]?.price.toFixed(liteItem?.digit)) || 0;
                           })
@@ -272,17 +444,17 @@ const CalculatorModal = ({ open, onClose }: Props) => {
                       >
                         {LANG('最新价格')}
                       </div>
-                      <div className='unit'>USDT</div>
+                      <div className="unit">USDT</div>
                     </>
                   }
-                  onChange={(val) => {
-                    setState((draft) => {
+                  onChange={val => {
+                    setState(draft => {
                       draft.opPrice = val;
                     });
                   }}
                   onBlur={() => {
                     if (state.opPrice === '-') {
-                      setState((draft) => {
+                      setState(draft => {
                         draft.opPrice = '';
                       });
                     }
@@ -293,29 +465,29 @@ const CalculatorModal = ({ open, onClose }: Props) => {
                   value={state.cpPrice}
                   label={LANG('平仓价格')}
                   max={9999999999}
-                  suffix={<div className='unit'>USDT</div>}
-                  onChange={(val) => {
-                    setState((draft) => {
+                  suffix={<div className="unit">USDT</div>}
+                  onChange={val => {
+                    setState(draft => {
                       draft.cpPrice = val;
                     });
                   }}
                   onBlur={() => {
                     if (state.opPrice === '-') {
-                      setState((draft) => {
+                      setState(draft => {
                         draft.cpPrice = '';
                       });
                     }
                   }}
                 />
               </div>
-              <button className='btn' disabled={!canSubmit} onClick={onCalculateBtnClicked}>
+              <Button type="primary" rounded size={Size.XL} disabled={!canSubmit} onClick={onCalculateBtnClicked}>
                 {LANG('计算')}
-              </button>
+              </Button>
             </div>
             <CalculatorResult results={results} />
           </div>
         </div>
-      </Modal>
+      </AntModal>
       <style jsx>{styles}</style>
     </>
   );
@@ -325,14 +497,17 @@ export default CalculatorModal;
 
 const styles = css`
   :global(.modal) {
-    width: min-content !important;
-    :global(.ant-modal-content) {
-      padding: 0;
+    :global(.calculator-modal) {
+      width: 720px !important;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      :global(.calculator-modal-content) {
+        align-self: stretch;
+        padding: 0 !important;
+      }
     }
-    .modal-content {
-      width: 684px !important;
-      padding: 0 !important;
-      background: var(--theme-trade-modal-color);
+    .calculator-content {
       .title {
         color: var(--theme-font-color-1);
         border-bottom: 1px solid var(--theme-trade-border-color-1);
@@ -353,18 +528,39 @@ const styles = css`
       }
       .content {
         display: flex;
-        min-height: 402px;
-        padding: 18px 30px 32px;
+        align-items: flex-start;
+        gap: 24px;
+        @media ${MediaInfo.mobile} {
+          flex-direction: column;
+          padding: 0 8px;
+          gap: 0;
+        }
         .left {
           display: flex;
+          width: 324px;
           flex-direction: column;
-          width: 315px;
-          margin-right: 28px;
+          justify-content: center;
+          align-items: stretch;
+          gap: 24px;
+          @media ${MediaInfo.mobile} {
+            width: 100%;
+            gap: 1rem;
+            :global(.title) {
+              padding: 0 16px;
+            }
+          }
           .slider-container {
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            height: 100px;
+            @media ${MediaInfo.mobile} {
+              :global(.slider) {
+                margin: 0;
+              }
+              :global(.ant-slider-horizontal.ant-slider-with-marks.slider-with-marks-label) {
+                margin-bottom: 1rem;
+              }
+            }
             .slider-label {
               position: relative;
               display: flex;
@@ -395,22 +591,33 @@ const styles = css`
             }
           }
           .inputContainer {
-            margin-top: 19px;
-            :global(> input) {
-              margin-bottom: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            flex-shrink: 0;
+            gap: 24px;
+            @media ${MediaInfo.mobile} {
+              gap: 1rem;
             }
             .unit {
-              white-space: nowrap;
-              line-height: 14px;
-              font-size: 14px;
+              color: var(--text_2);
+              text-align: right;
+              font-size: 12px;
+              font-style: normal;
               font-weight: 400;
-              color: var(--theme-font-color-3);
+              line-height: normal;
             }
             .new {
               user-select: none;
               cursor: pointer;
-              color: var(--skin-primary-color);
-              margin-right: 3px;
+              color: var(--text_brand);
+              text-align: right;
+              font-size: 12px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
+              margin-right: 16px;
             }
           }
           .btn {

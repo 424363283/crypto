@@ -1,6 +1,6 @@
 import { Svg } from '@/components/svg';
-import { useTheme } from '@/core/hooks';
-import { clsx } from '@/core/utils';
+import { useTheme, useResponsive } from '@/core/hooks';
+import { clsx, MediaInfo } from '@/core/utils';
 import { ChangeEvent, useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
 
@@ -15,8 +15,8 @@ interface Props {
   isPercent?: boolean;
   max?: number;
   min: number;
-  addStep: number;
-  minusStep: number;
+  addStep?: number;
+  minusStep?: number;
   least?: number;
   onOriginValueChange?: (value: string) => void;
 }
@@ -29,15 +29,16 @@ const RatioInput = ({
   isNegative = true,
   min,
   max,
-  addStep,
-  minusStep,
+  addStep = 0,
+  minusStep = 0,
   isPercent = false,
   onFocus,
   onBlur,
   least = 0,
-  onOriginValueChange,
+  onOriginValueChange
 }: Props) => {
   const { theme } = useTheme();
+  const { isMobile } = useResponsive();
   const [isFocus, setIsFocus] = useState(false);
   const [originVal, setOriginVal] = useState(value);
 
@@ -126,8 +127,12 @@ const RatioInput = ({
   };
 
   const _onMinus = () => {
+     console.log('max',min);
+      console.log('min',min);
     if (originVal != min) {
+      console.log('originVal',originVal);
       const result = Number(originVal).sub(minusStep);
+      console.log('result',result);
       onChange(Number(result) < min ? String(min) : String(result));
     }
   };
@@ -135,14 +140,17 @@ const RatioInput = ({
   return (
     <>
       <div className={`${theme} ${clsx('container', isFocus && 'focus')}`}>
-        <div className='controller'>
-          <button className='btn-control' onClick={_onMinus}>
-            <Svg src='/static/images/lite/minus.svg' width={12} height={12} />
-          </button>
-        </div>
+        {addStep > 0 && (
+          <div className="controller">
+            <button className="btn-control" onClick={_onAdd}>
+              <span>+</span>
+            </button>
+          </div>
+        )}
         <input
           value={originVal}
-          type='text'
+          type="text"
+          inputMode="decimal"
           onInput={onInput}
           placeholder={placeholder}
           onFocus={_onFocus}
@@ -153,17 +161,19 @@ const RatioInput = ({
           <span
             className={'symbol'}
             style={{
-              left: `${value.toString().length * 4 + 132}px`,
+              left:isMobile ? `calc(50% + ${value.toString().length * 5}px)`: `${value.toString().length * 4 + 160}px`
             }}
           >
             %
           </span>
         )}
-        <div className='controller'>
-          <button className='btn-control' onClick={_onAdd}>
-            <Svg src='/static/images/lite/plus.svg' width={12} height={12} />
-          </button>
-        </div>
+        {minusStep > 0 && (
+          <div className="controller">
+            <button className="btn-control" onClick={_onMinus}>
+              <span>-</span>
+            </button>
+          </div>
+        )}
       </div>
       <style jsx>{styles}</style>
     </>
@@ -176,11 +186,11 @@ const styles = css`
     width: 100%;
     height: 40px;
     border-radius: 6px;
-    margin: 0 0 14px 0;
+    padding: 0 8px;
     display: flex;
     align-items: center;
     position: relative;
-    background: var(--theme-trade-tips-color);
+    background: var(--fill_3);
     &:hover {
       border-color: var(--skin-color-active) !important;
     }
@@ -188,16 +198,19 @@ const styles = css`
       box-shadow: 0 0 0 2px rgba(248, 187, 55, 0.1);
       border-color: var(--skin-color-active) !important;
     }
+    @media ${MediaInfo.mobile} {
+      width: auto;
+    }
     input {
       flex: 1;
-      color: var(--theme-font-color-1);
-      padding-right: 10px;
+      color: var(--text_1);
+      padding: 0 8px;
       font-size: 14px;
       outline: none;
       text-align: center;
       border: 0;
       width: 100%;
-      background: var(--theme-trade-tips-color);
+      background: var(--fill_3);
       &::placeholder,
       input::placeholder,
       input::-webkit-input-placeholder,
@@ -209,7 +222,7 @@ const styles = css`
       position: absolute;
       font-size: 14px;
       pointer-events: none;
-      color: var(--theme-font-color-1);
+      color: var(--text_1);
     }
     .controller {
       width: auto;
@@ -220,14 +233,22 @@ const styles = css`
         border: none;
         outline: 0;
         height: 36px;
-        width: 44px;
-        background: var(--theme-trade-tips-color);
+        width: auto;
+        background: var(--fill_3);
         display: flex;
         justify-content: space-evenly;
         align-items: center;
         border-radius: 6px;
         cursor: pointer;
-        padding: 0;
+        padding: 0 8px;
+        span {
+          color: var(--text_3);
+          text-align: center;
+          font-size: 20px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: normal;
+        }
       }
     }
   }

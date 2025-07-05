@@ -5,8 +5,9 @@ import { useCallback, useMemo, useRef } from 'react';
 import InputController from './controller';
 
 import { clsx, styles } from './styled';
+import { Layer } from '@/components/constants';
 
-const Input = ({ inputComponent, className, label, controller = false, ...props }: any) => {
+const Input = ({ inputComponent, className, label, controller = false, layer = Layer.Default, ...props }: any) => {
   const { isDark } = useTheme();
   const inputRef = useRef<any>({});
   const Comp = inputComponent || AppInput;
@@ -21,7 +22,7 @@ const Input = ({ inputComponent, className, label, controller = false, ...props 
             </span>
           )
         : undefined,
-    []
+    [label]
   );
 
   return (
@@ -29,7 +30,7 @@ const Input = ({ inputComponent, className, label, controller = false, ...props 
       <Comp
         inputRef={inputRef}
         type='number'
-        className={clsx('trade-view-input', isDark ? 'dark' : 'light', label && 'with-label', className)}
+        className={clsx('trade-view-input', isDark ? 'dark' : 'light', `layer${layer}`, className)}
         component={DecimalInput}
         controller={controller}
         renderAdd={renderAdd}

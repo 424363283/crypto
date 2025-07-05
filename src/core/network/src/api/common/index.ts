@@ -292,7 +292,7 @@ export function referralSendEmailApi(data: any) {
 /** 获取KYC状态 */
 export async function getKycStatusApi() {
   const res = await http.get(paths['profile_last_kyc2']);
-  if (res.code === 200) {
+  if (res?.code === 200) {
     const data: any = res.data;
     data.identityName = [data.firstname, data.lastname].filter((v) => !!v).join('');
   }
@@ -393,6 +393,18 @@ export function postCommonVipApplyApi(data: { account: string; contact: string; 
       'Content-Type': 'multipart/form-data;boundary=' + new Date().getTime(),
     },
   });
+}
+
+/** 合伙人申请 */
+export function postPartnerApplyApi(data: any) {
+  return http.post(paths['partner_apply'], data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+}
+
+/** 合伙人申请状态 */
+export function postPartnerApplyStatusApi() {
+  return http.get(paths['partner_apply_status']);
 }
 
 /** vip等级相关数据 */

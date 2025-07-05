@@ -1,18 +1,17 @@
+import Radio from '@/components/Radio';
 import ProTooltip from '@/components/tooltip';
 import { LANG } from '@/core/i18n';
 import { WS } from '@/core/network';
 import { TIME_ZON } from '@/core/shared';
-import { MediaInfo } from '@/core/utils';
+import { MediaInfo, clsx } from '@/core/utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
 
 // 涨跌幅基准
 export const QuoteChange = ({
-  goBack,
   onTimeZoneSelected,
 }: {
-  goBack: () => void;
   onTimeZoneSelected: (title: string) => void;
 }) => {
   const offset = new Date().getTimezoneOffset();
@@ -40,28 +39,18 @@ export const QuoteChange = ({
   };
   return (
     <div className='base-wrapper'>
-      <div className='back' onClick={goBack}>
-        <Image src='/static/images/common/back.svg' width={24} height={24} alt='back' />
-      </div>
-      <h2 className='title'>
-        <span>{LANG('涨跌幅基准')}</span>
-        <ProTooltip title={<TooltipTitle />}>
-          <Image src='/static/images/common/question-mark.svg' width={16} height={16} alt='icon' className='icon' />
-        </ProTooltip>
-      </h2>
       <ul className='time-list'>
         {TIME_ZON.map((item, index) => {
           const isCurrentTimeZone = item.title === timezone;
           const currentTimeZone = isCurrentTimeZone ? `(${LANG('当前时区')})` : '';
+          const active = String(selectedTimeZone) === item.value;
           return (
-            <li key={index} onClick={() => onTimeZoneClick(item)} className='li-item'>
+            <li className={ clsx('li-item', active && 'active') } key={index} onClick={() => onTimeZoneClick(item)} >
               <p className='value'>
                 {item.title}
                 {item.value === '24' ? '' : ', 00:00'} {currentTimeZone}
               </p>
-              {String(selectedTimeZone) === item.value ? (
-                <Image src='/static/images/common/check.svg' width={16} height={16} alt='check' />
-              ) : null}
+              <Radio label='' checked={active}/>
             </li>
           );
         })}
@@ -73,42 +62,38 @@ export const QuoteChange = ({
 const styles = css`
   .base-wrapper {
     cursor: default;
-    padding: 20px 28px 25px;
-    @media ${MediaInfo.mobile} {
-      padding: 0;
-    }
-    height: 100%;
-    .back {
-      cursor: pointer;
-    }
-    .title {
-      display: flex;
-      align-items: center;
-      margin-top: 20px;
-      color: var(--theme-trade-text-color-1);
-      font-size: 16px;
-      font-weight: 400;
-      :global(.icon) {
-        margin-left: 10px;
-      }
-    }
+    height: 432px;
     .time-list {
-      margin-top: 28px;
       overflow: scroll;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
       padding: 0;
-      height: 100%;
-      padding-bottom: 30px;
       .li-item {
+        width: 100%;
         cursor: pointer;
-        color: var(--theme-trade-text-color-1);
         display: flex;
+        flex: 1 0 0;
+        padding: 16px;
         align-items: center;
-        justify-content: space-between;
-        &:not(:last-child) {
-          margin-bottom: 28px;
+        gap: 8px;
+        border-radius: 12px;
+        border: 1px solid transparent;
+        .value {
+          flex: 1 0 0;
+          color: var(--text_2);
+          font-family: "Lexend";
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
         }
-        &:last-child {
-          margin-bottom: 55px;
+        &.active {
+          .value {
+            color: var(--text_1);
+          }
+          border: 1px solid var(--brand);
         }
       }
     }

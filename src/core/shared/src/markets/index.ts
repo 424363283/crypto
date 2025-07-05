@@ -24,7 +24,7 @@ class Markets {
   public static markets: MarketsMap = Object.create(MarketsData); // 所有商品集合
 
   private constructor(group: Group, subscribe?: boolean) {
-    // console.log('group', group);
+    console.log('group', group);
     this.init(group, subscribe);
     window.dispatchEvent(new CustomEvent(SUBSCRIBE_TYPES.ws3001, { detail: Markets.markets }));
   }
@@ -39,8 +39,11 @@ class Markets {
     if (Markets.isLite && this.liteIds.length === 0) {
       this.liteIds = group.getLiteIds;
       group.getLiteList.forEach((item) => {
-        if (!Markets.markets[item.id]) {
-          Markets.markets[item.id] = new MarketItem(item);
+        // if (!Markets.markets[item.id]) {
+        //   Markets.markets[item.id] = new MarketItem(item);
+        // }
+        if (!Markets.markets[item.quoteCode]) {
+          Markets.markets[item.quoteCode] = new MarketItem(item);
         }
       });
     }
@@ -110,14 +113,14 @@ class Markets {
         return Markets.instance;
       } else {
         Markets.cahceMarketsStatus = cacheStr;
-        const group = await Group.getInstance();
+        const group = await Group.getInstance(true);
         Markets.instance.init(group);
-        // console.log('instance', Markets.instance);
+        console.log('instance', Markets.instance);
         return Markets.instance;
       }
     }
     return await asyncFactory.getInstance<Markets>(async (): Promise<Markets> => {
-      const group = await Group.getInstance();
+      const group = await Group.getInstance(true);
       Markets.instance = new Markets(group);
       return Markets.instance;
     }, Markets);
@@ -135,8 +138,10 @@ class Markets {
         spotLoading: this._spotLoading,
         swapLoading: this._swapLoading,
       });
-      Markets.markets = Object.assign(obj, data);
-      window.dispatchEvent(new CustomEvent(SUBSCRIBE_TYPES.ws3001, { detail: Markets.markets }));
+      if (data) {
+        Markets.markets = Object.assign(obj, data);
+        window.dispatchEvent(new CustomEvent(SUBSCRIBE_TYPES.ws3001, { detail: Markets.markets }));
+      }
     });
   }
 
@@ -164,7 +169,7 @@ class Markets {
 
   // 通过这个方法获取真实存在的商品
   public static getMarketList(list: MarketsMap, ids: string[]): MarketItem[] {
-    if (!ids.length) return [];
+    if (!ids?.length) return [];
     if (!list) return [];
     const marketList: MarketItem[] = [];
     for (const id of ids) {
@@ -175,6 +180,8 @@ class Markets {
     }
     return marketList;
   }
+
+
 }
 
 export { MarketItem, Markets };

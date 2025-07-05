@@ -15,9 +15,9 @@ export const OrderBookRates = ({ data, id = '' }: { data: ListDataType; id?: str
         const func = [
           (id: string) => TradeMap.getSpotById(id),
           (id: string) => TradeMap.getLiteById(id),
-          (id: string) => TradeMap.getSwapById(id),
+          (id: string) => TradeMap.getSwapById(id)
         ];
-        const funcIndex = [isSpot(id), isLite(id), isSwap(id)].findIndex((v) => v);
+        const funcIndex = [isSpot(id), isLite(id), isSwap(id)].findIndex(v => v);
         const item = await func[funcIndex](id);
         setName(item?.name || '');
       }
@@ -28,10 +28,10 @@ export const OrderBookRates = ({ data, id = '' }: { data: ListDataType; id?: str
     const len = 20;
     let buyAmount = '0';
     let sellAmount = '0';
-    data.asks.slice(0, len).forEach((v) => {
+    data.asks.slice(0, len).forEach(v => {
       sellAmount = sellAmount.add(v.amount);
     });
-    data.bids.slice(0, len).forEach((v) => {
+    data.bids.slice(0, len).forEach(v => {
       buyAmount = buyAmount.add(v.amount);
     });
     const total = buyAmount.add(sellAmount);
@@ -39,7 +39,7 @@ export const OrderBookRates = ({ data, id = '' }: { data: ListDataType; id?: str
   }, [data]);
 
   return (
-    <Tooltip title={`${name} ${LANG('订单薄前20档买卖比例')}`}>
+    <Tooltip title={`${name} ${LANG('订单薄前20档买卖比例')}`} overlayClassName="order-book-rates_tooltip">
       <>
         <div
           className={clsx(
@@ -50,30 +50,30 @@ export const OrderBookRates = ({ data, id = '' }: { data: ListDataType; id?: str
             isMobile && 'mobile'
           )}
         >
-          <div className='bar'>
-            <div className='buy-bar' style={{ width: `${amounts.buy}%` }}>
-              <div className='content'></div>
+          <div className="bar">
+            <div className="sell-bar" style={{ width: `${amounts.sell}%` }}>
+              <div className="content"></div>
             </div>
-            <div className='sell-bar' style={{ width: `${amounts.sell}%` }}>
-              <div className='content'></div>
+
+            <div className="buy-bar" style={{ width: `${amounts.buy}%` }}>
+              <div className="content"></div>
             </div>
           </div>
-          <div className='buy'>
-            <div className='block'>B</div>
-            <div className='percent'>{`${amounts.buy}%`}</div>
-          </div>
-          <div className='sell'>
-            <div className='percent'>{`${amounts.sell}%`}</div>
-            <div className='block'>S</div>
+          <div className="percent-bar">
+            <div className="percent sell">
+              <span>{isMobile ? `${LANG('卖')} - ` : 'S'}</span>
+              {`${amounts.sell}%`}
+            </div>
+            <div className="percent buy">
+              <span>{isMobile ? `${LANG('买')} - ` : 'B'}</span>
+              {`${amounts.buy}%`}
+            </div>
           </div>
         </div>
         <style jsx>{`
           .order-book-rates {
             cursor: pointer;
-            height: 22px;
-            margin: 0 10px 10px;
-            display: flex;
-            position: relative;
+            padding: 19px;
             &.swap {
               .small {
                 margin-top: 7px;
@@ -82,82 +82,86 @@ export const OrderBookRates = ({ data, id = '' }: { data: ListDataType; id?: str
                 margin-top: 7px;
               }
               &.mobile {
-                margin-top: 7px;
+                padding: 0 1rem;
+                margin-top: 8px;
+                padding-bottom: 10px;
               }
             }
             .bar {
               width: 100%;
               height: inherit;
               top: 0;
-              position: absolute;
               display: flex;
               overflow: hidden;
+              height: 4px;
               .buy-bar {
                 transition: width 0.3s;
-                border-radius: 2px;
+
                 height: inherit;
                 overflow: hidden;
                 .content {
                   position: relative;
-                  left: -4px;
+                  /* left: -4px; */
                   height: inherit;
                   transform-origin: left center;
-                  transform: skew(155deg);
-                  background-color: rgba(var(--color-green-rgb), 0.12);
+                  /* transform: skew(155deg); */
+                  background-color: var(--color-green);
+                  border-radius: 4px;
                 }
               }
               .sell-bar {
                 transition: width 0.3s;
-                border-radius: 2px;
+
                 height: inherit;
                 overflow: hidden;
+                &:first-child {
+                  margin: 0 4px 0 0;
+                }
                 .content {
                   position: relative;
-                  right: -4px;
+                  /* right: -4px; */
                   height: inherit;
                   transform-origin: left center;
-                  transform: skew(155deg);
-                  background-color: rgba(var(--color-red-rgb), 0.12);
+                  background-color: var(--color-red);
+                  border-radius: 4px;
                 }
               }
             }
-            .buy {
-              position: relative;
-              z-index: 2;
-              flex: 1;
-              padding: 2px;
-              display: flex;
-              align-items: center;
 
+            .percent-bar {
+              display: flex;
+              justify-content: space-between;
+              flex-wrap: nowrap;
+              align-items: center;
+              width: 100%;
+              padding: 8px 0 0;
               .percent {
-                color: var(--color-green);
+                 font-family: "Lexend";
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                &.buy {
+                  color: var(--color-green);
+                }
+                &.sell {
+                  color: var(--color-red);
+                }
+                span {
+                  padding: 0 4px 0 0;
+                }
               }
             }
-            .sell {
-              position: relative;
-              z-index: 2;
-              flex: 1;
-              padding: 2px;
-              display: flex;
-              align-items: center;
-              justify-content: flex-end;
-              .percent {
-                color: var(--color-red);
-              }
-            }
-            .block {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              height: 18px;
-              width: 18px;
-              border-radius: 3px;
-              background-color: var(--theme-background-color-1);
+          }
+          :global(.order-book-rates_tooltip) {
+            :global(.ant-tooltip-inner) {
+              font-size: 12px;
+              padding: 16px;
+              font-weight: 400;
+              background-color: var(--fill_pop);
               color: var(--theme-font-color-1);
             }
-            .percent {
-              margin: 0 5px;
-              font-size: 12px;
+            :global(.ant-tooltip-arrow::before) {
+              background: var(--fill_pop);
             }
           }
         `}</style>

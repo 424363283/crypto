@@ -5,6 +5,7 @@ import { WidgetOptions } from '../types';
 
 const STORAGE_DRAWING_KEY = 'bv_tv_drawing';
 const STORAGE_STUDY_KEY = 'bv_tv_index';
+import { kChartEmitter } from "@/core/events";
 
 interface StudyShapeInfo {
   id: TradingView.EntityId;
@@ -54,6 +55,7 @@ interface PositionLineOptions<T = any> {
   extendLeft?: boolean;
   onClose?: EmptyCallback;
   onModify?: EmptyCallback;
+  onMove?: any
 }
 
 interface HistoryOrderMarkOptions {
@@ -76,6 +78,7 @@ export interface WidgetApi<T = any> extends TradingView.IChartingLibraryWidget {
   removeAllLiquidationLine: () => void;
   createHistoryOrderMark: (options: HistoryOrderMarkOptions) => void;
   removeAllHistoryOrderMark: () => void;
+  setColor: (data: any) => any;
   setSymbolResolution: (symbol: string, resolution: TradingView.ResolutionString) => void;
 }
 
@@ -94,6 +97,39 @@ export default function createWidget(options: WidgetOptions<TradingView.Resoluti
 
     private _historyOrderMarkMapping: Map<string, TradingView.IExecutionLineAdapter> = new Map();
 
+
+    overrides(Color: { upColor: any; downColor: any }) {
+      return {
+        'mainSeriesProperties.candleStyle.upColor': Color.upColor,
+        'mainSeriesProperties.candleStyle.downColor': Color.downColor,
+        'mainSeriesProperties.candleStyle.wickUpColor': Color.upColor,
+        'mainSeriesProperties.candleStyle.wickDownColor': Color.downColor,
+        'mainSeriesProperties.candleStyle.borderUpColor': Color.upColor,
+        'mainSeriesProperties.candleStyle.borderDownColor': Color.downColor,
+        // Bar styles
+        'mainSeriesProperties.barStyle.upColor': Color.upColor,
+        'mainSeriesProperties.barStyle.downColor': Color.downColor,
+        // Hollow Candles styles
+        'mainSeriesProperties.hollowCandleStyle.upColor': Color.upColor,
+        'mainSeriesProperties.hollowCandleStyle.downColor': Color.downColor,
+        'mainSeriesProperties.hollowCandleStyle.borderUpColor': Color.upColor,
+        'mainSeriesProperties.hollowCandleStyle.borderDownColor': Color.downColor,
+        'mainSeriesProperties.hollowCandleStyle.wickUpColor': Color.upColor,
+        'mainSeriesProperties.hollowCandleStyle.wickDownColor': Color.downColor,
+      };
+    }
+    volOverrides(Color: { upColor: any; downColor: any }) {
+      return {
+        'volume.volume.color.0': Color.downColor,
+        'volume.volume.color.1': Color.upColor,
+        'volume.volume.transparency': 80,
+        'volume.volume ma.transparency': 80,
+        'volume.volume ma.linewidth': 5,
+        'volume.show ma': true,
+        'bollinger bands.upper.linewidth': 7,
+      };
+    }
+
     private _studyEvent = (id: TradingView.EntityId, type: TradingView.StudyEventType) => {
       try {
         if (type === 'price_scale_changed') {
@@ -111,11 +147,14 @@ export default function createWidget(options: WidgetOptions<TradingView.Resoluti
     constructor(options: WidgetOptions<TradingView.ResolutionString, TradingView.LanguageCode, TradingView.ThemeName>) {
       const overrides = getOverrides(options.theme ?? 'Dark');
       const containerId = options.container ?? 'tv_chart_container';
+      // 从 localStorage 中获取用户选择的时区
+      const storedTimezone = localStorage.getItem('user_selected_timezone') || 'Asia/Shanghai';
+
       const ops: TradingView.ChartingLibraryWidgetOptions = {
         ...options,
         autosize: true,
         symbol_search_request_delay: 1000,
-        timezone: 'Asia/Shanghai',
+        timezone: storedTimezone, // 使用存储的时区
         container: containerId,
         debug: false,
         library_path: '/tradingView/charting_library/',
@@ -123,7 +162,7 @@ export default function createWidget(options: WidgetOptions<TradingView.Resoluti
         //隐藏模块
         disabled_features: [
           'create_volume_indicator_by_default',
-          'volume_force_overlay', //在主数据量列的窗格上放置成交量指标
+          // 'volume_force_overlay', //在主数据量列的窗格上放置成交量指标
           'display_market_status', //显示市场状态 （开市休市，加载中等）
           'header_indicators', //指标
           'header_fullscreen_button', //全屏按钮
@@ -150,13 +189,78 @@ export default function createWidget(options: WidgetOptions<TradingView.Resoluti
         studies_overrides: getStudyOverrides(),
       };
       super(ops);
+
       this._options = options;
       this.onChartReady(() => {
         this._restoreStudies();
         this._restoreShapes();
         this._saveStudiesShapes();
         this.subscribe('study_event', this._studyEvent);
+
+
+        const chart = this.activeChart();
+        const timezoneApi = chart.getTimezoneApi();
+        
+        // 订阅时区变化事件
+        timezoneApi.onTimezoneChanged().subscribe(
+          null,
+          (timezone) => {
+            localStorage.setItem('user_selected_timezone', timezone);
+          },
+          false
+        );
+
+        kChartEmitter.on(kChartEmitter.K_CHART_SWITCH_COLOR, data => {
+          if (data) {
+            const upColorRgb = `rgb(${data['up-color-rgb']})`
+            const downColorRgb = `rgb(${data['down-color-rgb']})`
+            const color = {
+              upColor: upColorRgb,
+              downColor: downColorRgb
+            }
+
+            try {
+              // this.switchChartType(2);
+              this.applyOverrides(this.overrides(color)); // 应用其他覆盖
+              this.applyOverrides(this.volOverrides(color)); // 应用其他覆盖
+              const chart = this.activeChart();
+              const studyList = chart.getAllStudies();
+              studyList.map(item => {
+                if (item.name === 'Volume') {
+                  chart.getStudyById(item.id).applyOverrides({
+                    palettes: {
+                      volumePalette: {
+                        colors: {
+                          0: {
+                            color: color.upColor,
+                          },
+                          1: {
+                            color: color.downColor,
+                          },
+                        },
+                      },
+                    },
+                  } as any);
+                }
+              });
+
+              this._saveStudiesShapesTimeout = window.setTimeout(() => {
+                this._saveStudiesShapes();
+              }, 1000);
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        });
+
+
+
+
       });
+    }
+    setTimezone(newTimezone: string) {
+      const chart = this.activeChart();
+      chart.setTimezone(newTimezone);
     }
 
     private _saveStudiesShapes() {
@@ -223,6 +327,18 @@ export default function createWidget(options: WidgetOptions<TradingView.Resoluti
      * 获取缓存的图形
      * @returns 
      */
+    private _removeAllVolumeStudies() {
+      const chart = this.activeChart();
+      const studies = chart.getAllStudies();
+      console.log('获取成交量的指标', studies);
+
+      studies.forEach(study => {
+        if (study.name === 'Volume') {
+          // 使用 removeStudy 来确保移除指标
+          chart.removeStudy(study.id);
+        }
+      });
+    }
     private _getCacheShapes() {
       let shapes: Record<string, StudyShapeInfo[]> = {};
       try {
@@ -238,31 +354,33 @@ export default function createWidget(options: WidgetOptions<TradingView.Resoluti
         const studies = this._getCacheStudies();
         const studyList: StudyShapeInfo[] = studies[symbol];
 
+        // 先移除所有的 Volume 指标
+        this._removeAllVolumeStudies();
+
+        // 如果没有缓存的 Volume 指标，添加一个新的 Volume 指标
         if (studyList) {
-          chart.removeAllStudies();
+          studyList.forEach(study => {
+            const { name, forceOverlay, lock, inputs, overrides, options } = study;
+            if (name === 'Volume') {
+              // @ts-expect-error
+              delete inputs['symbol'];
+            }
+            chart.createStudy(name, forceOverlay, lock, inputs, overrides, options);
+          });
         } else {
-          chart.createStudy(
-            'Volume',
-            false,
-            false,
-            {
+          // 使用 setTimeout 延迟添加 Volume 指标，确保移除操作完成
+          setTimeout(() => {
+            chart.createStudy('Volume', false, false, {
               col_prev_close: false,
               length: 20,
               showMA: false,
               smoothingLength: 9,
-              smoothingLine: 'SMA'
-            }
-          );
+              smoothingLine: 'SMA',
+            });
+          }, 100); // 延迟100ms后添加
         }
-        studyList.forEach(study => {
-          const { name, forceOverlay, lock, inputs, overrides, options } = study;
-          if (name === 'Volume') {
-            // @ts-expect-error
-            delete inputs['symbol'];
-          }
-          chart.createStudy(name, forceOverlay, lock, inputs, overrides, options);
-        });
-      } catch {
+      } catch (error) {
+        console.error('Error restoring studies', error);
       }
     }
 
@@ -341,6 +459,7 @@ export default function createWidget(options: WidgetOptions<TradingView.Resoluti
         closeButtonBorderColor, closeButtonIconColor, closeButtonBackgroundColor,
         tooltip, protectTooltip, closeTooltip,
         extendLeft, onClose, onModify,
+        onMove,
       } = options;
       const positionLine = this._positionLineMapping.get(id);
       if (!positionLine) {
@@ -358,7 +477,7 @@ export default function createWidget(options: WidgetOptions<TradingView.Resoluti
       if (lineStyle || lineStyle === 0) {
         positionLine.setLineStyle(lineStyle);
       }
-      
+
       if (lineColor) {
         positionLine.setLineColor(lineColor);
       }
@@ -429,6 +548,9 @@ export default function createWidget(options: WidgetOptions<TradingView.Resoluti
       if (onClose) {
         positionLine.onClose(onClose);
       }
+      if (onMove) {
+        positionLine.onMove(onMove);
+      }
     }
 
     removeAllPositionLine() {
@@ -492,7 +614,7 @@ export default function createWidget(options: WidgetOptions<TradingView.Resoluti
       if (positionTPSLLine) {
         positionTPSLLine.remove();
       }
-      positionTPSLLine = this.activeChart().createPositionLine();
+      positionTPSLLine = this.activeChart().createOrderLine();
       this._positionTPSLLineMapping.set(options.id, positionTPSLLine);
       this.overridePositionTPSLLine(options);
     }
@@ -602,9 +724,9 @@ export default function createWidget(options: WidgetOptions<TradingView.Resoluti
       this._positionTPSLLineMapping.clear();
     }
 
-   /**
-   * 创建爆仓线
-   */
+    /**
+    * 创建爆仓线
+    */
     createLiquidationLine<T>(options: PositionLineOptions<T>) {
       let positionLine = this._LiquidationLineMapping.get(options.id);
       if (positionLine) {

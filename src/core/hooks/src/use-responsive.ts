@@ -46,7 +46,7 @@ const useResponsiveClsx = () => {
     }
   };
   return {
-    setResponsiveClsx,
+    setResponsiveClsx
   };
 };
 

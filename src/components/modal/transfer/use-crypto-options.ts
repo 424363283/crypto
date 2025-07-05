@@ -21,7 +21,7 @@ type FormatCryptoOptions = {
 };
 export const useFormatCryptoOptions = ({
   sourceAccount,
-  targetAccount,
+  targetAccount
 }: {
   sourceAccount: ACCOUNT_TYPE;
   targetAccount: ACCOUNT_TYPE;
@@ -35,25 +35,25 @@ export const useFormatCryptoOptions = ({
     const twoWayMode = Swap.Info.getTwoWayMode(isUsdtType, { withHooks: false });
     const swapPositions = Swap.Order.getPosition(isUsdtType);
     const swapWalletsData = isUsdtType ? swapUAssetsStore.wallets : swapAssetsStore.wallets;
-
+    const findCopyWallet = swapUAssetsStore.wallets?.find((wa) => wa.wallet === 'COPY')
     switch (account) {
       case ACCOUNT_TYPE.SPOT:
-        const isUsdtKey = [ACCOUNT_TYPE.LITE, ACCOUNT_TYPE.SWAP_U].includes(
+        const isUsdtKey = [ACCOUNT_TYPE.LITE, ACCOUNT_TYPE.SWAP_U,ACCOUNT_TYPE.COPY].includes(
           [ACCOUNT_TYPE.SPOT].includes(sourceAccount) ? targetAccount : sourceAccount
         );
         const keys = isUsdtKey
           ? ['USDT']
-          : Object.keys(swapWalletsData.find((v) => v.wallet === SWAP_DEFAULT_WALLET_ID)?.accounts || {}).map((key) =>
+          : Object.keys(swapWalletsData.find(v => v.wallet === SWAP_DEFAULT_WALLET_ID)?.accounts || {}).map(key =>
               key.split('-')[0]?.toUpperCase()
             );
         const spotAssetsList = spotAssetsStore.allSpotAssets;
         return spotAssetsList
           .filter(({ currency }) => keys.includes(currency))
-          .map((item) => {
+          .map(item => {
             return {
               id: isUsdtKey ? usdtKey : `${item.currency}-USD`,
               price: item.balance,
-              crypto: isUsdtKey ? usdtKey : item.currency.replace(/usdt$/i, ''),
+              crypto: isUsdtKey ? usdtKey : item.currency.replace(/usdt$/i, '')
             };
           });
       case ACCOUNT_TYPE.SWAP:
@@ -63,12 +63,11 @@ export const useFormatCryptoOptions = ({
         const calcPositionData = Swap.Calculate.positionData({
           usdt: isUsdtType,
           data: Swap.Order.getPosition(isUsdtType),
-          twoWayMode: twoWayMode,
+          twoWayMode: twoWayMode
         });
-
-        swapWalletsData.forEach((data) => {
+        swapWalletsData.forEach(data => {
           const assetsData = data.accounts;
-          return Object.keys(assetsData).map((key) => {
+          return Object.keys(assetsData).map(key => {
             const item = assetsData[key];
             const quoteId = key.toUpperCase();
             const walletId = data.wallet;
@@ -80,16 +79,16 @@ export const useFormatCryptoOptions = ({
               balanceData: Swap.Assets.getBalanceData({ code: quoteId, usdt: isUsdtType, withHooks: false, walletId }),
               isCross: isUsdtType ? true : Swap.Info.getIsCrossByPositionData(quoteId, swapPositions),
               crossIncome: Number((isUsdtType ? allCrossIncomeLoss : calcItem?.crossIncomeLoss) || 0),
-              twoWayMode,
+              twoWayMode
             });
             options.push({
-              id: key.toUpperCase(),
+              id: quoteId,
               price: Number(price.toFixed(4)),
               crypto: isUsdtType ? usdtKey : key.toUpperCase().replace(/-usd$/i, ''),
               canWithdraw: item.canWithdrawAmount,
               wallet: walletId,
               walletName: data['alias'],
-              icon: data['pic'],
+              icon: data['pic']
             });
           });
         });
@@ -100,11 +99,19 @@ export const useFormatCryptoOptions = ({
             {
               id: usdtKey,
               crypto: usdtKey,
-              price: liteAssetsStore.assets?.money,
-            },
+              price: liteAssetsStore.assets?.money
+            }
           ];
         }
         return [];
+      case ACCOUNT_TYPE.COPY:
+        return [
+          {
+            id: usdtKey,
+            crypto: usdtKey,
+            price: findCopyWallet?.accounts[usdtKey].canWithdrawAmount,
+          }
+        ];;
     }
   };
 
@@ -153,14 +160,14 @@ export const useCryptoOptions = (props: CryptoOptions) => {
     const fetchAssetsStore = async () => {
       await Promise.all([
         // Account.assets.getPerpetualAsset(true),
-        // Account.assets.getPerpetualUAsset(true),
-        Account.assets.getAllSpotAssets(true),
+        Account.assets.getPerpetualUAsset(true),
+        Account.assets.getAllSpotAssets(true)
         // Account.assets.getLiteAsset(true),
       ]);
     };
     const polling = new Polling({
       interval: 2000,
-      callback: fetchAssetsStore,
+      callback: fetchAssetsStore
     });
     polling.start();
     return () => polling.stop();

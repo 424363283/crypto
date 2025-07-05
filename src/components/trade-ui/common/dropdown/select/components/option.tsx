@@ -17,11 +17,10 @@ export const Option: <T>(props: { component?: any; className?: string } & T) => 
 const { className, styles } = css.resolve`
   .trade-view-component-option:hover {
     border-radius: 5px;
-    background: rgba(var(--skin-primary-color-rgb), 0.15);
     &:hover,
     &.active {
       border-radius: 5px;
-      color: var(--skin-hover-font-color) !important;
+      color: var(--text_brand);
       font-weight: 500;
     }
   }

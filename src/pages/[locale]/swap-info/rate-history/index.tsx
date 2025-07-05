@@ -141,6 +141,7 @@ const styles = css`
       max-width: var(--const-max-page-width);
       width: 100%;
       margin: 0 auto;
+      user-select: none;
     }
   }
 

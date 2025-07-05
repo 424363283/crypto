@@ -1,35 +1,45 @@
 import { FC, memo } from 'react';
-import { Button } from 'antd';
 
-import BVIcon from '@/components/YIcons';
+import YIcon from '@/components/YIcons';
 
-import BvModal from '@/components/YModal';
+import YModal from '@/components/YModal';
+import { LANG } from '@/core/i18n';
+import { Button } from '@/components/button';
+import css from 'styled-jsx/css';
 
-interface IndicatorLimitModalProps{
+interface IndicatorLimitModalProps {
   onClose: () => void;
 }
 
-const IndicatorLimitModal: FC<IndicatorLimitModalProps> = ({  onClose }) => {
+const IndicatorLimitModal: FC<IndicatorLimitModalProps> = ({ onClose }) => {
 
 
   return (
-    <BvModal
-      open={true}
-      header={
-        <>
-          <h3>{'历史委托'}</h3>
-          <BVIcon.CloseOutlined className="close-btn" onClick={onClose} />
-        </>
-      }
-      contentStyle={{ paddingTop: 16 }}
-      content={'指标数量超过10个，请删除一些指标'}
-      footer={
-        <Button className="primary" onClick={onClose}>
-         确认
-        </Button>
-      }
-    />
+    <>
+      <YModal
+        open={true}
+        header={
+          <>
+            <h3 >{LANG('温馨提示')}</h3>
+            <YIcon.CloseOutlined className="close-btn" onClick={onClose} />
+          </>
+        }
+        contentStyle={{ paddingTop: 16 }}
+        content={LANG('指标数量超过10个，请删除一些指标')}
+        footer={
+          <Button type={'primary'} style={{ width: '100%' }} onClick={onClose}>
+            确认
+          </Button>
+        }
+      />
+      <style jsx>{styles}</style>
+    </>
   );
 };
+const styles = css`
+ .title {
 
+ }
+  
+`;
 export default memo((IndicatorLimitModal));

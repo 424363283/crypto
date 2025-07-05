@@ -1,19 +1,27 @@
 import { getSpotPositionApi } from '@/core/api';
-import { message } from '@/core/utils';
-import { useMemo } from 'react';
+import { Polling, message } from '@/core/utils';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import { TableStyle } from '../../../../components/table-style';
 import HistoricalTable from '../../../components/historical-table';
 import { SpotFilterBar } from '../spot-filter-bar';
 import { columns0 } from './column-0';
+import { Loading } from '@/components/loading';
+import { LoadingType, Spot } from '@/core/shared';
+import { closeSpotOrderApi, getSpotPositionListApi } from '@/core/api';
+import { LANG } from '@/core/i18n';
+import { ORDER_HISTORY_TYPE } from '@/pages/[locale]/account/fund-management/order-history/types';
+import { SPOT_HISTORY_TAB_KEY } from '../../types';
+import { useResponsive } from '@/core/hooks';
 
 export const SpotCurrentCommissionTable = () => {
+  const { isMobile } = useResponsive();
   const [state, setState] = useImmer({
     page: 1,
     data: [] as any,
     loading: false,
     isOCO: false,
-    searchParam: {} as any,
+    searchParam: {} as any
   });
   const { page, data, loading, searchParam } = state;
   const fetchSpotPosition = async ({
@@ -21,7 +29,7 @@ export const SpotCurrentCommissionTable = () => {
     side,
     type,
     commodity,
-    page = 1,
+    page = 1
   }: {
     commodity: string;
     symbol: string;
@@ -29,7 +37,7 @@ export const SpotCurrentCommissionTable = () => {
     type: string;
     page?: number;
   }) => {
-    setState((draft) => {
+    setState(draft => {
       draft.loading = true;
       draft.page = page;
       draft.searchParam = {
@@ -37,13 +45,13 @@ export const SpotCurrentCommissionTable = () => {
         side,
         type,
         commodity,
-        page,
+        page
       };
     });
     const params: any = {
       orderTypes: '0,2',
-      rows: 13,
-      page,
+      rows: isMobile ? 10 : 13,
+      page
     };
     if (commodity) {
       params['commodity'] = commodity;
@@ -61,19 +69,22 @@ export const SpotCurrentCommissionTable = () => {
     }
     const res = await getSpotPositionApi(params);
     if (res.code === 200) {
-      setState((draft) => {
+      setState(draft => {
         draft.data = res.data;
       });
     } else {
       message.error(res.message);
     }
-    setState((draft) => {
+    setState(draft => {
       draft.loading = false;
     });
   };
 
-  const onChangePagination = (pagi: number) => {
-    fetchSpotPosition({ ...searchParam, page: pagi });
+  const onChangePagination = (page: number) => {
+    setState(draft => {
+      draft.page = page;
+    });
+    fetchSpotPosition({ ...searchParam, page: page });
   };
 
   const filterList = useMemo(() => {
@@ -90,19 +101,32 @@ export const SpotCurrentCommissionTable = () => {
     return list;
   }, [data, state.searchParam]);
 
+  useEffect(() => {
+    const iter = setInterval(() => {
+      fetchSpotPosition({ ...searchParam, page: page });
+    }, 2000);
+
+    return () => {
+      clearInterval(iter);
+    };
+  }, [page, searchParam]);
   return (
     <>
-      <SpotFilterBar onSearch={fetchSpotPosition} />
+      <SpotFilterBar onSearch={fetchSpotPosition} filterData={filterList} />
       <HistoricalTable
         dataSource={filterList}
-        loading={loading}
+        // loading={loading}
+        loading={false}
         columns={columns0}
         showTabletTable
         showMobileTable
+        isHistoryList
+        historyType={SPOT_HISTORY_TAB_KEY.CURRENT_COMMISSION}
+        orderType={ORDER_HISTORY_TYPE.SPOT_ORDER}
         pagination={{
           current: page,
           pageSize: 13,
-          onChange: onChangePagination,
+          onChange: onChangePagination
         }}
       />
       <TableStyle />

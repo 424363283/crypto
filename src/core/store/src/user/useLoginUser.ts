@@ -1,11 +1,14 @@
-import { useLoginEffect } from '@/core/hooks/src/use-login-effect';
-import { Account, UserInfo } from '@/core/shared/src/account';
-import { useEffect } from 'react';
-import { useAppContext } from '../app-context';
-import { LOCAL_KEY } from '../local-storage';
-import { resso, useResso } from '../resso';
+import { useLoginEffect } from "@/core/hooks/src/use-login-effect";
+import { Account, UserInfo } from "@/core/shared/src/account";
+import { useEffect } from "react";
+import { useAppContext } from "../app-context";
+import { LOCAL_KEY } from "../local-storage";
+import { resso, useResso } from "../resso";
 
-export const LOGIN_STORE = resso<{ user: UserInfo | null }>({ user: null }, { nameSpace: LOCAL_KEY.LOGIN_USER, auth: true });
+export const LOGIN_STORE = resso<{ user: UserInfo | null }>(
+  { user: null },
+  { nameSpace: LOCAL_KEY.LOGIN_USER, auth: true }
+);
 
 export const useLoginUser = () => {
   const appContext = useAppContext();

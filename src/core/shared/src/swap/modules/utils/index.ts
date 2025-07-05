@@ -51,17 +51,18 @@ export class Utils {
     return 1;
   }
 
-  static getSpslParams(stopProfit: boolean, { symbol, buy, volume, price, priceType }: any) {
+  static getSpslParams(stopProfit: boolean, { symbol, buy, volume, triggerPrice, priceType,price}: any) {
     return {
       priceType: priceType == Trade.PRICE_TYPE.FLAG ? 2 : 1, // 1:市场价格，2:标记价格，
       side: buy ? 2 : 1,
       source: Utils.getSource(),
       symbol: symbol,
-      triggerPrice: price,
+      triggerPrice: triggerPrice,
       type: 5,
       strategyType: stopProfit ? 1 : 2,
       opType: 2,
       volume: volume,
+      price
     };
   }
 }

@@ -1,6 +1,7 @@
 import { useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Account, Lite, LiteListItem } from '@/core/shared';
+import { DesktopOrTablet, Mobile } from '@/components/responsive';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { useMemo } from 'react';
@@ -8,6 +9,9 @@ import css from 'styled-jsx/css';
 import RecordList from '../../components/record-list';
 import Clipboard from './clipboard';
 import ShareModal from './share-modal';
+import { ItemHeader, ItemStatistics } from './history-item';
+import { EmptyComponent } from '@/components/empty';
+import { clsx, MediaInfo } from '@/core/utils';
 
 const Position = Lite.Position;
 const Trade = Lite.Trade;
@@ -44,39 +48,49 @@ const HistoryTable = () => {
     {
       title: LANG('合约'),
       dataIndex: 'contract',
+      minWidth: 100,
       render: (_: any, { commodityName, currency, lever, buy }: LiteListItem) => {
         return (
           <div className={`first-td flex ${buy ? 'raise' : 'fall'}`}>
-            <span>{commodityName.replace(currency, '')}</span>
-            <span>{lever}X</span>
+            <span className="liteName">{commodityName?.replace(currency, '')}</span>
+            <span className="liteMultiple">{lever}x</span>
           </div>
         );
-      },
+      }
     },
     {
       title: LANG('保证金'),
       dataIndex: 'margin',
+      minWidth: 100,
+      render: (margin: number) => {
+        return <span className="liteName">{`${margin}`} USDT</span>;
+      }
     },
     {
       title: LANG('仓位'),
       dataIndex: 'volume',
-      render: (val: number) => val.toFixed(4),
+      minWidth: 100,
+      render: (val: number) => {
+        return <span className="liteName">{`${val}`}</span>;
+      }
     },
     {
       title: `${LANG('开仓价')}/${LANG('平仓价')}`,
       dataIndex: 'opPrice',
+      minWidth: 100,
       render: (_: any, { opPrice, cpPrice, priceDigit }: LiteListItem) => {
         return (
-          <div className='flex'>
-            <span className='gray'>{opPrice?.toFormat(priceDigit)}</span>
-            <span>{cpPrice?.toFormat(priceDigit)}</span>
+          <div className="flex">
+            <span className="liteName">{opPrice?.toFormat(priceDigit)}</span>
+            <span className="liteName gray">{cpPrice?.toFormat(priceDigit)}</span>
           </div>
         );
-      },
+      }
     },
     {
       title: `${LANG('订单盈亏')}(${LANG('盈亏比')})`,
       dataIndex: 'income',
+      minWidth: 100,
       render: (_: any, { income: oldIncome, margin }: LiteListItem) => {
         const income = Number((oldIncome || 0).toFixed(2)) + 0;
         const rate = Number(income.div(margin).mul(100));
@@ -86,74 +100,84 @@ const HistoryTable = () => {
               {income >= 0 ? '+' : ''}
               {income.toFixed(2)}
             </span>
-            (
-            <span>
+
+            <p className="gray">
               {rate >= 0 ? '+' : ''}
               {rate.toFixed(2)}%
-            </span>
-            )
+            </p>
           </div>
         );
-      },
+      }
     },
     {
       title: `${LANG('止盈')}/${LANG('止损')}`,
       dataIndex: 'takeProfit',
-      render: (_: any, { takeProfit, stopLoss }: LiteListItem) => (
-        <div>{`${takeProfit.toFormat()} / ${stopLoss.toFormat()}`}</div>
-      ),
+      minWidth: 100,
+      render: (_: any, { takeProfit, stopLoss }: LiteListItem) => {
+        return (
+          <div className="flex">
+            <span className="liteName">{takeProfit.toFormat()}</span>
+            <span className="liteName StopLoss">{stopLoss.toFormat()}</span>
+          </div>
+        );
+      }
     },
     {
       title: LANG('开仓方式'),
       dataIndex: 'placeSource',
-      render: (_: any, item: LiteListItem) => getType(item),
+      minWidth: 100,
+      render: (_: any, item: LiteListItem) => {
+        return <span className="liteName">{`${getType(item)}`}</span>;
+      }
     },
     {
       title: `${LANG('开仓时间')}/${LANG('平仓时间')}`,
-      width: 160,
+      minWidth: 130,
       dataIndex: 'opTime',
       render: (_: any, { createTime, tradeTime }: LiteListItem) => {
         return (
-          <div className='flex'>
-            <span className='gray'>{dayjs(createTime).format('MM/DD HH:mm:ss')}</span>
-            <span>{dayjs(tradeTime).format('MM/DD HH:mm:ss')}</span>
+          <div className="flex">
+            <span className="liteName">{dayjs(createTime).format('MM/DD HH:mm:ss')}</span>
+            <span className="gray liteName">{dayjs(tradeTime).format('MM/DD HH:mm:ss')}</span>
           </div>
         );
-      },
+      }
     },
     {
       title: LANG('订单号'),
       dataIndex: 'id',
+      minWidth: 100,
       render: (id: string) => {
         return (
-          <div>
-            <span style={{ marginRight: '10px' }}>
+          <div className="liteOrderid">
+            <span style={{}}>
               {id.slice(0, 5)}...
               {id.slice(id.length - 5)}
             </span>
             <Clipboard text={id} />
           </div>
         );
-      },
+      }
     },
     {
       title: LANG('操作'),
       align: 'right',
+      minWidth: 100,
       render: (item: LiteListItem) => {
         return (
           <Image
-            src='/static/images/lite/share.png'
-            className='share'
-            width={20}
-            height={20}
-            alt=''
+            src="/static/images/lite/share.svg"
+            className="share"
+            width={16}
+            height={16}
+            alt=""
             onClick={() => {
               Position.setShareModalData(item);
             }}
           />
         );
-      },
-    },
+      }
+    }
   ];
 
   const rate = useMemo(() => {
@@ -167,20 +191,78 @@ const HistoryTable = () => {
 
   return (
     <>
-      <div className='container'>
-        <RecordList
-          loading={loading}
-          columns={columns}
-          data={(isLogin ? historyList : []).filter(({ commodity }) => (hideOther ? commodity === id : true))}
-          className={`${theme} lite-history-table`}
-        />
+      <div className="container">
+        <DesktopOrTablet>
+          <RecordList
+            loading={loading}
+            columns={columns}
+            data={(isLogin ? historyList || [] : []).filter(({ commodity }) => (hideOther ? commodity === id : true))}
+            className={`${theme} lite-history-table`}
+          />
+        </DesktopOrTablet>
+        <Mobile>
+          <div className="list-view">
+            {loading ? (
+              <></>
+            ) : historyList.filter(({ commodity }) => (hideOther ? commodity === id : true)).length > 0 ? (
+              historyList
+                .filter(({ commodity }) => (hideOther ? commodity === id : true))
+                .map(item => {
+                  const {
+                    id,
+                    commodityName,
+                    currency,
+                    buy,
+                    lever,
+                    income: oldIncome,
+                    volume,
+                    margin,
+                    opPrice,
+                    cpPrice,
+                    priceDigit,
+                    takeProfit,
+                    stopLoss,
+                    createTime,
+                    tradeTime
+                  } = item;
+                  const income = Number((oldIncome || 0).toFixed(2)) + 0;
+                  const rate = Number(income.div(margin).mul(100));
+                  return (
+                    <div key={id} className="history-item">
+                      <ItemHeader
+                        name={commodityName}
+                        isBuy={buy}
+                        lever={lever}
+                        income={income}
+                        incomeRate={rate}
+                        shareItem={() => Position.setShareModalData(item)}
+                      />
+                      <ItemStatistics
+                        id={id}
+                        opPrice={opPrice.toFormat(priceDigit)}
+                        cpPrice={cpPrice.toFormat(priceDigit)}
+                        opTime={dayjs(createTime).format('YYYY-MM-DD HH:mm')}
+                        cpTime={dayjs(tradeTime).format('YYYY-MM-DD HH:mm')}
+                        volume={volume.toFormat()}
+                        margin={margin.toFormat()}
+                        stopProfit={takeProfit.toFormat()}
+                        stopLoss={stopLoss.toFormat()}
+                      />
+                    </div>
+                  );
+                })
+            ) : (
+              <EmptyComponent text={LANG('暂无数据')} active className={clsx('empty')} />
+            )}
+          </div>
+        </Mobile>
       </div>
       {shareModalData && (
         <ShareModal
           isBuy={shareModalData.buy}
           lever={shareModalData.lever}
           commodityName={shareModalData.commodityName}
-          type={LANG('Contract ID')}
+          type={LANG('简易合约')}
           incomeRate={rate}
           opPrice={shareModalData.opPrice.toFormat(shareModalData.priceDigit)}
           cpPrice={shareModalData.cpPrice.toFormat(shareModalData.priceDigit)}
@@ -193,10 +275,31 @@ const HistoryTable = () => {
 
 export default HistoryTable;
 const styles = css`
+  :global(.liteName) {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    color: var(--text_1);
+  }
+  :global(.StopLoss) {
+    color: var(--color-red);
+    margin-top: 8px;
+  }
+  :global(.liteOrderid) {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    color: var(--text_1);
+    display: flex;
+    align-items: end;
+    gap: 8px;
+  }
+
   :global(.lite-history-table) {
     :global(.ant-table-fixed-header) {
       background: transparent !important;
     }
+
     :global(.ant-table-row) {
       :global(td) {
         padding: 2px 5px !important;
@@ -204,6 +307,7 @@ const styles = css`
         font-size: 14px;
         color: #666 !important;
         font-weight: 500;
+        height: 52px;
         &:first-child {
           padding-top: 0 !important;
           padding-bottom: 0 !important;
@@ -223,13 +327,13 @@ const styles = css`
           position: absolute;
           display: block;
           content: '';
-          width: 3px;
-          height: 24px;
+          width: 4px;
+          height: 50px;
           left: 1px;
           background: 0 0;
-          border-top: 2.4px solid transparent;
+          /* border-top: 2.4px solid transparent;
           border-bottom: 2.4px solid transparent;
-          border-right: 2.4px solid transparent;
+          border-right: 2.4px solid transparent; */
         }
       }
       :global(.raise) {
@@ -243,7 +347,7 @@ const styles = css`
         }
       }
       :global(.gray) {
-        color: #798296;
+        margin-top: 8px;
       }
       :global(.flex) {
         display: flex;
@@ -257,13 +361,30 @@ const styles = css`
     :global(.share) {
       cursor: pointer;
       margin-right: 15px;
+      margin-top: 7px;
     }
   }
   :global(.dark) {
     :global(.ant-table-row) {
       :global(td) {
         color: #c7c7c7 !important;
+        border-bottom: 1px solid var(--fill_line_1) !important;
       }
+    }
+  }
+  @media ${MediaInfo.mobile} {
+    .list-view {
+      padding: 12px 1rem;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding-bottom: 4.5rem;
+    }
+    .history-item {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
   }
 `;

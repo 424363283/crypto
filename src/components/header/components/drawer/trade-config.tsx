@@ -2,7 +2,7 @@ import { DrawerModal } from '@/components/mobile-modal';
 import { PreferenceMenu } from '@/components/trade-ui/trade-view/swap/components/preference-menu';
 import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
-import { clsxWithScope, isSwapTradePage } from '@/core/utils';
+import { clsxWithScope, isSwapTradePage, MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
 
 import { useState } from 'react';
@@ -24,21 +24,31 @@ const TradeConfigDrawer = (props: ConfigDrawerProps) => {
       <DrawerModal
         renderTitle={() => (
           <div className={clsx('trade-config-title')}>
-            {_isSwapTradePage && (
-              <div className={clsx(index === 0 && 'active')} onClick={() => setIndex(0)}>
-                {isUsdtType ? LANG('U本位偏好设置') : LANG('币本位偏好设置')}
-              </div>
-            )}
-            <div className={clsx(index === 1 && 'active')} onClick={() => setIndex(1)}>
-              {LANG('界面设置')}
-            </div>
+            <div className={clsx()}>{LANG('设置')}</div>
           </div>
         )}
         open={open}
         onClose={onClose}
         contentClassName={clsx('drawer-content')}
       >
-        {index === 0 ? <PreferenceMenu onlyContent /> : <ConfigMenu />}
+        <div className={clsx('trade-config-wrapper')}>
+          {_isSwapTradePage && (
+            <>
+              <div className={clsx('subtitle', index === 0 && 'active')} onClick={() => setIndex(0)}>
+                {isUsdtType ? LANG('U本位偏好设置') : LANG('币本位偏好设置')}
+              </div>
+              <PreferenceMenu onlyContent />
+            </>
+          )}
+          {
+            <>
+              <div className={clsx('subtitle', index === 1 && 'active')} onClick={() => setIndex(1)}>
+                {LANG('界面设置')}
+              </div>
+              <ConfigMenu />
+            </>
+          }
+        </div>
       </DrawerModal>
       {styles}
     </>
@@ -56,9 +66,8 @@ const { className, styles: _styles } = css.resolve`
     left: 0;
     width: 100%;
     display: flex;
-    color: var(--theme-font-color-3);
+    color: var(--text_1);
     height: 60px;
-    border-bottom: 1px solid var(--skin-border-color-1);
     > div {
       cursor: pointer;
       white-space: nowrap;
@@ -75,6 +84,22 @@ const { className, styles: _styles } = css.resolve`
       &:first-child {
         margin-left: 18px;
       }
+    }
+  }
+  .trade-config-wrapper {
+    .subtitle {
+      color: var(--text_1);
+      font-size: 16px;
+      font-weight: 500;
+      padding: 0 24px;
+    }
+  }
+  @media ${MediaInfo.mobile} {
+    .trade-config-wrapper {
+      margin-top: 1.5rem;
+    }
+    :global(.ant-drawer-content) {
+      background: var(--fill_1) !important;
     }
   }
 `;

@@ -1,7 +1,7 @@
 .title {
   padding-left: 20px;
   margin: 18px;
-  background-color: #782CE8;
+  background-color: #07828B;
   color: #000;
   font-size: 14px;
   text-align: center;
@@ -77,7 +77,7 @@
 }
 .episodeActive {
   @extend .episode;
-  background: #782CE8;
+  background: #07828B;
   color: #000;
 }
 
@@ -109,7 +109,7 @@
   }
   .itemActive {
     @extend .item;
-    background-color: #782CE8;
+    background-color: #07828B;
     color: #000;
   }
 }

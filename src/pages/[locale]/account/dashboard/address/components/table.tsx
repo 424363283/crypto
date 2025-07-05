@@ -8,23 +8,26 @@ import { LANG } from '@/core/i18n';
 import { Account } from '@/core/shared';
 import { useLoginUser } from '@/core/store';
 import { MediaInfo, message } from '@/core/utils';
+import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
-import { AddressContentModal } from './address-content';
 import { ColumnItem } from './types';
 import { useColumns } from './useColumns';
+import { Svg } from '@/components/svg';
+const AddressContentModal = dynamic(() => import('./address-content'));
+import { Desktop, MobileOrTablet } from '@/components/responsive';
+import { Size } from '@/components/constants';
 
 export default function AddressTable() {
   const { user } = useLoginUser();
   const router = useRouter();
-  const { theme } = useTheme();
   const [state, setState] = useImmer({
     dataSource: [],
     addAddressVisible: false,
     addressItem: null as ColumnItem | null,
     current: 1,
-    safetyVisible: false,
+    safetyVisible: false
   });
   const { addressItem, dataSource, addAddressVisible, current, safetyVisible } = state;
   const getAddressList = async () => {
@@ -34,7 +37,7 @@ export default function AddressTable() {
       message.error(LANG('获取地址列表失败'));
       return;
     }
-    setState((draft) => {
+    setState(draft => {
       draft.dataSource = list.data || [];
     });
     Loading.end();
@@ -54,7 +57,7 @@ export default function AddressTable() {
   };
   // 编辑提币地址
   const _edit = (row: ColumnItem) => {
-    setState((draft) => {
+    setState(draft => {
       draft.addAddressVisible = true;
       draft.addressItem = row;
     });
@@ -63,8 +66,9 @@ export default function AddressTable() {
     AlertFunction({
       title: LANG('确定刪除此地址吗？'),
       onOk: () => _deleteAddress(id),
-      theme: theme,
       content: '',
+      centered: true,
+      width: 378
     });
   };
   const columns = useColumns({ edit: _edit, onConfirmDeleteAddress });
@@ -78,10 +82,10 @@ export default function AddressTable() {
         content: LANG('为了您的账户安全，请先绑定邮箱再进行提币操作'),
         onOk: () => {
           router.replace('/account/dashboard?type=security-setting&option=bind-email');
-        },
+        }
       });
     } else if (!user.bindGoogle && user.pw_w === 0) {
-      setState((draft) => {
+      setState(draft => {
         draft.safetyVisible = true;
       });
     } else {
@@ -90,15 +94,15 @@ export default function AddressTable() {
   };
   const _showModal = () => {
     checkUserAuthentication(() => {
-      setState((draft) => {
+      setState(draft => {
         draft.addAddressVisible = true;
+        draft.addressItem = null;
       });
     });
   };
   const _hideModal = () => {
-    setState((draft) => {
+    setState(draft => {
       draft.addAddressVisible = false;
-      draft.addressItem = null;
     });
   };
   // 添加地址成功回调
@@ -108,28 +112,32 @@ export default function AddressTable() {
   };
   // 切换页码
   const _onChange = (current: number) => {
-    setState((draft) => {
+    setState(draft => {
       draft.current = current;
     });
   };
 
   return (
-    <div className='address-content'>
-      <div className='title-box'>
-        <span className='title'>{LANG('地址管理')}</span>
-        <Button type='primary' onClick={_showModal} className='add-address-btn'>
-          {LANG('新建提币地址')}
-        </Button>
-      </div>
+    <div className="address-content rounded-1">
+      <Desktop>
+        <div className="title-box">
+          <span className="title">{LANG('地址管理')}</span>
+          <Button type="primary" onClick={_showModal} className="add-address-btn">
+            <Svg src="/static/icons/primary/common/add_address.svg" width={14} height={14} />
+            <span style={{ paddingLeft: '5px' }}> {LANG('新建提币地址')}</span>
+          </Button>
+        </div>
+      </Desktop>
       <Table
         columns={columns}
         dataSource={dataSource}
         showMobileTable
+        isHistoryList
         pagination={{
           current,
           pageSize: 10,
           total: dataSource?.length,
-          onChange: _onChange,
+          onChange: _onChange
         }}
       />
       <AddressContentModal
@@ -139,67 +147,92 @@ export default function AddressTable() {
         onCancel={_hideModal}
         hideModal={_hideModal}
       />
-      <EnableAuthenticationModal
-        user={user}
-        visible={safetyVisible}
-        onClose={() => setState((draft) => void (draft.safetyVisible = false))}
-      />
+      {safetyVisible && (
+        <EnableAuthenticationModal
+          user={user}
+          visible={safetyVisible}
+          onClose={() => setState(draft => void (draft.safetyVisible = false))}
+        />
+      )}
+      <MobileOrTablet>
+        <div className="title-box">
+          <Button type="primary" size={Size.XL} rounded onClick={_showModal} className="add-address-btn">
+            <Svg src="/static/icons/primary/common/add_address.svg" width={14} height={14} />
+            <span style={{ paddingLeft: '5px' }}> {LANG('新建提币地址')}</span>
+          </Button>
+        </div>
+      </MobileOrTablet>
       <style jsx>{styles}</style>
     </div>
   );
 }
 const styles = css`
   .address-content {
-    min-height: calc(100vh - 82px);
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+    min-height: calc(100vh - 64px);
+    background: var(--fill_bg_1);
+    padding: 24px;
+    :global(.bottom-pagination) {
+      padding: 15px 20px;
+    }
     @media ${MediaInfo.tablet} {
       min-height: calc(100vh - 300px);
     }
     @media ${MediaInfo.mobile} {
-      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      padding: 16px;
     }
     @media ${MediaInfo.mobileOrTablet} {
       border-radius: 15px;
     }
-    background: var(--theme-background-color-2);
     .title-box {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 20px;
-      height: 75px;
-      border-bottom: 1px solid var(--theme-border-color-2);
+      background:var(--fill_bg_1);
+      margin-bottom: 24px;
       @media ${MediaInfo.tablet} {
-        padding: 0 15px;
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+      }
+      @media ${MediaInfo.mobile} {
+        margin-bottom: 3rem;
       }
       .title {
-        font-size: 20px;
+        font-size: 24px;
         font-weight: 500;
-        color: var(--theme-font-color-1);
+        color: var(--text_1);
         @media ${MediaInfo.mobile} {
           font-size: 16px;
         }
       }
       :global(.add-address-btn) {
-        min-width: 120px;
-        padding: 10px 27px;
-        font-size: 12px;
+        min-width: 140px;
+        font-size: 14px;
+        height: 32px;
+        min-height: 32px;
+        line-height: 32px;
+        @media ${MediaInfo.mobile} {
+          width: 100%;
+          height: 48px;
+        }
       }
     }
     :global(.ant-table-content .ant-table-cell) {
       word-break: break-all;
     }
     :global(.ant-table-thead .ant-table-cell) {
-      color: var(--theme-font-color-3);
+      color: var(--spec-font-color-2);
       font-size: 12px;
     }
     :global(td.ant-table-cell-row-hover) {
-      background-color: var(--theme-background-color-8);
+      background-color: var(--spec-background-color-3);
     }
   }
   :global(.common-mobile-table) {
-    padding: 14px;
     @media ${MediaInfo.mobile} {
       display: flex;
       flex-direction: column;
@@ -232,6 +265,27 @@ const styles = css`
       margin: 2px 0;
       margin-left: 4px;
       padding: 2px 6px;
+    }
+  }
+  :global(.address) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    :global(span) {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      @media ${MediaInfo.mobileOrTablet} {
+        width: 160px;
+        white-space: wrap;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+    }
+    @media ${MediaInfo.mobile} {
+      justify-content: flex-end;
     }
   }
 `;

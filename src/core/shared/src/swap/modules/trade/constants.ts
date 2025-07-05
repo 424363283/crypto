@@ -27,4 +27,9 @@ export const POSITION_MODE = {
     SWAP: 'BTC-USD',
     SWAP_U: 'BTC-USDT',
   };
+
+  export const MARGIN_TYPE = {
+    CROSS: 1,
+    ISOLATED: 2
+  };
   

@@ -7,7 +7,7 @@ const list = [
   { name: LANG('提币'), href: '/account/fund-management/asset-account/withdraw' },
   // { name: LANG('法币充值'), href: '/fiat-crypto' },
   { name: LANG('内部转账'), href: '/account/fund-management/asset-account/transfer' },
-  { name: LANG('合约卡券'), href: '/account/fund-management/assets-overview', query: { type: 'coupon' } },
+  // { name: LANG('合约卡券'), href: '/account/fund-management/assets-overview', query: { type: 'coupon' } },
 ];
 const HeaderAssets = () => {
   return (
@@ -28,26 +28,39 @@ const HeaderAssets = () => {
 export default HeaderAssets;
 const styles = css`
   .assets-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     margin: 0;
-    padding: 10px 12px;
+    padding: 16px 24px;
     text-align: left;
+    li {
+      :global(> a) {
+        color: var(--text_1)!important;
+        :global(>*:nth-last-child(2)) {
+          color: var(--text_1);
+        }
+        :global(>*:nth-child(2)) {
+          color: var(--text_3);
+        }
+      }
+      &:hover {
+        .name {
+          color: var(--brand);
+        }
+      }
+    }
     .name {
       display: flex;
       justify-content: center;
       flex-direction: column;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 500;
       cursor: pointer;
-      height: 52px;
-      padding-left: 10px;
-      border-radius: 5px;
+      padding: 8px 0;
+      border-radius: 4px;
       white-space: nowrap;
       word-break: keep-all;
-      color: var(--theme-font-color-1);
-      &:hover {
-        background-color: var(--theme-background-color-3);
-        color: var(--skin-hover-font-color);
-      }
     }
   }
 `;

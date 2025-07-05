@@ -26,7 +26,7 @@ export const Tabs = ({ items, children }: { items: Tab[], children?: React.React
               onClick={() => setActiveIndex(index)}
               className={clsx('tabs-item', activeIndex === index ? 'active-tab' : '')}
             >
-              {tab.label}
+              <span className='label'>{tab.label}</span>
             </li>
           ))}
         </ul>
@@ -43,6 +43,9 @@ export const Tabs = ({ items, children }: { items: Tab[], children?: React.React
 const styles = css`
 .tabs-wrapper {
   padding: 40px 0 0;
+  @media ${MediaInfo.mobile} {
+    padding: 36px 0 0;
+  }
   .tabs {
     display: flex;
     flex-direction: row;
@@ -61,21 +64,28 @@ const styles = css`
         display: flex;
         justify-content: center;
         align-items: center;
-        min-width: 52px;
         min-height: 26px;
-        color: var(--theme-font-color-1);
+        color: var(--text_2);
         font-weight: 500;
         cursor: pointer;
-        margin-right: 20px;
-        font-size: 14px;
-        padding: 3px 6px;
+        margin-right: 40px;
+        font-size: 16px;
+        @media ${MediaInfo.mobile} {
+          font-size: 14px;
+          margin-right: 24px;
+          .label {
+            padding: 6px 16px;
+          }
+        }
       }
       :global(.active-tab) {
-        background: #782CE8;
-        color: #FFFFFF;
-        padding: 3px 6px;
+        color: var(--text_brand);
         border-radius: 23px;
         /* border-bottom: 2px solid var(--skin-color-active); */
+        @media ${MediaInfo.mobile} {
+          background: var(--brand);
+          color: var(--text_white);
+        }
       }
     }
   }

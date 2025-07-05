@@ -57,7 +57,7 @@ const StrategyView = () => {
                   </div>
                   <div>{LANG('全天侯低买高卖')}</div>
                 </div>
-                <CommonIcon name='common-arrow-right-0' size={12} />
+                <CommonIcon name='common-arrow-right-0' size={24} />
               </div>
             </div>
             <div className='card' onClick={() => Strategy.changeSelectType(LIST_TYPE.INVEST)}>
@@ -74,7 +74,7 @@ const StrategyView = () => {
                   </div>
                   <div>{LANG('积累加密货币')}</div>
                 </div>
-                <CommonIcon name='common-arrow-right-0' size={12} />
+                <CommonIcon name='common-arrow-right-0' size={24} />
               </div>
             </div>
           </>

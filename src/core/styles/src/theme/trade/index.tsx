@@ -13,14 +13,14 @@ export const TradeThemeProvider = ({ children }: any) => {
             --theme-trade-light-text-1: #141717;
             --theme-trade-text-2: #798296;
             --theme-trade-layout-radius: 8px;
-            --theme-trade-layout-spacing: 5px;
+            --theme-trade-layout-spacing: 2px;
             --theme-trade-filter-bar-height: 30px;
             --theme-trade-depth-height: 24px;
 
             --theme-trade-modal-horizontal-padding: 18px;
-            --theme-trade-depth-view-max-width: 345px;
+            --theme-trade-depth-view-max-width: 340px;
             --theme-trade-trade-view-max-width: 365px;
-            --theme-trade-depth-view-width: 246px;
+            --theme-trade-depth-view-width: 340px;
             --theme-trade-trade-view-width: 294px;
             --theme-trade-trade-page-left-flex: 1126;
             --theme-trade-tv-view-flex: 880;

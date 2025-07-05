@@ -12,7 +12,7 @@ const routeMap = {
   future_finance: '/contract/finance', // 资产列表页
   otc_finance: '/funding', // 资产列表页
   follow_finance: '/contract/follow', // 跟单资产
-  copytrading: '/copytrading', // 跟单
+  // copytrading: '/copytrading', // 跟单
   transaction: 'transaction', // 流水记录
   order: '/order', // 流水记录
   option_current_entrust: '/option/order/current_entrust',

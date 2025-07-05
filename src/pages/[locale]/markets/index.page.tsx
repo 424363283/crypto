@@ -12,7 +12,7 @@ function MarketsPage() {
           :global(header) {
             position: sticky;
             top: 0;
-            z-index: 99;
+            z-index: 100;
           }
           :global(.markets-container) {
             background-color: var(--theme-background-color-1);

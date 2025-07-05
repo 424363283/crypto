@@ -51,12 +51,14 @@ const WithdrawDetailModal: React.FC<ChainModelProps> = ({ data, type = 0 }) => {
     <>
       <div className='chain-model' onClick={() => setVisible(true)}>
         <span className='text'>{LANG('详情')}</span>
-        <Image src='/static/images/account/fund/right_1.png' alt='' className='icon' width={16} height={16} />
+        <Image src='/static/images/account/fund/right_1.webp' alt='' className='icon' width={16} height={16} />
       </div>
       {visible && (
         <BasicModal
           open={visible}
           onCancel={() => setVisible(false)}
+          onOk={() => setVisible(false)}
+
           title={type ? LANG('提币明细') : LANG('充币明细')}
           className='withdraw-detail-modal'
           okButtonProps={{ style: { display: 'none' } }}
@@ -82,11 +84,11 @@ const WithdrawDetailModal: React.FC<ChainModelProps> = ({ data, type = 0 }) => {
               <div className='data'>{dayjs(createTime).format('YYYY-MM-DD HH:mm:ss')}</div>
             </div>
             <div className='item'>
-              <div className='text'>{LANG('充币地址')}</div>
+              <div className='text'>{type ? LANG('提币地址') : LANG('充币地址')}</div>
               <div className='data'>
                 <span>{address || '--'}</span>
                 <CopyToClipboard text={address} onCopy={() => message.success(LANG('复制成功'))}>
-                  <CommonIcon name='common-copy-2-yellow-0' width={12} height={13} enableSkin className='copy-icon' />
+                  <CommonIcon size={16} name='common-copy' enableSkin className='copy-icon' />
                 </CopyToClipboard>
               </div>
             </div>
@@ -95,7 +97,7 @@ const WithdrawDetailModal: React.FC<ChainModelProps> = ({ data, type = 0 }) => {
               <div className='data'>
                 <span>{txid || '--'}</span>
                 <CopyToClipboard text={txid} onCopy={() => message.success(LANG('复制成功'))}>
-                  <CommonIcon name='common-copy-2-yellow-0' width={12} height={13} className='copy-icon' enableSkin />
+                  <CommonIcon size={16} name='common-copy' className='copy-icon' enableSkin />
                 </CopyToClipboard>
               </div>
             </div>
@@ -110,7 +112,7 @@ const WithdrawDetailModal: React.FC<ChainModelProps> = ({ data, type = 0 }) => {
               <div className='data'>
                 <span>{id}</span>
                 <CopyToClipboard text={id} onCopy={() => message.success(LANG('复制成功'))}>
-                  <CommonIcon name='common-copy-2-yellow-0' width={12} height={13} className='copy-icon' enableSkin />
+                  <CommonIcon size={16} name='common-copy'  className='copy-icon' enableSkin />
                 </CopyToClipboard>
               </div>
             </div>

@@ -188,7 +188,7 @@ class DetailMap {
     return Date.now() > this.onlineTime;
   }
 
-  constructor(data: any, item: GroupItem) {
+  constructor(data: any,symbol:any, item: GroupItem) {
     data = {
       ...data,
       price: data.price || 0,
@@ -213,7 +213,7 @@ class DetailMap {
       t: data.t || 0,
     };
 
-    this.id = item.id;
+    this.id = symbol;
     this.name = item.name;
     this.coin = item.coin;
     this.quoteCoin = item.quoteCoin;
@@ -266,7 +266,8 @@ class MarkteDetail {
   public static async getGroupList(): Promise<{ [key: string]: GroupItem }> {
     if (MarkteDetail.isGetGroupList) return MarkteDetail.groupList;
     const group = await Group.getInstance();
-    group.getLiteList.forEach((item: GroupItem) => (MarkteDetail.groupList[item.id] = item));
+    group.getLiteList.forEach((item: GroupItem) => (MarkteDetail.groupList[item.quoteCode] = item));
+    // group.getLiteList.forEach((item: GroupItem) => (MarkteDetail.groupList[item.id] = item));
     group.getSpotList.forEach((item: GroupItem) => (MarkteDetail.groupList[item.id] = item));
     group.getSwapList.forEach((item: GroupItem) => (MarkteDetail.groupList[item.id] = item));
     group.getSwapSLList.forEach((item: GroupItem) => (MarkteDetail.groupList[item.id] = item));
@@ -280,8 +281,8 @@ class MarkteDetail {
    */
   public static async onMessage(message: any): Promise<void> {
     const groupList = await MarkteDetail.getGroupList();
-    const id = message.data.symbol;
-    const data = new DetailMap(message.data, { ...groupList[id] });
+    const symbol = message.data.symbol;
+    const data = new DetailMap(message.data,symbol, { ...groupList[symbol] });
     window.dispatchEvent(new CustomEvent(SUBSCRIBE_TYPES.ws4001, { detail: data }));
   }
 }

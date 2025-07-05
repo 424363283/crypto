@@ -23,6 +23,7 @@ const SafetyVerificationModal: React.FC<Props> = ({
   sence,
   ...rest
 }) => {
+
   return (
     <BasicModal
       open={visible}
@@ -30,6 +31,7 @@ const SafetyVerificationModal: React.FC<Props> = ({
       title={LANG('安全验证')}
       okButtonProps={{ style: { display: 'none' } }}
       cancelButtonProps={{ style: { display: 'none' } }}
+      footer={null}
       {...rest}
     >
       <div className='security-verify-content'>
@@ -52,6 +54,7 @@ const styles = css`
     padding: 10px 10px;
     @media ${MediaInfo.mobile} {
       width: 100%;
+      padding: 0;
     }
     :global(.verify-form) {
       width: 440px;

@@ -1,0 +1,279 @@
+// Base size
+
+$nui-base-size: 10px !default;
+
+// Body
+
+$nui-body-bg: var(-bg-1) !default;
+$nui-body-color: var(--text_1) !default;
+$nui-body-font-size: $nui-base-size * 1.6 !default;
+
+// Fonts
+
+$nui-font-size:    floor($nui-base-size) * 1.4 !default;
+$nui-font-size-xs: floor($nui-base-size) * 1.2 !default;
+$nui-font-size-sm: floor($nui-base-size) * 1.4 !default;
+$nui-font-size-md: floor($nui-base-size) * 1.6 !default;
+$nui-font-size-lg: floor($nui-base-size) * 1.4 !default;
+$nui-font-size-xl: floor($nui-base-size) * 1.6 !default;
+
+$nui-font-size-map: (
+  xs: $nui-font-size-xs,
+  sm: $nui-font-size-sm,
+  lg: $nui-font-size-lg,
+  xl: $nui-font-size-xl,
+  md: $nui-font-size-md,
+);
+
+$nui-font-weight-light:           300 !default;
+$nui-font-weight-normal:          400 !default;
+$nui-font-weight-middle:          500 !default;
+$nui-font-weight-bold:            700 !default;
+
+/**
+ * UI colors
+ * @primary brand
+ */
+$nui-intents: 'primary', 'brand', 'brand0', 'brand20', 'green', 'red', 'orange',  'blue', 'yellow', 'yellow10', 'reverse', 'black', 'white';
+
+$nui-text-color:                $nui-body-color !default;
+$nui-placeholder-color:         var(--text_2) !default;
+$nui-placeholder-color-focus:   var(--text_2) !default;
+
+$nui-base-text-color:          var(--text_1) !default;
+$nui-base-text-color-hover:    var(--text_1) !default;
+$nui-base-gradient:            var(--fill_1) !default;
+$nui-base-gradient-hover:      var(--fill_3) !default;
+$nui-base-border-color:        var(--fill_1) !default;
+$nui-base-border-color-hover:  var(--fill_3) !default;
+
+$nui-primary-text-color:          var(--text_white) !default;
+$nui-primary-text-color-hover:    var(--text_white) !default;
+$nui-primary-gradient:            var(--btn_brand) !default;
+$nui-primary-gradient-hover:      var(--btn_brand_hover) !default;
+$nui-primary-border-color:        var(--btn_brand) !default;
+$nui-primary-border-color-hover:  var(--btn_brand_hover) !default;
+
+$nui-brand-text-color:          var(--text_white) !default;
+$nui-brand-text-color-hover:    var(--text_white) !default;
+$nui-brand-gradient:            var(--btn_brand) !default;
+$nui-brand-gradient-hover:      var(--btn_brand_hover) !default;
+$nui-brand-border-color:        var(--btn_brand) !default;
+$nui-brand-border-color-hover:  var(--btn_brand_hover) !default;
+
+$nui-brand0-text-color:          var(--text_brand) !default;
+$nui-brand0-text-color-hover:    var(--text_white) !default;
+$nui-brand0-gradient:            none !default;
+$nui-brand0-gradient-hover:      var(--brand) !default;
+$nui-brand0-border-color:        var(--brand) !default;
+$nui-brand0-border-color-hover:  var(--brand) !default;
+
+$nui-brand20-text-color:          var(--text_brand) !default;
+$nui-brand20-text-color-hover:    var(--text_brand) !default;
+$nui-brand20-gradient:            var(--brand_20) !default;
+$nui-brand20-gradient-hover:      var(--brand_20) !default;
+$nui-brand20-border-color:        var(--brand_20) !default;
+$nui-brand20-border-color-hover:  var(--brand_20) !default;
+
+$nui-green-text-color:          var(--text_white) !default;
+$nui-green-text-color-hover:    var(--text_white) !default;
+$nui-green-gradient:            var(--btn_green) !default;
+$nui-green-gradient-hover:      var(--btn_green_hover) !default;
+$nui-green-border-color:        var(--btn_green) !default;
+$nui-green-border-color-hover:  var(--btn_green_hover) !default;
+
+$nui-red-text-color:          var(--text_white) !default;
+$nui-red-text-color-hover:    var(--text_white) !default;
+$nui-red-gradient:            var(--btn_red) !default;
+$nui-red-gradient-hover:      var(--btn_red_hover) !default;
+$nui-red-border-color:        var(--btn_red) !default;
+$nui-red-border-color-hover:  var(--btn_red_hover) !default;
+
+$nui-orange-text-color:          var(--text_white) !default;
+$nui-orange-text-color-hover:    var(--text_white) !default;
+$nui-orange-gradient:            var(--btn_orange) !default;
+$nui-orange-gradient-hover:      var(--btn_orange_hover) !default;
+$nui-orange-border-color:        var(--btn_orange) !default;
+$nui-orange-border-color-hover:  var(--btn_orange_hover) !default;
+
+$nui-blue-text-color:          var(--text_white) !default;
+$nui-blue-text-color-hover:    var(--text_white) !default;
+$nui-blue-gradient:            var(--btn_blue) !default;
+$nui-blue-gradient-hover:      var(--btn_blue_hover) !default;
+$nui-blue-border-color:        var(--btn_blue) !default;
+$nui-blue-border-color-hover:  var(--btn_blue_hover) !default;
+
+$nui-yellow-text-color:          var(--text_white) !default;
+$nui-yellow-text-color-hover:    var(--text_white) !default;
+$nui-yellow-gradient:            var(--btn_yellow) !default;
+$nui-yellow-gradient-hover:      var(--btn_yellow_hover) !default;
+$nui-yellow-border-color:        var(--btn_yellow) !default;
+$nui-yellow-border-color-hover:  var(--btn_yellow_hover) !default;
+
+$nui-yellow10-text-color:          var(--text_yellow) !default;
+$nui-yellow10-text-color-hover:    var(--text_yellow) !default;
+$nui-yellow10-gradient:            var(--yellow_10) !default;
+$nui-yellow10-gradient-hover:      var(--yellow_10) !default;
+$nui-yellow10-border-color:        var(--yellow_10) !default;
+$nui-yellow10-border-color-hover:  var(--yellow_10) !default;
+
+
+$nui-reverse-text-color:          var(--text_reverse) !default;
+$nui-reverse-text-color-hover:    var(--text_reverse) !default;
+$nui-reverse-gradient:            var(--btn_reverse) !default;
+$nui-reverse-gradient-hover:      var(--btn_reverse_hover) !default;
+$nui-reverse-border-color:        var(--btn_reverse) !default;
+$nui-reverse-border-color-hover:  var(--btn_reverse_hover) !default;
+
+$nui-black-text-color:          var(--text_white) !default;
+$nui-black-text-color-hover:    var(--text_white) !default;
+$nui-black-gradient:            var(--btn_black) !default;
+$nui-black-gradient-hover:      var(--btn_black_hover) !default;
+$nui-black-border-color:        var(--btn_black) !default;
+$nui-black-border-color-hover:  var(--btn_black_hover) !default;
+
+$nui-white-text-color:          var(--text_black) !default;
+$nui-white-text-color-hover:    var(--text_black) !default;
+$nui-white-gradient:            var(--btn_white) !default;
+$nui-white-gradient-hover:      var(--btn_white_hover) !default;
+$nui-white-border-color:        var(--btn_white) !default;
+$nui-white-border-color-hover:  var(--btn_white_hover) !default;
+
+$nui-text-map: (
+  'primary':  $nui-primary-text-color,
+  'brand':  $nui-brand-text-color,
+  'brand0':  $nui-brand0-text-color,
+  'brand20':  $nui-brand20-text-color,
+  'green':  $nui-green-text-color,
+  'red':  $nui-red-text-color,
+  'orange':  $nui-orange-text-color,
+  'blue':  $nui-blue-text-color,
+  'yellow':  $nui-yellow-text-color,
+  'yellow10':  $nui-yellow10-text-color,
+  'reverse':  $nui-reverse-text-color,
+  'black':  $nui-black-text-color,
+  'white':  $nui-white-text-color,
+
+);
+
+$nui-text-hover-map: (
+  'primary':  $nui-primary-text-color-hover,
+  'brand':  $nui-brand-text-color-hover,
+  'brand0':  $nui-brand0-text-color-hover,
+  'brand20':  $nui-brand20-text-color-hover,
+  'green':  $nui-green-text-color-hover,
+  'red':  $nui-red-text-color-hover,
+  'orange':  $nui-orange-text-color-hover,
+  'blue':  $nui-blue-text-color-hover,
+  'yellow':  $nui-yellow-text-color-hover,
+  'yellow10':  $nui-yellow10-text-color-hover,
+  'reverse':  $nui-reverse-text-color-hover,
+  'black':  $nui-black-text-color-hover,
+  'white':  $nui-white-text-color-hover,
+);
+
+
+
+$nui-gradient-map: (
+  'primary':  $nui-primary-gradient,
+  'brand':  $nui-brand-gradient,
+  'brand0':  $nui-brand0-gradient,
+  'brand20':  $nui-brand20-gradient,
+  'green':  $nui-green-gradient,
+  'red':  $nui-red-gradient,
+  'orange':  $nui-orange-gradient,
+  'blue':  $nui-blue-gradient,
+  'yellow':  $nui-yellow-gradient,
+  'yellow10':  $nui-yellow10-gradient,
+  'reverse':  $nui-reverse-gradient,
+  'black':  $nui-black-gradient,
+  'white':  $nui-white-gradient,
+
+);
+$nui-gradient-hover-map: (
+  'primary':  $nui-primary-gradient-hover,
+  'brand':  $nui-brand-gradient-hover,
+  'brand0':  $nui-brand0-gradient-hover,
+  'brand20':  $nui-brand20-gradient-hover,
+  'green':  $nui-green-gradient-hover,
+  'red':  $nui-red-gradient-hover,
+  'orange':  $nui-orange-gradient-hover,
+  'blue':  $nui-blue-gradient-hover,
+  'yellow':  $nui-yellow-gradient-hover,
+  'yellow10':  $nui-yellow10-gradient-hover,
+  'reverse':  $nui-reverse-gradient-hover,
+  'black':  $nui-black-gradient-hover,
+  'white':  $nui-white-gradient-hover,
+);
+$nui-border-color-map: (
+  'primary':  $nui-primary-border-color,
+  'brand':  $nui-brand-border-color,
+  'brand0':  $nui-brand0-border-color,
+  'brand20':  $nui-brand20-border-color,
+  'green':  $nui-green-border-color,
+  'red':  $nui-red-border-color,
+  'orange':  $nui-orange-border-color,
+  'blue':  $nui-blue-border-color,
+  'yellow':  $nui-yellow-border-color,
+  'yellow10':  $nui-yellow10-border-color,
+  'reverse':  $nui-reverse-border-color,
+  'black':  $nui-black-border-color,
+  'white':  $nui-white-border-color,
+);
+
+$nui-border-color-hover-map: (
+  'primary':  $nui-primary-border-color-hover,
+  'brand':  $nui-brand-border-color-hover,
+  'brand0':  $nui-brand0-border-color-hover,
+  'brand20':  $nui-brand20-border-color-hover,
+  'green':  $nui-green-border-color-hover,
+  'red':  $nui-red-border-color-hover,
+  'orange':  $nui-orange-border-color-hover,
+  'blue':  $nui-blue-border-color-hover,
+  'yellow':  $nui-yellow-border-color-hover,
+  'yellow10':  $nui-yellow10-border-color-hover,
+  'reverse':  $nui-reverse-border-color-hover,
+  'black':  $nui-black-border-color-hover,
+  'white':  $nui-white-border-color-hover,
+);
+
+// Base dimensions
+$nui-sizes: 'xs', 'sm', 'lg', 'xl','md';
+
+$nui-base-height:     $nui-base-size * 4 !default;
+$nui-base-height-xs:  $nui-base-size * 2.4 !default;
+$nui-base-height-sm:  $nui-base-size * 3.2 !default;
+$nui-base-height-lg:  $nui-base-size * 4.8 !default;
+$nui-base-height-md:  $nui-base-size * 4.8 !default;
+$nui-base-height-xl:  $nui-base-size * 5.6 !default;
+
+$nui-height-map: (
+  xs: $nui-base-height-xs,
+  sm: $nui-base-height-sm,
+  lg: $nui-base-height-lg,
+  md: $nui-base-height-md,
+  xl: $nui-base-height-xl
+);
+
+$nui-base-padding:      $nui-base-size * 1.6 !default;
+$nui-base-padding-xs:   $nui-base-size * 1.6 !default;
+$nui-base-padding-sm:   $nui-base-size * 1.6 !default;
+$nui-base-padding-lg:   $nui-base-size * 1.6 !default;
+$nui-base-padding-md:   $nui-base-size * 1.6 !default;
+$nui-base-padding-xl:   $nui-base-size * 1.6 !default;
+
+$nui-padding-map: (
+  xs: $nui-base-padding-xs,
+  sm: $nui-base-padding-sm,
+  lg: $nui-base-padding-md,
+  md: $nui-base-padding-md,
+  xl: $nui-base-padding-xl
+);
+
+// Component shapes
+$nui-border-radius-1:         8px !default;
+$nui-border-radius-2:         12px !default;
+$nui-border-radius-3:         16px !default;
+$nui-border-radius-rounded: floor(map-get($nui-height-map, 'xl')) !default;
+$nui-border-width:          1px !default;
+

@@ -2,7 +2,7 @@ import { FavorEmitter } from '@/core/events';
 import { useTheme } from '@/core/hooks';
 import { SUBSCRIBE_TYPES, useWs } from '@/core/network';
 import { MarketsMap } from '@/core/shared';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import dynamic from 'next/dynamic';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import HotList from '../hot-list';

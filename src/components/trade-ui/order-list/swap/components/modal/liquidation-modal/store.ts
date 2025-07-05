@@ -9,7 +9,7 @@ export const store = resso<{ inputPrice: string; inputVolume: string; income: st
   inputPrice: '', // 输入价格
   inputVolume: '', // 输入数量
   income: '',
-  optionIndex: null,
+  optionIndex: null
 });
 export const handleStore = ({ data, isUsdtType, isLimit, onClose }: any) => {
   const isVolUnit = Swap.Info.getIsVolUnit(isUsdtType);
@@ -30,7 +30,7 @@ export const handleStore = ({ data, isUsdtType, isLimit, onClose }: any) => {
       value = Swap.Calculate.amountToVolume({
         usdt: isUsdtType,
         value,
-        code: data.symbol,
+        code: data.symbol
       });
     }
 
@@ -40,7 +40,7 @@ export const handleStore = ({ data, isUsdtType, isLimit, onClose }: any) => {
       isBuy: data.side === '1',
       flagPrice: isLimit ? store.getSnapshot('inputPrice') : getMarketPrice(),
       avgCostPrice: Number(data.avgCostPrice),
-      volume: value || 0,
+      volume: value || 0
     });
 
     income = formatNumber2Ceil(income, scale, false);
@@ -69,6 +69,7 @@ export const handleStore = ({ data, isUsdtType, isLimit, onClose }: any) => {
           value: num || 0,
           fixed: fixed || volumeDigit,
           flagPrice,
+          isRoundup: true
         })
       : 0;
   };
@@ -95,14 +96,14 @@ export const handleStore = ({ data, isUsdtType, isLimit, onClose }: any) => {
       value = Swap.Calculate.amountToVolume({
         usdt: isUsdtType,
         value,
-        code: data.symbol,
+        code: data.symbol
       });
     }
 
     if (isUsdtType && value <= 0) {
       return message.error(
         LANG('下单数量最少为{volume}', {
-          volume: `${getMinOrderVolume()} ${Swap.Info.getUnitText({ symbol: data?.symbol })}`,
+          volume: `${getMinOrderVolume()} ${Swap.Info.getUnitText({ symbol: data?.symbol })}`
         }),
         1
       );
@@ -114,14 +115,15 @@ export const handleStore = ({ data, isUsdtType, isLimit, onClose }: any) => {
         price: isLimit ? Number(inputPrice) : '',
         orderQty: value,
         side: Number(data.side) === 1 ? 1 : 2, // 1 买  2 卖
-        type: !isLimit ? 5 : 4,
+        type: !isLimit ? 5 : 4
       });
       if (result.code == 200) {
         Swap.Assets.fetchBalance(isUsdtType);
         Swap.Order.fetchPosition(isUsdtType);
         onClose();
       } else {
-        message.error(result);
+        // 重复提示 Swap.Order.closePosition
+        // message.error(result);
       }
     } catch (error: any) {
       message.error(error);
@@ -142,6 +144,134 @@ export const handleStore = ({ data, isUsdtType, isLimit, onClose }: any) => {
     volumeDigit,
     getMarketPrice,
     getMinOrderVolume,
-    onConfirm,
+    onConfirm
   };
+};
+
+export const setInputPrice = (e: any) => {
+  store.inputPrice = e;
+};
+
+export const setInputVolume = (e: any) => {
+  store.inputVolume = e;
+};
+
+export const submitClosePosition = async ({ isUsdtType, isLimit, value, data, inputPrice }: any) => {
+  // 计算 张和币的转化
+  const getMarketPrice = () => Swap.Socket.getFlagPrice(data?.symbol, { withHooks: false });
+  const isVolUnit = Swap.Info.getIsVolUnit(isUsdtType);
+  if (isUsdtType && value <= 0) {
+    const isMarketType = !isLimit;
+    const orderPrice = (isMarketType ? data.avgCostPrice : data.avgCostPrice) || 0;
+    const { minDelegateNum } = Swap.Info.getCryptoData(data?.symbol);
+    const volumeDigit = Swap.Info.getVolumeDigit(data?.symbol);
+    const minOrderVol = data
+      ? Swap.Calculate.formatPositionNumber({
+          usdt: isUsdtType,
+          code: data.symbol,
+          value: minDelegateNum,
+          fixed: volumeDigit,
+          flagPrice: orderPrice
+        })
+      : 0;
+    return message.error(
+      LANG('下单数量最少为{volume}', {
+        volume: `${minOrderVol} ${Swap.Info.getUnitText({ symbol: data?.symbol })}`
+      }),
+      1
+    );
+  }
+
+  if (isUsdtType ? true : !isVolUnit) {
+    value = Swap.Calculate.amountToVolume({
+      usdt: isUsdtType,
+      value,
+      code: data.symbol,
+      flagPrice: data.avgCostPrice,
+      shouldCeil: true
+    });
+  }
+  /* 
+  
+    VOL: 'vol',
+    COIN: 'coin',
+    MARGIN: 'margin',
+  */
+
+  Loading.start();
+  try {
+    const result = await Swap.Order.closePosition(data, {
+      price: isLimit ? Number(inputPrice) : '',
+      orderQty: value,
+      side: Number(data.side) === 1 ? 1 : 2, // 1 买  2 卖
+      type: !isLimit ? 5 : 4,
+      usingAccountType: data.usingAccountType
+      // type: isLimit ? 5 : 4,
+    });
+    const volumeDigit = Swap.Info.getVolumeDigit(data?.symbol);
+    if (result.code == 200) {
+      Swap.Assets.fetchBalance(isUsdtType);
+      Swap.Order.fetchPosition(isUsdtType);
+    } else if (result.code === 100008) {
+      let min = result.data[0];
+      let max = result.data[1];
+      let errMsg = '';
+      if (Swap.Info.getUnitMode(isUsdtType) === 'coin') {
+        min = Swap.Calculate.volumeToAmount({
+          usdt: isUsdtType,
+          value: min,
+          code: data.symbol,
+          fixed: volumeDigit
+        });
+        max = Swap.Calculate.volumeToAmount({
+          usdt: isUsdtType,
+          value: max,
+          code: data.symbol,
+          fixed: volumeDigit
+        });
+        const coin = data.symbol.split('-')[0].toUpperCase();
+        errMsg = LANG('下单张数范围最低{min}{coin},最高{max}{coin}', {
+          min,
+          max,
+          coin
+        });
+      } else {
+        min = Number(
+          Swap.Calculate.formatPositionNumber({
+            usdt: isUsdtType,
+            code: data.symbol,
+            value: min,
+            fixed: volumeDigit,
+            flagPrice: data.avgCostPrice
+          })
+        );
+        max = Number(
+          Swap.Calculate.formatPositionNumber({
+            usdt: isUsdtType,
+            value: max,
+            code: data.symbol,
+            fixed: volumeDigit,
+            flagPrice: data.avgCostPrice
+          })
+        );
+        if (Swap.Info.getUnitMode(isUsdtType) === 'margin') {
+          errMsg = LANG('下单保证金范围最低{min}USDT,最高{max}USDT', {
+            min,
+            max
+          });
+        } else {
+          errMsg = LANG('下单USDT范围最低{min}USDT,最高{max}USDT', {
+            min,
+            max
+          });
+        }
+      }
+      // 重复提示 Swap.Order.closePosition
+      message.error(errMsg);
+    }
+  } catch (error: any) {
+    message.error(error);
+  } finally {
+    Loading.end();
+  }
 };

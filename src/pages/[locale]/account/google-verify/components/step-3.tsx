@@ -22,7 +22,7 @@ export const BackupKey = ({ prev, next, secret }: { prev: () => void; next: () =
         )}
       </div>
       <div className='btn-area'>
-        <Button type='light-border-2' className='btn-prev' onClick={() => prev()}>
+        <Button className='btn-prev' onClick={() => prev()}>
           {LANG('上一步')}
         </Button>
         <Button type='primary' className='btn-next' onClick={next}>
@@ -87,7 +87,7 @@ const styles = css`
         background: var(--theme-background-color-3-1);
         font-size: 32px;
         font-weight: 700;
-        color: var(--skin-main-font-color);
+        color: var(--brand);
         @media ${MediaInfo.mobile} {
           font-size: 20px;
           font-weight: 500;

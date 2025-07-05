@@ -152,7 +152,7 @@ const ContractColumn = ({ buy, commodity, lever }: { buy: boolean; commodity: st
         height='18'
       />
       <div className='text'>{commodity}</div>
-      <div>{lever}X</div>
+      <div>{lever}x</div>
     </div>
   );
 };

@@ -56,6 +56,8 @@ export const useModalProps = () => {
   const [spslModalProps, setSpslModalProps] = useState({
     visible: false,
     data: { symbol: '' },
+    tab: 0,
+    isEdit: false,
   });
 
   const [reverseModalProps, setReverseModalProps] = useState({
@@ -64,8 +66,8 @@ export const useModalProps = () => {
     onConfirm: () => {},
   });
 
-  const onVisiblesSpslModal = (item: any) => {
-    setSpslModalProps({ visible: true, data: item });
+  const onVisiblesSpslModal = (item: any,tab?:any,isEdit?:boolean) => {
+    setSpslModalProps({ visible: true, data: item,tab:tab || 0,isEdit});
   };
   const onCloseSpslModal = () => setSpslModalProps((v) => ({ ...v, visible: false }));
 

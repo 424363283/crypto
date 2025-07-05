@@ -1,5 +1,5 @@
 import { useTheme } from '@/core/hooks';
-import { clsx } from '@/core/utils';
+import { clsx, MediaInfo } from '@/core/utils';
 import { ChangeEvent, ReactNode, useState } from 'react';
 import css from 'styled-jsx/css';
 
@@ -25,7 +25,7 @@ const CalculatorInput = ({
   onChange,
   isNegative = false,
   onBlur,
-  max,
+  max
 }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
   const { theme } = useTheme();
@@ -55,7 +55,11 @@ const CalculatorInput = ({
     }
 
     // 第一位数为 0 的情况
-    if (currentValue.length > 1 && currentValue.indexOf('0') === 0) {
+    if (currentValue.length > 1 && currentValue.indexOf('0') === 0 && decimal === 0) {
+      currentValue = currentValue.slice(1);
+    }
+    // 有小数点 && 第二位数不是. 而是0,删除0
+    if (currentValue.length > 1 && decimal > 0 && currentValue.indexOf('.') !== 1 && currentValue.indexOf('00') === 0) {
       currentValue = currentValue.slice(1);
     }
 
@@ -88,12 +92,13 @@ const CalculatorInput = ({
   };
 
   return (
-    <>
+    <div className="input-wrapper">
+      <span className="label">{label}</span>
       <div className={`${theme} ${clsx('container', isFocus && 'focus')}`}>
-        <span className='label'>{label}</span>
         <input
           value={value}
-          type='text'
+          type="text"
+          inputMode="decimal"
           onInput={_onInput}
           placeholder={placeholder}
           onFocus={() => setIsFocus(true)}
@@ -103,49 +108,68 @@ const CalculatorInput = ({
         {suffix}
       </div>
       <style jsx>{styles}</style>
-    </>
+    </div>
   );
 };
 
 export default CalculatorInput;
 const styles = css`
-  .container {
-    width: 100%;
-    height: 37px;
-    border-radius: 8px;
-    padding: 0 10px;
-    margin: 0 0 14px 0;
+  .input-wrapper {
     display: flex;
-    align-items: center;
-    background: var(--theme-trade-tips-color);
-    border: 1px solid transparent;
-    &:hover {
-      border-color: var(--skin-color-active) !important;
-    }
-    &.focus {
-      box-shadow: 0 0 0 2px rgba(248, 187, 55, 0.1);
-      border-color: var(--skin-color-active) !important;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    gap: 16px;
+    @media ${MediaInfo.mobile} {
+      gap: 8px;
     }
     .label {
+      color: var(--text_3);
       font-size: 14px;
-      font-weight: 400;
-      color: var(--theme-font-color-3);
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
     }
-    input {
-      flex: 1;
-      text-align: right;
-      color: var(--theme-font-color-1);
-      background: var(--theme-trade-tips-color);
-      padding-right: 10px;
-      font-size: 13px;
-      outline: none;
-      border: 0;
+    .container {
+      display: flex;
+      align-items: center;
       width: 100%;
-      &::placeholder,
-      input::placeholder,
-      input::-webkit-input-placeholder,
-      &::-webkit-input-placeholder {
-        color: #c3c6ce;
+      height: 40px;
+      border-radius: 8px;
+      padding: 0 10px;
+      background: var(--fill_input_2);
+      border: 1px solid transparent;
+      @media ${MediaInfo.mobile} {
+        width: -webkit-fill-available;
+      }
+      &:hover {
+        border-color: var(--brand) !important;
+      }
+      &.focus {
+        border-color: var(--brand) !important;
+      }
+      input {
+        flex: 1;
+        text-align: left;
+        background: var(--fill_input_2);
+        padding-right: 10px;
+        color: var(--text_1);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        outline: none;
+        border: 0;
+        width: 100%;
+        &::placeholder,
+        input::placeholder,
+        input::-webkit-input-placeholder,
+        &::-webkit-input-placeholder {
+          color: var(--text_3);
+        }
+        @media ${MediaInfo.mobile} {
+          background: var(--fill-input-2);
+        }
       }
     }
   }

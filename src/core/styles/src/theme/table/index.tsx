@@ -12,8 +12,12 @@ export const GlobalTableThemeStyle = ({ excludePaths }: { excludePaths: string[]
       <style jsx global>
         {`
           :global(.ant-table-wrapper) {
+            border-bottom-right-radius: 8px;  
+            border-bottom-left-radius: 8px;
             :global(.ant-table-container .ant-table-thead > tr > th) {
-              font-size: 12px;
+              font-size: 14px;
+              font-weight: 400;
+              padding: 16px;
               background: transparent;
               &:before {
                 background: transparent !important;
@@ -29,50 +33,50 @@ export const GlobalTableThemeStyle = ({ excludePaths }: { excludePaths: string[]
               }
             }
             :global(.ant-table-empty .ant-table-tbody .ant-table-placeholder td) {
-              background-color: var(--theme-background-color-2);
+              background-color: var(--fill_bg_1);
               &:hover {
-                background-color: var(--theme-background-color-2) !important;
+                background-color: var(--fill_bg_1) !important;
               }
               border-bottom: none;
             }
             :global(.ant-table-tbody > tr.ant-table-row:hover > td, .ant-table-wrapper .ant-table-tbody > tr > td.ant-table-cell-row-hover) {
-              background-color: var(--theme-background-color-2-4);
+              background-color: var(--fill_2);
             }
             :global(.ant-table-content) {
-              background-color: var(--theme-background-color-2);
+              background-color: var(--fill_bg_1);
               :global(.ant-table-thead > tr > th) {
                 border-bottom: none !important;
                 &:hover {
                   background-color: unset !important;
                 }
-                color: var(--theme-font-color-3);
+                color: var(--text_3);
               }
               :global(.ant-table-tbody > tr > td) {
                 transition: none;
               }
               :global(.ant-table-tbody .ant-table-cell-fix-left) {
-                background-color: var(--theme-background-color-2);
+                background-color: var(--fill_bg_1);
               }
               :global(.ant-table-thead .ant-table-cell-fix-left) {
-                background-color: var(--theme-background-color-2);
+                background-color: var(--fill_bg_1);
               }
               :global(.ant-table-tbody .ant-table-row) {
                 :global(td) {
-                  border-bottom: 1px solid var(--theme-border-color-2);
-                  color: var(--theme-font-color-1);
+                  border-bottom: unset;
+                  color: var(--text_1);
                   font-size: 14px;
                   font-weight: 500;
                 }
                 :global(.ant-table-column-sort) {
-                  background-color: var(--theme-background-color-2);
+                  background-color: var(--fill_bg_1);
                 }
                 :global(td.ant-table-cell-row-hover) {
-                  background-color: var(--theme-background-color-2-4);
+                  background-color: var(--fill_2);
                   &:first-child {
-                    border-radius: 8px 0 0 8px;
+                    border-radius: 0px;
                   }
                   &:last-child {
-                    border-radius: 0 8px 8px 0;
+                    border-radius: 0px;
                   }
                 }
               }
@@ -80,7 +84,7 @@ export const GlobalTableThemeStyle = ({ excludePaths }: { excludePaths: string[]
             :global(.ant-spin-nested-loading) {
               :global(.ant-spin-blur) {
                 &::after {
-                  background-color: var(--theme-background-color-2) !important;
+                  background-color: var(--fill_bg_1) !important;
                   opacity: 0;
                 }
               }

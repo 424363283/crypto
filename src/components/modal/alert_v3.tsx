@@ -71,7 +71,7 @@ const { className: cssClassName, styles } = css.resolve`
         font-size: 16px;
         font-weight: 500;
         text-align: center;
-        color: var(--theme-font-color-1);
+       color: var(--theme-font-color-1);
         margin: 30px 0 16px;
       }
       :global(.alert-description) {
@@ -79,7 +79,7 @@ const { className: cssClassName, styles } = css.resolve`
         flex-direction: column;
         align-items: flex-start;
         text-align: left;
-        color: var(--theme-font-color-1);
+        color: var(--text_2);
         font-size: 12px;
         font-weight: normal;
       }
@@ -95,7 +95,7 @@ const { className: cssClassName, styles } = css.resolve`
       }
     }
     :global(.ant-modal-header) {
-      background: var(--theme-background-color-2);
+       background: var(--common-modal-bg);
     }
     :global(.ant-modal-body) {
       display: flex;
@@ -123,8 +123,8 @@ const { className: cssClassName, styles } = css.resolve`
       :global(.ant-btn:nth-child(2)) {
         margin-inline-start: 0;
         margin-right: 0px;
-        background: var(--theme-primary-color);
-        color: var(--theme-light-text-1);
+       color: var(--text_white);
+    background: var(--brand);
       }
       :global(.ant-btn-primary:disabled) {
         cursor: not-allowed;
@@ -140,8 +140,8 @@ const { className: cssClassName, styles } = css.resolve`
     }
     :global(.ant-modal-content),
     :global(.ant-modal-body) {
-      background: var(--theme-background-color-2);
-      color: var(--theme-font-color-1);
+      background: var(--common-modal-bg);
+      color: var(--text_2);
     }
     :global(.ant-modal-footer) {
       background: var(--theme-background-color-2);

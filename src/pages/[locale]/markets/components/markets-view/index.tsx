@@ -7,13 +7,13 @@ import { CURRENT_VIEW, store } from './../../store';
 import BottomOption from './components/bottom-option';
 import MiddleOption from './components/middle-option';
 import MarketTable from './table';
+import { useCascadeOptions } from '../hooks';
 
 const Feeds = dynamic(() => import('./link-feeds'), { ssr: false });
 const ItbWidget = dynamic(() => import('./itb-widget'), { ssr: false });
 
 const MainContent = () => {
   const { currentView } = store;
-
   if (currentView === CURRENT_VIEW.FEEDS) {
     return <Feeds />;
   }
@@ -24,18 +24,26 @@ const MainContent = () => {
 };
 
 const MarketsView = () => {
+  const config = useCascadeOptions();
   return (
-    <div className='market-container'>
-      <div className='markets-view'>
-        <MiddleOption />
-        <BottomOption />
+    <div className="market-container">
+      <div className="markets-view">
+        <div className="multi-options">
+          <MiddleOption />
+          {config.thirdOptions?.length > 0 && (
+            <>
+              <div className="line"></div>
+              <BottomOption />
+            </>
+          )}
+        </div>
         <MainContent />
       </div>
       <style jsx>{styles}</style>
     </div>
   );
 };
-export default memo(MarketsView);
+export default MarketsView;
 
 const styles = css`
   .market-container {
@@ -44,19 +52,47 @@ const styles = css`
     min-height: 100vh;
     @media ${MediaInfo.mobile} {
       margin-top: 0;
+      min-height: auto;
     }
-    background: var(--theme-background-color-2);
+    .multi-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      gap: 16px;
+      @media ${MediaInfo.mobile} {
+        position: sticky;
+        top: 8.5rem;
+        z-index: 100;
+        padding-left: 1.5rem;
+        padding-right: 4px;
+        gap: 8px;
+        background: var(--fill_bg_1);
+      }
+    }
+    .line {
+      width: 2px;
+      height: 32px;
+      background: var(--fill_line_2);
+      @media ${MediaInfo.mobile} {
+        width: 1px;
+        height: 1rem;
+      }
+    }
     .markets-view {
       height: 100%;
       max-width: var(--const-max-page-width);
       margin: 0 auto;
-      background-color: var(--theme-background-color-2);
       .main-content {
         overflow-y: hidden;
       }
       @media ${MediaInfo.mobileOrTablet} {
         padding: 25px 20px;
         position: relative;
+      }
+      @media ${MediaInfo.mobile} {
+        margin: 0;
+        padding: 0;
       }
     }
   }

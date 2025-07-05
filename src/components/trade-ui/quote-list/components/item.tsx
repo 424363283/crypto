@@ -66,15 +66,15 @@ const _ListItem = ({
       <div className={`item ${getActive(item.id === id)}`} onClick={() => onClick?.(item)}>
         <div className='name'>
           {renderStar ? renderStar?.() : <Star code={item.id} type={getStarType(item.id)} inQuoteList />}
-          {isSpot(item.id) ? (
-            <>
+          {isSpot(item.id)? (
+            <div>
               <span>{item.coin}</span>
               <span className='quoteCoin'>&nbsp;/{item.quoteCoin}</span>
-            </>
+            </div>
           ) : (
-            item.name
+            <span>{item.name}</span>
           )}
-          {isHot && <Image src='/static/images/common/hot.svg' width='16' height='16' alt='hot' className='hot' />}
+          {isHot && <Image src='/static/images/common/hot.svg' width='14' height='14' alt='hot' className='hot' />}
           {isNew && <span className='new'>NEW</span>}
         </div>
         <div className='price' style={{ color: `var(${item.isUp ? '--color-green' : '--color-red'})` }}>
@@ -100,14 +100,14 @@ const _ListItem = ({
             cursor: pointer;
             flex-shrink: 0;
             content-visibility: auto;
-            font-weight: 500;
-            margin-bottom: 9px;
+            font-weight: 400;
+            padding: 8px 16px;
             &:hover {
-              background-color: var(--theme-background-color-3);
+              background-color: var(--fill_3);
             }
 
             &.active {
-              background: var(--theme-background-color-3);
+              background: var(--fill_3);
             }
             > div {
               font-size: 12px;
@@ -115,7 +115,6 @@ const _ListItem = ({
               align-items: center;
             }
             > div:nth-child(1) {
-              padding-left: 10px;
             }
             > div:nth-child(2) {
               flex-flow: row-reverse;
@@ -123,36 +122,39 @@ const _ListItem = ({
             }
             > div:nth-child(3) {
               flex-flow: row-reverse;
-              padding-right: 10px;
               flex-shrink: 0;
               flex: 1;
             }
             .name {
-              color: var(--theme-trade-text-color-1);
+              color: var(--text_1);
               display: flex;
               align-items: center;
               width: 140px;
+              height: 14px;
+              :global(>:not(:last-child)) {
+                margin-right: 4px;
+              }
               .quoteCoin {
-                color: var(--theme-trade-text-color-2);
+                color: var(--text_3);
               }
               :global(.star_icon) {
-                margin-right: 4px;
               }
             }
             .price {
-              color: var(--theme-trade-text-color-1);
+              height: 14px;
+              color: var(--text_1);
             }
             .rate {
-              color: var(--theme-trade-text-color-1);
+              height: 14px;
+              color: var(--text_1);
             }
             .new {
               color: #f04e3f;
               background: rgba(240, 78, 63, 0.2);
               border-radius: 2px;
-              height: 16px !important;
-              line-height: 16px;
+              height: 14px !important;
+              line-height: 14px;
               width: 30px !important;
-              margin: 0px 0 0 4px;
               font-size: 12px;
               text-align: center;
               transform: scale(0.83333);

@@ -38,7 +38,6 @@ export const BottomView = ({ wrapperClassName }: { wrapperClassName?: string }) 
               {LANG('立即注册')}
             </Button>
             <Button
-              type={isDark ? 'light-2-3' : 'light-border-2-hover'}
               className='login-button'
               onClick={() => router.push('/login')}
             >

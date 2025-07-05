@@ -1,3 +1,4 @@
+import { Layer } from '@/components/constants';
 import { EmptyComponent } from '@/components/empty';
 import { BasicModal, BasicProps } from '@/components/modal';
 import { getCommonArticleListApi } from '@/core/api';
@@ -30,7 +31,7 @@ export default function RuleModal(props: RuleModalProps) {
       {currentArticle ? (
         <div className='main-article' dangerouslySetInnerHTML={{ __html: currentArticle.content }}></div>
       ) : (
-        <EmptyComponent />
+        <EmptyComponent layer={Layer.Overlay} />
       )}
       <style jsx>{styles}</style>
     </BasicModal>

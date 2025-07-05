@@ -11,7 +11,6 @@ import css from 'styled-jsx/css';
 import { ACCOUNT_TYPE } from './types';
 import { useFormatCryptoOptions } from './use-crypto-options';
 import { useOptions } from './use-options';
-
 export const AccountTypeSelect2 = ({
   children,
   selectedValue,
@@ -21,6 +20,8 @@ export const AccountTypeSelect2 = ({
   positiveTransfer,
   wallets,
   crypto,
+  from,
+  to
 }: {
   children: React.ReactNode;
   onChange: (args: { value: ACCOUNT_TYPE; positiveTransfer: boolean; wallet?: string }) => void;
@@ -30,37 +31,44 @@ export const AccountTypeSelect2 = ({
   positiveTransfer: boolean;
   wallets: string[];
   crypto: string;
+  from?: boolean;
+  to?: boolean;
 }) => {
   const [open, setOpen] = useState(false);
   const { isDark } = useTheme();
   const { isMobile } = useResponsive();
-  const options = useOptions({ positiveTransfer, positiveAccount: sourceAccount });
+
+  const baseOptions = useOptions({ positiveTransfer, positiveAccount: sourceAccount });
+
   const { getCryptoOptions } = useFormatCryptoOptions({ sourceAccount, targetAccount });
+
   const wallet = wallets[positiveTransfer ? 0 : 1];
+  // const imgs = {
+  //   [ACCOUNT_TYPE.SWAP_U]: isDark
+  //     ? '/static/images/account/transfer/assets_u.png'
+  //     : '/static/images/account/transfer/assets_u_light.png',
+  //   [ACCOUNT_TYPE.SWAP]: isDark
+  //     ? '/static/images/account/transfer/assets_m.png'
+  //     : '/static/images/account/transfer/assets_m_light.png',
+  //   [ACCOUNT_TYPE.SPOT]: isDark
+  //     ? '/static/images/account/transfer/assets_spot.png'
+  //     : '/static/images/account/transfer/assets_spot_light.png',
+  //   [ACCOUNT_TYPE.LITE]: isDark
+  //     ? '/static/images/account/transfer/assets_c.png'
+  //     : '/static/images/account/transfer/assets_c_light.png',
+  // };
 
-  const imgs = {
-    [ACCOUNT_TYPE.SWAP_U]: isDark
-      ? '/static/images/account/transfer/assets_u.png'
-      : '/static/images/account/transfer/assets_u_light.png',
-    [ACCOUNT_TYPE.SWAP]: isDark
-      ? '/static/images/account/transfer/assets_m.png'
-      : '/static/images/account/transfer/assets_m_light.png',
-    [ACCOUNT_TYPE.SPOT]: isDark
-      ? '/static/images/account/transfer/assets_spot.png'
-      : '/static/images/account/transfer/assets_spot_light.png',
-    [ACCOUNT_TYPE.LITE]: isDark
-      ? '/static/images/account/transfer/assets_c.png'
-      : '/static/images/account/transfer/assets_c_light.png',
+  const handleSelectWallet = (v, opt) => {
+    onChange({ value: opt.value, positiveTransfer, wallet: v.wallet });
+    setOpen(false);
   };
-
   const overlay = (
-    <div className='account-wallet-type-dropdown-menu'>
-      {options.map((opt, i) => {
+    <div className="account-wallet-type-dropdown-menu">
+      {baseOptions.map((opt, i) => {
         let swapType = false;
         const cryptoOptionsOrigin = getCryptoOptions({ account: opt.value });
+        let cryptoOptions = cryptoOptionsOrigin.filter(v => v.crypto.toUpperCase() === crypto);
         const activeType = selectedValue === opt.value;
-        let cryptoOptions = cryptoOptionsOrigin.filter((v) => v.crypto.toUpperCase() === crypto);
-
         let children: {
           id: string;
           crypto: string;
@@ -70,36 +78,65 @@ export const AccountTypeSelect2 = ({
           walletName?: string | undefined;
           icon?: string | undefined;
         }[] = [
-          {
-            ...cryptoOptions?.[0],
-            walletName: opt.label,
-            wallet: '',
-          },
-        ];
+            {
+              ...cryptoOptions?.[0],
+              walletName: opt.label,
+              wallet: ''
+            }
+          ];
         if ([ACCOUNT_TYPE.SWAP, ACCOUNT_TYPE.SWAP_U].includes(opt.value)) {
           swapType = true;
           children = cryptoOptions;
           if (cryptoOptions.length === 0) {
             children = cryptoOptionsOrigin.filter(
-              (v) => v.crypto.toUpperCase() === (ACCOUNT_TYPE.SWAP === opt.value ? 'BTC' : 'USDT')
+              v => v.crypto.toUpperCase() === (ACCOUNT_TYPE.SWAP === opt.value ? 'BTC' : 'USDT')
             );
           }
           if (!positiveTransfer && sourceAccount === opt.value) {
             // 过滤掉转出的子钱包
-            children = children.filter((v) => v.wallet !== wallets[0]);
+            children = children.filter(v => v.wallet !== wallets[0]);
           }
         }
         return (
-          <div key={i} className='selected-item'>
-            <Expand value={(positiveTransfer ? sourceAccount : targetAccount) === opt.value}>
-              {({ expand, setExpand }) => (
-                <>
-                  <div className='title' onClick={() => setExpand((v: any) => !v)}>
-                    <div className='left'>
-                      <Image src={imgs[opt.value]} height={20} width={20} alt='icon' />
-                      <div>{opt.label}</div>
-                    </div>
-                    <div className={clsx('expand', expand && 'active')}>
+          <div key={opt.value + i} className="selected-item">
+            {
+              <Expand value={(positiveTransfer ? sourceAccount : targetAccount) === opt.value}>
+                {({ expand, setExpand }) => (
+                  <>
+                    {from && opt.value !== sourceAccount && opt.value !== targetAccount && (
+                      <div
+                        className="title"
+                        onClick={v => {
+                          handleSelectWallet(v, opt);
+                        }}
+                      >
+                        <div className="left">
+                          {opt.label}
+                        </div>
+                        <div></div>
+                        {/* <div className={clsx('expand', expand && 'active')}>
+                           <div>{!expand ? LANG('展开') : LANG('收起')}</div>
+                           <Svg
+                             src='/static/images/common/arrow_down.svg'
+                             width={12}
+                             height={12}
+                             className={clsx('arrow')}
+                           />
+                         </div> */}
+                      </div>
+                    )}
+                    {to && opt.value !== sourceAccount && opt.value !== targetAccount &&
+                      <div
+                        className="title"
+                        onClick={v => {
+                          handleSelectWallet(v, opt);
+                        }}
+                      >
+                        <div className="left">
+                          <div>{opt.label}</div>
+                        </div>
+                        <div></div>
+                        {/* <div className={clsx('expand', expand && 'active')}>
                       <div>{!expand ? LANG('展开') : LANG('收起')}</div>
                       <Svg
                         src='/static/images/common/arrow_down.svg'
@@ -107,9 +144,11 @@ export const AccountTypeSelect2 = ({
                         height={12}
                         className={clsx('arrow')}
                       />
-                    </div>
-                  </div>
-                  {expand && (
+                    </div> */}
+                      </div>
+                    }
+
+                    {/* {expand && (
                     <div className='item-childs'>
                       {children.map((v, i) => {
                         return (
@@ -124,7 +163,6 @@ export const AccountTypeSelect2 = ({
                               onChange({ value: opt.value, positiveTransfer, wallet: v.wallet });
                             }}
                           >
-                            {swapType && <WalletAvatar size={20} type={v.icon} />}
                             <div className='name'>{v.walletName}</div>
                             <div className='price'>
                               {v.price} {v.crypto}
@@ -133,10 +171,11 @@ export const AccountTypeSelect2 = ({
                         );
                       })}
                     </div>
-                  )}
-                </>
-              )}
-            </Expand>
+                  )} */}
+                  </>
+                )}
+              </Expand>
+            }
           </div>
         );
       })}
@@ -147,10 +186,10 @@ export const AccountTypeSelect2 = ({
     <Dropdown
       open={open}
       autoAdjustOverflow
-      onOpenChange={(open) => setOpen(open)}
-      dropdownRender={(menu) => overlay}
+      onOpenChange={open => setOpen(open)}
+      dropdownRender={menu => overlay}
       trigger={['click']}
-      placement='bottom'
+      placement="bottom"
       overlayClassName={clsx('account-wallet-type-select-menus', !isDark && 'transfer-modal-light', 'base-drop-view')}
     >
       <div onClick={stopPropagation}>
@@ -162,7 +201,7 @@ export const AccountTypeSelect2 = ({
 };
 const Expand = ({
   children,
-  value,
+  value
 }: {
   children: (args: { expand: boolean; setExpand: any }) => ReactNode;
   value: boolean;
@@ -184,19 +223,27 @@ const styles = css`
   @import 'src/core/styles/src/design.scss';
   :global(.account-wallet-type-select-menus) {
     :global(.account-wallet-type-dropdown-menu) {
-      box-shadow: var(--theme-trade-select-shadow);
       border-radius: 8px;
       padding: 0 10px;
-      background: var(--theme-background-color-4);
-      width: 360px;
+      background: var(--fill_pop_down);
+      box-shadow: 0px 0px 8px 0px var(--fill_shadow);
+      border-radius: 8px 8px 0 0;
+      width: 188px;
       max-height: 280px;
       overflow-y: auto;
       position: relative;
-      left: 11px;
+      // left: 11px;
       top: -2px;
       border-radius: 5px;
       color: var(--theme-font-color-1);
+      @media ${MediaInfo.mobile} {
+        width: 110px;
+      }
       :global(.selected-item) {
+        &:hover {
+          color: var(--brand);
+          // background-color: var(--fill_3);
+        }
         :global(.title) {
           display: flex;
           justify-content: space-between;
@@ -256,8 +303,8 @@ const styles = css`
             }
           }
           :global(> .item-child.active) {
-            border: 1px solid var(--theme-primary-color);
-            background: rgba(var(--theme-primary-color-rgb), 0.1);
+            border: 1px solid var(--skin-primary-color);
+            background: rgba(var(--skin-primary-color-rgb), 0.1);
           }
         }
       }

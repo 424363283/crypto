@@ -8,14 +8,15 @@ export const Step = ({ step }: { step: number }) => {
       <ul className='step-content'>
         <li className='step'>
           <div className={clsx('step-round', 'active')}>
-            1<span className='step-text'>{LANG('下载APP')}</span>
+            1
+            {/* <span className='step-text'>{LANG('下载APP')}</span> */}
           </div>
-          <span className={clsx('step-line', step > 0 && 'active')}></span>
-          <div className={clsx('step-round', step > 0 && 'active')}>
+          {/* <span className={clsx('step-line', step > 0 && 'active')}></span> */}
+          {/* <div className={clsx('step-round', step > 0 && 'active')}>
             2<span className='step-text'>{LANG('添加密钥')}</span>
-          </div>
+          </div> */}
         </li>
-        <li className='step'>
+        {/* <li className='step'>
           <span className={clsx('step-line', step > 1 && 'active')}></span>
           <div className={clsx('step-round', step > 1 && 'active')}>
             3<span className='step-text'>{LANG('备份密钥')}</span>
@@ -26,11 +27,12 @@ export const Step = ({ step }: { step: number }) => {
           <div className={clsx('step-round', step > 2 && 'active')}>
             4<span className='step-text'>{LANG('安全验证')}</span>
           </div>
-        </li>
+        </li> */}
+        <li className={clsx('step-line', step > 0 && 'active')}></li>
         <li className='step'>
-          <span className={clsx('step-line', step > 3 && 'active')}></span>
-          <div className={clsx('step-round', step > 3 && 'active')}>
-            5<span className='step-text'>{LANG('启用谷歌验证')}</span>
+          <div className={clsx('step-round', step > 0 && 'active')}>
+            2
+            {/* <span className='step-text'>{LANG('启用谷歌验证')}</span> */}
           </div>
         </li>
       </ul>
@@ -50,8 +52,11 @@ const styles = css`
     @media ${MediaInfo.desktop} {
       width: 1100px;
     }
+    @media ${MediaInfo.mobile} {
+      width: auto;
+    }
     .step-content {
-      display: inline-block;
+      display: flex;
       vertical-align: middle;
       padding-left: 10px;
       .step {
@@ -70,7 +75,7 @@ const styles = css`
           font-size: 16px;
           font-weight: 500;
           &.active {
-            background-color: var(--skin-primary-color);
+            background-color: var(--brand);
             color: var(--skin-font-color);
             border: none;
           }
@@ -86,16 +91,19 @@ const styles = css`
             transform: translateX(-50%);
           }
         }
-        .step-line {
-          display: inline-block;
-          width: 84px;
-          height: 2px;
-          background: #f5f5f3;
-          margin: 0 50px;
-          margin-bottom: -10px;
-          &.active {
-            background: var(--skin-primary-color);
-          }
+        
+      }
+      .step-line {
+        display: inline-block;
+        width: 560px;
+        height: 2px;
+        background: #f5f5f3;
+        margin: auto 10px;
+        &.active {
+          background: var(--brand);
+        }
+        @media ${MediaInfo.mobile} {
+          width: 220px;
         }
       }
     }

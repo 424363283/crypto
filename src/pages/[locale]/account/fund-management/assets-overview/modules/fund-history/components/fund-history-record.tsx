@@ -1,7 +1,7 @@
 import CommonIcon from '@/components/common-icon';
 import { DateRangePicker } from '@/components/date-range-picker';
 import { ExportRecord } from '@/components/modal';
-import { Desktop, DesktopOrTablet } from '@/components/responsive';
+import { Desktop, DesktopOrTablet, Mobile } from '@/components/responsive';
 import { Select } from '@/components/select';
 import SelectCoins from '@/components/select-coin';
 import { getAccountRechargeListApi, getAccountWithdrawListApi } from '@/core/api';
@@ -15,16 +15,23 @@ import { FUND_HISTORY_TAB_KEY } from '../types';
 import { EXPORTS_MODE } from './constants';
 import { CommonFundHistoryTable } from './fund-history-table';
 import { useFetchTableData } from './hooks/use-fetch-table-data';
+import { Button } from '@/components/button';
+import { useResponsive } from '@/core/hooks';
+import { MobileBottomSheet, MobileDateRangePicker } from '@/components/mobile-modal';
+import { Svg } from '@/components/svg';
+import { Layer } from '@/components/constants';
 
 interface CoinOption {
   code: string;
   currency: string;
 }
 const DATE_MODE_OTHER = 5; //暂时没用
+
 // TODO: 将所有的筛选组件模块化，形成可组合可拼接的组件
 export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY }) => {
   const { tabKey } = props;
   const { start = '', end = '' } = getFormatDateRange(new Date(), 7, true);
+  const { isMobile } = useResponsive();
   const [state, setState] = useImmer({
     subPage: String(tabKey),
     startDate: start,
@@ -36,15 +43,18 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
       { label: LANG('全部'), value: 'ALL' },
       { label: LANG('现货账户'), value: 'SPOT' },
       { label: LANG('U本位合约账户'), value: 'FUTURE' },
-      { label: LANG('币本位合约账户'), value: 'DELIVERY' },
+      // { label: LANG('币本位合约账户'), value: 'DELIVERY' },
+      { label: LANG('跟单账户'), value: 'COPY' }
     ],
     transferToOptions: [
       { label: LANG('全部'), value: 'ALL' },
       { label: LANG('现货账户'), value: 'SPOT' },
       { label: LANG('U本位合约账户'), value: 'FUTURE' },
-      { label: LANG('币本位合约账户'), value: 'DELIVERY' },
+      // { label: LANG('币本位合约账户'), value: 'DELIVERY' },
+      { label: LANG('跟单账户'), value: 'COPY' }
     ],
     selectedCoinIndex: 0,
+    resetCount: 0
   });
   const {
     subPage,
@@ -56,15 +66,16 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
     transferToValue,
     transferFromOptions,
     transferToOptions,
+    resetCount
   } = state;
   const { tableData, total, fetchRecordData, listPage } = useFetchTableData({
     type: tabKey,
     startDate,
-    endDate,
+    endDate
   });
 
   useEffect(() => {
-    setState((draft) => {
+    setState(draft => {
       draft.subPage = tabKey;
       draft.selectedCoinIndex = 0;
       draft.startDate = start;
@@ -79,60 +90,79 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
         { label: LANG('全部'), value: 'ALL' },
         { label: LANG('现货账户'), value: 'SPOT' },
         { label: LANG('U本位合约账户'), value: 'FUTURE' },
-        { label: LANG('币本位合约账户'), value: 'DELIVERY' },
+        // { label: LANG('币本位合约账户'), value: 'DELIVERY' },
+        { label: LANG('跟单账户'), value: 'COPY' }
       ],
       SPOT: [
         { label: LANG('全部'), value: 'ALL' },
         { label: LANG('U本位合约账户'), value: 'FUTURE' },
-        { label: LANG('币本位合约账户'), value: 'DELIVERY' },
+        // { label: LANG('币本位合约账户'), value: 'DELIVERY' },
+        { label: LANG('跟单账户'), value: 'COPY' }
       ],
       DELIVERY: [
         { label: LANG('全部'), value: 'ALL' },
         { label: LANG('现货账户'), value: 'SPOT' },
-        { label: LANG('币本位合约账户'), value: 'DELIVERY' },
+        // { label: LANG('币本位合约账户'), value: 'DELIVERY' },
+        { label: LANG('跟单账户'), value: 'COPY' }
       ],
       FUTURE: [
         { label: LANG('全部'), value: 'ALL' },
         { label: LANG('现货账户'), value: 'SPOT' },
-        { label: LANG('U本位合约账户'), value: 'FUTURE' },
+        // { label: LANG('U本位合约账户'), value: 'FUTURE' },
+        { label: LANG('跟单账户'), value: 'COPY' }
       ],
+      COPY: [
+        { label: LANG('全部'), value: 'ALL' },
+        { label: LANG('现货账户'), value: 'SPOT' },
+        { label: LANG('U本位合约账户'), value: 'FUTURE' }
+        // { label: LANG('U本位合约账户'), value: 'FUTURE' },
+      ]
     };
     if (TRANSFER_OPTION_MAP.hasOwnProperty(transferFromValue.value)) {
-      setState((draft) => {
+      setState(draft => {
         draft.transferToOptions = TRANSFER_OPTION_MAP[transferFromValue.value];
       });
     }
     if (TRANSFER_OPTION_MAP.hasOwnProperty(transferToValue.value)) {
-      setState((draft) => {
+      setState(draft => {
         draft.transferFromOptions = TRANSFER_OPTION_MAP[transferToValue.value];
       });
     }
   }, [transferFromValue, transferToValue]);
+
+  //手机模式下切换时间请求数据
+  useEffect(() => {
+    if (isMobile) onSearchClick();
+  }, [state.selectedTime]);
+
+  //切换查询时间
   const onChangeDateMode = (value: { label: string; value: number }[]) => {
     const duration = value[0].value;
     if (duration !== DATE_MODE_OTHER) {
       //实际持续天数设置
       const { start = '', end = '' } = getFormatDateRange(new Date(), duration, true);
-      setState((draft) => {
+      setState(draft => {
         draft.startDate = start;
         draft.endDate = end;
       });
     }
-    setState((draft) => {
+    setState(draft => {
       draft.selectedTime = value[0];
     });
   };
+
   const handleSelectCoin = (code: number[]) => {
     if (!code?.length) return;
-    setState((draft) => {
+    setState(draft => {
       draft.selectedCoinIndex = code[0];
     });
   };
+
   const handleSearchFundHistory = ({
     code,
     page = 1,
     source,
-    target,
+    target
   }: {
     code: string;
     page?: number;
@@ -143,7 +173,7 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
       coin: code,
       source,
       target,
-      page,
+      page
     });
   };
 
@@ -152,29 +182,33 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
     if (!start || !end) {
       return;
     }
-    setState((draft) => {
+    setState(draft => {
       draft.startDate = start.format('YYYY-MM-DD H:m:s');
       draft.endDate = end.format('YYYY-MM-DD H:m:s');
     });
   }, []);
+
   const [coinList, setCoinList] = useState([]);
   const DATE_OPTIONS = [
     { label: LANG('最近7天'), value: 7 },
     { label: LANG('最近30天'), value: 30 },
-    { label: LANG('最近90天'), value: 90 },
+    { label: LANG('最近90天'), value: 90 }
   ];
 
   const getWithdrawList = async (): Promise<string[]> => {
     const list = await getAccountWithdrawListApi();
     return list.data;
   };
+
   const getRechargeList = async (): Promise<string[]> => {
     const list = await getAccountRechargeListApi();
     return list.data;
   };
+
   const generateOptions = (options: CoinOption[]): CoinOption[] => {
     return [{ code: LANG('币种'), currency: 'all' }].concat(options);
   };
+
   const getCoinList = async (): Promise<void> => {
     const [rechargeList, withdrawList] = await Promise.all([getRechargeList(), getWithdrawList()]);
     const rechargeOptions = generateOptions(rechargeList.map((item: any) => ({ code: item, currency: item })));
@@ -185,13 +219,15 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
       withdrawOptions,
       rechargeOptions,
       undefined,
-      withdrawOptions,
+      withdrawOptions
     ];
     setCoinList(coinListOptions);
   };
+
   useEffect(() => {
     getCoinList();
   }, []);
+
   const coinItem = coinList?.[Number(subPage)]?.[selectedCoinIndex] as { code: string; currency: string };
   const shouldShouldExport =
     subPage === FUND_HISTORY_TAB_KEY.FIAT_CURRENCY_RECORD ||
@@ -200,101 +236,214 @@ export const CommonFundHistoryRecord = (props: { tabKey: FUND_HISTORY_TAB_KEY })
 
   useEffect(() => {
     handleSearchFundHistory({ code: coinItem?.currency || 'all' });
-  }, [subPage]);
+  }, [subPage, resetCount]);
+
   const onSwitchTransferOptions = () => {
-    setState((draft) => {
+    setState(draft => {
       draft.transferFromValue = transferToValue;
       draft.transferToValue = transferFromValue;
     });
   };
+
   const onTransferFromSelectChange = (v: any) => {
-    setState((draft) => {
+    setState(draft => {
       draft.transferFromValue = v;
     });
   };
+
   const onTransferToSelectChange = (v: any) => {
-    setState((draft) => {
+    setState(draft => {
       draft.transferToValue = v;
     });
   };
+
   const MoveRecordSelectOption = () => {
     return (
-      <div className='transfer-options'>
-        <Select
-          width={140}
-          options={transferFromOptions}
-          values={[transferFromValue]}
-          onChange={([v]) => onTransferFromSelectChange(v)}
-        />
-        <CommonIcon
-          name='common-switch-icon-0'
-          size={20}
-          className='exchange-icon'
-          onClick={onSwitchTransferOptions}
-          enableSkin
-        />
-        <Select
-          width={140}
-          options={transferToOptions}
-          values={[transferToValue]}
-          onChange={([v]) => onTransferToSelectChange(v)}
-        />
+      <div className="transfer-options">
+        <DesktopOrTablet>
+          <Select
+            width={isMobile ? 355 : 140}
+            height={40}
+            options={transferFromOptions}
+            values={[transferFromValue]}
+            onChange={([v]) => onTransferFromSelectChange(v)}
+          />
+          <CommonIcon
+            name="common-switch-icon"
+            size={16}
+            className="exchange-icon"
+            onClick={onSwitchTransferOptions}
+            enableSkin
+          />
+          <Select
+            width={isMobile ? 355 : 140}
+            height={40}
+            options={transferToOptions}
+            values={[transferToValue]}
+            onChange={([v]) => onTransferToSelectChange(v)}
+          />
+        </DesktopOrTablet>
+        <Mobile>
+          <div className="container">
+            <span className="label">{LANG('从')}</span>
+            <Select
+              height={48}
+              layer={Layer.Overlay}
+              options={transferFromOptions}
+              values={[transferFromValue]}
+              onChange={([v]) => onTransferFromSelectChange(v)}
+            />
+          </div>
+          <div className="container">
+            <span className="label">{LANG('到')}</span>
+            <Select
+              height={48}
+              layer={Layer.Overlay}
+              options={transferToOptions}
+              values={[transferToValue]}
+              onChange={([v]) => onTransferToSelectChange(v)}
+            />
+          </div>
+        </Mobile>
       </div>
     );
   };
-  const onSearchClick = () => {
+
+  const onSearchClick = (page: number = 1) => {
     // 划转记录
     handleSearchFundHistory({
+      page,
       code: coinItem?.currency,
       source: transferFromValue.value,
-      target: transferToValue.value,
+      target: transferToValue.value
     });
   };
+
   const shouldShowSelectCoins =
     String(subPage) !== FUND_HISTORY_TAB_KEY.TRANSFER_RECORD && String(subPage) !== FUND_HISTORY_TAB_KEY.MOVE_RECORD;
+
+  const [filterShow, setFiterShow] = useState(false);
+
+  const _resetSelect = () => {
+    setState(draft => {
+      draft.startDate = start;
+      draft.endDate = end;
+      draft.selectedTime = { label: LANG('最近7天'), value: 7 };
+      draft.transferFromValue = { label: LANG('全部'), value: 'ALL' };
+      draft.transferToValue = { label: LANG('全部'), value: 'ALL' };
+      draft.selectedCoinIndex = 0;
+      draft.resetCount++;
+    });
+  };
+
   return (
     <>
-      <div className='filter-bar'>
-        <div className='box'>
-          {subPage === FUND_HISTORY_TAB_KEY.MOVE_RECORD && <MoveRecordSelectOption />}
-          {shouldShowSelectCoins ? (
-            <SelectCoins
-              width={120}
-              options={coinList[+subPage]}
-              className='fund-history-select-coin'
-              values={[selectedCoinIndex]}
-              onChange={(code: number[]) => handleSelectCoin(code)}
-            />
-          ) : null}
-          <Select width={120} options={DATE_OPTIONS} values={[selectedTime]} onChange={onChangeDateMode} />
-          {subPage !== FUND_HISTORY_TAB_KEY.MOVE_RECORD && (
-            <DesktopOrTablet>
-              <DateRangePicker
-                value={[dayjs(startDate), dayjs(endDate)]}
-                placeholder={[LANG('开始日期'), LANG('结束日期')]}
-                onChange={onChangeDate}
-                allowClear={false}
+      <DesktopOrTablet>
+        <div className="filter-bar">
+          <div className="box">
+            {subPage === FUND_HISTORY_TAB_KEY.MOVE_RECORD && <MoveRecordSelectOption />}
+            {shouldShowSelectCoins && (
+              <SelectCoins
+                width={120}
+                options={coinList[+subPage]}
+                className="fund-history-select-coin"
+                values={[selectedCoinIndex]}
+                onChange={(code: number[]) => handleSelectCoin(code)}
               />
-            </DesktopOrTablet>
-          )}
-          <div className={clsx('search-button')} onClick={onSearchClick}>
-            {LANG('查询')}
+            )}
+            <Select width={120} options={DATE_OPTIONS} values={[selectedTime]} onChange={onChangeDateMode} />
+            {subPage !== FUND_HISTORY_TAB_KEY.MOVE_RECORD && (
+              <DesktopOrTablet>
+                <DateRangePicker
+                  value={[dayjs(startDate), dayjs(endDate)]}
+                  placeholder={[LANG('开始日期'), LANG('结束日期')]}
+                  onChange={onChangeDate}
+                  allowClear={false}
+                />
+              </DesktopOrTablet>
+            )}
+            <Button className="search-button" width={72} rounded onClick={() => onSearchClick()}>
+              {LANG('查询')}
+            </Button>
+            <Button className="reset-button" width={72} rounded onClick={() => _resetSelect()}>
+              {LANG('重置')}
+            </Button>
           </div>
-        </div>
-        {shouldShouldExport && (
-          <Desktop>
+          {shouldShouldExport && (
             <ExportRecord type={EXPORTS_MODE[subPage]} digital={subPage === FUND_HISTORY_TAB_KEY.RECHARGE_RECORD} />
-          </Desktop>
-        )}
-        <style jsx>{styles}</style>
-      </div>
+          )}
+        </div>
+      </DesktopOrTablet>
+      <Mobile>
+        <div className="mobile-filter-bar">
+          <div className="mobile-quick-times">
+            {DATE_OPTIONS.map((item, key) => {
+              return (
+                <div
+                  onClick={() => onChangeDateMode([item])}
+                  className={item.value === state.selectedTime.value ? 'active' : ''}
+                  key={key}
+                >
+                  {item.label}
+                </div>
+              );
+            })}
+          </div>
+          {
+            <div className="mobile-filter" onClick={() => setFiterShow(true)}>
+              <Svg src="/static/images/common/filter.svg" width={14} height={14} color={`var(--text_2)`} />
+              <span>{LANG('筛选')}</span>
+            </div>
+          }
+        </div>
+        <MobileBottomSheet
+          title={LANG('筛选')}
+          visible={filterShow}
+          content={
+            <div className="mobile-bottom-sheet-box">
+              {subPage === FUND_HISTORY_TAB_KEY.MOVE_RECORD && <MoveRecordSelectOption />}
+              {shouldShowSelectCoins && (
+                <div className="filter-item">
+                  <span>{LANG('币种')}</span>
+                  <SelectCoins
+                    width={120}
+                    height={48}
+                    options={coinList[+subPage]}
+                    values={[selectedCoinIndex]}
+                    onChange={(code: number[]) => handleSelectCoin(code)}
+                  />
+                </div>
+              )}
+              {subPage !== FUND_HISTORY_TAB_KEY.MOVE_RECORD && (
+                <div className="filter-item">
+                  <span>{LANG('日期')}</span>
+                  <MobileDateRangePicker
+                    startTime={dayjs(startDate)}
+                    endTime={dayjs(endDate)}
+                    onDateChange={onChangeDate}
+                  />
+                </div>
+              )}
+            </div>
+          }
+          close={() => setFiterShow(false)}
+          onConfirm={() => {
+            onSearchClick();
+            setFiterShow(false);
+          }}
+          hasCancel
+          cancelText="重置"
+          onCancel={_resetSelect}
+        />
+      </Mobile>
       <CommonFundHistoryTable
         tabKey={tabKey}
         tableData={tableData}
         page={listPage}
-        fetchRecordData={fetchRecordData}
+        fetchRecordData={onSearchClick}
         total={total}
       />
+      <style jsx>{styles}</style>
     </>
   );
 };
@@ -304,6 +453,7 @@ const styles = css`
     display: flex;
     align-items: center;
     padding: 0 18px;
+    margin-top: 16px;
     justify-content: space-between;
     @media ${MediaInfo.mobile} {
       margin-top: 10px;
@@ -322,40 +472,108 @@ const styles = css`
         align-items: flex-start;
         margin-top: 130px;
       }
-      :global(.fund-history-select-coin) {
-        width: 138px;
-        height: 34px !important;
-      }
-
-      :global(.transfer-options) {
-        display: flex;
-        align-items: center;
-        margin-right: 8px;
-        :global(.exchange-icon) {
-          margin: 0 10px 0px 2px;
-          cursor: pointer;
-        }
-      }
       :global(.select-wrapper) {
-        margin-right: 10px;
+        margin-right: 24px;
       }
       :global(.picker-content) {
         margin-right: 10px;
       }
     }
-    .search-button {
-      background-color: var(--theme-background-color-14);
+    :global(.search-button) {
+      margin-right: 24px;
+      background-color: var(--fill_3);
+      color: var(--text_brand);
+    }
+    :global(.reset-button) {
+      margin-right: 24px;
+    }
+  }
+
+  :global(.transfer-options) {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+
+    @media ${MediaInfo.mobile} {
+      flex-direction: column;
+      justify-content: start;
+      align-items: start;
+      margin: 0;
+      // height: 240px;
+      fon-size: 14px;
+      gap: 24px;
+      :global(.container) {
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+        width: 100%;
+        gap: 8px;
+        :global(.label) {
+          color: var(--text_2);
+        }
+        :global(.select-wrapper) {
+          width: 100%;
+        }
+      }
+    }
+    :global(.exchange-icon) {
+      margin-right: 24px;
       cursor: pointer;
-      height: 32px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      padding: 6px 10px;
-      color: var(--skin-color-active);
-      vertical-align: middle;
-      text-align: center;
+      @media ${MediaInfo.mobile} {
+        padding: 15px 0;
+        margin: 0;
+        transform: rotate(90deg);
+      }
+    }
+  }
+  :global(.fund-history-select-coin) {
+    width: 138px;
+    height: 34px !important;
+    @media ${MediaInfo.mobile} {
       width: 100%;
-      white-space: nowrap;
+      height: 40px;
+    }
+  }
+  .mobile-bottom-sheet-box {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    .filter-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+
+  .mobile-filter-bar {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--fill_line_1);
+     color: var(--text_2);
+    .mobile-quick-times {
+      display: flex;
+      gap: 16px;
+      > div {
+        background: var(--fill_3);
+        padding: 8px 12px;
+        border-radius: 4px;
+        border: 1px solid var(--fill_3);
+        font-size: 12px;
+        &.active {
+          color: var(--text_brand);
+          border-color: var(--text_brand);
+        }
+      }
+    }
+    .mobile-filter {
+      display: flex;
+      font-size: 12px;
+      align-items: center;
+      span {
+        padding-left: 5px;
+      }
     }
   }
 `;

@@ -1,35 +1,36 @@
 import { ImageHover } from '@/components/image';
 import { DesktopOrTablet } from '@/components/responsive';
 import { Svg } from '@/components/svg';
-import { TradeLink } from '@/core/i18n';
+import { TradeLink, LANG } from '@/core/i18n';
 import { clsx } from '@/core/utils';
 
 export const ItemHeader = ({
-  buy,
   code,
   symbol,
   onShare,
-  codeRight,
+  info,
+  right
 }: {
-  buy: boolean;
   code: string;
   symbol: string;
   onShare: any;
-  codeRight?: any;
+  info?: any;
+  right?: any;
 }) => {
   return (
     <>
       <div className='item-header'>
         <div className='left'>
-          <div className={clsx('position-type', buy ? 'buy' : 'sell')}>{buy ? 'L' : 'S'}</div>
+          {/* <div className={clsx('position-type', buy ? 'buy' : 'sell')}>{buy ? 'L' : 'S'}</div> */}
           <TradeLink id={symbol.toUpperCase()}>
-            <div className='code'>{code}</div>
+            <div className='code'>{code} {LANG('永续')}</div>
           </TradeLink>
-          <Svg src={'/static/images/common/arrow-right.svg'} />
-          {codeRight}
+          {/* <Svg src={'/static/images/common/arrow-right.svg'} /> */}
+          {info}
         </div>
         <div className='right'>
-          <DesktopOrTablet>
+          {right}
+          {/* <DesktopOrTablet>
             <ImageHover
               src='common-share-round-0'
               className={clsx('share')}
@@ -39,7 +40,7 @@ export const ItemHeader = ({
               onClick={onShare}
               enableSkin
             />
-          </DesktopOrTablet>
+          </DesktopOrTablet> */}
         </div>
       </div>
       <style jsx>{`
@@ -47,10 +48,12 @@ export const ItemHeader = ({
           display: flex;
           justify-content: space-between;
           align-items: center;
-          height: 20px;
+          // height: 20px;
           .left {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
           }
           .position-type {
             height: 20px;
@@ -71,8 +74,7 @@ export const ItemHeader = ({
           .code {
             font-size: 16px;
             font-weight: 500;
-            color: var(--theme-trade-text-color-1);
-            margin-right: 4px;
+            color: var(--text_1);
           }
         }
       `}</style>

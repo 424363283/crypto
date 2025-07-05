@@ -7,13 +7,16 @@ import SelectCoin from '@/components/select-coin';
 import { useRouter } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Account, ChainListResponse, CurrencyListResponse, SENCE, Wallet } from '@/core/shared';
-import { message } from '@/core/utils';
+import { MediaInfo, message } from '@/core/utils';
 import { Checkbox, Switch } from 'antd';
 import { useEffect } from 'react';
 import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
 import { ChainList } from './chain-list';
 import { ColumnItem } from './types';
+import { Desktop, MobileOrTablet } from '@/components/responsive';
+import { MobileBottomSheet } from '@/components/mobile-modal';
+
 
 const Item = ({ title, content }: { title: string; content: React.ReactNode | JSX.Element[] }) => {
   return (
@@ -31,9 +34,12 @@ type AddAddressModalProps = {
   open: boolean;
   onCancel: () => void;
 };
-export const AddressContentModal = (props: AddAddressModalProps) => {
+
+
+export default function AddressContentModal(props: AddAddressModalProps) {
   const { confirm, addressItem, hideModal, open, onCancel } = props;
   const router = useRouter();
+  
   const [state, setState] = useImmer({
     remark: '', // 地址备注
     address: '',
@@ -97,9 +103,10 @@ export const AddressContentModal = (props: AddAddressModalProps) => {
   };
   // 打开编辑modal调用，切换币种不执行
   const onOpenEditModal = async () => {
-    if (addressItem && coinList.length) {
+    // 打开安全验证Modal时不执行
+    if (addressItem && coinList.length && !showSafetyVerificationModal) {
       const idx = coinList.findIndex((o) => o.code === addressItem.currency);
-      const { remark, address, currency, addressTag, chain, white, common } = addressItem;
+      const { remark, address, currency, addressTag, network, white, common } = addressItem;
       const selectedCoinItem = coinList?.filter((item) => item.code === addressItem.currency)?.[0];
       const { chains } = await getSpecificChainsByCoinItem(selectedCoinItem);
       setState((draft) => {
@@ -107,7 +114,7 @@ export const AddressContentModal = (props: AddAddressModalProps) => {
         draft.address = address;
         draft.addressTag = addressTag;
         draft.currency = currency;
-        draft.chain = chain;
+        draft.chain = network;
         draft.chains = chains;
         draft.selectIndex = idx === -1 ? 0 : idx;
         draft.tag = !!addressTag;
@@ -120,9 +127,11 @@ export const AddressContentModal = (props: AddAddressModalProps) => {
   useEffect(() => {
     onOpenEditModal();
   }, [addressItem, coinList, confirm]);
+
   useEffect(() => {
     getCurrencyList();
   }, []);
+
   useEffect(() => {
     if (showSafetyVerificationModal) {
       hideModal();
@@ -139,6 +148,7 @@ export const AddressContentModal = (props: AddAddressModalProps) => {
 
   const changePayment = async (index: number[]) => {
     // 除了新建modal不调用以外，其余均调用
+    if(!index || !index.length) return;
     Loading.start();
     const selectedItem = coinList[index[0]];
     const { chainArr, chains } = await getSpecificChainsByCoinItem(selectedItem);
@@ -164,21 +174,25 @@ export const AddressContentModal = (props: AddAddressModalProps) => {
     await getChainList(index[0]);
     Loading.end();
   };
+
   const changeAddress = (value: string) => {
     setState((draft) => {
       draft.address = value;
     });
   };
+
   const changeAddressTag = (value: string) => {
     setState((draft) => {
       draft.addressTag = value;
     });
   };
+
   const changeRemark = (value: string) => {
     setState((draft) => {
       draft.remark = value;
     });
   };
+
   const handleWithdrawWhiteList = async () => {
     const user = await Account.getUserInfo();
     if (user?.email === '') {
@@ -257,9 +271,10 @@ export const AddressContentModal = (props: AddAddressModalProps) => {
       onSafetyModalCancel();
       AlertFunction({
         title: LANG('您尚未开启提币地址免验证功能'),
-        content: LANG('要添加免费验证提币地址，请访问“钱包地址”页面开启此功能。'),
+        content: LANG('要添加免费验证提币地址，请访问“安全中心”页面开启此功能。'),
         cancelText: LANG('暂不开启'),
         okText: LANG('去开启'),
+        centered: true,
         onOk: () => {
           router.replace({
             pathname: '/account/dashboard',
@@ -287,6 +302,14 @@ export const AddressContentModal = (props: AddAddressModalProps) => {
       draft.white = !white;
     });
   };
+
+
+  const onChainInit = () => {
+    setState((draft) => {
+      draft.chain = addressItem?.chain;
+    });
+  };
+
   useEffect(() => {
     // 每次打开新建modal时调用，编辑modal不调用
     const initCreateWithdrawModal = async () => {
@@ -307,86 +330,112 @@ export const AddressContentModal = (props: AddAddressModalProps) => {
           draft.isSetCommonAddress = false;
         });
         Loading.end();
+      } else {
+        console.log('addressItem 1', addressItem);
+
       }
     };
     initCreateWithdrawModal();
+
+
   }, [addressItem, confirm, coinList]);
+
+
+  if (!chain && addressItem) {
+    onChainInit();
+  }
+
+  const AddAddress = () => {
+    return  <div className='add-address'>
+      <Item
+        title={LANG('币种')}
+        content={
+          <SelectCoin
+            height={48}
+            className='address-select-coin'
+            values={Array.isArray(selectIndex) ? selectIndex : [selectIndex]}
+            options={coinList}
+            onChange={changePayment}
+          />
+        }
+      />
+      <div className='save-common-address'>
+        {/* <Radio
+          label={<span className='tips'>{LANG('保存为通用地址，可以适用于多个币种提现')}</span>}
+          checked={isSetCommonAddress}
+          onChange={() => setState((draft) => void (draft.isSetCommonAddress = !isSetCommonAddress))}
+          {...{ width: 14, height: 14 }}
+        /> */}
+      </div>
+      <Item
+        title={LANG('链名称')}
+        content={<ChainList changeChain={changeChain} chains={chains} chain={chain} />}
+      />
+      <BasicInput
+        label={LANG('提币地址')}
+        maxLength={150}
+        placeholder={LANG('请输入{chain}地址', { chain })}
+        type={INPUT_TYPE.NORMAL_TEXT}
+        value={address}
+        onInputChange={changeAddress}
+      />
+      {tag && (
+        <>
+          <BasicInput
+            type={INPUT_TYPE.NORMAL_TEXT}
+            maxLength={50}
+            label='Tag'
+            placeholder={'Tag'}
+            value={addressTag}
+            onInputChange={changeAddressTag}
+          />
+          <p className='tag-tips'>{LANG('请确认您的接收地址是否需要填写MEMO')}</p>
+        </>
+      )}
+      <BasicInput
+        label={LANG('地址备注')}
+        maxLength={50}
+        placeholder={LANG('请输入{chain}地址备注', { chain: chain || chains[0] })}
+        type={INPUT_TYPE.NORMAL_TEXT}
+        value={remark}
+        onInputChange={changeRemark}
+      />
+      <div className='add-white-area'>
+        <span className='tips'>{LANG('此地址下次无需验证')}</span>
+        <Switch checked={white} onClick={onCheckboxChange} />
+      </div>
+      <div className='prompt'>{LANG('开启验证之后，下次提币无需任何验证。')}</div>
+      <Button type='primary' onClick={onSaveWithdrawAddress} className='bottom-btn' disabled={!address}>
+        {LANG('确定')}
+      </Button>
+      <style jsx>{styles}</style>
+    </div>
+  }
+
 
   return (
     <>
-      <BasicModal
-        destroyOnClose
-        width={515}
-        title={addressItem ? LANG('编辑地址') : LANG('新建地址')}
-        footer={null}
-        open={open}
-        onCancel={onCancel}
-      >
-        <div className='add-address'>
-          <Item
-            title={LANG('币种')}
-            content={
-              <SelectCoin
-                height={44}
-                className='address-select-coin'
-                values={Array.isArray(selectIndex) ? selectIndex : [selectIndex]}
-                options={coinList}
-                onChange={changePayment}
-              />
-            }
-          />
-          <div className='save-common-address'>
-            <Checkbox
-              checked={isSetCommonAddress}
-              onClick={() => setState((draft) => void (draft.isSetCommonAddress = !isSetCommonAddress))}
-            />
-            <span className='prompt'>{LANG('保存为通用地址，可以适用于多个币种提现')}</span>
-          </div>
-          <Item
-            title={LANG('链名称')}
-            content={<ChainList changeChain={changeChain} chains={chains} chain={chain} />}
-          />
-          <BasicInput
-            label={LANG('提币地址')}
-            maxLength={150}
-            placeholder={LANG('请输入{chain}地址', { chain })}
-            type={INPUT_TYPE.NORMAL_TEXT}
-            value={address}
-            onInputChange={changeAddress}
-          />
-          {tag && (
-            <>
-              <BasicInput
-                type={INPUT_TYPE.NORMAL_TEXT}
-                maxLength={50}
-                label='Tag'
-                placeholder={'Tag'}
-                value={addressTag}
-                onInputChange={changeAddressTag}
-              />
-              <p className='tag-tips'>{LANG('请确认您的接收地址是否需要填写MEMO')}</p>
-            </>
-          )}
-          <BasicInput
-            label={LANG('地址备注')}
-            maxLength={50}
-            placeholder={LANG('请输入{chain}地址备注', { chain })}
-            type={INPUT_TYPE.NORMAL_TEXT}
-            value={remark}
-            onInputChange={changeRemark}
-          />
-          <div className='add-white-area'>
-            <span className='tips'>{LANG('此地址下次无需验证')}</span>
-            <Switch checked={white} onClick={onCheckboxChange} />
-          </div>
-          <div className='prompt'>{LANG('开启验证之后，下次提币无需任何验证。')}</div>
-          <Button type='primary' onClick={onSaveWithdrawAddress} className='bottom-btn' disabled={!address}>
-            {LANG('确定')}
-          </Button>
-
-          <style jsx>{styles}</style>
-        </div>
-      </BasicModal>
+      <Desktop>
+        <BasicModal
+          destroyOnClose
+          width={515}
+          title={addressItem ? LANG('编辑地址') : LANG('新建地址')}
+          footer={null}
+          open={open}
+          onCancel={onCancel}
+        >
+          {AddAddress()}
+        </BasicModal>
+      </Desktop>
+      <MobileOrTablet>
+        <MobileBottomSheet
+          title={addressItem ? LANG('编辑地址') : LANG('新建地址')}
+          content={AddAddress()}
+          visible={open}
+          close={onCancel}
+          hasBtn={false}
+        />
+      </MobileOrTablet>  
       <SafetyVerificationModal
         sence={SENCE.CHANGE_ADDRESS_WHITE}
         visible={showSafetyVerificationModal}
@@ -408,16 +457,16 @@ export const AddressContentModal = (props: AddAddressModalProps) => {
       />
     </>
   );
-};
+}
 const styles = css`
   .add-address {
-    :global(.address-select-coin) {
-      height: 44px;
+    @media ${MediaInfo.mobileOrTablet} {
+      width: 100%;
     }
     .save-common-address {
       margin: 10px 0 20px;
-      .prompt {
-        margin-left: 6px;
+      .tips {
+        font-size: 14px;
       }
     }
     .add-white-area {
@@ -433,7 +482,7 @@ const styles = css`
     .prompt {
       font-size: 12px;
       font-weight: 400;
-      color: var(--theme-font-color-3);
+      color: var(--spec-font-color-2);
     }
     :global(.tag-tips) {
       font-size: 12px;
@@ -473,8 +522,10 @@ const styles = css`
     }
     :global(.bottom-btn) {
       margin-top: 20px;
-      width: 100%;
-      padding: 10px 0;
+      width: calc(100% - 30px);
+      height: 48px;
+      line-height:48px;
+      border-radius: 24px;
     }
   }
 `;

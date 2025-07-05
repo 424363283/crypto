@@ -5,10 +5,11 @@ import { TradeMap } from '@/core/shared';
 import { MenuProps } from 'antd';
 import { useEffect, useState } from 'react';
 import { ORDER_BOOK_TYPES } from '.';
+import { MediaInfo } from '@/core/utils';
 
 export const DepthConfig = ({
   onChange,
-  type,
+  type
 }: {
   onChange: (value: number | null) => void;
   type: ORDER_BOOK_TYPES;
@@ -40,7 +41,7 @@ export const DepthConfig = ({
         setText(t.toString().toFixed());
         // 第一档不计算
         onChange(i == 0 ? null : t);
-      },
+      }
     };
   });
 
@@ -53,6 +54,7 @@ export const DepthConfig = ({
         </span>
       </Dropdown> */}
       <DropdownSelect
+        visible={true}
         data={depthConfig}
         onChange={(t, i) => {
           setText(t.toString().toFixed());
@@ -60,42 +62,50 @@ export const DepthConfig = ({
           onChange(i == 0 ? null : t);
         }}
         isActive={(v, index) => v.toString().toFixed() === text}
-        formatOptionLabel={(v) => v.toString().toFixed()}
-        // overlayClassName={clsx('overlay')}
-        trigger={['hover']}
+        formatOptionLabel={v => v.toString().toFixed()}
+        overlayClassName="overlay"
+        trigger={['click']}
         align={{ offset: [10, 0] }}
-        className='swap-deep-conf-dropdown'
+        className="swap-deep-conf-dropdown"
       >
-        <span className='text'>
+        <span className="text">
           {text}
-          <Svg src='/static/images/common/arrow_down.svg' width={12} height={12} className={'arrow'} />
+          <Svg src="/static/images/new_common/arrow_down.svg" width={10} height={10} className={'arrow'} />
         </span>
       </DropdownSelect>
       <style jsx>{`
         :global(.swap-deep-conf-dropdown) {
-          color: var(--theme-trade-text-color-1);
-          font-size: 10px;
-          cursor: pointer;
-          background-color: var(--theme-trade-sub-button-bg);
-          padding: 2px 5px;
-          padding-right: 19px;
-          min-width: 54px;
-          height: 20px;
-          border-radius: 5px;
           display: flex;
+          min-width: 80px;
+          height: 24px;
+          padding: 0px 8px;
+          justify-content: space-between;
           align-items: center;
+          border-radius: 4px;
+          background: var(--fill_3);
           position: relative;
+          color: var(--text_1);
           :global(.arrow) {
-            position: absolute;
-            top: 4px;
+            /* position: absolute;
+            top: 50%;
             right: 5px;
+            transform: translateY(-50%); */
+            svg {
+              path {
+                fill: var(--text_1);
+              }
+            }
+          }
+          @media ${MediaInfo.mobile} {
+            font-size: 12px;
+            height: 1.5rem;
           }
         }
         :global(.ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item) {
           color: var(--theme-trade-text-color-1);
         }
-        :global(.swap-deep-conf-dropdown-overlay) > :global(ul) {
-          background-color: ${isDark ? ' var(--theme-trade-bg-color-4)' : '#fff'} !important;
+        :global(.ant-dropdown.overlay .menus) {
+          right: 10px !important;
         }
       `}</style>
     </>

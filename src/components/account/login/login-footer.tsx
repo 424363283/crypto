@@ -10,13 +10,8 @@ const LoginFooter = () => {
   const { curTab } = store;
   return (
     <div className={clsx('bottom-area', curTab !== ACCOUNT_TAB_KEY.QRCODE ? '' : 'bottom-qrcode')}>
-      {curTab !== ACCOUNT_TAB_KEY.QRCODE ? (
-        <TrLink href={`/${ROUTE_PATH_KEY.FORGET}`} className='bottom-link'>
-          {LANG('忘记密码')}？
-        </TrLink>
-      ) : null}
       <span className='bottom-tips'>
-        {LANG('还不是Y-MEX用户')}？
+        {LANG('还没有账号吗')}？
         <TrLink href={`/${ROUTE_PATH_KEY.REGISTER}`} className='bottom-link'>
           {LANG('立即注册')}
         </TrLink>
@@ -33,7 +28,7 @@ const styles = css`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 36px;
+    margin-top: 16px;
     :global(.bottom-link) {
       font-size: 14px;
       font-weight: 400;

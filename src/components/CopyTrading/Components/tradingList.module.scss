@@ -1,0 +1,939 @@
+// @import '@/styles/size-variables.scss';
+$sm: 768px;
+
+.copyContainer {
+  padding-bottom: 120px;
+  background: var(--fill_bg_1);
+  @media (max-width: $sm) {
+    padding-bottom: 80px;
+  }
+}
+
+.filterContentBox {
+  background: var(--fill_pop) !important;
+  &.filterDark {
+    background: #1f1f1f !important;
+  }
+  :global(.ant-drawer-body) {
+    @media (max-width: $sm) {
+      padding: 0;
+    }
+  }
+}
+
+.selectTips {
+  font-family: 'Lexend';
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 100%;
+  color: var(--text_1);
+  @media (max-width: $sm) {
+    width: 40%;
+    word-wrap: break-word;
+    overflow: overlay;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    word-wrap: break-word;
+  }
+}
+
+.noLoginBox {
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  @media (max-width: $sm) {
+    flex-direction: column;
+    margin: 0;
+    padding: 16px;
+    align-items: initial;
+    gap: 24px;
+    .noLoginItem {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: row-reverse;
+    }
+    border-bottom: 1px solid var(--fill_line_2);
+    margin-bottom: 8px;
+  }
+  
+  p {
+    font-family: 'Lexend';
+    font-weight: 500;
+    font-size: 24px;
+    color: var(--text_1);
+    margin-bottom: 16px;
+    @media (max-width: $sm) {
+      margin-bottom: 0;
+      font-size: 16px;
+    }
+  }
+
+  label {
+    font-family: 'Lexend';
+    font-weight: 300;
+    font-size: 14px;
+    color: var(--text_2);
+  }
+}
+
+.closeBox {
+  cursor: pointer;
+}
+
+.becomeTrade {
+  margin: 16px 24px 24px 24px;
+  @media (max-width: $sm) { 
+    margin: 0;
+  }
+}
+.gap8 {
+  gap: 8px;
+}
+
+.copyHeader {
+  height: 400px;
+  background: var(--brand_10);
+  padding-top: 62px;
+  padding-bottom: 63px;
+
+  @media (max-width: $sm) {
+    padding: 0;
+    height: auto;
+  }
+
+  .copyApply {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    color: var(--text_1);
+    font-family: 'Lexend';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    gap: 16px;
+    margin-bottom: 16px;
+    margin-right: 80px;
+    @media (max-width: $sm) {
+      margin: 0;
+      justify-content: space-between;
+      padding: 16px 16px 24px;
+    }
+  }
+}
+
+.container {
+  width: 1200px;
+  margin: 0 auto;
+
+  @media (max-width: $sm) {
+    width: 100%;
+  }
+}
+
+.copyHeaderContainer {
+  .title {
+    font-family: 'Lexend';
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 52px;
+    color: var(--text_1);
+    @media (max-width: $sm) {
+      font-size: 32px;
+      padding: 32px 24px 0 24px;
+      line-height: 40px;
+    }
+  }
+}
+
+.copyMine {
+  display: flex;
+  padding: 16px 24px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  align-self: stretch;
+  border-radius: 24px;
+  background: var(--fill_bg_1);
+  color: var(--text_1);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+}
+
+.copyInfo {
+  width: 100%;
+}
+
+.myIncome {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+  color: var(--text_2);
+  font-family: 'Lexend';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+@media (max-width: $sm) {
+  .copyMine {
+    border-radius: 0;
+  }
+}
+
+.textRight {
+  text-align: right;
+}
+
+.myInTitle {
+  color: var(--text_1);
+  font-family: 'Lexend';
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-bottom: 8px;
+}
+
+.myValue {
+  font-weight: 300;
+}
+.openInfo {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 100%;
+}
+.searchBox {
+  margin-top: 78px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .title {
+    color: var(--brand);
+    font-family: 'Lexend';
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+
+  @media (max-width: $sm) {
+    .title {
+      font-size: 18px;
+    }
+  }
+
+  .inputSearch {
+    width: 200px;
+    height: 40px;
+    border: none;
+    border-radius: 40px;
+    border: 1px solid var(--fill_3);
+    background: transparent;
+    &:focus,
+    &:hover,
+    &:focus-within {
+      border-color: var(--text_brand);
+      border: 1px solid var(--text_brand);
+    }
+
+    input {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text_1);
+      caret-color: var(--brand);
+      &::placeholder {
+        color: var(--text_2) !important;
+      }
+
+      &::-webkit-input-placeholder {
+        color: var(--text_2) !important;
+      }
+    }
+
+    :global(.ant-input-affix-wrapper > input.ant-input) {
+      color: var(--text_1);
+      font-size: 12px;
+      font-weight: 400;
+    }
+  }
+}
+
+@media (max-width: $sm) {
+  .searchBox {
+    margin-top: 16px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--fill_line_1);
+    padding-bottom: 8px;
+  }
+}
+
+.tabsBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .tabList {
+    display: flex;
+    align-items: center;
+    margin: 40px 0;
+    overflow-y: auto;
+
+    .tabItem {
+      color: var(--text_3);
+      font-family: 'Lexend';
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      margin-right: 40px;
+      word-break: keep-all;
+      cursor: pointer;
+
+      &.active {
+        color: var(--brand);
+      }
+    }
+  }
+
+  @media (max-width: $sm) {
+    .tabList {
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  .filterBox {
+    display: flex;
+    width: 80px;
+    height: 32px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 24px;
+    background: var(--text_brand);
+    color: var(--text_white);
+    font-family: 'Lexend';
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    cursor: pointer;
+
+    .filterIcon {
+      margin-right: 4px;
+    }
+  }
+
+  @media (max-width: $sm) {
+    .filterBox {
+      background: transparent;
+      width: auto;
+      border: none;
+    }
+  }
+}
+
+@media (max-width: $sm) {
+  .tabsBox {
+    margin: 0 16px;
+    margin-top: 24px;
+    justify-content: flex-end;
+    gap: 6px;
+    flex-direction: row-reverse;
+  }
+}
+
+.copyBox {
+  .copyTradingList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 24px;
+    grid-row-gap: 24px;
+  }
+
+  @media (max-width: $sm) {
+    margin: 24px 0;
+
+    .copyTradingList {
+      grid-template-columns: repeat(1, 1fr);
+      margin: 0 16px;
+    }
+  }
+}
+.arrow {
+  transform: rotate(-90deg);
+}
+.copyItem {
+  cursor: pointer;
+  padding: 24px;
+  border-radius: 24px;
+  border: 1px solid var(--fill_line_3);
+  color: var(--text_2);
+  font-family: 'Lexend';
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+
+  &:hover {
+    border: 1px solid var(--text_brand);
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    margin-right: 8px;
+  }
+
+  .copyName {
+    color: var(--text_1);
+    font-family: 'Lexend';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-bottom: 4px;
+  }
+
+  .currentAmount {
+    color: var(--text_1);
+  }
+
+  .copyIncome {
+    font-family: 'Lexend';
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-top: 8px;
+  }
+
+  .copyCount {
+    color: var(--text_1);
+    font-weight: 500;
+  }
+
+  .copyLine {
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--fill_line_2);
+  }
+
+  .symbolBox {
+    gap: 4px;
+    width: 240px;
+    white-space: nowrap;
+    /* 禁止换行 */
+    overflow: hidden;
+    /* 隐藏溢出内容 */
+    text-overflow: ellipsis;
+    /* 显示省略号 */
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .copySymbol {
+    width: 24px;
+    height: 24px;
+  }
+
+  .copyEarn {
+    width: 20px;
+    height: 20px;
+  }
+
+  .copyItemSubmit {
+    display: flex;
+    height: 48px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 40px;
+    color: var(--text_brand);
+    border: 1px solid var(--brand);
+    text-align: center;
+    font-family: 'Lexend';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--brand);
+      color: var(--text_white);
+    }
+  }
+}
+
+@media (max-width: $sm) {
+  .copyItem {
+    height: auto;
+  }
+}
+
+.gap4 {
+  gap: 4px;
+}
+
+.gap16 {
+  gap: 16px;
+}
+
+.flexCenter {
+  display: flex;
+  align-items: center;
+}
+
+.flexSpan {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flexCol {
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.flexAround {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.mt24 {
+  margin-top: 24px;
+}
+
+.mb24 {
+  margin-bottom: 24px;
+}
+
+.mb32 {
+  margin-bottom: 24px;
+}
+
+.my16 {
+  margin: 16px 0;
+}
+
+.mb16 {
+  margin-bottom: 16px;
+}
+
+.pl8 {
+  padding-left: 8px;
+}
+
+.amontItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.setBox {
+  color: var(--text_2);
+  font-family: 'Lexend';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+
+  .setHeader {
+    margin-bottom: 40px;
+    color: var(--text_1);
+    font-weight: 500;
+    font-size: 16px;
+
+    @media (max-width: $sm) {
+      padding: 12px 24px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--fill_line_1);
+    }
+  }
+
+  .setTitle {
+    color: var(--text_1);
+    font-family: 'Lexend';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+
+  .filterSetContent {
+    @media (max-width: $sm) {
+      padding: 0 24px;
+    }
+  }
+}
+
+.setMutitle {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+
+  .multipleItem {
+    font-family: 'Lexend';
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 0.5px solid var(--fill_line_3);
+    height: 24px;
+    justify-content: center;
+    color: var(--text_1);
+    &.itemSelect {
+      color: var(--text_brand);
+      border: 0.5px solid var(--text_brand);
+    }
+  }
+
+  .usertag {
+    height: 32px;
+  }
+}
+
+.contractSearch {
+  width: 164px;
+  height: 32px;
+  border: 1px solid var(--fill_3);
+  border-radius: 40px;
+  background: var(--fill_3);
+  color: var(--text_1);
+
+  &:focus,
+  &:hover,
+  &:focus-within {
+    border-color: var(--text_brand);
+    background: var(--fill_3);
+    border: 1px solid var(--text_brand);
+  }
+
+  font-size: 12px;
+  font-weight: 400;
+
+  :global(.ant-input) {
+    &::placeholder {
+      color: var(--text_2) !important;
+    }
+
+    &::-webkit-input-placeholder {
+      color: var(--text_2) !important;
+    }
+  }
+
+  &.w240 {
+    width: 240px;
+  }
+}
+
+.contractSelect {
+  margin-bottom: 16px;
+
+  .currencyOpt {
+    color: var(--text_1);
+    margin-left: 16px;
+  }
+
+  .icon-radio {
+    span {
+      color: var(--text_1);
+    }
+  }
+}
+
+.copySubmit {
+  margin-top: 16px;
+  margin-bottom: 51px;
+  gap: 16px;
+
+  .copyBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    text-align: center;
+    font-family: 'Lexend';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    border-radius: 24px;
+    border: 1px solid var(--brand);
+  }
+
+  .copyReset {
+    color: var(--text_brand);
+    width: 40%;
+  }
+
+  .copyConfirm {
+    color: var(--text_white);
+    background: var(--brand);
+    width: 50%;
+  }
+}
+
+.symbolList {
+  .symbolHeaderItem {
+    display: flex;
+    align-items: center;
+
+    .symbolLogoImg {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .symbolName {
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 700;
+      color: var(--text_1);
+    }
+
+    .symbolType {
+      color: var(--text_1);
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+
+    .symbolTadingType {
+      display: flex;
+      padding: 4.5px 16px;
+      align-items: center;
+      border-radius: 4px;
+      background: var(--fill_3);
+      color: var(--text_2);
+      margin-left: 8px;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+    }
+
+    .symbolLeverage {
+      display: flex;
+      padding: 4.5px 16px;
+      align-items: center;
+      border-radius: 4px;
+      background: var(--green_10);
+      color: var(--color-green);
+      margin-left: 8px;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+    }
+
+    .symbolLeverageUp {
+      margin-right: 8px;
+    }
+
+    .symbolTadingTime {
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      color: var(--text_3);
+      margin-left: 8px;
+    }
+  }
+
+  .symbolItemContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    margin-right: 40px;
+  }
+
+  .symbolListInfo {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    color: var(--text_1);
+  }
+
+  .symbolListTitle {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    color: var(--text_3);
+    margin-bottom: 26px;
+
+    &:nth-of-type(2) {
+      margin-bottom: 0px;
+    }
+  }
+
+  .symbolListDesc {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    margin-bottom: 26px;
+
+    &:nth-of-type(2) {
+      margin-bottom: 0px;
+    }
+  }
+
+  .symbolListTitleInfo {
+    margin-right: 8px;
+    color: var(--text_3);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  .symbolListware {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .symbolTradingBtn {
+    padding: 10px 52px;
+    border-radius: 24px;
+    background: var(--brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text_white);
+    cursor: pointer;
+  }
+
+  .symbolItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 24px;
+  }
+}
+.font16 {
+  font-size: 16px;
+}
+
+.textPrimary {
+  color: var(--text_1);
+  &:hover {
+    color: var(--text_1);
+  }
+}
+
+.selectContract {
+  font-family: 'Lexend';
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--text_3);
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.SigleSlider {
+  width: 100%;
+
+  :global(.slider) {
+    padding-left: 9px !important;
+    margin: 0;
+
+    :global(.ant-slider-horizontal) {
+      margin: 11px 0 5px;
+    }
+
+    :global(.ant-slider-handle::after) {
+      box-shadow: 0 0 0 3px var(--text_brand) !important;
+      height: 4px;
+      width: 4px;
+      top: 3px;
+    }
+  }
+
+  :global(.ant-slider) {
+    &.cuSlider {
+      :global(.ant-slider-handle::after) {
+        box-shadow: 0 0 0 3px var(--text_brand) !important;
+        height: 4px;
+        width: 4px;
+        top: 3px;
+      }
+    }
+  }
+}
+.doubleSlider {
+  :global(.ant-slider) {
+    &.cuSlider {
+      :global(.ant-slider-handle::after) {
+        box-shadow: 0 0 0 3px var(--text_brand) !important;
+        height: 4px;
+        width: 4px;
+        top: 3px;
+      }
+    }
+  }
+}
+
+.contractEmpty {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+.contractBox {
+  height: 192px;
+}
+.filterTypeBox {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  font-family: 'Lexend';
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 100%;
+  color: var(--text_1);
+  padding: 0 16px;
+  border: 1px solid var(--fill_line_3);
+  border-radius: 8px;
+  min-width: 80px;
+  box-sizing: border-box;
+  justify-content: space-between;
+  .mr4 {
+    margin-right: 4px;
+  }
+}
+.selectPopWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  padding: 0 0.5rem;
+  .selectItem {
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    height: 3rem;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text_1);
+    &.active {
+      color: var(--brand);
+    }
+  }
+}

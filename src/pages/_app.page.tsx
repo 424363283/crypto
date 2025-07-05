@@ -1,5 +1,5 @@
 import { Activity } from '@/components/activity/activity';
-import { KycBonusModal } from '@/components/activity/kyc-bonus';
+// import { KycBonusModal } from '@/components/activity/kyc-bonus';
 import { AntdThemeConfigProvider } from '@/components/antd-config-provider/theme-config-provider';
 import { Cookie } from '@/components/cookie';
 import { DesktopOrTablet } from '@/components/responsive';
@@ -9,8 +9,8 @@ import '@/core/styles/src/design.scss';
 import { GlobalStyle } from '@/core/styles/src/global-style';
 import { AppProps } from 'next/app';
 // const ErrorBoundary = dynamic(() => import('@/components/error/error-boundary'));
-import  ErrorBoundary  from '@/components/error/error-boundary';
-import {useRouter} from 'next/router';
+import ErrorBoundary from '@/components/error/error-boundary';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 import { KeepAliveContextProvider } from '@/components/keepalive';
@@ -23,18 +23,18 @@ const RootApp = ({ Component, pageProps }: AppProps) => {
   return (
     <AppProvider auth={pageProps.auth}>
       <GlobalStyle>
-       <ErrorBoundary> 
+        <ErrorBoundary>
           <AntdThemeConfigProvider>
-                   <KeepAliveContextProvider>
-                     <Component {...pageProps} /> 
-                  </KeepAliveContextProvider>
-             <DesktopOrTablet>
+            <KeepAliveContextProvider>
+              <Component {...pageProps} />
+            </KeepAliveContextProvider>
+            <DesktopOrTablet>
               <Activity />
             </DesktopOrTablet>
             <Cookie />
-            <KycBonusModal />
+            {/* <KycBonusModal /> */}
           </AntdThemeConfigProvider>
-         </ErrorBoundary>  
+        </ErrorBoundary>
       </GlobalStyle>
     </AppProvider>
   );

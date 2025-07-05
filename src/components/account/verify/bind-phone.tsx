@@ -11,6 +11,7 @@ import { isCaptcha } from '@/core/utils/src/regexp';
 import { useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
 import { ACCOUNT_ROUTE_PATH } from '../constants';
+import { hidePartialOfPhoneOrEmail } from '@/core/utils';
 
 type PhoneVerifyProps = {
   token: string;
@@ -64,7 +65,16 @@ export const BindPhoneVerify = (props: PhoneVerifyProps) => {
   };
   return (
     <div className='phone-verification-item'>
-      <InputVerificationCode type={LOCAL_KEY.INPUT_VERIFICATION_PHONE} scene={_sence} withBorder autoSend={false} />
+      <InputVerificationCode
+        type={LOCAL_KEY.INPUT_VERIFICATION_PHONE}
+        scene={_sence} withBorder autoSend={false}
+        label={<p
+          className='agree-item'
+          dangerouslySetInnerHTML={{
+            __html: LANG(`请输入发送至{type} {target} 的6位验证码`, { type: LANG('手机'), target: `<span class='varify-target'>${hidePartialOfPhoneOrEmail(countryCode + phone)}</span>` })
+          }}
+        ></p>}
+      />
       <Button type='primary' disabled={shouldDisableBtn} height={50} width='100%' onClick={onVerifyPhoneCode}>
         {LANG('确定')}
       </Button>

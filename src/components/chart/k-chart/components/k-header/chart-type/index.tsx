@@ -30,7 +30,7 @@ export const ChartType = ({ qty }: { qty: number }) => {
     <>
       <Popover
         overlayInnerStyle={{
-          backgroundColor: 'var(--theme-trade-bg-color-2)',
+          backgroundColor: 'var(--fill_bg_1)',
           padding: 0,
           border: '1px solid var(--theme-trade-border-color-2)',
         }}

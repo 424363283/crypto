@@ -35,7 +35,7 @@ const Content = ({ list }: any) => {
             <div className='i-prompt' dangerouslySetInnerHTML={{ __html: prompt }} />
             <TrLink className='i-link' href={link}>
               {linkText}
-              <CommonIcon name='common-arrow-right-active-0' width='12' height='12' className='right' enableSkin />
+              <CommonIcon name='common-arrow-right-active-0' width='24' height='24' className='right' enableSkin />
             </TrLink>
           </div>
         ))}

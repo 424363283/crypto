@@ -41,18 +41,18 @@ export const Activity2888 = () => {
   return (
     <>
       <div className='activity2888'>
-        <div className='item'>
+        {/* <div className='item'>
           <div className='bg' onClick={onClick}></div>
           <div className='close' onClick={onClose}>
             <CommonIcon name='common-active-close-0' size={8} enableSkin />
           </div>
-        </div>
+        </div> */}
       </div>
       <style jsx>{`
         .activity2888 {
           cursor: pointer;
           position: fixed;
-          left: 0;
+          left: -60px;
           bottom: 15%;
           z-index: 10;
           :global(.bg) {
@@ -61,13 +61,15 @@ export const Activity2888 = () => {
             background-size: cover;
             background-position: 100% 100%;
             transition: all 0.1s;
+            
           }
           &:hover {
+            left:0;
             :global(.bg) {
               width: 153px;
               background: url('${skin === 'blue'
-                ? '/static/images/activity/activity2888_expand-blue.png'
-                : '/static/images/activity/activity2888_expand.png'}');
+          ? '/static/images/activity/activity2888_expand-blue.png'
+          : '/static/images/activity/activity2888_expand.png'}');
               background-size: cover;
               background-position: 100% 100%;
             }

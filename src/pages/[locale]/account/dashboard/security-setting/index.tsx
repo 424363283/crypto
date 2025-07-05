@@ -1,4 +1,4 @@
-import { getUrlQueryParams } from '@/core/utils';
+import { getUrlQueryParams, MediaInfo } from '@/core/utils';
 import dynamic from 'next/dynamic';
 import css from 'styled-jsx/css';
 import BindEmail from '../../bind-email';
@@ -12,6 +12,7 @@ import { SettingPasswordForm } from '../../setting-funds-password';
 import { UpdatePasswordForm } from '../../update-funds-password';
 import VerifyPage from '../../verify';
 import SettingPanel from './components/setting-panel';
+import React from 'react';
 const AntiPhishing = dynamic(() => import('../../anti-phishing'));
 const GoogleVerify = dynamic(() => import('../../google-verify'));
 
@@ -27,7 +28,7 @@ enum BIND_OPTION_TYPE {
   RESET_LOGIN_PASSWORD = 'reset-login-password',
   RESET_FUNDS_PASSWORD = 'reset-funds-password',
   SETTINGS_FUNDS_PASSWORD = 'setting-funds-password',
-  UPDATE_FUNDS_PASSWORD = 'update-funds-password',
+  UPDATE_FUNDS_PASSWORD = 'update-funds-password'
 }
 
 const BIND_OPTION_ROUTE: any = {
@@ -42,27 +43,24 @@ const BIND_OPTION_ROUTE: any = {
   [BIND_OPTION_TYPE.RESET_LOGIN_PASSWORD]: <ResetLoginPassword />,
   [BIND_OPTION_TYPE.RESET_FUNDS_PASSWORD]: <ResetFundsPassword />,
   [BIND_OPTION_TYPE.SETTINGS_FUNDS_PASSWORD]: <SettingPasswordForm />,
-  [BIND_OPTION_TYPE.UPDATE_FUNDS_PASSWORD]: <UpdatePasswordForm />,
+  [BIND_OPTION_TYPE.UPDATE_FUNDS_PASSWORD]: <UpdatePasswordForm />
+};
+
+const SettingPanelOrBindOption = ({type, option}) => {
+  if (type === 'security-setting' && !option) {
+    return <SettingPanel />;
+  }
+  return BIND_OPTION_ROUTE[option as BIND_OPTION_TYPE];
 };
 function SecuritySettingContainer() {
   const type = getUrlQueryParams('type') || 'security-setting';
   const option = getUrlQueryParams('option');
-  const SettingPanelOrBindOption = () => {
-    if (type === 'security-setting' && !option) {
-      return <SettingPanel />;
-    }
-    return BIND_OPTION_ROUTE[option as BIND_OPTION_TYPE];
-  };
+
   return (
-    <div className='security-setting-container'>
-      <SettingPanelOrBindOption />
-      <style jsx>{styles}</style>
+    <div className="security-setting-container">
+      <SettingPanelOrBindOption type={type} option={option} />
     </div>
   );
 }
-const styles = css`
-  .security-setting-container {
-    height: calc(100vh - 82px);
-  }
-`;
+
 export default SecuritySettingContainer;

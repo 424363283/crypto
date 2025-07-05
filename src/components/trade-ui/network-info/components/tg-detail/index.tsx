@@ -2,20 +2,21 @@ import Tooltip from '@/components/trade-ui/common/tooltip';
 import { clsxWithScope } from '@/core/utils';
 import Link from 'next/link';
 import css from 'styled-jsx/css';
+import { Svg } from '@/components/svg';
 
 export const TgDetail = ({ children }: { children: any }) => {
   const tg = [
-    ['Filipino', 'https://t.me/YmexFilipino'],
-    ['English', 'https://t.me/YmexEnglish/1'],
-    ['India', 'https://t.me/YmexIndia'],
-    ['Japanese', 'https://t.me/BityardJapanese'],
+    ['X', 'https://x.com/YMEX_Official', '/static/images/home/Twitter.svg'],
+    ['Discord', 'https://discord.gg/QJSP34qw', '/static/images/home/Discord.svg'],
+    // ['India', 'https://t.me/YmexIndia'],
+    // ['Japanese', 'https://t.me/BityardJapanese'],
     // ['Korea', 'https://t.me/YmexKorea'],
   ];
   const tg2 = [
-    ['Indonesia', 'https://t.me/YmexIndonesia'],
-    ['Việt Nam', 'https://t.me/YmexVietNamChat'],
-    ['Russia', 'https://t.me/YmexRussia'],
-    ['Turkiye', 'https://t.me/Ymex_Turkiye'],
+    // ['Indonesia', 'https://t.me/YmexIndonesia'],
+    // ['Việt Nam', 'https://t.me/YmexVietNamChat'],
+    // ['Russia', 'https://t.me/YmexRussia'],
+    // ['Turkiye', 'https://t.me/Ymex_Turkiye'],
   ];
 
   return (
@@ -29,12 +30,14 @@ export const TgDetail = ({ children }: { children: any }) => {
               {tg.map((v, i) => {
                 return (
                   <Link className={clsx('item')} key={i} href={v[1]} target='__blank'>
-                    {process.env.NEXT_PUBLIC_APP_NAME} {v[0]}
+                    {/* {process.env.NEXT_PUBLIC_APP_NAME}  */}
+                    <Svg className="ListLogoSvg" src={v[2]} width={20} height={20} />
+                    {v[0]}
                   </Link>
                 );
               })}
             </div>
-            <div className={clsx('line')}></div>
+            {/* <div className={clsx('line')}></div>
             <div className={clsx('content')}>
               {tg2.map((v, i) => {
                 return (
@@ -43,7 +46,7 @@ export const TgDetail = ({ children }: { children: any }) => {
                   </Link>
                 );
               })}
-            </div>
+            </div> */}
           </div>
         }
       >
@@ -77,23 +80,27 @@ const { className, styles } = css.resolve`
         width: 110px;
         height: 30px;
         border-radius: 5px;
-
+        gap: 8px;
         &:hover {
           background: var(--theme-trade-tips-color);
           color: var(--theme-trade-text-color-1);
+          :global(.ListLogoSvg) {
+            :global(svg) {
+              fill: var(--brand);
+            }
+          }
+        }
+        :global(.ListLogoSvg) {
+          cursor: pointer;
+          :global(svg) {
+            fill: var(--text_3);
+          }
         }
       }
       a {
         font-size: 12px;
         color: var(--theme-trade-text-color-3);
       }
-    }
-  }
-  .myOverlayClassName {
-    :global(.ant-tooltip-inner) {
-      background: var(--theme-trade-bg-color-9) !important;
-      padding: 11px 12px !important;
-      max-width: unset;
     }
   }
 `;

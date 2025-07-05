@@ -13,6 +13,9 @@ import { UserDrawer } from '../drawer/';
 import Menu from '../menu';
 import HeaderOrder from '../order';
 import HeaderUser from '../user';
+import { Size } from '@/components/constants';
+import SearchInput from '@/components/basic-input/search-input';
+import { SearchBox } from '../search-drawer';
 const UserIcon = dynamic(() => import('../icon/user-icon'));
 
 const ASSETS_PATH = Object.values(ASSETS_MENU_URL);
@@ -39,91 +42,120 @@ const LoggedArea = () => {
 
   return (
     <>
-      {/* {!_isSwapDemo && (
+      {!_isSwapDemo && (
         <DesktopOrTablet>
-          <TrLink
-            native
-            className='deposit-btn'
-            style={{ minWidth: 76 }}
-            href='/account/fund-management/asset-account/recharge'
-          >
-            {LANG('充币')}
-          </TrLink>
+          <Button type='primary' style={{ padding: `0`, margin: '0 12px', borderRadius: 24, width: 80 }} size={Size.SM}>
+            <TrLink
+              style={{ minWidth: 72, color: 'var(--skin-font-color)' }}
+              href='/account/fund-management/asset-account/recharge'
+            >
+              {LANG('充值')}
+            </TrLink>
+          </Button>
         </DesktopOrTablet>
-      )} */}
+      )}
       <Desktop>
-        {!_isSwapDemo && (
+        {
+          !_isSwapDemo && (
+            <Menu
+              width='160px'
+              height='auto'
+              position='right:0'
+              content={<HeaderAssets />}
+              showArrow
+              isActive={isAssetsPathActive}
+            >
+              {LANG('资产')}
+            </Menu>
+          )
+        }
+        {
           <Menu
             width='160px'
-            height='330px'
+            height={'auto'}
             position='right:0'
-            content={<HeaderAssets />}
+            content={<HeaderOrder />}
             showArrow
-            isActive={isAssetsPathActive}
+            isActive={isOrderPathActive}
           >
-            {LANG('资产')}
+            {LANG('订单')}
           </Menu>
-        )}
-        <Menu
-          width='160px'
-          height={!_isSwapDemo ? '72px' : '72px'}
-          position='right:0'
-          content={<HeaderOrder />}
-          showArrow
-          isActive={isOrderPathActive}
-        >
-          {LANG('订单')}
-        </Menu>
+        }
       </Desktop>
       <Desktop>
         <Menu
-          width='244px'
-          height={process.env.NEXT_PUBLIC_LITE_ENABLE === 'true' ? '370px' : '311px'}
+          menuType="user"
+          width='352px'
+          height={process.env.NEXT_PUBLIC_LITE_ENABLE === 'true' ? 'auto' : '311px'}
           position='right:0'
           content={
             <HeaderUser onMouseEnter={() => setUserIconActive(true)} onMouseLeave={() => setUserIconActive(false)} />
           }
+          boxRadius='12px'
         >
-          <UserIcon iconActive={userIconActive} />
+          <UserIcon className='user-icon' iconActive={false} />
         </Menu>
       </Desktop>
-      <MobileOrTablet>
-        <UserIcon iconActive={userIconActive} className='user-icon' onClick={() => setUserDrawerOpen(true)} />
-        <UserDrawer open={userDrawerOpen} onClose={() => setUserDrawerOpen(false)} />
-      </MobileOrTablet>
+      {/*
+        <MobileOrTablet>
+          <UserIcon iconActive={userIconActive} className='user-icon' onClick={() => setUserDrawerOpen(true)} />
+          <UserDrawer open={userDrawerOpen} onClose={() => setUserDrawerOpen(false)} />
+        </MobileOrTablet>
+      */}
     </>
   );
 };
 
 const LoginAndRegister = () => {
   const { isLogin } = useAppContext();
+  const { isMobileOrTablet } = useResponsive();
   const router = useRouter();
-  const { isMobile } = useResponsive();
+  const [searchKey, setSearchKey] = useState('');
   const handleLogin = () => {
     const pathname = router.asPath;
     sessionStorage.setItem(SESSION_KEY.LOGIN_REDIRECT, pathname);
     router.push('/login');
   };
-  if (!isLogin) {
-    return (
-      <>
-        <Desktop>
-          <Button
-            type='light-2'
-            onClick={handleLogin}
-            style={{ padding: '8px 14px', minWidth: '67px', marginRight: '8px' }}
-          >
+
+  const handleSearch = (value: string) => {
+    setSearchKey(value);
+  };
+
+  return (
+    <>
+      <Menu
+        width='393px'
+        height='368px'
+        position='right:0'
+        content={<SearchBox searchKey={searchKey} />}
+        isActive={true}
+      >
+        <SearchInput
+          width={160}
+          prefix
+          size={Size.SM}
+          placeholder={LANG('搜索')}
+          onChange={(val: string) => {
+            handleSearch(val);
+          }}
+        />
+      </Menu>
+      {!isLogin ? (
+        <>
+          <Button className='login-btn' style={{ minWidth: 112 }} onClick={handleLogin} >
             {LANG('登录')}
           </Button>
-        </Desktop>
-        <Button type='primary' style={{ padding: `${isMobile ? '8px 10px' : '8px 14px'}` }}>
-          <TrLink href='/register' style={{ minWidth: 80, color: 'var(--skin-font-color)' }} data-name='register-btn'>
-            {LANG('注册')}
-          </TrLink>
-        </Button>
-      </>
-    );
-  }
-  return <LoggedArea />;
+          <Button className='register-btn' type='primary' size={Size.SM} rounded>
+            <TrLink href='/register' style={{ minWidth: isMobileOrTablet ? 44 : 80 }} data-name='register-btn'>
+              {LANG('注册')}
+            </TrLink>
+          </Button>
+        </>
+      ) : (isMobileOrTablet ? '' : <LoggedArea />)}
+    </>
+  );
 };
+
+
+
 export default LoginAndRegister;

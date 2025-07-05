@@ -9,8 +9,9 @@ export const useUpdateLoginLog = () => {
     current: 1,
     dataSource: [] as any[],
     total: 0,
-    lastLoginLog: { date: '' },
+    lastLoginLog: { date: '' }
   });
+
   const { dataSource, lastLoginLog, current, total } = state;
   // 获取登录记录
   const updateLoginLog = async (page: number) => {
@@ -18,23 +19,23 @@ export const useUpdateLoginLog = () => {
       Loading.start();
       const result = await getLoginHistoryApi({
         page,
-        rows: 10,
+        rows: 10
       });
       if (result.code === 200) {
         const { list, count } = result.data;
-        setState((draft) => {
+        setState(draft => {
           draft.current = page;
           draft.total = count;
           draft.dataSource = list.map((element, key) => {
-            const { time, location, agent, terminal, ip, region } = element;
+            const { loginTime, location, agent, terminal, ip, region } = element;
             return {
               key,
-              date: formatDate('y-m-d h:i:s', { date: time }),
               location,
               agent,
               region,
               terminal,
               ip,
+              date: formatDate('y-m-d h:i:s', { date: loginTime })
             };
           });
         });
@@ -42,19 +43,21 @@ export const useUpdateLoginLog = () => {
         message.error(result.message);
       }
     } catch (error: any) {
-      setState((draft) => {
+      setState(draft => {
         draft.current = page;
       });
       message.error(error.message);
     }
     Loading.end();
   };
+
   useEffect(() => {
     updateLoginLog(1);
   }, []);
+
   useEffect(() => {
     if (current === 1) {
-      setState((draft) => {
+      setState(draft => {
         draft.lastLoginLog = dataSource[0];
       });
     }
@@ -65,6 +68,6 @@ export const useUpdateLoginLog = () => {
     current,
     dataSource,
     total,
-    lastLoginLog,
+    lastLoginLog
   };
 };

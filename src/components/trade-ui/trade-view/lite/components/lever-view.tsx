@@ -1,6 +1,6 @@
 import { Switch } from '@/components/switch';
 import Slider from '@/components/trade-ui/trade-view/components/slider';
-import { useSessionStorage, useTheme } from '@/core/hooks';
+import { useSessionStorage, useTheme, useResponsive } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { AccountType, Lite } from '@/core/shared';
 import { SESSION_KEY } from '@/core/store';
@@ -9,6 +9,7 @@ import React, { useEffect, useMemo } from 'react';
 import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
 import LeverInput from './input/lever-input';
+import { MediaInfo } from '@/core/utils';
 
 const Trade = Lite.Trade;
 
@@ -18,8 +19,9 @@ type SliderMode = {
 
 const LeverView = () => {
   const { isDark } = useTheme();
+  const { isMobile } = useResponsive();
   const [sliderMode, setSliderMode] = useSessionStorage<SliderMode>(SESSION_KEY.LITE_SLIDE_MODE, {
-    mode: 'showSlider',
+    mode: 'showSlider'
   });
 
   const { leverage, leverageRange, copyMaxLeverage, traderActive, isFollow, accountType, selectedBonusLever } =
@@ -45,15 +47,16 @@ const LeverView = () => {
     step: 1,
     value: 10,
     min: 5,
-    max: 50,
+    max: 50
   });
 
   useEffect(() => {
-    setSliderData((draft) => {
+    setSliderData(draft => {
       draft.min = leverageRange[0];
       draft.max = leverageRange[leverageRange.length - 1];
+      draft.value = leverage;
     });
-  }, [leverageRange]);
+  }, [leverageRange, leverage]);
 
   const leverageButtonsData = useMemo(() => {
     if (!leverageRange) return [5, 10, 20];
@@ -75,7 +78,7 @@ const LeverView = () => {
   }, [sliderData]);
 
   const onLeverChanged = (val: number) => {
-    setSliderData((draft) => {
+    setSliderData(draft => {
       draft.value = val;
     });
     Trade.changeLeverage(val);
@@ -83,52 +86,49 @@ const LeverView = () => {
 
   return (
     <>
-      <div className='container'>
-        <div className='header'>
-          <div className='title'>
-            {LANG('杠杆倍率')}
-            <span>{leverage}X</span>
+      <div className="container">
+        <div className="header">
+          <div className="title">
+            {LANG('杠杆倍率')}:<span>{leverage}x</span>
           </div>
-          <div className='right'>
+          <div className="right">
             <span>{LANG('滑动条')}</span>
             <Switch
               checked={sliderMode.mode === 'showSlider'}
               bgType={2}
               onChange={onSliderSwitchChange}
-              size='small'
+              size="small"
             />
           </div>
         </div>
         {sliderMode.mode === 'showSlider' ? (
-          <div className='slider-container'>
+          <div className="slider-container">
             <Slider
               isDark={isDark}
               percent={percent}
               grid={leverageRange.length - 1 > 0 ? leverageRange.length - 1 : 0}
               grids={leverageRange}
               onChange={onLeverChanged}
-              renderText={() => `${sliderData.value}X`}
+              renderMarkText={(value: number | string) => (isMobile ? ' ' : `${value}x`)}
               {...sliderData}
-              min={leverageRange[0]}
-              max={maxLever}
             />
           </div>
         ) : (
-          <div className='input-container'>
+          <div className="input-container">
             <LeverInput
               value={leverage}
               max={max}
               min={leverageRange[0]}
-              onChange={(val) => Trade.changeLeverage(val)}
-              symbol='x'
+              onChange={val => Trade.changeLeverage(val)}
+              symbol="x"
             />
-            <div className='buttons'>
-              {leverageButtonsData?.map((v) => {
+            <div className="buttons">
+              {leverageButtonsData?.map(v => {
                 return (
                   <div key={v} onClick={() => Trade.changeLeverage(v)}>
                     {v}
                     {traderActive && isFollow && v <= copyMaxLeverage && (
-                      <Image src='/static/images/lite/copy_1.svg' width={20} height={20} alt='' />
+                      <Image src="/static/images/lite/copy_1.svg" width={20} height={20} alt="" />
                     )}
                   </div>
                 );
@@ -145,30 +145,40 @@ const LeverView = () => {
 export default React.memo(LeverView);
 const styles = css`
   .container {
+    @media ${MediaInfo.mobile} {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
     .header {
-      margin: 15px 0;
-      padding-bottom: 4px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      @media ${MediaInfo.mobile} {
+        height: 2.5rem;
+      }
       .title {
-        color: var(--theme-font-color-1);
+        color: var(--text_1);
+        leading-trim: both;
+        text-edge: cap;
+        font-size: 12px;
+        font-style: normal;
         font-weight: 400;
-        span {
-          margin-left: 6px;
-          font-size: 12px;
-          font-weight: 400;
-          color: var(--theme-font-color-2);
-        }
+        line-height: normal;
       }
       .right {
         display: flex;
         align-items: center;
+        gap: 8px;
         span {
-          margin-right: 7px;
+          color: var(--text_1);
+          leading-trim: both;
+          text-edge: cap;
           font-size: 12px;
+          font-style: normal;
           font-weight: 400;
-          color: var(--theme-font-color-2);
+          line-height: normal;
         }
         :global(.ant-switch-checked) {
           background: var(--skin-primary-color) !important;
@@ -176,14 +186,33 @@ const styles = css`
       }
     }
     .slider-container {
-      margin-bottom: 11px;
+      display: flex;
+      @media ${MediaInfo.mobile} {
+        align-items: center;
+        :global(.slider) {
+          margin: 0;
+          :global(.ant-slider-dot-active) {
+            background-color: var(--text_white);
+          }
+          :global(.ant-slider-handle:after) {
+            background-color: var(--text_white) !important;
+          }
+        }
+      }
     }
     .input-container {
       display: flex;
-      margin-bottom: 15px;
+      margin: 16px 0;
+      @media ${MediaInfo.mobile} {
+        margin: 0;
+      }
       .buttons {
         display: flex;
         align-items: center;
+        @media ${MediaInfo.mobile} {
+        justify-content:space-between;
+          flex: 1;
+        }
         div {
           cursor: pointer;
           user-select: none;

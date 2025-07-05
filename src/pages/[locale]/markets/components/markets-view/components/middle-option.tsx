@@ -1,6 +1,6 @@
 import { Button } from '@/components/button';
 import CommonIcon from '@/components/common-icon';
-import { Desktop, MobileOrTablet } from '@/components/responsive';
+import { Desktop, Mobile, MobileOrTablet } from '@/components/responsive';
 import { Select } from '@/components/select';
 import ProTooltip from '@/components/tooltip';
 import { LANG } from '@/core/i18n';
@@ -8,11 +8,14 @@ import { MediaInfo, clsx } from '@/core/utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { store } from '../../../store';
-import { CURRENT_TAB, CURRENT_VIEW } from '../../../types';
+import { CURRENT_TAB, CURRENT_VIEW, FAVORITE_OPTION_ID } from '../../../types';
 import { useCascadeOptions } from '../../hooks';
 import { Options } from '../../hooks/types';
+import { Size } from '@/components/constants';
+import { useResponsive } from '@/core/hooks';
 
 const MiddleOption = () => {
+  const { isMobile } = useResponsive();
   const config = useCascadeOptions();
   const [selectValue, setSelectValue] = useState<{}>();
   const { currentId, secondItem, currentView } = store;
@@ -21,56 +24,66 @@ const MiddleOption = () => {
   //   config.secondOptions
   // );
   const [secondConfigOption, setSecondConfigOption] = useState(config.secondOptions);
+  const enableH5Lite = process.env.NEXT_PUBLIC_MOBILE_LITE_ENABLE === 'true';
   useEffect(() => {
     setSecondConfigOption(config.secondOptions);
   }, [JSON.stringify(config.secondOptions)]);
 
+  useEffect(() => {
+    // if(secondItem?.id=='1-1'){
+    //   let list = {
+    //     id: "1-2",
+    //     key: "favorites.swap_usdt",
+    //     name: "U本位合约",
+    //   };
+    //   handleClick(list);
+    // }
+  }, [secondItem.id]);
+
   const handleClick = (item: Options) => {
     store.secondItem = {
       id: item.id,
-      name: item.name,
+      name: item.name
     };
     store.currentView = CURRENT_VIEW.TABLE;
   };
+
   const renderLeftOptions = () => {
-    /* 自选页签下屏蔽现货/杠杆代币和LVTs */
-    return secondConfigOption.filter((item: Options) => !['1-1', '1-5'].includes(item.id)).map((item: Options) => {
+    return secondConfigOption.filter((elem: Options) => elem.id !== FAVORITE_OPTION_ID.LITE || !isMobile || enableH5Lite).map((item: Options) => {
       const isActive = secondItem.id === item.id;
       return (
-        <Button
+        <div
           key={item.id}
+          size={Size.SM}
           className={['item', isActive ? 'active' : '', item.name === 'LVTs' ? 'etf' : ''].join(' ')}
-          onClick={() => handleClick(item)}
-          type={isActive ? 'primary' : 'light-sub-2'}
+          onClick={() => {
+            handleClick(item);
+          }}
         >
           {item.name}
-          {item.name === 'LVTs' && <Image src='/static/images/common/3x.svg' alt='' width={9} height={10} />}
-        </Button>
+          {item.name === 'LVTs' && <Image src="/static/images/common/3x.svg" alt="" width={9} height={10} />}
+        </div>
       );
     });
   };
-  const selectOptionValues = secondConfigOption.map((item) => {
+  const selectOptionValues = secondConfigOption.map(item => {
     return {
       value: item.id,
       label: item.name,
-      key: item.key,
+      key: item.key
     };
   });
   useEffect(() => {
-    const defaultValue = selectOptionValues?.filter((item: Options) => !['1-1', '1-5'].includes(item.value))[0];
+    const defaultValue = selectOptionValues?.[0];
     setSelectValue(defaultValue);
-    store.secondItem = {
-      id: defaultValue?.value,
-      name: defaultValue?.name,
-    };
   }, [currentId, JSON.stringify(secondConfigOption)]);
   const MobileLeftOption = ({ className }: { className?: string }) => {
     return (
       <div className={clsx('select-container', className)}>
         <Select
           values={[selectValue]}
-          wrapperClassName='second-option-wrapper'
-          onChange={(val) => {
+          wrapperClassName="second-option-wrapper"
+          onChange={val => {
             const item = val[0];
             if (item) {
               const newItem = { id: item.value, name: item.label };
@@ -93,28 +106,28 @@ const MiddleOption = () => {
   const renderRightOptions = () => {
     if (currentId === CURRENT_TAB.FAVORITE || currentId === CURRENT_TAB.SPOT_GOODS) {
       return (
-        <div className='right-btn-wrapper'>
+        <div className="right-btn-wrapper">
           <div
             className={clsx('markets-data-btn', currentView === CURRENT_VIEW.FEEDS && 'markets-data-btn-active')}
             onClick={handleLinkBtnClick}
           >
-            <Image alt='' src='/static/images/markets/market-data-icon.svg' width='24' height='24' />
-            <div className='right-info'>
-              <div className='title'>
+            <Image alt="" src="/static/images/markets/market-data-icon.svg" width="24" height="24" />
+            <div className="right-info">
+              <div className="title">
                 {LANG('Market Data')}
                 <ProTooltip
-                  placement='topRight'
-                  title={<div className='content'>Explore the decentralized oracle networks powered by Chainlink</div>}
+                  placement="topRight"
+                  title={<div className="content">Explore the decentralized oracle networks powered by Chainlink</div>}
                 >
-                  <CommonIcon name='common-tooltip-0' size={12} className='tooltip' />
+                  <CommonIcon name="common-tooltip-0" size={12} className="tooltip" />
                 </ProTooltip>
               </div>
-              <p className='description'>{LANG('SECURED WITH CHAINLINK')}</p>
+              <p className="description">{LANG('SECURED WITH CHAINLINK')}</p>
             </div>
           </div>
 
-          <div className='signals-btn' onClick={handleMarketDataClick}>
-            <CommonIcon name='common-signal-icon-0' size={20} enableSkin />
+          <div className="signals-btn" onClick={handleMarketDataClick}>
+            <CommonIcon name="common-signal-icon-0" size={20} enableSkin />
             <h1>{LANG('市场数据')}</h1>
           </div>
         </div>
@@ -123,24 +136,23 @@ const MiddleOption = () => {
     return null;
   };
   return (
-    <div className='option2-wrapper'>
-      <div className='option-left-wrapper'>
+    <div className="option2-wrapper">
+      <div className="option-left-wrapper">
         <Desktop forceInitRender={false}>{renderLeftOptions()}</Desktop>
         <MobileOrTablet forceInitRender={false}>
-          <MobileLeftOption />
+          {renderLeftOptions()}
+          {/* <MobileLeftOption /> */}
         </MobileOrTablet>
       </div>
-      {renderRightOptions()}
+      {/* renderRightOptions() */}
       <style jsx>{`
         .option2-wrapper {
-          border-bottom: ${currentId === CURRENT_TAB.FAVORITE ? '1px solid var(--theme-border-color-2)' : 'none'};
+          height: 32px;
           :global(h1) {
             font-size: 14px;
             font-weight: 400;
           }
           @media ${MediaInfo.desktop} {
-            padding: 15px 0 18px;
-            height: 87px;
             justify-content: space-between;
             align-items: center;
           }
@@ -148,7 +160,8 @@ const MiddleOption = () => {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            margin-bottom: 0px;
+            margin-bottom: 0px !important;
+            height: 100%;
           }
           @media ${MediaInfo.tablet} {
             justify-content: space-between;
@@ -159,16 +172,37 @@ const MiddleOption = () => {
             display: flex;
             align-items: center;
           }
+          .option-left-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+          }
           :global(.item) {
-            padding: 7px 24px;
-            height: 32px;
-            margin-right: 15px;
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--text_2);
+            padding: 8px 16px;
+            position: relative;
+            cursor: pointer;
+            flex-shrink: 0;
+            border-radius: 4px;
+            border: 1px solid var(--fill_line_3);
             :global(img) {
               border-top-right-radius: 6px;
               width: 22px;
               height: auto;
               margin-left: 2px;
             }
+            @media ${MediaInfo.mobile} {
+              font-size: 14px;
+              padding: 4px 16px;
+              border-radius: 4px;
+            }
+          }
+          :global(.item.active),
+          :global(.item:hover) {
+            color: var(--text_1);
+            background-color: var(--fill_2);
           }
           :global(.right-btn-wrapper) {
             display: flex;
@@ -226,10 +260,8 @@ const MiddleOption = () => {
             }
           }
           :global(.option-left-wrapper) {
-            height: 36px;
             @media ${MediaInfo.mobile} {
               width: 100%;
-              margin-bottom: 20px;
             }
             :global(.select-container) {
               width: 100%;

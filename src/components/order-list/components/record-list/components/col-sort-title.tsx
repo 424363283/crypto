@@ -1,6 +1,5 @@
-import { Svg } from '@/components/svg';
-import { clsx } from '@/core/utils';
-import { ReactNode } from 'react';
+import CommonIcon from '@/components/common-icon';
+import { ReactNode, useMemo } from 'react';
 
 export const ColSortTitle = ({
   children,
@@ -11,23 +10,19 @@ export const ColSortTitle = ({
   value?: number;
   onChange: (v?: number) => any;
 }) => {
+  const sortIcons = useMemo(() => {
+    return [
+      <CommonIcon name="common-sort-icon" size={16} />,
+      <CommonIcon name="common-sort-down-active-icon" size={16} enableSkin />,
+      <CommonIcon name="common-sort-up-active-icon" size={16} enableSkin />
+    ];
+  }, []);
   return (
     <>
-      <div className={'title'}>
+      <div className={'title'} onClick={() => onChange(value === 0 ? 1 : value === 1 ? undefined : 0)}>
         {children}
-        <div className={'sort'} onClick={() => onChange(value === 0 ? 1 : value === 1 ? undefined : 0)}>
-          <Svg
-            src={
-              [
-                '/static/images/common/sort_arrow.svg',
-                '/static/images/common/sort_arrow2.svg',
-                '/static/images/common/sort_arrow1.svg',
-              ][[null, undefined].includes(value as any) ? 0 : (value || 0) + 1]
-            }
-            width={12}
-            height={12}
-            className={clsx('up', value === 1 && 'selected')}
-          />
+        <div className={'sort'}>
+          {sortIcons[(value ?? -1) + 1 ]}
         </div>
       </div>
       <style jsx>
@@ -36,6 +31,7 @@ export const ColSortTitle = ({
             display: flex;
             align-items: center;
             flex-direction: row;
+            cursor: pointer;
           }
           .sort {
             height: 20px;

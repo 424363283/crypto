@@ -2,13 +2,13 @@ import { Loading } from '@/components/loading';
 import { AlertFunction } from '@/components/modal/alert-function';
 import ShareModal from '@/components/order-list/lite/components/share-modal';
 import { store as orderListStore, useListByStore } from '@/components/order-list/swap/store';
-import { useModalProps, usePositionActions } from '@/components/order-list/swap/stores/position-list';
+import { useModalProps, usePositionActions, useSortData } from '@/components/order-list/swap/stores/position-list';
 import {
   LiquidationModal,
   ModifyMarginModal,
   ReverseConfirmModal,
   StopProfitStopLossModal,
-  TrackModal,
+  TrackModal
 } from '@/components/trade-ui/order-list/swap/components/modal';
 import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
@@ -18,16 +18,84 @@ import { useState } from 'react';
 import { ListBar } from '../list-bar';
 import { ListView } from '../list-view';
 import { PositionItem } from './components/position-item';
+import { useCopyTradingSwapStore } from '@/store/copytrading-swap';
+import { Mobile } from '@/components/responsive';
+import CheckboxItem from '@/components/trade-ui/trade-view/swap/components/checkbox-item';
+
+import CommonIcon from '@/components/common-icon';
+import YIcon from '@/components/YIcons';
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
+// import CommonIcon from '@/components/common-icon';
+// import CheckboxItem from '@/components/trade-ui/trade-view/swap/components/checkbox-item';
+// import { useLocalStorage } from '@/core/hooks';
+
+// const CloseAllContent = ({ item }: any) => {
+//   const [isNoMoreHint, setIsNoMoreHint] = useLocalStorage(LOCAL_KEY.SWAP_CLOSE_ALL_ALERT, false);
+//   const name = Swap.Info.getCryptoData(item.symbol).name;
+
+//   return (
+//     <>
+//       <div className="close-all-content">
+//         <span>
+//           {LANG('确认对 {0} 永续 {1} {2}x 仓位进行市价全平？')
+//             .replace('{0}', name)
+//             .replace('{1}', item.positionSide === 'LONG' ? LANG('多') : LANG('空'))
+//             .replace('{2}', item.leverage)}
+//         </span>
+//         <div className="hint">
+//           <CommonIcon name="common-small-info" size={16} />
+//           <span>{LANG('如果存在平仓挂单（限价或止盈止损委托），将会在全平前被撤单。')}</span>
+//         </div>
+//         <div className="line"></div>
+//         <CheckboxItem
+//           label={LANG('不再提示，您可在【偏好设置】中重新设置。')}
+//           info=""
+//           value={isNoMoreHint}
+//           onChange={value => {
+//             setIsNoMoreHint(value);
+//           }}
+//         />
+//       </div>
+//       <style jsx>{`
+//         .close-all-content {
+//           display: flex;
+//           flex-direction: column;
+//           gap: 1rem;
+//           font-size: 14px;
+//           font-weight: 400;
+//           color: var(--text_2);
+//           .hint {
+//             display: flex;
+//             align-items: center;
+//             gap: 2px;
+//             font-size: 12px;
+//             color: var(--yellow);
+//             line-height: 1.5;
+//           }
+//           .line {
+//             width: 100%;
+//             height: 1px;
+//             background: var(--fill_line_1);
+//           }
+//         }
+//       `}</style>
+//     </>
+//   );
+// };
 
 export const PositionList = ({
   onWalletClick,
   assetsPage,
+  wallet
 }: {
   onWalletClick?: (walletData?: any) => any;
   assetsPage?: boolean;
+  wallet?: WalletKey;
 }) => {
+  const isCopyTrader = useCopyTradingSwapStore.use.isCopyTrader();
   const { isUsdtType, quoteId } = Swap.Trade.base;
   const [_modalItem, setModalItem] = useState<any>(undefined);
+  const [dontShouldAgain, setDontShouldAgain] = useState<boolean>(false);
   const {
     liquidationModalProps,
     onVisibleLiquidationModal,
@@ -43,16 +111,22 @@ export const PositionList = ({
     onVisiblesSpslModal,
     reverseModalProps,
     onCloseReverseModal,
-    onVisibleReverseModal,
+    onVisibleReverseModal
   } = useModalProps();
   Swap.Info.getIsVolUnit(isUsdtType);
-  let list = useListByStore(
-    Swap.Calculate.positionData({
-      usdt: isUsdtType,
-      data: Swap.Order.getPosition(isUsdtType),
-      twoWayMode: Swap.Trade.twoWayMode,
-    }).list
-  );
+  const positions = Swap.Calculate.positionData({
+    usdt: isUsdtType,
+    data: Swap.Order.getPosition(isUsdtType),
+    twoWayMode: Swap.Trade.twoWayMode
+  }).list?.filter(item => {
+    if(wallet) {
+      return item.subWallet === wallet;
+    } else {
+      return isCopyTrader || item.subWallet !== WalletKey.COPY;
+    }
+  });
+  const storePositions = useListByStore(positions);
+  let list = useSortData(assetsPage ? positions : storePositions);
   if (!useAppContext().isLogin) {
     list = [];
   }
@@ -70,29 +144,58 @@ export const PositionList = ({
   const onClose = (item: any) => {
     onVisibleLiquidationModal(item, false);
   };
+
+  const closeAllPosition = async (item: any) => {
+    Loading.start();
+    try {
+      const result = await Swap.Order.closePosition(item, {
+        price: '',
+        orderQty: item.availPosition,
+        side: Number(item.side) === 1 ? 1 : 2, // 1 买  2 卖
+        type: 5
+      });
+      if (result.code != 200) {
+        // 重复提示 Swap.Order.closePosition
+        // message.error(result);
+      }
+    } catch (error: any) {
+      message.error(error);
+    } finally {
+      Loading.end();
+    }
+  }
+
   const onCloseAll = (item: any) => {
+    closeAllPosition(item);
+    return;
     AlertFunction({
-      v2: true,
+      v4: true,
       title: LANG('市价全平'),
-      onOk: async () => {
-        Loading.start();
-        try {
-          const result = await Swap.Order.closePosition(item, {
-            price: '',
-            orderQty: item.availPosition,
-            side: Number(item.side) === 1 ? 1 : 2, // 1 买  2 卖
-            type: 5,
-          });
-          if (result.code != 200) {
-            message.error(result);
-          }
-        } catch (error: any) {
-          message.error(error);
-        } finally {
-          Loading.end();
-        }
-      },
-      content: LANG('全部仓位将以市价委托方式进行平仓，请确认是否市价全平？'),
+      className: 'reverse-modal',
+      onOk: () => closeAllPosition(item),
+      content: (
+        <div className="modal-content-desc">
+          <p>
+            {LANG('确认对 {0} 永续 {1} {2}x 仓位进行市价全平？')
+              .replace('{0}', Swap.Info.getCryptoData(item.symbol).name)
+              .replace('{1}', item.positionSide === 'LONG' ? LANG('多') : LANG('空'))
+              .replace('{2}', item.leverage)}
+          </p>
+          <div className="hint">
+            <YIcon.tipsIcon />
+            <span>{LANG('如果存在平仓挂单（限价或止盈止损委托），将会在全平前被撤单。')}</span>
+          </div>
+          <div className="divider"></div>
+          <Mobile>
+            <CheckboxItem
+              label={LANG('不再展示，您可在【偏好设置】中重新设置。')}
+              value={dontShouldAgain}
+              onChange={value => setDontShouldAgain(value)}
+            />
+          </Mobile>
+        </div>
+      )
+      // content:  <CloseAllContent item={item} />
     });
   };
 
@@ -107,7 +210,7 @@ export const PositionList = ({
     <div>
       <ListBar positionMode positions={list} />
       <ListView data={list} loading={!list.length && loading}>
-        {(index) => {
+        {index => {
           const item = list[index];
 
           return (
@@ -119,7 +222,7 @@ export const PositionList = ({
               onClose={onClose}
               onCloseAll={onCloseAll}
               onTrack={onTrack}
-              onReverse={(item) => onReverse(item, (onConfirm) => onVisibleReverseModal(item, onConfirm))}
+              onReverse={() => onReverse(item, ({ onConfirm }) => onVisibleReverseModal(item, onConfirm))}
               onChangeMargin={onChangeMargin}
               onWalletClick={onWalletClick}
               assetsPage={assetsPage}
@@ -137,7 +240,7 @@ export const PositionList = ({
             Swap.Calculate.positionROE({
               usdt: isUsdtType,
               data: modalItem,
-              income: modalItem.income,
+              income: modalItem.income
             }).toFixed(2)
           )}
           currentPrice={Swap.Socket.getFlagPrice(modalItem.symbol, { withHooks: false })}
@@ -158,6 +261,27 @@ export const PositionList = ({
         data={list.find((v: any) => v.positionId === (spslModalProps.data as any)?.positionId) || spslModalProps.data}
         onClose={onCloseSpslModal}
       />
+
+      <style jsx>{`
+        :global(.reverse-modal) {
+          :global(.divider) {
+            border-top: 1px solid var(--fill_line_1);
+            margin: 0 0 12px;
+          }
+        }
+        :global(.hint) {
+          padding: 16px 0;
+          display: flex;
+          align-items: center;
+          gap: 2px;
+          font-size: 12px;
+          color: var(--yellow);
+          font-size: 12px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 150%; /* 18px */
+        }
+      `}</style>
     </div>
   );
 };

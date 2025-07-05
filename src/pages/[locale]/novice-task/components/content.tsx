@@ -9,7 +9,7 @@ import {
 } from '@/core/api';
 import { useRouter, useTheme } from '@/core/hooks';
 import { LANG, TrLink } from '@/core/i18n';
-import { TaskList } from '@/core/shared';
+// import { TaskList } from '@/core/shared';
 import { useAppContext } from '@/core/store';
 import { MediaInfo, clsx, getCommunityLink, message } from '@/core/utils';
 import Image from 'next/image';
@@ -87,8 +87,8 @@ export const RewardContent = () => {
     return arr;
   }, [tab, list]);
   const getList = async () => {
-    const list = (await TaskList?.getTaskList()) || [];
-    setList(list);
+    // const list = (await TaskList?.getTaskList()) || [];
+    // setList(list);
   };
   const fetchBlindData = async () => {
     const result = await getCommonVarietyLotteryApi();
@@ -173,7 +173,7 @@ export const RewardContent = () => {
   };
   const toLink = async (data: TaskListData) => {
     if (data.type === -1) {
-      return window.open(`https://support.y-mex.com/hc/${lang}/requests/new`);
+      return window.open(`https://ymex.zendesk.com/hc/${lang}/requests/new`);
     }
     if (data.status === -1) {
       doTask(data);

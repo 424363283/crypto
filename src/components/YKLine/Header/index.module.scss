@@ -2,8 +2,8 @@
 // @import '@/styles/AntdReset.module.scss';
 
 .headerContainer {
-  background: #ffffff;
-  border-bottom: 1px solid #F4F5F6;
+  background: var(--fill_bg_1);
+  border-bottom: 1px solid var(--fill_line_1);
   padding: 0 16px;
   box-sizing: border-box;
   position: relative;
@@ -12,10 +12,14 @@
 
 .header {
   display: flex;
-  height: 28px;
+  height: 40px;
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  touch-action: pan-x;
+  user-select: none;
 }
 
 .headerScrollArrow {
@@ -82,6 +86,7 @@
     display: flex;
     align-items: center;
     margin-left: 8px;
+    white-space: nowrap;
   }
 
   :global {
@@ -129,7 +134,7 @@
 
     &:hover {
       opacity: 0.6;
-      color: #ff8f34;
+      color: var(--brand);
     }
   }
 }
@@ -140,23 +145,26 @@
     display: inherit;
     margin-top: -1px;
     text-align: center;
-    margin-right: 10px;
-    opacity: 0.6;
+    margin-right: 24px;
+    font-size: 12px;
+font-style: normal;
+font-weight: 400;
+color: var(--text_3);
 
     &:hover {
-      color: #ff8f34;
+      color: var(--brand);
     }
   }
 }
 
 .activeTimeBtnBtn {
-  color: #ff8f34;
+  color: var(--brand);
 
   span {
-    opacity: 1;
-
+    // opacity: 1;
+    color: var(--brand);
     &:hover {
-      color: #ff8f34;
+      color: var(--brand);
     }
   }
 }
@@ -165,16 +173,16 @@
 .headerLine {
   height: 16px;
   width: 1px;
-  background: #eeeeee;
+  background: var(--fill_line_1);
 }
 
 
 .popoverWrapper {
   min-width: 99px;
-  background-color: #FFFFFF;
+  background: var(--fill_3);
   border-radius: 8px;
   .popoverContent {
-    color: #2B2F33;
+    color: var(--text_2);
     font-size: 12px;
   }
 
@@ -185,14 +193,14 @@
     height: 36px;
     fill: #787D83;
     stroke: #787D83;
-    color:#2B2F33;
+    color: var(--text_2);
     border-radius: 4px;
     cursor: pointer;
     &:hover, &.selected {
-      fill: #ff8f34;
-      stroke: #ff8f34;
-      color: #ff8f34;
-      background-color: #F4F5F6;
+      fill: var(--brand);
+      stroke: var(--brand);
+      color: var(--brand);
+      // background-color: #F4F5F6;
     }
   }
 }
@@ -223,6 +231,8 @@
 }
 
 .PopoverConfig {
+
+
   :global {
     .ant-popover-inner {
       background: var(--bg-page-secondary, #1d1d21);
@@ -237,7 +247,7 @@
           color: #6a6e73;
 
           &:hover {
-            color: #ff8f34;
+            color: var(--brand);
           }
         }
       }
@@ -248,8 +258,8 @@
     }
 
     .ant-checkbox-checked .ant-checkbox-inner {
-      background-color: #ff8f34;
-      border-color: #ff8f34;
+      background-color: var(--brand);
+      border-color: var(--brand);
       color: #ffffff;
     }
 
@@ -258,11 +268,11 @@
     }
 
     .ant-checkbox:hover {
-      border-color: #ff8f34;
+      border-color: var(--brand);
     }
 
     .ant-checkbox-checked::after {
-      border-color: #ff8f34;
+      border-color: var(--brand);
     }
 
     .ant-checkbox + span {
@@ -272,13 +282,13 @@
 
     .ant-checkbox-inner {
       background-color: #323232;
-      border: 1px solid #ff8f34;
+      border: 1px solid var(--brand);
     }
 
     .ant-checkbox-wrapper:hover .ant-checkbox-inner,
     .ant-checkbox:hover .ant-checkbox-inner,
     .ant-checkbox-input:focus + .ant-checkbox-inner {
-      border: 1px solid #ff8f34;
+      border: 1px solid var(--brand);
     }
 
     .ant-checkbox-checked.ant-checkbox-inner::after {
@@ -311,14 +321,14 @@
 
   :global {
     .ant-select-item {
-      background-color: #FFFFFF;
+      background-color: var(--fill_3);
       padding: 5px 2px !important;
       text-align: center;
       min-height: 28px;
       border-radius: 0px !important;
 
       &:hover {
-        color: var(--bg-btn-primary, #ff8f34) !important;
+        color: var(--bg-btn-primary, var(--brand)) !important;
         background: var(--fill-page-tertiary, #26262b) !important;
       }
     }
@@ -355,3 +365,30 @@
   left: 0px;
   background: rgba(0, 0, 0, 0.6)
 }
+
+.KlineHistoryOrderOutlinedName{
+  margin-left: 4px;
+  font-size: 12px;
+font-style: normal;
+font-weight: 400;
+color: var(--text_3);
+}
+.CheckBoxList{
+  color: var(--text_1);
+}
+
+@media (max-width: 768px) {
+  .header {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .headerScrollArrow {
+    display: flex;
+  }
+}
+

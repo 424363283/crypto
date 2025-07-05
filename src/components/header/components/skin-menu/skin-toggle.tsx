@@ -77,7 +77,7 @@ const styles = css`
       }
       .option-primary {
         .color-block {
-          background-color: #782CE8;
+          background-color: #07828B;
         }
       }
       .option-blue {

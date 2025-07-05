@@ -4,49 +4,55 @@ import { clsx } from '@/core/utils';
 import { Empty } from 'antd';
 import type { EmptyProps } from 'antd/es/empty';
 import css from 'styled-jsx/css';
+import { Layer } from '../constants';
 
 type Props = {
   active?: boolean;
   image?: string;
   text?: string;
+  imagestyle?: any,
   className?: string;
   size?: 'small' | 'large' | 'default';
+  layer?: Layer
 } & EmptyProps;
 
 export const EmptyComponent = ({
-                                 active,
-                                 image,
-                                 text = LANG('无此资料'),
-                                 className,
-                                 size,
-                                 prefixCls,
-                                 rootClassName,
-                                 style,
-                                 imageStyle,
-                                 description,
-                                 children,
-                               }: Props) => {
+  active,
+  image,
+  text = LANG('暂无数据'),
+  className,
+  size,
+  prefixCls,
+  rootClassName,
+  style,
+  imagestyle,
+  description,
+  children,
+  layer=Layer.Default
+}: Props) => {
   const props = {
     prefixCls,
     rootClassName,
     style,
-    imageStyle,
+    imagestyle,
     description: text || description,
     children,
   };
   const { isDark } = useTheme();
-
-  const _image = isDark ? '/static/images/common/empty-dark.svg' : '/static/images/common/empty.svg';
+  const isDefaultLayer = layer === Layer.Default;
+  const lightIcon = isDefaultLayer ? '/static/icons/primary/common/empty-1.svg' : '/static/icons/primary/common/empty-2.svg'
+  const darkIcon = isDefaultLayer ? '/static/icons/primary/common/dark/empty-1.svg' : '/static/icons/primary/common/dark/empty-2.svg'
+  const _image = isDark ? darkIcon : lightIcon;
 
   return (
-      <Empty
-          className={clsx('empty-img-wrapper', size, className)}
-          {...props}
-          description={<span>{text}</span>}
-          image={image || _image}
-      >
-        <style jsx>{styles}</style>
-      </Empty>
+    <Empty
+      className={clsx('empty-img-wrapper', size, className)}
+      {...props}
+      description={<span>{text}</span>}
+      image={image || _image}
+    >
+      <style jsx>{styles}</style>
+    </Empty>
   );
 };
 const styles = css`
@@ -58,17 +64,17 @@ const styles = css`
     text-align: center;
     margin: 30px auto;
     :global(.ant-empty-image) {
-      height: 48px;
-      margin-bottom: 5px;
+      height: 80px;
+      margin-bottom: 8px;
       :global(img) {
-        width: 48px;
-        height: 48px;
+        width: 80px;
+        height: 80px;
       }
     }
     :global(.ant-empty-description) {
       font-size: 12px;
-      font-weight: 300;
-      color: #798296;
+      color: var(--text_3);
+      font-weight: 400;
     }
     &.md {
       :global(.ant-empty-image) {
@@ -97,6 +103,21 @@ const styles = css`
         font-size: 16px;
         font-weight: 300;
       }
+    }
+  }
+  :global(.empty-img-wrapper.small) {
+    margin: 16px auto;
+    :global(.ant-empty-image) {
+      height: 50px;
+      margin-bottom: 16px;
+      :global(img) {
+        width: 50px;
+        height: 50px;
+      }
+    }
+    :global(.ant-empty-description) {
+      font-size: 14px;
+      font-weight: 300;
     }
   }
 `;

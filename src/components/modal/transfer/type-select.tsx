@@ -1,29 +1,17 @@
 import { Svg } from '@/components/svg';
 import { useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
-import { Swap } from '@/core/shared';
-import { clsx } from '@/core/utils';
+import { clsx, MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
 import { AccountTypeSelect2 } from './account-type-select2';
 import { ACCOUNT_TYPE } from './types';
-
-const ColLine = () => {
-  return (
-    <div className='col-line'>
-      <div className='start'></div>
-      <div className='dots' />
-      <div className='end'></div>
-      <style jsx>{styles}</style>
-    </div>
-  );
-};
 
 const TypeBar = ({
   values,
   onChange,
   onTransferDirectionChange,
   wallets,
-  crypto,
+  crypto
 }: {
   values: ACCOUNT_TYPE[];
   onChange: (args: { value: ACCOUNT_TYPE; positiveTransfer: boolean; wallet?: string }) => void;
@@ -31,13 +19,13 @@ const TypeBar = ({
   wallets: string[];
   crypto: string;
 }) => {
-  const enableLite = process.env.NEXT_PUBLIC_LITE_ENABLE === 'true';
-
   const { isDark } = useTheme();
+  const enableLite = process.env.NEXT_PUBLIC_LITE_ENABLE === 'true';
   const options = [
     [ACCOUNT_TYPE.SPOT, LANG('现货账户')],
-    [ACCOUNT_TYPE.SWAP, LANG('币本位合约账户')],
-    [ACCOUNT_TYPE.SWAP_U, LANG('U本位合约账户')],
+    // [ACCOUNT_TYPE.SWAP, LANG('币本位合约账户')],
+    [ACCOUNT_TYPE.COPY, LANG('跟单账户')],
+    [ACCOUNT_TYPE.SWAP_U, LANG('U本位合约')]
   ];
   if (enableLite) {
     options.push([ACCOUNT_TYPE.LITE, LANG('简易合约账户')]);
@@ -45,79 +33,68 @@ const TypeBar = ({
 
   return (
     <div className={clsx('type-bar', !isDark && 'light')}>
-      <ColLine />
-      <div className='types'>
+      <div className="types">
         {values.map((item, i) => {
-          const [, label]: any = options.find((v) => v[0] === item);
-
+          const option = options?.find(v => v[0] === item);
+          const [, label]: any = option || [];
           const positiveTransfer = i == 0;
           const content = (
             <>
-              <div className='left'>
-                <div className='prev'>{i === 0 ? LANG('从') : LANG('到')}</div>
-                <div className='label'>{label}</div>
-                {[ACCOUNT_TYPE.SWAP, ACCOUNT_TYPE.SWAP_U].includes(item) && (
-                  <div className='wallet'>
-                    {
-                      Swap.Assets.getWallet({
-                        usdt: item === ACCOUNT_TYPE.SWAP_U,
-                        walletId: wallets[i],
-                        withHooks: false,
-                      })?.alias
-                    }
-                  </div>
-                )}
-                {/* {[ACCOUNT_TYPE.SWAP, ACCOUNT_TYPE.SWAP_U].includes(item) && (
-                  <WalletSelect
-                    onOpen={onWalletSelectOpen}
-                    isUsdtType={item === ACCOUNT_TYPE.SWAP_U}
-                    selectedValue={wallets[i]}
-                    onChange={(value, isUsdtType) =>
-                      onChange({
-                        value: isUsdtType ? ACCOUNT_TYPE.SWAP_U : ACCOUNT_TYPE.SWAP,
-                        positiveTransfer,
-                        wallet: value,
-                      })
-                    }
-                    sourceAccount={values[0]}
-                    targetAccount={values[1]}
-                  >
-                    <div className='wallet'>{wallets[i]}</div>
-                  </WalletSelect>
-                )} */}
+              <div className="title" key={i}>
+                <div className="prev">{i === 0 ? LANG('从') : LANG('到')}</div>
               </div>
-              <Svg
-                className='icon'
-                src={'/static/images/common/modal/transfer-arrow-right.svg'}
-                width='12'
-                height='12'
-              />
+              <div className="description">
+                <div className="left flexSpan">
+                  <div className="label">{label}</div>
+                  <Svg src="/static/icons/primary/common/icon-down.svg" width={14} height={14} className={clsx('arrow')} />
+                </div>
+              </div>
             </>
           );
           return (
-            <AccountTypeSelect2
-              key={i}
-              onChange={onChange}
-              selectedValue={item}
-              wallets={wallets}
-              targetAccount={values[1]}
-              sourceAccount={values[0]}
-              positiveTransfer={positiveTransfer}
-              crypto={crypto}
-            >
-              {content}
-            </AccountTypeSelect2>
+            <>
+             {i === 0 && <AccountTypeSelect2
+                key={i}
+                from={i == 0}
+                to={i == 1}
+                onChange={onChange}
+                selectedValue={item}
+                wallets={wallets}
+                targetAccount={values[1]}
+                sourceAccount={values[0]}
+                positiveTransfer={positiveTransfer}
+                crypto={crypto}
+              >
+                {content}
+              </AccountTypeSelect2>} 
+              {i === 1 && <AccountTypeSelect2
+                key={i}
+                from={i == 0}
+                to={i == 1}
+                onChange={onChange}
+                selectedValue={item}
+                wallets={wallets}
+                targetAccount={values[1]}
+                sourceAccount={values[0]}
+                positiveTransfer={positiveTransfer}
+                crypto={crypto}
+              >
+                {content}
+              </AccountTypeSelect2>} 
+              {i === 0 && (
+                <div className="transfer-icon">
+                  <Svg
+                    className="img"
+                    src={'/static/images/common/modal/transfer_type.svg'}
+                    width="40"
+                    height="40"
+                    onClick={onTransferDirectionChange}
+                  />
+                </div>
+              )}
+            </>
           );
         })}
-      </div>
-      <div className='transfer-icon'>
-        <Svg
-          className='img'
-          src={'/static/images/common/modal/transfer_type.svg'}
-          width='24'
-          height='24'
-          onClick={onTransferDirectionChange}
-        />
       </div>
       <style jsx>{styles}</style>
     </div>
@@ -127,14 +104,16 @@ const TypeBar = ({
 const styles = css`
   @import 'src/core/styles/src/design.scss';
   .type-bar {
-    background: var(--theme-background-color-8);
+    background: transparent;
     width: 100%;
-    height: 117px;
     border-radius: 6px;
     display: flex;
     flex-direction: row;
     align-items: center;
     margin-top: 8px;
+    @media ${MediaInfo.mobile} {
+      margin: 0;
+    }
     .col-line {
       width: 38px;
       padding-right: 4px;
@@ -163,56 +142,88 @@ const styles = css`
     }
     .types {
       flex: 1;
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      align-self: stretch;
       :global(.ant-dropdown-trigger) {
-        height: 58px;
         display: flex;
-        flex-direction: row;
-        align-items: center;
-        border-bottom: 1px solid var(--theme-border-color-1);
-        cursor: pointer;
-        &:last-child {
-          border-bottom: 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        flex: 1 0 0;
+        .title {
+          flex: 1 0 0;
+          color: var(--text_2);
+          font-size: 14px;
+          font-weight: 400;
         }
-        :global(.left) {
+        .description {
           display: flex;
-          flex-direction: row;
+          height: 48px;
+          padding: 0px 16px;
+          justify-content: space-between;
           align-items: center;
-          :global(.prev) {
-            font-weight: 400;
-            color: var(--theme-font-color-3);
-            margin-right: 11px;
+          gap: 8px;
+          align-self: stretch;
+          cursor: pointer;
+          background: var(--fill_input_2);
+          border-radius: 8px;
+          &:last-child {
+            border-bottom: 0;
           }
-          :global(.label) {
-            color: var(--theme-font-color-1);
-          }
-          :global(.wallet) {
-            border-radius: 3px;
-            height: 19px;
-            margin-left: 5px;
-            font-size: 12px;
-            color: var(--theme-font-color-1);
-            padding: 0 4px;
-            background-color: var(--theme-background-color-2);
+          :global(.left) {
             display: flex;
-            justify-content: center;
             align-items: center;
+            color: var(--text_1);
+            font-size: 14px;
+            font-weight: 400;
+            gap: 8px;
+            :global(.prev) {
+              font-weight: 400;
+              color: var(--theme-font-color-3);
+              margin-right: 11px;
+            }
+            :global(.label) {
+              color: var(--theme-font-color-1);
+            }
+            :global(.wallet) {
+              display: flex;
+              padding: 4px 8px;
+              align-items: center;
+              gap: 10px;
+              border-radius: 4px;
+              background: var(--brand_20);
+              color: var(--text_brand);
+              text-align: center;
+              font-size: 12px;
+              font-weight: 400;
+              line-height: 14px;
+            }
           }
-        }
-        :global(.icon) {
-          margin-right: 25px;
-          margin-left: 8px;
+          :global(.flexSpan) {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: space-between;
+          }
+          :global(.icon) {
+            margin-right: 25px;
+            margin-left: 8px;
+          }
         }
       }
     }
     .transfer-icon {
       display: flex;
-      flex-direction: row;
       justify-content: center;
-      width: 60px;
+      align-items: center;
+      width: 48px;
+      height: 48px;
       :global(.img) {
         cursor: pointer;
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
       }
     }
   }

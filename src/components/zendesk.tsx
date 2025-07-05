@@ -12,14 +12,14 @@ export const Zendesk = (props: any) => {
 };
 export const useZendeskLink = (href?: any, opts?: { isEn?: any; enOnly?: any }) => {
   const { locale: lang } = useAppContext();
-
   return getZendeskLink(href, { ...opts, lang });
 };
 export const getZendeskLink = (href?: any, opts?: { isEn?: any; enOnly?: any; lang?: string }) => {
-  const _lang = opts?.lang || getUrlQueryParams('lang');
+  const { locale: lang } = useAppContext();
+  const _lang = opts?.lang || lang
   let language = Lang.getLanguageHelp(_lang || '');
   if (opts?.isEn || (opts?.enOnly && _lang !== 'zh-cn')) {
     language = 'en-us';
   }
-  return `https://support.y-mex.com/hc/${language}${href}`;
+  return `https://ymex.zendesk.com/hc/${language}${href}`;
 };

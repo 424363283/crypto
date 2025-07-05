@@ -17,3 +17,4 @@ export const SafetyModel = dynamic(() => import('./safety-modal'), { ssr: false 
 export const SafetyVerificationModal = dynamic(() => import('./safety-verify-modal'), { ssr: false });
 export const SelectCoinModel = dynamic(() => import('./select-coin-modal'), { ssr: false });
 export const TransferModal = dynamic(() => import('./transfer'), { ssr: false });
+

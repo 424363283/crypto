@@ -26,6 +26,7 @@ export const ActionsMenus = ({
                 const active = value === i;
                 return (
                   <Option
+                    style={{ display: i === 1 ? 'none' : 'block' }}
                     className={clsx('item', active && 'active')}
                     key={i}
                     onClick={() => {
@@ -53,7 +54,7 @@ export const ActionsMenus = ({
 
 const { className, styles } = css.resolve`
   .info-detail {
-    background: var(--theme-trade-bg-color-9) !important;
+    background: var(--dropdown-select-bg-color) !important;
     padding: 5px !important;
     max-width: unset;
     border-radius: 5px;
@@ -61,7 +62,7 @@ const { className, styles } = css.resolve`
       display: flex;
       flex-direction: column;
       box-shadow: none;
-      color: var(--theme-trade-text-color-1);
+      color: var(--text_2);
       .item {
         cursor: pointer;
         display: flex;

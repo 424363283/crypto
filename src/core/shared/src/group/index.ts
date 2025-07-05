@@ -26,12 +26,14 @@ class Group {
 
   private priceDigit: { [key: string]: number } = {}; // 价格精度
   private volumeDigit: { [key: string]: number } = {}; // 成交量精度
+  private liteQuote: { [key: string]: number } = {}; // 合约map
 
   public spotQuoteDomains: string[] = []; // 现货行情域名
   public swapQuoteDomains: string[] = []; // 永续行情域名
   public swapSLQuoteDomains: string[] = []; // 永续模拟盘行情域名
 
   public getLiteIds: string[] = []; // 简单合约id列表
+  public getLiteQuoteIds: string[] = []; // 简单合约id列表
   public getSpotIds: string[] = []; // 现货合约id列表(包含ETF)
   public getSwapIds: string[] = []; // 永续合约id列表(usdt和币本位)
   public getSwapSLIds: string[] = []; // 永续模拟盘合约id列表(usdt和币本位)
@@ -73,6 +75,7 @@ class Group {
       getSpotIds,
       getSwapIds,
       getLiteIds,
+      getLiteQuoteIds,
       getNewIds,
       getHotIds,
       spot_quote_domain,
@@ -83,6 +86,7 @@ class Group {
       swap_zones,
       priceDigit,
       volumeDigit,
+      liteQuote,
     } = data;
     this.spot_list = spot_list;
     this.swap_real_list = swap_list;
@@ -98,6 +102,7 @@ class Group {
     this.getSpotIds = getSpotIds;
     this.getSwapIds = getSwapIds;
     this.getLiteIds = getLiteIds;
+    this.getLiteQuoteIds = getLiteQuoteIds;
     this.getSwapSLIds = getSwapSLIds;
 
     this.newIds = getNewIds;
@@ -105,21 +110,25 @@ class Group {
 
     this.priceDigit = priceDigit;
     this.volumeDigit = volumeDigit;
- 
+    this.liteQuote = liteQuote;
+
     this.spotQuoteDomains = spot_quote_domain;//decodeDomain(spot_quote_domain);
     this.swapQuoteDomains = swap_quote_domain;//decodeDomain(swap_quote_domain);
-    this.swapSLQuoteDomains = swapSL_quote_domain; 
-  
+    this.swapSLQuoteDomains = swapSL_quote_domain;
+
     this.spotUnits = spot_units;
     this.spotZones = spot_zones;
     this.swapZones = swap_zones;
   }
 
   // 获取单例
-  public static async getInstance(): Promise<Group> {
+  public static async getInstance(isNotCache?: boolean): Promise<Group> {
     return await asyncFactory.getInstance<Group>(async (): Promise<Group> => {
       let data = SessionStorageApi.get(SESSION_KEY.SYMBOLS);
-      if (!data) {
+      if (isNotCache) {
+        data = (await getCommonSymbolsApi()).data;
+        SessionStorageApi.set(SESSION_KEY.SYMBOLS, data, 1);
+      } else if (!data) {
         data = (await getCommonSymbolsApi()).data;
         SessionStorageApi.set(SESSION_KEY.SYMBOLS, data, 1); //缓存http数据
       }
@@ -166,7 +175,7 @@ class Group {
       if (/-s?usdt$/i.test(item.id) && item) {
         result.push(item);
       }
-    } 
+    }
     this._cache[this.SWAP_USDT_CACHE_KEY] = result;
     return this._cache[this.SWAP_USDT_CACHE_KEY];
   }
@@ -175,9 +184,7 @@ class Group {
     if (this._cache[this.SWAP_COIN_CACHE_KEY]) return this._cache[this.SWAP_COIN_CACHE_KEY];
     const result: GroupItem[] = [];
     for (const item of this.swap_list) {
-      if (/-s?usd$/i.test(item.id) && item) {
-        result.push(item);
-      }
+      if (/-s?usd$/i.test(item.id)) result.push(item);
     }
     this._cache[this.SWAP_COIN_CACHE_KEY] = result;
     return this._cache[this.SWAP_COIN_CACHE_KEY];
@@ -192,30 +199,61 @@ class Group {
     this._cache['lite_order_list'] = result;
     return this._cache['lite_order_list'];
   }
-  // 获取简单合约的主流区
-  public get getLiteMainList(): GroupItem[] {
-    if (this._cache['lite_main_list']) return this._cache['lite_main_list'];
+  // 获取简单合约的 crypto
+  public get getLiteCryptoList(): GroupItem[] {
+    if (this._cache['lite_crypto_list']) return this._cache['lite_crypto_list'];
     const result: GroupItem[] = [];
     for (const item of this.lite_list) {
-      if (item.zone?.includes('mainstream')) {
+      if (item.zone?.includes('加密货币')) {
         result.push(item);
       }
     }
-    this._cache['lite_main_list'] = result;
-    return this._cache['lite_main_list'];
+    this._cache['lite_crypto_list'] = result;
+    return this._cache['lite_crypto_list'];
   }
-  // 获取简单合约的创新区
-  public get getLiteInnovateList(): GroupItem[] {
-    if (this._cache['lite_innovate_list']) return this._cache['lite_innovate_list'];
+
+  // 获取简单合约的 - Deriv
+  public get getLiteDerivList(): GroupItem[] {
+    if (this._cache['lite_deriv_list']) return this._cache['lite_deriv_list'];
     const result: GroupItem[] = [];
     for (const item of this.lite_list) {
-      if (item.zone?.includes('creative')) {
+      if (item.zone?.includes('期货')) {
         result.push(item);
       }
     }
-    this._cache['lite_innovate_list'] = result;
-    return this._cache['lite_innovate_list'];
+    this._cache['lite_deriv_list'] = result;
+    return this._cache['lite_deriv_list'];
   }
+
+
+  // 获取简单合约的 - UStock
+  public get getLiteUStockList(): GroupItem[] {
+    if (this._cache['lite_ustock_list']) return this._cache['lite_ustock_list'];
+    const result: GroupItem[] = [];
+    for (const item of this.lite_list) {
+      if (item.zone?.includes('美股')) {
+        result.push(item);
+      }
+    }
+    this._cache['lite_ustock_list'] = result;
+    return this._cache['lite_ustock_list'];
+  }
+
+
+  // 获取简单合约的 - HKtock
+  public get getLiteHKStockList(): GroupItem[] {
+    if (this._cache['lite_hkstock_list']) return this._cache['lite_hkstock_list'];
+    const result: GroupItem[] = [];
+    for (const item of this.lite_list) {
+      if (item.zone?.includes('港股')) {
+        result.push(item);
+      }
+    }
+    this._cache['lite_hkstock_list'] = result;
+    return this._cache['lite_hkstock_list'];
+  }
+
+
   // 获取现货的币币交易ids
   public getSpotCoinIds(quoteCoin?: string): string[] {
     if (this._cache['spot_coin_ids' + quoteCoin]) return this._cache['spot_coin_ids' + quoteCoin];
@@ -310,19 +348,36 @@ class Group {
     this._cache['lite_ids'] = this.getLiteList.map((_: any) => _.id);
     return this._cache['lite_ids'];
   }
-  // 获取所有简单合约主流区的ids
-  public getLiteMainByIds(): string[] {
-    if (this._cache['lite_main_ids']) return this._cache['lite_main_ids'];
-    this._cache['lite_main_ids'] = this.getLiteMainList.map((_: any) => _.id);
-    return this._cache['lite_main_ids'];
+  // 获取所有简单合约-加密货币的ids
+  public getLiteCryptoByIds(): string[] {
+    if (this._cache['lite_crypto_ids']) return this._cache['lite_crypto_ids'];
+    this._cache['lite_crypto_ids'] = this.getLiteCryptoList.map((_: any) => _.id);
+    return this._cache['lite_crypto_ids'];
   }
-  // 获取所有简单合约创新区的ids
-  public getLiteInnovateByIds(): string[] {
-    if (this._cache['lite_innovate_ids']) return this._cache['lite_innovate_ids'];
-    this._cache['lite_innovate_ids'] = this.getLiteInnovateList.map((_: any) => _.id);
-    return this._cache['lite_innovate_ids'];
+
+  // 获取所有简单合约-deriv的ids
+  public getLiteDerivByIds(): string[] {
+    if (this._cache['lite_innovate_ids']) return this._cache['lite_deriv_ids'];
+    this._cache['lite_deriv_ids'] = this.getLiteDerivList.map((_: any) => _.id);
+    return this._cache['lite_deriv_ids'];
   }
-  // 获取所有简单合约带单区的ids
+
+  // 获取所有简单合约-ustock的ids
+  public getLiteUStockByIds(): string[] {
+    if (this._cache['lite_ustock_ids']) return this._cache['lite_ustock_ids'];
+    this._cache['lite_ustock_ids'] = this.getLiteUStockList.map((_: any) => _.id);
+    return this._cache['lite_ustock_ids'];
+  }
+
+
+  // 获取所有简单合约-hkstock的ids
+  public getLiteHKStockByIds(): string[] {
+    if (this._cache['lite_hkstock_ids']) return this._cache['lite_hkstock_ids'];
+    this._cache['lite_hkstock_ids'] = this.getLiteHKStockList.map((_: any) => _.id);
+    return this._cache['lite_hkstock_ids'];
+  }
+
+  // 获取所有简单合约-带单区的ids
   public getLiteOrderByIds(): string[] {
     if (this._cache['lite_order_ids']) return this._cache['lite_order_ids'];
     this._cache['lite_order_ids'] = this.getLiteOrderList.map((_: any) => _.id);
@@ -356,6 +411,38 @@ class Group {
   public getHotIds(): string[] {
     return this.hotIds;
   }
+  // 获取现货的币币交易ids
+  public getHotSpotCoinIds(quoteCoin?: string): string[] {
+    const result: string[] = [];
+    for (const item of this.hotIds) {
+      if (/_s?usdt$/i.test(item) && item) {
+        result.push(item);
+      }
+    }
+    return result;
+  }
+// 获取合约的u本位交易ids
+  public getHotSwapUsdtIds(quoteCoin?: string): string[] {
+    const result: string[] = [];
+    for (const item of this.hotIds) {
+      if (/-s?usdt$/i.test(item) && item) {
+        result.push(item);
+      }
+    }
+    return result;
+  }
+
+// 获取热门简易合约交易ids
+  public getHotLiteIds(quoteCoin?: string): string[] {
+    const result: string[] = [];
+    for (const item of this.hotIds) {
+      if (/^(?!(.*_s?usdt$)|(.*-s?usdt$))/i.test(item) && item) {
+        result.push(item);
+      }
+    }
+    return result;
+  }
+
   // 获取新币种的ids
   public getNewIds(): string[] {
     return this.newIds;
@@ -384,6 +471,14 @@ class Group {
     if (this.hotIds.length === 0) return false;
     return this.hotIds.includes(id);
   };
+
+  // 获取简单合约行情
+  public getLiteQuoteCode = (id: string): string => {
+    return this.liteQuote[id] || '';
+  };
+
+
+
 }
 
 export { Group, GroupItem };

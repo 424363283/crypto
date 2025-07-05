@@ -72,7 +72,7 @@ export default function ShareModal(props: ShareModalProps) {
       );
     }
     const title =
-      modalType === SHARE_MODAL_TYPE.INVITE_FRIENDS_ASSIST_MODAL ? LANG('我需要2位好友助力') : LANG('加入Y-MEX');
+      modalType === SHARE_MODAL_TYPE.INVITE_FRIENDS_ASSIST_MODAL ? LANG('我需要2位好友助力') : LANG('加入YMEX');
     const subTitle =
       modalType === SHARE_MODAL_TYPE.INVITE_FRIENDS_ASSIST_MODAL
         ? renderLangContent(LANG('都助力成功后你可领取 {bonus} 体验金'), {
@@ -146,7 +146,7 @@ export default function ShareModal(props: ShareModalProps) {
         <CopyToClipboard text={shareUrl} onCopy={() => message.success(LANG('复制成功'))}>
           <div className='right-area'>
             <p className='url ellipsis'>{shareUrl}</p>
-            <CommonIcon name='common-copy-default-0' size={12} enableSkin />
+            <CommonIcon name='common-copy' size={16} enableSkin />
           </div>
         </CopyToClipboard>
       </div>
@@ -154,7 +154,7 @@ export default function ShareModal(props: ShareModalProps) {
         domID='share-picture-container'
         shareCallback={shareCallback}
         shareUrl={shareUrl}
-        idea={LANG('立即加入Y-MEX，超过{num}体验金静待领取！', { num: '$2888' })}
+        idea={LANG('立即加入YMEX，超过{num}体验金静待领取！', { num: '$2888' })}
       />
       <style jsx>{styles}</style>
     </BasicModal>

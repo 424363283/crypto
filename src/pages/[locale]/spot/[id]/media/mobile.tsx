@@ -5,15 +5,18 @@ import { HotQuote } from '@/components/trade-ui/hot-quote';
 import { Header } from '@/components/trade-ui/mobile/header';
 import { ORDER_BOOK_TYPES, OrderBook } from '@/components/trade-ui/order-book';
 import { RecentTrades } from '@/components/trade-ui/recent-trades';
+import { HeaderAnnouncement } from '@/components/trade-ui/header-announcement';
 import dynamic from 'next/dynamic';
+import { QuoteInfo } from '@/components/trade-ui/mobile/header/quote-info';
 const TradeView = dynamic(() => import('@/components/trade-ui/mobile/spot/trade-view'));
 const OrderList = dynamic(() => import('@/components/trade-ui/mobile/spot/order-list'));
 
 function MobileSSR() {
   return (
     <SpotMobileLayout
-      HotQuote={<HotQuote />}
-      QuoteInfo={<Header isSpot />}
+      HeaderAnnouncement={<HeaderAnnouncement.Swap />}
+      QuoteHeader={<Header isSpot />}
+      QuoteInfo={<QuoteInfo isSpot />}
       KlineView={<TradeCountDown KChart={<KChart symbolType={TRADINGVIEW_SYMBOL_TYPE.SPOT} />} />}
       OrderBook={<OrderBook type={ORDER_BOOK_TYPES.SPOT} />}
       RecentTrades={<RecentTrades />}

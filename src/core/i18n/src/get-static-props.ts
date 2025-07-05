@@ -16,12 +16,12 @@ export const getStaticProps = ({
   robots = true,
 }: Partial<GetStaticProps>) => {
     return async (context: any) => {
-    console.log(context.params,'getStaticProps context.params');
+    // console.log(context.params,'getStaticProps context.params');
 
     const locale = context.params?.locale || defaultLang;
     const id = context.params?.id || '';
 
-    console.log(locale,key,'await getFile ');
+    // console.log(locale,key,'await getFile ');
 
     const { lang, meta } = await getFile(locale, key);
     // console.log(locale, defaultLang,lang,meta,'getStaticProps 11111');
@@ -66,11 +66,11 @@ const generateLang = (langPath: string, symbol: string) => {
   return lang;
   return;
 };
-const getFile = async (locale: string, key: MetaKey) => {
+export const getFile = async (locale: string, key: MetaKey) => {
   // 加载语言文件
   // https://www.y-mex.com/static/locales/zh/index.js
   const langPath = getFilePath(locale, `${getFirstSegment(key)}.js`);
-  console.log(langPath,'getFile langPath');
+  //console.log(langPath,'getFile langPath');
 
   // https://www.y-mex.com/static/locales/zh/common-lang.js
   const commonLangPath = getFilePath(locale, 'common-lang.js');
@@ -84,7 +84,7 @@ const getFile = async (locale: string, key: MetaKey) => {
   const tradeUiLang = generateLang(tradeUiLangPath, 'tradeUiLang');
   // 动态导入 meta 文件
   const metaModule = await import(`./meta/${locale}.js`);
-  console.log(metaModule.default[key], 'getFile metaModule.default meta');
+  //console.log(metaModule.default[key], 'getFile metaModule.default meta');
   const meta = metaModule.default[key] || {};
   return {
     lang: Object.assign({}, remoteTaskLang, lang, tradeUiLang, commonLang) as { [key: string]: string },

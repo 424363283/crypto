@@ -14,7 +14,7 @@ export const useTheme = () => {
     const _theme = document.documentElement.getAttribute(LOCAL_KEY.THEME) as THEME;
     const _skin = document.documentElement.getAttribute(LOCAL_KEY.DATA_SKIN) as SKIN;
     if ([THEME.DARK, THEME.LIGHT].includes(_theme)) {
-      appContextSetState({ theme: _theme, skin: _skin });
+      // appContextSetState({ theme: _theme, skin: _skin });
     }
     const colorIndex = RootColor.getColorIndex;
     if (_skin === 'blue' && colorIndex !== 3) {

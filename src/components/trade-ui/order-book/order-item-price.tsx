@@ -42,10 +42,10 @@ export const OrderItemPrice = ({ item }: OrderItemPriceProps) => {
             animation: vol-red 0.7s;
             @keyframes vol-red {
               0% {
-                background-color: rgba(var(--color-red-rgb), 0.12);
+                background-color: rgba(var(--text_1), 0.12);
               }
               100% {
-                background-color: rgba(var(--color-red-rgb), 0);
+                background-color: rgba(var(--text_red), 0);
               }
             }
           }
@@ -53,10 +53,10 @@ export const OrderItemPrice = ({ item }: OrderItemPriceProps) => {
             animation: vol-green 0.7s;
             @keyframes vol-green {
               0% {
-                background-color: rgba(var(--color-green-rgb), 0.12);
+                background-color: rgba(var(--text_green), 0.12);
               }
               100% {
-                background-color: rgba(var(--color-green-rgb), 0);
+                background-color: rgba(var(--text_green), 0);
               }
             }
           }

@@ -18,6 +18,6 @@ const Home = (): JSX.Element => {
   );
 };
 
-export default Lang.SeoHead(WS3001(Home, { swap: true, spot: true }));
+export default Lang.SeoHead(WS3001(Home, { lite: true, swap: true, spot: true }));
 export const getStaticPaths = Lang.getStaticPaths;
 export const getStaticProps = Lang.getStaticProps({ key: 'index' });

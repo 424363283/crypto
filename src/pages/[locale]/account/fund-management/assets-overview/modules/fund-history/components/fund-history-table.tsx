@@ -3,7 +3,6 @@ import { MediaInfo } from '@/core/utils';
 import { useEffect } from 'react';
 import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
-import { TableStyle } from '../../../../components/table-style';
 import { FUND_HISTORY_TAB_KEY } from '../types';
 import { useFiatColumns } from './hooks/use-fiat-columns';
 import { useFlashExchangeColumns } from './hooks/use-flash-exchange-columns';
@@ -11,6 +10,8 @@ import { useMoveRecordsColumns } from './hooks/use-move-records-columns';
 import { useRechargeColumns } from './hooks/use-recharge-columns';
 import { useTransferRecordColumns } from './hooks/use-transfer-record-columns';
 import { useWithdrawColumns } from './hooks/use-withdraw-columns';
+import { Desktop, Mobile } from '@/components/responsive';
+import { TableStyle } from '../../../../components/table-style';
 
 const PAGE_ROWS = 13;
 type TableProps = {
@@ -55,34 +56,38 @@ export const CommonFundHistoryTable = (props: TableProps) => {
     setState((draft) => {
       draft.listPage = page;
     });
-    fetchRecordData({
-      ...value,
-      page,
-    });
+    fetchRecordData(page);
+    // fetchRecordData({
+    //   ...value,
+    //   page,
+    // });
   };
 
   const onChangePage = (pagination: number) => {
     handleSearchFundHistory({ code: '', currency: '' }, pagination);
   };
-  // console.log('tableData', tableData);
+
+
   return (
     <>
-      <Table
-        className='fund-history-table'
-        showTabletTable
-        showMobileTable
-        columns={TABLE_COLUMN_MAP[subPage]}
-        dataSource={tableData}
-        rowKey={(record: any) => record?.id}
-        scroll={{ x: true }}
-        pagination={{
-          current: listPage,
-          total: total,
-          pageSize: PAGE_ROWS,
-          onChange: onChangePage,
-        }}
-      />
-      <TableStyle />
+     <Table
+          className='fund-history-table'
+          showTabletTable
+          showMobileTable
+          columns={TABLE_COLUMN_MAP[subPage]}
+          dataSource={tableData}
+          rowKey={(record: any) => record?.id}
+          scroll={{ x: true }}
+          historyList
+          isHistoryList
+          pagination={{
+            current: listPage,
+            total: total,
+            pageSize: PAGE_ROWS,
+            onChange: onChangePage,
+          }}
+        />
+        <TableStyle />
       <style jsx>{styles}</style>
     </>
   );
@@ -97,6 +102,9 @@ const styles = css`
     :global(.ant-table-container .ant-table-content) {
       :global(.empty-img-wrapper) {
         height: calc(100vh - 380px);
+      }
+      :global(.ant-table-expanded-row-fixed) {
+        margin: -16px -30px;
       }
     }
   }

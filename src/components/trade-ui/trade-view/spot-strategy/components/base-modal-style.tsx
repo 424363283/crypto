@@ -44,6 +44,7 @@ export const BaseModalStyle = () => {
                 font-weight: 500;
                 background-color: var(--skin-primary-color);
                 border: none;
+                border-radius:20px;
                 &:hover {
                   color: inherit !important;
                 }

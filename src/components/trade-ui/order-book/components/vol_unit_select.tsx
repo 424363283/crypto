@@ -26,7 +26,8 @@ export const VolUnitSelect = ({ children }: { children?: any }) => {
         try {
           const result = await Swap.Info.updateIsVolUnit(
             isUsdtType,
-            value ? (isMarginUnit ? UNIT_MODE.MARGIN : UNIT_MODE.VOL) : UNIT_MODE.COIN
+            // value ? (isMarginUnit ? UNIT_MODE.MARGIN : UNIT_MODE.VOL) : UNIT_MODE.COIN
+            value ? UNIT_MODE.VOL : UNIT_MODE.COIN
           );
           if (result.code !== 200) {
             return message.error(result);

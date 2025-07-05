@@ -9,7 +9,7 @@ export const useListTabs = ({ positions, pending }: { positions: any; pending: a
     `${LANG('当前委托')}(${isLogin ? pending.length : 0})`,
     LANG('历史委托'),
     LANG('历史成交'),
-    // LANG('仓位记录'), TODO
+    LANG('历史仓位'),  
     LANG('资金流水'),
   ];
 

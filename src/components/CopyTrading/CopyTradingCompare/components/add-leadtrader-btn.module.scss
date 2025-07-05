@@ -1,0 +1,18 @@
+.addLeadTraderButton {
+  :global(.common-button) {
+    padding: 0 30px!important;
+
+    .commonButtonContent {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+  }
+  .addInnerBox {
+    background-color: var(--brand);
+    padding: 4px 26px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+  }
+}

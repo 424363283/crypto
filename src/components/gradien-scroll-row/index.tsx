@@ -5,7 +5,7 @@ import { debounce } from '@/core/utils';
 import { Svg } from '../svg';
 import { clsx, styles } from './styled';
 
-export const GradienScrollRow = ({ children }: { children: any }) => {
+export const GradienScrollRow = ({ children, color }: { children: any, color?: string }) => {
   const ref = useRef<any>(null);
   const [button, setButton] = useState({ left: false, right: false });
   const _onScroll = useMemo(
@@ -54,7 +54,7 @@ export const GradienScrollRow = ({ children }: { children: any }) => {
 
   return (
       <>
-        <div className={clsx('view')}>
+        <div className={clsx('gradien-scroll-row view')}>
           {button.left && (
               <div className={clsx('left')} onClick={onLeftClick}>
                 <Svg src={'/static/images/common/arrow-right.svg'} />
@@ -70,6 +70,16 @@ export const GradienScrollRow = ({ children }: { children: any }) => {
           )}
         </div>
         {styles}
+      <style jsx>{`
+        .view {
+          .left {
+            background: linear-gradient(to right, ${ color ?? 'var(--fill_bg_1)' } 42.24%, transparent 95.69%);
+          }
+          .right {
+            background: linear-gradient(to left, ${ color ?? 'var(--fill_bg_1)' } 42.24%, transparent 95.69%);
+          }
+        }
+      `}</style>
       </>
   );
 };

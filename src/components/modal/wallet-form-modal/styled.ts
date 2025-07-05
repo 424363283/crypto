@@ -20,7 +20,7 @@ const { className, styles } = css.resolve`
     height: 100%;
     display: flex;
     flex-direction: column;
-    color: var(--theme-trade-text-color-1);
+    color: var(--text_2);
     .content {
       display: flex;
       flex-direction: column;
@@ -28,12 +28,10 @@ const { className, styles } = css.resolve`
       height: 100%;
       overflow-y: hidden;
       .scroll {
-        padding-top: 11px;
         flex: 1;
         scrollbar-width: none;
         overflow-y: scroll;
         &.usdt {
-          padding-top: 16px;
         }
       }
     }
@@ -88,7 +86,7 @@ const { className, styles } = css.resolve`
       }
     }
     .repeat-tips {
-      color: var(--theme-trade-text-color-3);
+      color: var(--text_3);
       font-size: 12px;
       margin: 10px 0 11px;
     }

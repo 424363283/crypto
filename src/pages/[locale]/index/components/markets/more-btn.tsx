@@ -2,32 +2,20 @@ import { DesktopOrTablet, Mobile } from '@/components/responsive';
 import { useResponsiveClsx } from '@/core/hooks/src/use-responsive';
 import { TrLink } from '@/core/i18n/src/components/tr-link';
 import { LANG } from '@/core/i18n/src/page-lang';
+import { MediaInfo } from '@/core/utils';
 import { clsx } from '@/core/utils/src/clsx';
 import { memo } from 'react';
 import css from 'styled-jsx/css';
 
-const MoreBtn = ({ tab, children }: { tab: string; children: React.ReactNode }) => {
+const MoreBtn = ({ children }: { children: React.ReactNode }) => {
   const { setResponsiveClsx } = useResponsiveClsx();
   return (
     <div className={clsx('markets-container', setResponsiveClsx('m-pc', 'm-pad', 'm-phone'))}>
-      <div className={clsx('more-btn')}>
-        <span className='title'>{LANG('Popular cryptocurrencies')}</span>
-        <DesktopOrTablet>
-          <TrLink className='more-link' href={`/markets`} query={{ tab: tab }}>
-            {LANG('查看更多')}
-          </TrLink>
-        </DesktopOrTablet>
+      <div className={clsx('market-title')}>
+        <h2 className="title">{LANG('Popular cryptocurrencies')}</h2>
+        <p>{LANG('一键买币, 方便快捷, 永续合约')}</p>
       </div>
       {children}
-      <Mobile>
-        <TrLink
-          className={clsx('more-link', setResponsiveClsx('l-pc', 'l-pad', 'l-phone'))}
-          href={`/markets`}
-          query={{ tab: tab }}
-        >
-          {LANG('查看更多')}
-        </TrLink>
-      </Mobile>
       <style jsx>{styles}</style>
     </div>
   );
@@ -35,48 +23,45 @@ const MoreBtn = ({ tab, children }: { tab: string; children: React.ReactNode }) 
 export default memo(MoreBtn);
 const styles = css`
   .markets-container {
-    max-width: var(--const-max-page-width);
+    width: 1200px;
     margin: 0 auto;
-    padding: 30px 0 0;
-    .more-btn {
-      font-size: 20px;
+    padding: 0 0 64px;
+    @media ${MediaInfo.mobile} {
+      width: 100%;
+      padding: 0 16px 40px;
+      box-sizing: border-box;
+      :global(.favors-list-wrapper) {
+        width: 100%;
+        padding: 0;
+      }
+    }
+  }
+  .market-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 80px 0 46px;
+    @media ${MediaInfo.mobile} {
+      padding: 40px 0 24px;
+    }
+    h2 {
+      color: var(--text_1);
+      font-size: 32px;
       font-weight: 600;
-      padding: 40px 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      .title {
-        color: var(--theme-font-color-1);
-        font-size: 46px;
-        font-weight: 700;
+      white-space: nowrap;
+      @media ${MediaInfo.mobile} {
+        font-size: 24px;
+        font-weight: 500;
       }
     }
-    :global(.more-link) {
-      color: var(--skin-font-color);
-      background-color: var(--skin-primary-color);
-      display: flex;
-      min-width: 150px;
-      height: 48px;
-      padding: 0 24px;
-      justify-content: center;
-      align-items: center;
-      border-radius: 6px;
+    p {
+      color: var(--text_3);
       font-size: 16px;
-      font-weight: 500;
-    }
-    &.m-pad {
-      padding: 30px 32px 0;
-      .title {
-        font-size: 36px;
-      }
-    }
-    &.m-phone {
-      padding: 30px 16px 0;
-      .title {
-        font-size: 32px;
-      }
-      :global(.more-link) {
-        margin-top: 15px;
+      font-weight: 300;
+      text-align: center;
+      @media ${MediaInfo.mobile} {
+        font-size: 14px;
       }
     }
   }

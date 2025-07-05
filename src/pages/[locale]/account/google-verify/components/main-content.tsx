@@ -20,21 +20,23 @@ export const MainContent = ({
 };
 const styles = css`
   .main-content-container {
-    margin-top: 50px;
+    margin-top: 10px;
     width: 100%;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     @media ${MediaInfo.mobileOrTablet} {
       margin-top: 10px;
+      min-height: 340px;
     }
     .step-title {
-      @media ${MediaInfo.desktop} {
-        text-align: center;
-      }
-      text-align: left;
+      text-align: center;
       font-size: 18px;
       font-weight: 500;
       color: var(--theme-font-color-6);
       @media ${MediaInfo.mobileOrTablet} {
-        margin-bottom: 40px;
+        margin-bottom: 10px;
       }
     }
     .middle-area {
@@ -51,7 +53,7 @@ const styles = css`
         margin-top: 10px;
       }
       @media ${MediaInfo.desktop} {
-        margin: 40px 270px;
+        margin: 40px 250px;
       }
     }
   }

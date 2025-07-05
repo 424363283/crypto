@@ -17,14 +17,10 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
 import axios, { Canceler } from 'axios';
-import { SUBSCRIBE_TYPES, useWs,WS,wsType } from '@/core/network';
-
-
-import { volumeConversion } from './types';
+import { SUBSCRIBE_TYPES, useWs, WS, wsType } from '@/core/network';
+import { isLite, getUrlQueryParams } from '@/core/utils';
 
 import { ALL_RESOLUTION_INFO, SUPPORT_RESOLUTIONS } from '../types';
-
-// import { operator } from '@/service';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -50,7 +46,6 @@ export type DatafeedSubscribeOnTickCallback = (bar: DatafeedBar) => void;
 
 function getReqIntervalFromResolution(resolution: string) {
   const resolutionInfo = ALL_RESOLUTION_INFO.find(item => item.resolution === resolution);
-
   if (resolutionInfo) {
     return resolutionInfo.tvRes;
   }
@@ -65,6 +60,8 @@ export default class Datafeed implements IDatafeedChartApi {
 
   constructor(options: DatafeedOptions) {
     this._options = options;
+    // 监听页面可见性变化
+    document.addEventListener('visibilitychange', this.handleVisibilityChange.bind(this));
   }
 
   onReady(callback: OnReadyCallback) {
@@ -74,7 +71,6 @@ export default class Datafeed implements IDatafeedChartApi {
         symbols_types: [],
         supports_time: true,
         supported_resolutions: SUPPORT_RESOLUTIONS as ResolutionString[],
-
         supports_marks: false,
         supports_timescale_marks: false
       })
@@ -82,7 +78,7 @@ export default class Datafeed implements IDatafeedChartApi {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  searchSymbols(_userInput: string, _exchange: string, _symbolType: string, _onResult: SearchSymbolsCallback): void {}
+  searchSymbols(_userInput: string, _exchange: string, _symbolType: string, _onResult: SearchSymbolsCallback): void { }
 
   resolveSymbol(symbolName: string, onResolve: DatafeedOnResolveSymbolCallback): void {
     const result = symbolName.split('@');
@@ -109,14 +105,66 @@ export default class Datafeed implements IDatafeedChartApi {
       timezone: this._options.getTimezone() as Timezone,
       data_status: 'streaming',
       minmov: 1, // 新版api 无
-      // minmov2: 0, // 新版api 无
-      // has_empty_bars: false,
-      has_daily: true, // // 新版api 无 日k线诗句
+      has_daily: true, // 新版api 无 日k线诗句
       exchange: '',
       listed_exchange: '',
       format: 'price'
     };
     onResolve(symbol);
+  }
+  // 处理可见性变化
+  // private handleVisibilityChange() {
+  //   if (document.visibilityState === 'visible') {
+  //     console.log("页面从其他标签切换到当前标签");
+  //     // 重新请求K线的历史数据
+  //     // const symbol = (window.location.pathname.split('/').pop() || "btc-usdt").toUpperCase();
+  //     // const resolution = '15'; // 根据需要设置分辨率
+  //     // const periodParams = { from: Date.now() / 1000 - 3600, to: Date.now() / 1000, firstDataRequest: true }; // 过去一小时的数据
+  //     // this.getBars(this?._lastData, resolution, periodParams, (bars, meta) => {
+  //     //   // 处理获取到的K线数据
+  //     //   console.log(bars, meta);
+  //     // }, (error) => {
+  //     //   console.error("获取K线数据失败", error);
+  //     // });
+  //   } else {
+  //     console.log("当前标签页不再可见");
+  //   }
+  // }
+
+
+  // 处理可见性变化
+  private async handleVisibilityChange() {
+    if (document.visibilityState === 'visible') {
+      console.log("页面从其他标签切换到当前标签");
+      this.cancel()
+      
+      // 获取当前的symbol和时间参数
+      let symbol = (window.location.pathname.split('/').pop() || "btc-usdt").toUpperCase();
+      const time_from = Math.floor(Date.now() / 1000) - 86400;// 过去24小时
+      const time_to = Math.floor(Date.now() / 1000); // 当前时间
+      const periodParams = { from: time_from, to: time_to, firstDataRequest: true };
+      // const periodParams = { from: '1735077891', to: '1735977891', firstDataRequest: false };
+
+      // 请求历史数据
+      // await this.getBars(
+      //   { ticker: symbol, name: '', full_name: symbol, description: '', type: 'stock', session: '24x7', pricescale: 1, price_precision: 2, volume_precision: 2, volume_multiplier: 1, has_intraday: true, visible_plots_set: 'ohlcv', has_weekly_and_monthly: true, supported_resolutions: SUPPORT_RESOLUTIONS as ResolutionString[], timezone: this._options.getTimezone() as Timezone, data_status: 'streaming', minmov: 1, has_daily: true, exchange: '', listed_exchange: '', format: 'price' } as DatafeedSymbolInfo,
+      //   '1', // 你可以根据需要调整分辨率
+      //   periodParams,
+      //   (bars, meta) => {
+      //     // 处理返回的数据
+      //     // console.log("获取到的历史数据:", bars, meta);
+      //     if (this._onTickCallback) {
+      //       this._onTickCallback(bars);
+      //     }
+
+      //   },
+      //   (error) => {
+      //     console.error("获取数据错误:", error);
+      //   }
+      // );
+    } else {
+      console.log("当前标签页不再可见");
+    }
   }
 
   async getBars(
@@ -132,22 +180,79 @@ export default class Datafeed implements IDatafeedChartApi {
     const end = to * 1000;
 
     const isKLine = this._options.priceType === 0;
-    // const url = isKLine ? api.kline_history : api.index_kline;
 
     let time_from = start / 1000;
     let time_to = end / 1000;
-    // let symbol = 'BTC-USDT';
     let symbol = (window.location.pathname.split('/').pop() || "btc-usdt").toUpperCase();
-    const TV_LINK = `https://dev-swap.83uvgv.com/api/tv/tradingView/history?symbol=${symbol}&from=${time_from}&to=${time_to}&resolution=${resolution}`;
+    // let symbol = (symbolInfo.ticker || "btc-usdt").toUpperCase();
+    // let symbol = "BTCUSDT1808";
+    const contract = getUrlQueryParams('contract');
 
+    const isLiteId = isLite(symbol);
+    if (isLiteId) {
+      symbol = `${symbol.toUpperCase()}1808`;
+    }
+
+    try {
+      const bars: DatafeedBar[] = [];
+      const TV_LINK = `/api/tv/tradingView/history?symbol=${symbol}&from=${time_from}&to=${time_to}&resolution=${resolution}`;
+      const response = await fetch(TV_LINK);
+      const res3 = await response.json();
+
+      const barsData: { t: number; c: number; o: number; h: number; l: number; v: number }[] = [];
+
+      (res3.t || []).forEach((t, i) => {
+        if (t >= time_from && t <= time_to) {
+          barsData.push({
+            t: t * 1000,
+            c: +res3.c[i],
+            o: +res3.o[i],
+            h: +res3.h[i],
+            l: +res3.l[i],
+            v: +res3.v[i]
+          });
+        }
+      });
+
+      for (let i = 0; i < barsData.length; i++) {
+        const d = barsData[i];
+        const time = d.t;
+        if (time <= end && time >= start) {
+          const open = Number(d.o);
+          const close = Number(d.c);
+          bars.push({
+            time,
+            timestamp: time,
+            open,
+            high: Number(d.h),
+            low: Number(d.l),
+            close,
+            volume: d.v,
+          });
+        }
+      }
+
+      console.log("🔥",firstDataRequest )
+      if (firstDataRequest) {
+        this._lastData = bars[bars.length - 1] ?? null;
+      }
+
+      onResult(bars, { noData: bars.length === 0 });
+    } catch (e) {
+      onResult([], { noData: true });
+    }
+    this._options.onDataLoadEnd?.();
+  }
+
+  private async fetchHistoricalData(symbol: string, time_from: number, time_to: number, resolution: ResolutionString, onResult: DatafeedGetBarsOnResultCallBack) {
+    const TV_LINK = `/api/tv/tradingView/history?symbol=${symbol}&from=${time_from}&to=${time_to}&resolution=${resolution}`;
     const res3 = await fetch(TV_LINK).then(response => response.json());
 
     const barsData: { t: number; c: number; o: number; h: number; l: number; v: number }[] = [];
 
     (res3.t || []).forEach((t, i) => {
-      if (t >= from && t <= to) {
+      if (t >= time_from && t <= time_to) {
         barsData.push({
-          // t: t * 1000,
           t: t * 1000,
           c: +res3.c[i],
           o: +res3.o[i],
@@ -158,59 +263,30 @@ export default class Datafeed implements IDatafeedChartApi {
       }
     });
 
-    if (firstDataRequest) {
-      this._options.onDataLoading?.();
+    if (this._options.onDataLoading) {
+      this._options.onDataLoading();
     }
+
     try {
-      // const response = await http({
-      //   url,
-      //   method: 'get',
-      //   options: {
-      //     body: {
-      //       symbol: isKLine ? EXCHANGE_ID + '.' + symbolInfo.name.toUpperCase() : symbolInfo.ticker,
-      //       interval: getReqIntervalFromResolution(resolution),
-      //       from: start,
-      //       to: end
-      //       // limit // 默认写的固定值需要调整
-      //     },
-      //     cancelToken: new axios.CancelToken(cancel => {
-      //       this._requestCancels.push(cancel);
-      //     })
-      //   }
-      // });
-      // const content = response.data ?? {};
       const bars: DatafeedBar[] = [];
-      // if (content.code === 200) {
       const data = barsData ?? [];
       const volumeUnit = this._options.volumeUnit;
       for (let i = 0; i < data.length; i++) {
         const d = data[i];
         const time = d.t;
-        if (time <= end && time >= start) {
+        if (time <= time_to && time >= time_from) {
           const open = Number(d.o);
           const close = Number(d.c);
           bars.push({
             time,
-            // 时间戳字段适配基础版k线数据
             timestamp: time,
             open,
             high: Number(d.h),
             low: Number(d.l),
             close,
             volume: d.v,
-            // volume: +volumeConversion(
-            //   volumeUnit,
-            //   symbolInfo.volume_multiplier,
-            //   +d.v,
-            //   (open + close) / 2,
-            //   symbolInfo.volume_precision!
-            // )
           });
         }
-      }
-      // }
-      if (firstDataRequest) {
-        this._lastData = bars[bars.length - 1] ?? null;
       }
       onResult(bars, { noData: bars.length === 0 });
     } catch (e) {
@@ -218,6 +294,7 @@ export default class Datafeed implements IDatafeedChartApi {
     }
     this._options.onDataLoadEnd?.();
   }
+
   private _onTickCallback: DatafeedSubscribeOnTickCallback | null = null;
 
   subscribeBars(
@@ -230,117 +307,11 @@ export default class Datafeed implements IDatafeedChartApi {
     _onResetCacheNeededCallback: () => void
   ): void {
     const isIndexPrice = this._options.priceType === 1;
-
-    const interval = getReqIntervalFromResolution(resolution);
-
-    const key = isIndexPrice ? 'indexKline_source' : 'kline_source';
     this._onTickCallback = onTick;
-    // console.log("Accessing updated data in subscribeBars:", this._updatedData);
-    // const callback = (response: any) => {
-    //   console.log('订阅响应:', response);
-    // };
-
-
-    // 使用 getDataAfterSubscription 方法来处理推送的数据
-    
-//     const ids = ['BTC-USDT'];
-
-// // 可选的 r 参数
-// const r = 1;
-//     // 调用 subscribe4001 方法
-//     WS.subscribe4001(ids, r, callback);
-    
-    // useWs(SUBSCRIBE_TYPES.ws4001, (data) =>{
-
-    //   console.log("data===========",data)
-
-    // });
-
-
-    // operator.unsubscribe(key);
-    // operator.subscribe(key, (data) => {
-    //   const result = data[isIndexPrice ? `indexKline_${symbolInfo.name}_${interval}` : `kline_${EXCHANGE_ID}${symbolInfo.name}_${interval}`];
-    //   if (!result) {
-    //     return;
-    //   }
-    //   const volumeUnit = this._options.volumeUnit;
-    //   const open = Number(result.o);
-    //   const close = Number(result.c);
-    //   const bar: DatafeedBar = {
-    //     time: result.t,
-    //     timestamp: result.t,
-    //     open,
-    //     high: Number(result.h),
-    //     low: Number(result.l),
-    //     close,
-    //     volume: +(volumeConversion(
-    //       volumeUnit,
-    //       symbolInfo.volume_multiplier,
-    //       +result.v,
-    //       (open + close) / 2,
-    //       symbolInfo.volume_precision!
-    //     ))
-    //   };
-    //   let isBroken = false;
-    //   if (this._lastData) {
-    //     if (bar.time === this._lastData.time) {
-    //       this._lastData = { ...bar };
-    //     } else {
-    //       if (bar.time > this._lastData.time) {
-    //         const period = interval.replace(/\d+/g, '');
-    //         const diff = parseInt(resolution);
-    //         // const diff * 60 * 1000
-    //         switch (period) {
-    //           case 'm': {
-    //             if (bar.time - this._lastData.time > diff * 60 * 1000) {
-    //               isBroken = true;
-    //             }
-    //             break;
-    //           }
-    //           case 'h': {
-    //             if (bar.time - this._lastData.time > diff * 60 * 60 * 1000) {
-    //               isBroken = true;
-    //             }
-    //             break;
-    //           }
-    //           case 'd': {
-    //             if (bar.time - this._lastData.time > diff * 24 * 60 * 60 * 1000) {
-    //               isBroken = true;
-    //             }
-    //             break;
-    //           }
-    //           case 'w': {
-    //             const lastDate = dayjs(this._lastData.time).tz('Asia/Shanghai');
-    //             const barDate = dayjs(bar.time).tz('Asia/Shanghai');
-    //             if (barDate.day() !== 1 || (lastDate.diff(barDate, 'week', true) > diff)) {
-    //               isBroken = true;
-    //             }
-    //             break;
-    //           }
-    //           case 'M': {
-    //             const lastDate = dayjs(this._lastData.time).tz('Asia/Shanghai');
-    //             const barDate = dayjs(bar.time).tz('Asia/Shanghai');
-    //             if (barDate.date() !== 1 || (lastDate.diff(barDate, 'month', true) > diff)) {
-    //               isBroken = true;
-    //             }
-    //             break;
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    //   if (isBroken) {
-    //     operator.unsubscribe(key);
-    //     this._options.brokenNotify();
-    //   } else {
-    //      this._lastData = { ...bar };
-    //      onTick(bar);
-    //   }
-    // });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  unsubscribeBars(_listenerGuid: string): void {}
+  unsubscribeBars(_listenerGuid: string): void { }
 
   setPriceType(priceType: number): boolean {
     if (this._options.priceType !== priceType) {
@@ -357,10 +328,10 @@ export default class Datafeed implements IDatafeedChartApi {
     }
     return false;
   }
-    // 实时更新数据
-    updateData(data) {
-      // console.log("实时更新数据data",data)
-      this._updatedData = data;
+
+  // 实时更新数据
+  updateData(data) {
+    this._updatedData = data;
     if (this._onTickCallback) {
       const bar: DatafeedBar = {
         time: data.t * 1000,
@@ -373,13 +344,13 @@ export default class Datafeed implements IDatafeedChartApi {
       };
       this._onTickCallback(bar);
     }
-    }
+  }
 
   cancel() {
     this._requestCancels.forEach(cancel => {
       try {
         cancel('');
-      } catch {}
+      } catch { }
     });
     this._requestCancels = [];
   }

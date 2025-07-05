@@ -35,15 +35,14 @@ const styles = css`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: var(--theme-font-color-2);
-    background-color: var(--theme-tips-color);
+    color: var(--text_2);
+    background-color: var(--fill_3);
     border-radius: 8px;
     height: 30px;
-    padding: 2px;
     .buy-wrapper,
     .sell-wrapper {
       flex: 1;
-      height: 24px;
+      height: 30px;
       position: relative;
       cursor: pointer;
       display: flex;
@@ -53,11 +52,11 @@ const styles = css`
     }
     .buy-wrapper.active {
       background-color: var(--color-green);
-      color: #fff;
+      color: var(--text_white);
     }
     .sell-wrapper.active {
       background-color: var(--color-red);
-      color: #fff;
+      color: var(--text_white);
     }
   }
 `;

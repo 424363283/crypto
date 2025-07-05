@@ -22,7 +22,7 @@ export const ForgetButton = (props: any) => {
       } else {
         store.showForgetEntry = false;
         store.showForgetStep = true;
-        
+
         store.showGaVerify = result.data.verify_ga;
       }
     } catch (error: any) {
@@ -32,11 +32,12 @@ export const ForgetButton = (props: any) => {
   return (
     <Button
       type='primary'
-      style={{ marginTop: '30px', width: '100%', padding: '14px 0' }}
+      height={56}
+      style={{ marginTop: '16px', width: '100%', padding: '14px 0', borderRadius: '56px' }}
       onClick={handleEmailForget}
       disabled={shouldDisableBtn}
     >
-      {LANG('提交')}
+      {LANG('下一步')}
     </Button>
   );
 };

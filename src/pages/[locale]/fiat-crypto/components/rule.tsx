@@ -59,7 +59,7 @@ const Rule = () => {
     <div className='rule'>
       <h3>
         <span>{LANG('常见问题')}</span>
-        <Zendesk className='rule-a' href='/sections/5715223197967-Buy-Crypto'>
+        <Zendesk className='rule-a' href='/sections/11306769511567-Buy-Crypto'>
           {LANG('更多问题')}
         </Zendesk>
       </h3>

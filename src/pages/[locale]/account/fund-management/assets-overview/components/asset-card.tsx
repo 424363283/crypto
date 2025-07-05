@@ -18,19 +18,26 @@ const HeaderAssetCard = memo(
 export default HeaderAssetCard;
 const styles = css`
   .assets-overview-card {
-    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.05);
-    border-radius: 15px;
+    border-radius: 8px;
     width: 100%;
     height: 100%;
     z-index: 11;
     position: relative;
+    padding: 24px;
+    display: flex ;
+    flex-direction: column;
     @media ${MediaInfo.desktop} {
-      margin-right: 20px;
       overflow-x: auto;
-      background-color: var(--theme-background-color-2);
+      overflow-y: hidden;
+      background-color: var(--fill_bg_1);
     }
-    @media ${MediaInfo.tablet} {
-      background-color: var(--theme-background-color-2);
+    
+    @media ${MediaInfo.mobileOrTablet} {
+      // box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.05);
+      margin:auto;
+      background-color: var(--fill_bg_1);
+      padding: 16px;
+      width: calc( 100% - 24px );
     }
   }
 `;

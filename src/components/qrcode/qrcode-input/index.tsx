@@ -31,7 +31,7 @@ const QrcodeInput: FC<QrcodeInputProps> = ({ text, isShowQR = true }) => {
             }}
           >
             <div className='button'>
-              <CommonIcon name='common-copy-2-yellow-0' width={14} height={16} enableSkin />
+              <CommonIcon size={16} name='common-copy' enableSkin />
             </div>
           </CopyToClipboard>
           {isShowQR && (

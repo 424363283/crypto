@@ -17,6 +17,7 @@ type StoreType = Store<{
   priceProtection: { u: boolean; c: boolean };
   unitMode: { u: string; c: string };
   walletId: { u: string; c: string };
+  isCopyTrader: { u: string; c: string };
   cryptoDataMap: Map<string, SwapTradeItem>;
   depth: { sell1Price: number; buy1Price: number };
   agreement: { loading: boolean; allow: boolean };
@@ -97,6 +98,7 @@ export class InfoField {
   }
   getWalletId(usdt: boolean, { withHooks = true }: { withHooks?: boolean } = {}): string {
     const { c, u } = withHooks ? this.store.walletId : this.store.getSnapshot('walletId');
+    
     if (isSwapDemo()) {
       return 'W001';
     }
@@ -161,7 +163,7 @@ export class InfoField {
   }
 
   getLeverFindData(id: string, { withHooks = true }: { withHooks?: boolean } = {}) {
-    return (withHooks ? this.store.leverFindData : this.store.getSnapshot('leverFindData'))[id] || { leverageLevel: 10, marginType: 0 };
+    return (withHooks ? this.store.leverFindData : this.store.getSnapshot('leverFindData'))[id] || { leverageLevel: 10, leverageLevelBuy: 10, leverageLevelSell: 10,marginType: 0 };
   }
   getIsCross(id: string, { withHooks = true }: { withHooks?: boolean } = {}) {
     return this.getLeverFindData(id, { withHooks }).marginType === 1;

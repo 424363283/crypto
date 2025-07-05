@@ -14,11 +14,11 @@ const SearchInput = ({ onChange, value }: { onChange: (value: string) => void; v
   };
   return (
     <div className={clsx('search-input', isFocus && 'focus')}>
-      <Image className='icon' src='/static/images/account/security-setting/search.png' alt='' width='14' height='14' />
+      <Image className='icon' src='/static/images/account/security-setting/search.svg' alt='' width='14' height='14' />
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={LANG('Search')}
+        placeholder={LANG('搜索币种')}
         onFocus={_focus}
         onBlur={_blur}
       />
@@ -31,27 +31,27 @@ export default SearchInput;
 const styles = css`
   .search-input {
     width: 100%;
-    height: 37px;
-    border-radius: 5px;
+    height: 32px;
+    border-radius: 16px;
     display: flex;
     flex-direction: row;
     align-items: center;
     padding: 0 10px;
-    background-color: var(--theme-background-color-disabled-dark);
+    background-color: var(--fill_3);
     .icon {
       user-select: none;
       width: 16px;
       height: 16px;
     }
     input {
-      background-color: var(--theme-background-color-disabled-dark);
+      background-color: var(--fill_3);
       padding-left: 10px;
       flex: 1;
       font-size: 14px;
       border: 0;
       outline: none;
       width: 0;
-      color: var(--theme-font-color-3);
+      color: var(--text_1);
     }
   }
 `;

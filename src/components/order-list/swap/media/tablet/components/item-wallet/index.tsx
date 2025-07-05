@@ -19,7 +19,7 @@ export const ItemWallet = ({ wallet }: { wallet: any }) => {
         />
       )}
       <div className={clsx(!isDemo && 'text')}>
-        {!isDemo ? Swap.Assets.walletFormat(wallet)?.alias : LANG('模拟交易账户')}
+        {!isDemo ? LANG(Swap.Assets.walletFormat(wallet)?.alias) : LANG('模拟交易账户')}
       </div>
       <style jsx>
         {`

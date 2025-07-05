@@ -1,5 +1,5 @@
 import { useTheme } from '@/core/hooks';
-
+import YIcon from '@/components/YIcons';
 import { AddIcon } from './icon/add';
 import { MinuIcon } from './icon/minus';
 
@@ -16,11 +16,7 @@ const Add = (props: any) => {
         onMouseUp={props.onMouseUp}
         className={clsx('btn-control', 'btn-plus', !isDark && 'light')}
       >
-        <div>
-          <div className={clsx('svg')}>
-            <AddIcon width='13' height='13' alt='numeric-input-plus' />
-          </div>
-        </div>
+        <YIcon.plusIcon />
       </div>
       {styles}
     </>
@@ -36,11 +32,7 @@ const Minus = (props: any) => {
       onMouseUp={props.onMouseUp}
       className={clsx('btn-control', 'btn-minus', !isDark && 'light')}
     >
-      <div>
-        <div className={clsx('svg')}>
-          <MinuIcon width='13' height='13' alt='numeric-input-minus' />
-        </div>
-      </div>
+      <YIcon.minusIcon />
     </div>
   );
 };

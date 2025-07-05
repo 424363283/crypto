@@ -11,7 +11,7 @@ const LoginSwitchLoginReg = () => {
       <span className='switch-login-reg-tips'>
         {LANG('还没有账号吗')}？
         <TrLink href={`/${ROUTE_PATH_KEY.REGISTER}`} className='bottom-link'>
-          &nbsp;&nbsp;{LANG('注册')}
+          {LANG('立即注册')}
         </TrLink>
       </span>
       <style jsx>{styles}</style>
@@ -25,17 +25,19 @@ const styles = css`
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    margin: 24px 0;
     :global(.bottom-link) {
       font-size: 14px;
       font-weight: 400;
-      color: var(--skin-main-font-color);
+      color: var(--text_brand);
+      margin-left: 8px;
     }
     .switch-login-reg-tips {
       text-align: center;
       font-size: 14px;
       font-weight: 400;
-      color: var(--theme-font-color-3);
+      color: var(--text_2);
       @media ${MediaInfo.mobile} {
         margin-top: 16px;
       }

@@ -1,14 +1,19 @@
 import CommonIcon from '@/components/common-icon';
-import { useTheme } from '@/core/hooks';
+import { useTheme, useResponsive } from '@/core/hooks';
 import { clsx } from '@/core/utils';
 
 const ModalClose = ({ className, onClose }: { className?: string; onClose?: any }) => {
   const { isDark } = useTheme();
+  const { isMobile } = useResponsive();
   return (
     <>
       <div className={clsx('close-wrapper', className)}>
         <div className={clsx('close', className)} onClick={onClose}>
-          <CommonIcon name='common-close-filled' size={24} enableSkin />
+          <CommonIcon
+            name={isMobile ? 'common-modal-close' : 'common-close-filled-0'}
+            size={isMobile ? 16 : 24}
+            enableSkin
+          />
         </div>
       </div>
       <style jsx>{`

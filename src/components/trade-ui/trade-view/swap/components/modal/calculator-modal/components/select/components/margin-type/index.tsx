@@ -1,6 +1,7 @@
 import { LANG } from '@/core/i18n';
 import Select from '../..';
 import { store } from '../../../../store';
+import { Layer } from '@/components/constants';
 
 export const MARGIN_TYPES = {
   ALL: 'all',
@@ -9,6 +10,7 @@ export const MARGIN_TYPES = {
 export const MarginType = (props: any) => {
   return (
     <Select
+      layer={Layer.Overlay}
       value={store.marginType}
       onChange={(v) => (store.marginType = v)}
       options={[

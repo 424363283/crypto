@@ -1,3 +1,5 @@
+import CommonIcon from '@/components/common-icon';
+import { Layer } from '@/components/constants';
 import { useTheme } from '@/core/hooks';
 import type { MenuProps } from 'antd';
 import { Dropdown } from 'antd';
@@ -8,25 +10,28 @@ interface Props {
   label?: string;
   onChange: (name: string) => void;
   list: { id: string; name: string }[];
+  layer?: Layer;
 }
 
-const QuoteSelect = ({ value, label, onChange, list }: Props) => {
+const QuoteSelect = ({ value, label, onChange, list, layer = Layer.Default }: Props) => {
   const { theme } = useTheme();
-
   const items: MenuProps['items'] = list.map((item) => {
     return {
       id: item.id,
       key: item.name,
-      label: <div onClick={() => onChange(item.id)}>{item.name}</div>,
+      label: <div className='select-item' onClick={() => onChange(item.id)}>{item.name}</div>,
     };
   });
 
   return (
     <div className={theme as string}>
-      <Dropdown menu={{ items }} trigger={['click']} overlayClassName={theme}>
-        <div className={`title ${label ? 'hasLabel' : ''}`}>
-          {label && <span>{label}</span>}
-          <span>{value}</span>
+      <Dropdown menu={{ items }} trigger={['click']} overlayClassName={`${theme} overlay-layer${layer}`}>
+        <div className={`title ${label ? 'hasLabel' : ''}`} >
+          {label && <span className='label'>{label}</span>}
+          <div className='content'>
+            <span className='value'>{value}</span>
+            <CommonIcon name='common-tiny-triangle-down' size={16} />
+          </div>
         </div>
       </Dropdown>
       <style jsx>{styles}</style>
@@ -37,17 +42,30 @@ const QuoteSelect = ({ value, label, onChange, list }: Props) => {
 export default QuoteSelect;
 const styles = css`
   .title {
-    background: var(--theme-trade-tips-color);
-    height: 28px;
-    line-height: 28px;
-    border-radius: 2px;
-    margin-bottom: 14px;
-    padding: 0 30px 0 15px;
+    background: var(--fill_input_2);
+    height: 40px;
+    border-radius: 8px;
+    padding: 12px 16px;
     display: flex;
     justify-content: center;
-    color: var(--theme-font-color-1);
+    color: var(--text_1);
     font-weight: 500;
     cursor: pointer;
+    .content {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 4px;
+      flex: 1 0 0;
+      .value {
+        color: var(--text_1);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        flex: 1 0 0;
+      }
+    }
     &.hasLabel {
       justify-content: space-between;
     }
@@ -67,16 +85,27 @@ const styles = css`
       }
     }
   }
+  :global(.select-item) {
+    height: 28px;
+    cursor: pointer;
+    text-align: left;
+    line-height: 28px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text_1);
+    margin-bottom: 1px;
+    padding: 0 16px;
+    &:hover,
+    &.active {
+      color: var(--text_brand);
+      font-weight: 500;
+    }
+  }
   :global(.ant-dropdown) {
     max-height: 300px;
     overflow-y: auto;
     box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.2);
     text-align: center;
-  }
-  :global(.ant-dropdown.dark ul) {
-    background: var(--theme-trade-tips-color);
-  }
-  :global(.ant-dropdown.dark li) {
-    color: #fff !important;
+    border-radius: 8px;
   }
 `;

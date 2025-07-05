@@ -1,5 +1,8 @@
+import { useMemo } from 'react';
 import { LANG } from '@/core/i18n';
+import { MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
+import { useResponsive } from '@/core/hooks';
 
 export type ResultItem = [string, string];
 
@@ -9,21 +12,27 @@ interface Props {
 }
 
 const CalculatorResult = ({ results, tips }: Props) => {
+  const { isMobile } = useResponsive();
+  const data = useMemo(
+    () =>
+      results.map(([label, value], index) => {
+        return (
+          <div className="row" key={index}>
+            <div>{label}</div>
+            <div>{value}</div>
+          </div>
+        );
+      }),
+    [results]
+  );
   return (
     <>
-      <div className='result'>
-        <div className='result-content'>
-          <div className='title'>{LANG('计算结果')}</div>
-          {results.map(([label, value], index) => {
-            return (
-              <div className='row' key={index}>
-                <div>{label}</div>
-                <div>{value}</div>
-              </div>
-            );
-          })}
+      <div className="result">
+        <div className="result-content">
+          <div className="title">{LANG('计算结果')}</div>
+          {isMobile ? <div className="content">{data}</div> : data}
         </div>
-        {tips && <div className='tips'>{tips}</div>}
+        {tips && <div className="tips">{tips}</div>}
       </div>
       <style jsx>{styles}</style>
     </>
@@ -33,35 +42,72 @@ const CalculatorResult = ({ results, tips }: Props) => {
 export default CalculatorResult;
 const styles = css`
   .result {
-    flex: 1;
-    padding: 20px;
-    background: var(--theme-trade-tips-color);
     display: flex;
+    padding: 24px;
     flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    background: var(--fill_1);
+    border-radius: 16px;
+    flex: 1 0 0;
+    @media ${MediaInfo.mobile} {
+      margin-top: 1rem;
+      padding: 0;
+      padding-top: 1rem;
+      border-top: 1px solid var(--fill_line_1);
+      border-radius: 0;
+      background: none;
+    }
     .result-content {
-      flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
+      align-items: flex-start;
+      align-self: stretch;
+      flex: 1 0 0;
+      gap: 24px;
+      @media ${MediaInfo.mobile} {
+        gap: 1rem;
+        :global(.content) {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          width: -webkit-fill-available;
+          border-radius: 8px;
+          padding: 12px;
+          background: var(--fill_1);
+          gap: 1rem;
+        }
+        :global(.row) {
+          display: flex;
+          justify-content: space-between;
+          width: -webkit-fill-available;
+          :global(div) {
+            color: var(--text_2);
+          }
+          :global(div:last-child) {
+            color: var(--text_1);
+          }
+        }
+      }
       .title {
-        line-height: 14px;
-        font-size: 14px;
-        font-weight: 400;
-        color: #ffffff;
-        margin-bottom: 34px;
+        color: var(--text_1);
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
       }
       .row {
         display: flex;
-        flex-direction: row;
         justify-content: space-between;
-        margin-bottom: 17px;
+        align-items: flex-start;
+        align-self: stretch;
         > div {
           font-size: 14px;
           line-height: 14px;
           font-weight: 400;
-          color: var(--theme-font-color-2);
+          color: var(--text_2);
           &:nth-child(2) {
-            color: var(--theme-font-color-1);
+            color: var(--text_1);
           }
         }
       }

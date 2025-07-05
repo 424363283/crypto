@@ -5,8 +5,6 @@ import dayjs from 'dayjs';
 import { checkIsUsdtType } from '../../../assets-overview/helper';
 import { SWAP_FUNDS_TYPES } from '../constants';
 
-import { isSwapDemo } from '@/core/utils/src/is';
-const _isSwapDemo = isSwapDemo();
 type SwapAssetsFlowItem = {
   amount: string;
   currency: string;
@@ -42,19 +40,19 @@ export const useAssetsFlowColumns = () => {
         </div>
       ),
     },
-    {
-      title: LANG('子钱包账户'),
-      dataIndex: 'subWallet',
-      render: (v: string, item: any) => {
-        return (
-          <span>
-            {_isSwapDemo
-              ? LANG('模拟交易账户')
-              : item?.alias || Swap.Assets.getWallet({ walletId: v, usdt: isUsdtType, withHooks: false })?.alias}
-          </span>
-        );
-      },
-    },
+    // {
+    //   title: LANG('子钱包账户'),
+    //   dataIndex: 'subWallet',
+    //   render: (v: string, item: any) => {
+    //     return (
+    //       <span>
+    //         {_isSwapDemo
+    //           ? LANG('模拟交易账户')
+    //           : item?.alias || Swap.Assets.getWallet({ walletId: v, usdt: isUsdtType, withHooks: false })?.alias}
+    //       </span>
+    //     );
+    //   },
+    // },
     {
       title: LANG('类型'),
       dataIndex: 'type',

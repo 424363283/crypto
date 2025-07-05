@@ -32,13 +32,38 @@ const styles = css`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-right: 35px;
-    height: 60px;
     cursor: pointer;
-    color: var(--theme-font-color-3);
-    font-size: 16px;
-    @media ${MediaInfo.mobile} {
+    color: var(--text_2);
+    line-height: 14px;
+    font-size: 14px;
+    font-weight: 400;
+    &.xs {
+      line-height: 12px;
+      font-size: 12px;
+    }
+    &.xs:not(.card) {
+      padding: 8px 0;
+    }
+    &.sm {
+      line-height: 14px;
       font-size: 14px;
+    }
+    &.sm:not(.card) {
+      padding: 8px 0;
+    }
+    &.lg {
+      line-height: 14px;
+      font-size: 14px;
+    }
+    &.lg:not(.card) {
+      padding: 12px 0;
+    }
+    &.xl {
+      line-height: 16px;
+      font-size: 16px;
+    }
+    &.xl:not(.card) {
+        padding: 16px 0;
     }
     > div {
       position: relative;
@@ -46,26 +71,46 @@ const styles = css`
       justify-content: center;
       align-items: center;
       height: 100%;
+      @media ${MediaInfo.mobile} {
+        height: auto;
+      }
     }
-
     &.active {
+      font-weight: 500;
       > div {
-        color: var(--theme-font-color-1);
-        font-size: 16px;
-        font-weight: 500;
+        color: var(--text_1);
+      }
+    }
+    &.line.active {
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: 0;
+        width: 37.5%;
+        height: 3px;
+        background: var(--text_brand);
+      }
+    }
+    &.card {
+      > div{
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: 1px solid var(--fill_line_1);
         @media ${MediaInfo.mobile} {
-          font-size: 14px;
-        }
-        &::after {
-          content: '';
-          display: block;
-          position: absolute;
-          bottom: 0;
-          width: 100%;
-          height: 3px;
-          background: var(--skin-primary-color);
+           padding: 5px 8px;
         }
       }
     }
+    &.card.active {
+      > div {
+        color: var(--text_1);
+        background: var(--fill_1);
+        border: 1px solid var(--fill_1);
+      }
+    }
+  }
+  .tab:not(.card) {
+    padding: 12px 0;
   }
 `;

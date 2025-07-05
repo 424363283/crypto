@@ -6,10 +6,14 @@ import { useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
 import { BasicInput } from '../../basic-input';
 import { store } from '../store';
+import { Intent, Size } from '@/components/constants';
+import { useResponsive } from '@/core/hooks';
+
 type BasicInputPropsOptional = Partial<Pick<BasicInputProps, 'type' | 'label'>> &
   Omit<BasicInputProps, 'type' | 'label'>;
 
 export const InputPhone = (props: BasicInputPropsOptional) => {
+  const { isMobile } = useResponsive();
   const [val, setVal] = useState('');
   const { label, type, placeholder, showLabel, ...rest } = props;
   const onChange = (value: string) => {
@@ -24,8 +28,7 @@ export const InputPhone = (props: BasicInputPropsOptional) => {
   }, [val]);
   return (
     <div className='input-phone-container'>
-      {showLabel ? <p className='label'>{LANG('选择国家')}</p> : null}
-
+      {showLabel ? <p className='label'>{LANG('手机号码')}</p> : null}
       <div className='input-row'>
         <div className='select-country-container'>
           <SelectCountry small className='select-country' onChange={onCountrySelect} />
@@ -34,10 +37,13 @@ export const InputPhone = (props: BasicInputPropsOptional) => {
           label={''}
           type={type || INPUT_TYPE.PHONE}
           value={val}
-          {...rest}
+          size={isMobile ? Size.LG : Size.XL}
+          intent={Intent.PRIMARY}
+          clearable={true}
           className='phone-input'
           placeholder={placeholder || LANG('请输入手机号码')}
           onInputChange={onChange}
+          {...rest}
         />
       </div>
       <style jsx>{styles}</style>
@@ -46,36 +52,22 @@ export const InputPhone = (props: BasicInputPropsOptional) => {
 };
 const styles = css`
   .input-phone-container {
-    margin-bottom: 30px;
     .label {
       font-size: 14px;
       font-weight: 400;
       line-height: 16px;
-      color: var(--theme-font-color-1);
+      color: var(--text_3);
       margin-bottom: 12px;
     }
     .input-row {
       display: flex;
-      height: 48px;
+
       :global(.select-country-container) {
-        background-color: var(--theme-sub-button-bg);
-        padding: 5px 12px;
-        border-radius: 6px;
         margin-right: 10px;
-        display: flex;
-        align-items: center;
-        :global(.select-country) {
-          position: relative;
-          :global(.emulate-select-selected) {
-            color: var(--theme-font-color-1);
-          }
-          :global(.basic-input) {
-            padding-left: 10px;
-          }
-        }
       }
+      
       :global(.phone-input) {
-        margin-bottom: 30px;
+        margin-bottom: 24px;
         :global(.error-input-tips) {
           position: absolute;
           font-size: 12px;

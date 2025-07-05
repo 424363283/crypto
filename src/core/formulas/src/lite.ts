@@ -2,6 +2,7 @@ import { PositionSide } from '@/core/shared/src/lite/trade/types';
 // 简单合约
 export const LITE = {
   /**
+   * (未使用)
    * 最大保证金计算 = 杠杆可开数量 / 杠杆
    * @param amountRange 开仓量范围
    * @param leverRange 杠杆范围
@@ -17,6 +18,19 @@ export const LITE = {
     if (index > len - 1) index = len - 1;
     const amount = amountRange[index];
     return Math.trunc(+amount?.div(+leverage));
+  },
+   /**
+   * 最大保证金计算 = （可开最高保证金 / 选择杠杆）* 起始杠杆
+   * @param amountRange 保证金范围
+   * @param leverRange 杠杆范围
+   * @param lever 杠杆
+   */
+   maxLevelMargin: (amountRange: number[], leverRange: number[], leverage: number | string) => {
+    let minLever = leverRange[0];
+    let maxMargin = amountRange[1];
+    maxMargin = +maxMargin?.div(+leverage);
+    maxMargin = Math.trunc(+maxMargin?.mul(+minLever));
+    return maxMargin;
   },
   /**
    * 计算手续费 = 保证金 * 杠杆 * 手续费计算因子

@@ -27,7 +27,15 @@ export const useSendCaptchaCode = (type: LOCAL_KEY, scene: SENCE) => {
     if (isVerifySuccess) {
       resetCountdown();
     }
-    return () => resetCountdown(); // 安全认证成功后重置倒计时
+    const handleBeforeUnload = (e) => {
+      resetCountdown();
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      resetCountdown(); // 安全认证成功后重置倒计时
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, [isVerifySuccess]);
   // 在ui上让用户先选择国家再输入手机号的场景才需要拼接区号
   let newPhone: string = phone || defaultPhone;

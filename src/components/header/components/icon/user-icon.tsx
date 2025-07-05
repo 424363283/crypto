@@ -1,4 +1,5 @@
 import CommonIcon from '@/components/common-icon';
+import { Svg } from '@/components/svg';
 import { memo, useEffect, useState } from 'react';
 
 const UserIcon = memo(
@@ -6,23 +7,16 @@ const UserIcon = memo(
     const [hover, setIsHover] = useState(false);
     let name = hover ? 'header-user-active-0' : 'header-user';
     useEffect(() => {
-      if (iconActive) {
-        setIsHover(iconActive);
-      }
+      if (iconActive) setIsHover(iconActive);
     }, [iconActive]);
 
-    const onUserIconMouseLeave = () => {
-      setIsHover(false);
-    };
     return (
-      <CommonIcon
-        size={24}
-        name={name}
-        className={className}
-        onMouseEnter={() => setIsHover(true)}
-        onMouseLeave={onUserIconMouseLeave}
+      <Svg
+        src={'/static/icons/primary/header/user.svg'}
+        width={24}
+        height={24}
         onClick={onClick}
-        enableSkin={hover}
+        className={className}
       />
     );
   }

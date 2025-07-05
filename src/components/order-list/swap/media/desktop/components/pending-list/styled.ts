@@ -26,15 +26,9 @@ const { className, styles } = css.resolve`
     .cancel {
       cursor: pointer;
       display: flex;
-      justify-content: center;
+      justify-content: flex-end;
       align-items: center;
-      line-height: 0;
-      width: 20px;
-      height: 20px;
-      img {
-        width: 16px;
-        height: 16px;
-      }
+      padding: 0 16px;
     }
 
     .code {
@@ -52,6 +46,9 @@ const { className, styles } = css.resolve`
 
     .inline-block {
       display: inline-block;
+    }
+    .order-type-select-wrapper {
+      padding: 16px 24px;
     }
   }
 

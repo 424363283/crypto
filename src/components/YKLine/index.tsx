@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useMemo, useRef } from 'react';
 
 import Header from './Header';
@@ -7,6 +9,7 @@ import OriginalKLine from './StockChart/OriginalKLine';
 // import DepthChart from './DepthChart';
 import { getKineState } from '@/store/kline';
 import { SUPPORT_RESOLUTIONS } from './types';
+import { DeepChart } from '@/src/components/chart/k-chart/lib/deep-chart/index';
 
 // import { CandleType } from 'klinecharts';
 import { CandleType } from '@/components/YKLine/StockChart/OriginalKLine/index.esm';
@@ -19,18 +22,22 @@ import {
   STORAGE_KLINE_PRICE_TYPE_KEY,
   STORAGE_SHOW_LIQUIDATION_LINE_KEY,
   STORAGE_SHOW_POSIITION_TPSL_LINE_KEY,
+  STORAGE_SHOW_CURRENT_ENTRUST_LINE_KEY,
+  STORAGE_SHOW_COUNT_DOWN,
   KLinePriceType
 } from './types';
 
 import { ExchangeChartContextProvider } from './context';
 import { ChartRef } from './StockChart/types';
 
+import { useResponsive, useRouter, useTheme } from '@/core/hooks';
 import styles from './index.module.scss';
 
 
-export default function ExchangeChart({ originalKLineChartContainerId }: { originalKLineChartContainerId?: string }) {
+export default function ExchangeChart({ originalKLineChartContainerId,pricePrecision }:any) {
   const chartRef = useRef<ChartRef>(null);
-
+  const router = useRouter();
+  let { id, locale } = router.query;
   const [chartType, setChartType] = useState<ChartType>(() => {
     const type = +(localStorage.getItem(STORAGE_CHART_TYPE_KEY) ?? '0');
     if (type === ChartType.TradingView || type === ChartType.Original) {
@@ -83,6 +90,16 @@ export default function ExchangeChart({ originalKLineChartContainerId }: { origi
     return !!show;
   });
 
+  const [showCurrentEntrustLine, setShowCurrentEntrustLine] = useState(() => {
+    const show = +(localStorage.getItem(STORAGE_SHOW_CURRENT_ENTRUST_LINE_KEY) ?? '1');
+    return !!show;
+  });
+
+  const [showCountdown, setShowCountdown] = useState(() => {
+    const show = +(localStorage.getItem(STORAGE_SHOW_COUNT_DOWN) ?? '1');
+    return !!show;
+  });
+
 
   const [kLinePriceType, setKLinePriceType] = useState(() => {
     const type = +(localStorage.getItem(STORAGE_KLINE_PRICE_TYPE_KEY) ?? '0');
@@ -104,6 +121,8 @@ export default function ExchangeChart({ originalKLineChartContainerId }: { origi
       showHistoryOrderMark,
       showLiquidationLine,
       showPositionTPSLLine,
+      showCurrentEntrustLine,
+      showCountdown,
       setChartType: (type: ChartType) => {
         if (type === ChartType.Original || type === ChartType.TradingView) {
           localStorage.setItem(STORAGE_CHART_TYPE_KEY, `${type}`);
@@ -137,9 +156,17 @@ export default function ExchangeChart({ originalKLineChartContainerId }: { origi
       setShowPositionTPSLLine: (show: boolean) => {
         localStorage.setItem(STORAGE_SHOW_LIQUIDATION_LINE_KEY, show ? '1' : '0');
         setShowPositionTPSLLine(show);
+      },
+      setShowCurrentEntrustLine: (show: boolean) => {
+        localStorage.setItem(STORAGE_SHOW_CURRENT_ENTRUST_LINE_KEY, show ? '1' : '0');
+        setShowCurrentEntrustLine(show);
+      },
+      setShowCountdown: (show: boolean) => {
+        localStorage.setItem(STORAGE_SHOW_COUNT_DOWN, show ? '1' : '0');
+        setShowCountdown(show);
       }
     };
-  }, [chartType, originalKLineStyle, kLinePriceType, kLineResolution, showPositionLine, showHistoryOrderMark, showLiquidationLine, showPositionTPSLLine]);
+  }, [chartType, originalKLineStyle, kLinePriceType, kLineResolution, showPositionLine, showHistoryOrderMark, showLiquidationLine, showPositionTPSLLine, showCurrentEntrustLine, showCountdown]);
 
 
 
@@ -152,16 +179,16 @@ export default function ExchangeChart({ originalKLineChartContainerId }: { origi
     // return <OriginalKLine key="OriginalKLine" ref={chartRef} containerId={originalKLineChartContainerId}/>
     switch (chartType) {
       case ChartType.Original: {
-        return <OriginalKLine key="OriginalKLine" ref={chartRef} containerId={originalKLineChartContainerId} />;
+        return <OriginalKLine key="OriginalKLine" coinPricePrecision={pricePrecision}   ref={chartRef} containerId={originalKLineChartContainerId} />;
       }
       case ChartType.TradingView: {
         return (
-          <TradingView key="TradingView" ref={chartRef} />
+          <TradingView key="TradingView" coinPricePrecision={pricePrecision}   ref={chartRef} />
         );
       }
-      // case ChartType.Depth: {
-      //   return <DepthChart key="DepthChart"/>;
-      // }
+      case ChartType.Depth: {
+        return  '';
+      }
     }
   };
 

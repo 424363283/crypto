@@ -26,35 +26,31 @@ const styles = css`
     overflow: hidden;
     display: flex;
     flex-direction: row;
-    height: 30px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: var(--fill_3);
+    padding: 2px;
     div {
       cursor: pointer;
-      border: 1px solid var(--theme-trade-border-color-1);
       flex: 1;
       line-height: 28px;
       font-size: 14px;
       font-weight: 400;
-      color: var(--theme-trade-text-color-1);
+      color: var(--text_2);
       text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       &.active {
-        color: var(--theme-trade-dark-text-1);
+        color: var(--text_white);
         border-color: transparent;
-      }
-      &:nth-child(1) {
-        border-right: 0;
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
-      }
-      &:nth-child(2) {
-        border-left: 0;
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
+        border-radius: 8px;
       }
       &.active.green {
-        background-color: var(--color-green);
+        background-color: var(--green);
       }
       &.active.red {
-        background-color: var(--color-red);
+        background-color: var(--red);
       }
     }
   }

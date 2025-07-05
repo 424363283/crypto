@@ -209,4 +209,5 @@ export enum SpotGridPositionType {
 export enum LIST_TYPE {
   GRID,
   INVEST,
+  MARTIN,
 }

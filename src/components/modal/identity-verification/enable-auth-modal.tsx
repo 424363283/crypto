@@ -50,6 +50,7 @@ const EnableAuthenticationModal = ({
       title={LANG('安全验证')}
       cancelButtonProps={{ style: { display: 'none' } }}
       okButtonProps={{ style: { display: 'none' } }}
+      footer={null}
     >
       <div className='modal'>
         <div className='title'>{LANG('启用双重认证以提高您的账户安全，推荐绑定谷歌验证。')}</div>

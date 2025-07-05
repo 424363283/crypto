@@ -132,6 +132,7 @@ const styles = css`
     .box {
       max-width: var(--const-max-page-width);
       margin: 0 auto;
+      user-select: none;
     }
     overflow: hidden;
     border-radius: 0;

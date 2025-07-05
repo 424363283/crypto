@@ -1,13 +1,7 @@
-import { linkClassName, linkStyles } from '@/components/link';
-import { Svg } from '@/components/svg';
-import { InfoHover } from '@/components/trade-ui/common/info-hover';
-import Tooltip from '@/components/trade-ui/common/tooltip';
-import { getZendeskLink } from '@/components/zendesk';
 import { getCommonEtfCommodityApi } from '@/core/api';
-import { useRouter, useTheme } from '@/core/hooks';
+import { useRouter } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
-import { SUBSCRIBE_TYPES, useWs } from '@/core/network';
-import { DetailMap, Group, TradeMap } from '@/core/shared';
+import { FAVORITE_TYPE, Group, TradeMap, Swap } from '@/core/shared';
 import {
   formatDefaultText,
   getEtfCryptoInfo,
@@ -16,22 +10,42 @@ import {
   isSwapDemo,
   isSwapSLCoin,
   isSwapSLUsdt,
-  isSwapUsdt,
+  isSwapUsdt
 } from '@/core/utils';
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-use';
 import css from 'styled-jsx/css';
-import { FundingRateCountdown, FundingRateType } from '../../kline-header/components/funding-rate-countdown';
 import QuoteListDrawer from '../quote-list-drawer';
+import Star from '@/components/star';
+import CommonIcon from '@/components/common-icon';
+import { BottomModal, MobileModal } from '@/components/mobile-modal';
+import { Zendesk } from '@/components/zendesk';
+import SwapInfoDrawer from '../swap-info-drawer';
+import GuideModal from './guide';
+import SpotGuideModal from './spot-guide';
 
-export const Header = ({ isSpot = false }: { isSpot?: boolean }) => {
-  const [data, setData] = useState<DetailMap>();
+export const Header = ({ isSpot = false, isLite = false }: { isSpot?: boolean; isLite?: boolean }) => {
   const [quoteInfo, setQuoteInfo] = useState<any>();
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [helpVisible, setHelpVisible] = useState(false);
+  const [guideVisible, setGuideVisible] = useState(false);
+  const [spotGuideVisible, setSpotGuideVisible] = useState(false);
+  const [guide, setGuide] = useState({ show: false, index: 0 });
   const id = useRouter().query?.id as string;
-  useWs(SUBSCRIBE_TYPES.ws4001, (data) => setData(data));
 
-  const { isDark } = useTheme();
+  // const flagPrice = quoteInfo ? Swap.Socket.getFlagPrice(quoteInfo.symbol)?.toFormat(quoteInfo.pricePrecision) : '0'
+
+  const { isUsdtType } = Swap.Trade.base;
+
+  const guideList = [
+    [LANG('指南'), isUsdtType ? '/sections/11320601264783' : '/sections/11320601264783', -1],
+    [LANG('新手引导'), () => {}, -1],
+    // [LANG('交易规则'), _handleRuleModalVisible],
+    [LANG('实时资金费率'), '', 0],
+    [LANG('资金费率历史'), '', 1],
+    [LANG('风险保障基金'), '', 2],
+    [LANG('指数'), '', 3]
+  ];
 
   useEffect(() => {
     initQuoteInfo();
@@ -45,7 +59,7 @@ export const Header = ({ isSpot = false }: { isSpot?: boolean }) => {
     if (isSpot) {
       item = await TradeMap.getSpotById(id);
       const spotList = group.getSpotList;
-      const spotItem = spotList.find((item) => item.id === id);
+      const spotItem = spotList.find(item => item.id === id);
       spotItem && item && (item.fullname = spotItem.fullname);
       if (isSpotEtf(id)) {
         const resultEtfCommodityInfo = await getCommonEtfCommodityApi(id);
@@ -56,6 +70,8 @@ export const Header = ({ isSpot = false }: { isSpot?: boolean }) => {
 
         item.etfTitle = etfTitle;
       }
+    } else if (isLite) {
+      item = await TradeMap.getLiteById(id);
     } else {
       item = await TradeMap.getSwapById(id);
       const description = (!isDemoSwap ? isSwapUsdt : isSwapSLUsdt)(id)
@@ -66,95 +82,103 @@ export const Header = ({ isSpot = false }: { isSpot?: boolean }) => {
       item.description = description;
     }
     setQuoteInfo(item);
-  }, [id, isSpot]);
+  }, [id, isSpot, isLite]);
+
+  const getStarType = useCallback((id: string): FAVORITE_TYPE => {
+    if (isLite) return FAVORITE_TYPE.LITE;
+    if (isSwapCoin(id)) return FAVORITE_TYPE.SWAP_COIN;
+    if (isSwapUsdt(id)) return FAVORITE_TYPE.SWAP_USDT;
+    if (isSwapSLCoin(id)) return FAVORITE_TYPE.SWAP_COIN_TESTNET;
+    if (isSwapSLUsdt(id)) return FAVORITE_TYPE.SWAP_USDT_TESTNET;
+    return FAVORITE_TYPE.SPOT;
+  }, []);
 
   return (
     <>
-      <div className='container'>
-        <div className='row'>
-          <div className='left'>
-            <Svg
-              src={
-                isDark
-                  ? '/static/images/trade/header/collapse-mobile.svg'
-                  : '/static/images/trade/header/collapse-mobile-light.svg'
-              }
-              width='16'
-              height='13'
-              onClick={() => setDrawerVisible(true)}
-            />
-            <div className='marginLeft11 main-color'>
-              <h1>{id?.replace(/_|-/, '/')}</h1>
-              <div className='sub-color font12'>
-                {quoteInfo?.fullname
-                  ? `${formatDefaultText(quoteInfo?.coin)}(${formatDefaultText(
+      <div className="quote-header">
+        <div className="left" onClick={() => setDrawerVisible(true)}>
+          <CommonIcon name="common-collapse-mobile" className="icon" size={24} />
+          <div className="quoteInfo">
+            {isSpot ? (
+              <div>
+                <span className="main-color font16">{quoteInfo?.coin}</span>
+                {/* <span className="sub-color font14">/{quoteInfo?.quoteCoin}</span> */}
+              </div>
+            ) : isLite ? (
+              <span className="main-color font16">{quoteInfo?.coin}</span>
+            ) : (
+              <>
+                <h1>{quoteInfo?.name}</h1>
+                {/* <div className="sub-color font12">
+                  {quoteInfo?.fullname
+                    ? `${formatDefaultText(quoteInfo?.coin)}(${formatDefaultText(
                       quoteInfo?.etfTitle ? quoteInfo?.etfTitle : quoteInfo?.fullname
                     )})`
-                  : quoteInfo?.description}
-              </div>
-            </div>
-          </div>
-          <div className='right'>
-            <div>
-              <div className='sub-color font10'>{LANG('24H最高')}</div>
-              <div className='main-color font12'>{data?.maxPrice?.toFormat()}</div>
-            </div>
-            <div>
-              <div className='sub-color font10'>
-                {LANG('24H成交量')}({quoteInfo?.coin})
-              </div>
-              <div className='main-color font12'>{data?.volume?.toFormatUnit()}</div>
-            </div>
-          </div>
-        </div>
-        <div className='row marginTop10'>
-          <div className='left'>
-            <div>
-              <div className='main-color font20'>{data?.price?.toFormat()}</div>
-              <div className={`font12 ${data?.isUp ? 'main-raise' : 'main-fall'}`}>
-                ${data?.price?.toFormat()} {data?.rate}%
-              </div>
-            </div>
-          </div>
-          <div className='right'>
-            <div>
-              <div className='sub-color font10'>{LANG('24H最低')}</div>
-              <div className='main-color font12'>{data?.minPrice?.toFormat()}</div>
-            </div>
-            {quoteInfo?.description && (
-              <div>
-                <Tooltip
-                  placement='top'
-                  title={
-                    <>
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: LANG(
-                            '买方及卖方在下个资金时段要交换的资金费率。资金费率周期内(每 8 小时)每分钟计算一次溢价指数，并将溢价指数以时间加权平均的方式应用于计算资金费率。 {more}',
-                            {
-                              more: `<a target={'_blank'} class="${linkClassName} link" href="${getZendeskLink(
-                                '/articles/5699104130831'
-                              )}">${LANG('了解更多')}</a>`,
-                            }
-                          ),
-                        }}
-                      />
-                      {linkStyles}
-                    </>
-                  }
-                >
-                  <InfoHover componnet='span' className='info-label'>
-                    <span className='font12 sub-color'>{LANG('资金费率/倒计时')}</span>
-                  </InfoHover>
-                </Tooltip>
-                <div className='main-color font12'>
-                  {data?.isOpen ? <FundingRateCountdown type={FundingRateType.SWAP} /> : '--'}
-                </div>
-              </div>
+                    : quoteInfo?.description}
+                </div> */}
+              </>
             )}
           </div>
+          <CommonIcon name="common-tiny-triangle-down" size={24} />
         </div>
-        <QuoteListDrawer open={drawerVisible} onClose={() => setDrawerVisible(false)} isSpotPage={isSpot} />
+        <div className="right">
+          <Star code={id} type={getStarType(id)} width={24} height={24} inQuoteList />
+          {!isLite && (
+            <div className="guide" onClick={() => (isSpot ? setSpotGuideVisible(true) : setHelpVisible(true))}>
+              <CommonIcon size={24} name="common-info-book-0" />
+            </div>
+          )}
+        </div>
+        <QuoteListDrawer
+          open={drawerVisible}
+          onClose={() => setDrawerVisible(false)}
+          isSpotPage={isSpot}
+          isLitePage={isLite}
+        />
+        <SwapInfoDrawer
+          open={guide.show}
+          onClose={() => setGuide({ show: false, index: 0 })}
+          tabIndex={guide.index}
+          isUsdtType={isUsdtType}
+        />
+        <MobileModal visible={helpVisible} onClose={() => setHelpVisible(false)} type="bottom">
+          <BottomModal onConfirm={() => setHelpVisible(false)} title={LANG('Help Center')}>
+            <div className="guide-wrapper">
+              {guideList.map(([label, url, _query], index) => {
+                const props = {
+                  className: 'guide',
+                  onClick: () => {
+                    setHelpVisible(false);
+                  },
+                  children: <>{label}</>
+                };
+                if (typeof url === 'function') {
+                  return (
+                    <div
+                      key={index}
+                      {...props}
+                      onClick={() => {
+                        setHelpVisible(false);
+                        setGuideVisible(true);
+                      }}
+                    >
+                      {label}
+                    </div>
+                  );
+                } else if (url) {
+                  return <Zendesk key={index} href={url} {...props} />;
+                }
+                return (
+                  <div key={index} className="guide" onClick={() => setGuide({ show: true, index: _query })}>
+                    {label}
+                  </div>
+                );
+              })}
+            </div>
+          </BottomModal>
+        </MobileModal>
+        <GuideModal isShow={guideVisible} onClose={() => setGuideVisible(false)} />
+        <SpotGuideModal isShow={spotGuideVisible} onClose={() => setSpotGuideVisible(false)} />
       </div>
       <style jsx>{styles}</style>
     </>
@@ -162,60 +186,78 @@ export const Header = ({ isSpot = false }: { isSpot?: boolean }) => {
 };
 
 const styles = css`
-  .container {
-    .main-color {
-      color: var(--theme-font-color-1);
-    }
-    .sub-color {
-      color: var(--theme-font-color-3);
-    }
-    .font10 {
-      font-size: 10px;
-    }
-    .font12 {
-      font-size: 12px;
-    }
-    .font20 {
-      font-size: 20px;
-    }
-    .marginTop10 {
-      margin-top: 5px;
-    }
-    .row {
-      display: flex;
-      .left,
-      .right {
-        display: flex;
-        align-items: center;
-      }
-      .left {
-        flex: 3;
-      }
-      .right {
-        flex: 4;
-        justify-content: space-between;
-        > div {
-          &:first-child {
-            flex: 2;
-          }
-          &:last-child {
-            flex: 3;
-          }
-        }
-      }
-    }
-    .marginLeft11 {
-      margin-left: 11px;
-      h1 {
-        font-size: 14px;
-      }
-    }
-    .item {
+  .quote-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    height: 3rem;
+    border-bottom: 1px solid var(--fill_line_1);
+    padding: 0 1rem;
+    .left,
+    .right {
       display: flex;
       align-items: center;
-      > div {
-        height: 32px;
+    }
+    .left {
+      justify-content: flex-start;
+      gap: 8px;
+    }
+    .right {
+      justify-content: flex-end;
+      gap: 16px;
+    }
+    .quoteInfo {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      h1 {
+        font-size: 1.25em;
+        font-weight: 500;
+        color: var(--text_1);
       }
+    }
+    .quoteInfo,
+    .guide {
+      display: flex;
+    }
+  }
+  .main-color {
+    color: var(--text_1);
+  }
+  .sub-color {
+    color: var(--text_3);
+  }
+
+  .font12 {
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .font14 {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .font16 {
+    font-size: 16px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .guide-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    padding: 0 0.5rem;
+    :global(.guide) {
+      display: flex;
+      align-items: center;
+      padding: 0 1rem;
+      height: 3rem;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text_1);
+      width: 100%;
     }
   }
 `;

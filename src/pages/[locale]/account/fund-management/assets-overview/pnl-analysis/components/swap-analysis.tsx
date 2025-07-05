@@ -16,6 +16,11 @@ import { WalletType } from '../../components/types';
 import { HidePrice } from './hide-price';
 import { PnlListItem } from './pnl-list-item';
 import { SwapPnlDetailCard } from './swap-pnl-detail-card';
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
+import { DesktopOrTablet, Mobile } from '@/components/responsive';
+import { Svg } from '@/components/svg';
+import { MobileBottomSheet, MobileDateRangePicker } from '@/components/mobile-modal';
+
 const SwapOverviewCard = dynamic(() => import('./swap-overview-card'));
 const SwapDetailCard = dynamic(() => import('./swap-detail-card'));
 interface SwapProfits {
@@ -65,7 +70,7 @@ const CommonTabBar = () => {
     <TabBar
       options={[
         { label: LANG('U本位合约'), value: WalletType.ASSET_SWAP_U },
-        { label: LANG('币本位合约'), value: WalletType.ASSET_SWAP },
+        // { label: LANG('币本位合约'), value: WalletType.ASSET_SWAP },
       ]}
       value={curTab}
       onChange={onTabChange}
@@ -75,6 +80,8 @@ const CommonTabBar = () => {
 
 export default function SwapAnalysis() {
   const type = (getUrlQueryParams('type') as WalletType) || WalletType.ASSET_SWAP_U;
+  const account: keyof typeof WalletKey = getUrlQueryParams('account')?.toUpperCase();
+  const wallet = WalletKey[account] || (type === WalletType.ASSET_SWAP_U ? WalletKey.SWAP_U : '');
 
   const [eyeOpen, setEyeOpen] = useState(true);
   const [state, setState] = useImmer({
@@ -100,6 +107,7 @@ export default function SwapAnalysis() {
     startDate: dayjs(startDate).valueOf(),
     endDate: dayjs(endDate).valueOf(),
     type,
+    wallet
   });
   const symbolUnit = type === WalletType.ASSET_SWAP_U ? 'USDT' : 'USD';
 
@@ -107,7 +115,7 @@ export default function SwapAnalysis() {
     const getSwapProfitData = async () => {
       const PROFITS_REQUESTS: any = {
         [WalletType.ASSET_SWAP]: async () => await getSwapTotalProfitsApi(),
-        [WalletType.ASSET_SWAP_U]: async () => await getSwapUTotalProfitsApi(),
+        [WalletType.ASSET_SWAP_U]: async () => await getSwapUTotalProfitsApi({ subWallet: wallet }),
       };
       if (!PROFITS_REQUESTS.hasOwnProperty(type)) {
         return;
@@ -122,7 +130,7 @@ export default function SwapAnalysis() {
       }
     };
     getSwapProfitData();
-  }, [type]);
+  }, [type, account]);
 
   const onDateRangeChange = ({ startDate, endDate }: { startDate: string; endDate: string }) => {
     setState((draft) => {
@@ -134,6 +142,7 @@ export default function SwapAnalysis() {
     await getSwapPnlReports({
       start: dayjs(startDate).valueOf(),
       end: dayjs(endDate).valueOf(),
+      wallet: wallet
     });
   };
   const PNL_list = [
@@ -172,7 +181,8 @@ export default function SwapAnalysis() {
   const BASIC_PNL_DATA = [
     {
       name: LANG('总盈利'),
-      value: totalProfit > 0 ? `+${totalProfit.toFixed(2)} ${symbolUnit}` : totalProfit?.toFixed(2) + symbolUnit,
+      // value: totalProfit > 0 ? `+${totalProfit.toFixed(2)} ${symbolUnit}` : totalProfit?.toFixed(2) + symbolUnit,
+      value: `${totalProfit > 0 ? '+' + totalProfit.toFixed(2) : totalProfit?.toFixed(2)} ${symbolUnit}`,
       tips: LANG('期间所有已实现获利加总'),
     },
     {
@@ -182,7 +192,8 @@ export default function SwapAnalysis() {
     },
     {
       name: LANG('净盈利/亏损'),
-      value: +totalValue > 0 ? `+${totalValue} ${symbolUnit}` : totalValue + symbolUnit,
+      // value: +totalValue > 0 ? `+${totalValue} ${symbolUnit}` : totalValue + symbolUnit,
+      value: `${Number(totalValue) > 0 ? '+' + totalValue : totalValue} ${symbolUnit}`,
       tips: LANG('总盈利') + '-' + LANG('总亏损'),
     },
     {
@@ -213,15 +224,37 @@ export default function SwapAnalysis() {
 
   return (
     <div className='swap-analysis'>
-      <Nav title={LANG('盈亏分析详情')} />
-      <CommonTabBar />
+      {/* <CommonTabBar /> */}
       <SwapPnlDetailCard eyeOpen={eyeOpen} setEyeOpen={setEyeOpen} symbolUnit={symbolUnit} swapProfits={swapProfits} />
       <div className='swap-bottom-card'>
+        <DesktopOrTablet>
+          <SwapPnlRightColumn symbolUnit={symbolUnit} reportPnls={reportPnls} />
+        </DesktopOrTablet>
         <div className='left-column'>
           <div className='top-area'>
             <div className='filter-bar'>
-              <DateRangeSelector dayOptionWidth={105} onDateRangeChange={onDateRangeChange} />
-              <SearchButton onSearchClick={onSearchClick} />
+              <DateRangeSelector dayOptionWidth={86} onDateRangeChange={onDateRangeChange} />
+              <DesktopOrTablet>
+                <SearchButton onSearchClick={onSearchClick} />
+              </DesktopOrTablet>
+              <Mobile>
+                <MobileDateRangePicker
+                  startTime={dayjs(startDate)}
+                  endTime={dayjs(endDate)}
+                  onDateChange={(param: any) => {
+                    const [start, end] = param;
+                    onDateRangeChange({
+                      startDate: start.format('YYYY-MM-DD H:m:s'),
+                      endDate: end.format('YYYY-MM-DD H:m:s'),
+                    });
+                  }}
+                >
+                <div className="mobile-filter">
+                  <Svg src="/static/images/common/filter.svg" width={14} height={14} color={`var(--text_2)`} />
+                  <span>{LANG('筛选')}</span>
+                </div>
+                </MobileDateRangePicker>
+              </Mobile>
             </div>
             <div className='basic-pnl-container'>
               <BasicPnlCard />
@@ -241,7 +274,9 @@ export default function SwapAnalysis() {
             })}
           </div>
         </div>
-        <SwapPnlRightColumn symbolUnit={symbolUnit} reportPnls={reportPnls} />
+        <Mobile>
+          <SwapPnlRightColumn symbolUnit={symbolUnit} reportPnls={reportPnls} />
+        </Mobile>
       </div>
       <style jsx>{styles}</style>
     </div>
@@ -249,6 +284,9 @@ export default function SwapAnalysis() {
 }
 const styles = css`
   .swap-analysis {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     :global(.tab-bar) {
       border-bottom: none;
       padding: 0;
@@ -259,66 +297,83 @@ const styles = css`
       }
     }
     .swap-bottom-card {
-      margin-top: 27px;
       display: flex;
-      @media ${MediaInfo.mobileOrTablet} {
+      gap: 8px;
+      @media ${MediaInfo.mobile} {
         flex-direction: column;
+        width: 100%;
+        background: var(--fill_bg_1);
       }
       .left-column {
-        @media ${MediaInfo.tablet} {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-end;
-        }
+        display: flex;
+        flex: 1 auto;
+        height: 956px;
+        padding: 24px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+        flex-shrink: 0;
+        border-radius: 8px;
+        border: 1px solid var(--fill_line_1);
         @media ${MediaInfo.mobile} {
-          margin-bottom: 42px;
+          height: auto;
         }
         .top-area {
-          @media ${MediaInfo.mobileOrTablet} {
-            margin-right: 44px;
-          }
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          gap: 24px;
         }
-        .top-area,
         .bottom-area {
-          @media ${MediaInfo.mobileOrTablet} {
-            flex: 1;
-          }
+          width: 100%; 
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
         }
         .filter-bar {
           display: flex;
           align-items: center;
-          :global(.select-wrapper) {
-            margin-right: 5px;
-          }
-          :global(.search-button) {
-            margin-left: 5px;
+          justify-content: space-between;
+          gap: 8px;
+          .mobile-filter {
+            display: flex;
+            font-size: 12px;
+            align-items: center;
+            span {
+              color: var(--text_2);
+              padding-left: 5px;
+            }
           }
         }
         :global(.basic-pnl-container) {
           display: grid;
           grid-template-columns: repeat(2, 2fr);
-          grid-gap: 16px 8px;
-          margin-top: 20px;
-          margin-bottom: 20px;
+          grid-gap: 8px 8px;
           :global(.basic-pnl-card) {
-            border: 1px solid var(--theme-border-color-2);
-            width: 178px;
-            height: 81px;
             display: flex;
+            padding: 24px;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex: 1 0 0;
             border-radius: 8px;
+            background: var(--fill_2);
             :global(.title) {
-              color: var(--theme-font-color-3);
-              font-size: 12px;
-              border-bottom: 1px solid var(--theme-font-color-placeholder);
+              color: var(--text_2);
+              text-align: center;
+              font-size: 14px;
+              font-weight: 400;
+              line-height: 14px;
+              padding-bottom: 4px;
+              border-bottom: 1px dashed var(--text_2);
             }
             :global(.value) {
-              color: var(--theme-font-color-1);
-              font-size: 16px;
+              color: var(--text_1);
+              text-align: center;
+              font-size: 18px;
               font-weight: 500;
-              margin-top: 5px;
+              line-height: 18px; /* 100% */
             }
             :global(.value.green) {
               color: var(--color-green);
@@ -330,33 +385,47 @@ const styles = css`
         }
       }
       .right-column {
-        width: 100%;
-        @media ${MediaInfo.desktop} {
-          margin-left: 80px;
+        display: flex;
+        width: 720px;
+        padding: 24px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+        border-radius: 8px;
+        border: 1px solid var(--fill_line_1);
+        @media ${MediaInfo.mobile}{
+          width:auto;
+          padding: 12px;
         }
         .tab {
-          border-radius: 5px;
           display: flex;
+          padding: 8px;
           align-items: center;
-          min-width: 160px;
-          margin-bottom: 25px;
+          gap: 8px;
+          align-self: stretch;
+          border-radius: 30px;
+          background: var(--fill_3);
           .tab-item {
-            background-color: var(--theme-background-color-3);
-            cursor: pointer;
-            height: 26px;
             display: flex;
-            align-items: center;
+            padding: 12px 16px;
             justify-content: center;
-            padding: 2px 10px;
-            min-width: 80px;
-            font-size: 14px;
-            color: var(--theme-font-color-3);
-            border-radius: 5px;
+            align-items: center;
+            gap: 10px;
+            flex: 1 0 0;
+            border-radius: 8px;
+            color: var(--text_2);
+            cursor: pointer;
           }
           .tab-item.active {
-            height: 26px;
-            background-color: var(--skin-primary-color);
-            color: var(--skin-font-color);
+            display: flex;
+            padding: 12px 16px;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex: 1 0 0;
+            border-radius: 30px;
+            background: var(--brand);
+            color: var(--text_white);
           }
         }
         :global(.bottom-pagination) {

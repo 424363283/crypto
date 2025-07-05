@@ -71,7 +71,11 @@ const CryptoSelect = ({ options = [], value, onChange, label = '', screen }: any
   return (
     <div className={'content'}>
       <div className={'label'}>{LANG(label)}</div>
-      <Dropdown dropdownRender={(menu) => overlay} open={visible}>
+      <Dropdown dropdownRender={(menu) => overlay}
+       open={visible}
+      //  open={true}
+
+       >
         <div className={'select'} tabIndex={1} onFocus={_focus} onBlur={_blur}>
           {options[value]}
         </div>
@@ -83,11 +87,6 @@ const CryptoSelect = ({ options = [], value, onChange, label = '', screen }: any
 
 const styles = css`
   .overlay {
-    background: var(--theme-background-color-3-2);
-    border-radius: 4px;
-    min-width: 100px;
-    padding: 6px 10px;
-    margin-left: -32px;
   }
   .menus {
     max-height: 250px;
@@ -95,15 +94,16 @@ const styles = css`
     .menu {
       cursor: pointer;
       text-align: center;
-      line-height: 1.5;
+      line-height: 12px;
       font-size: 14px;
       font-weight: 400;
-      padding: 6px 0px;
-      color: var(--theme-font-color-3);
-      &.active {
-        color: var(--skin-primary-color) !important;
-        font-weight: 500;
-      }
+      padding: 10px 5px;
+      color: var(--text_2);
+      background:var(--fill_3);
+    }
+    .active {
+      color: var(--text_brand) !important;
+      font-weight: 500;
     }
   }
 
@@ -113,25 +113,29 @@ const styles = css`
     align-items: center;
     background: var(--theme-background-color-3-2);
     border-radius: 3px;
-    padding-left: 10px;
+    /* padding-left: 10px; */
     .label {
       font-size: 14px;
       color: var(--theme-font-color-1);
+      margin-right: 16px;
     }
     .select {
       position: relative;
       cursor: pointer;
       padding: 0 30px 0 15px;
-      height: 30px;
-      line-height: 30px;
+      height: 40px;
+      line-height: 40px;
       font-size: 14px;
-      color: var(--theme-font-color-3);
+      color: var(--text_1);
       min-width: 100px;
+      background:var(--fill_3);
+      border-radius: 8px;
+
       &::after {
         content: '';
         display: block;
         position: absolute;
-        top: 13px;
+        top: 18px;
         right: 10px;
         width: 0;
         height: 0;

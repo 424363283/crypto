@@ -100,6 +100,7 @@ const { className, styles } = css.resolve`
   }
 
   .menus {
+    background: var(--fill_3);
     .menu {
       cursor: pointer;
       text-align: left;

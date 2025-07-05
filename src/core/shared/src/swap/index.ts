@@ -63,8 +63,8 @@ export class Swap {
   /*
    * @param assets 是否全部资产页
    */
-  static useListener({ assets }: { assets?: boolean } = {}) {
-    const ws1050Throttle = new Throttle(() => {}, 200);
+  static useListener({ assets = false }: { assets?: boolean } = {}) {
+    const ws1050Throttle = new Throttle(() => { }, 200);
 
     useResso(Swap.Info.store);
     if (!assets) {
@@ -79,8 +79,8 @@ export class Swap {
         Swap.Socket.store.data1050 = { ...data };
       });
     });
-    useWs1060Position(() => {
-      const isUsdtType = Swap.Trade.base.isUsdtType;
+
+    const fetchPositionRelated = (assets: boolean, isUsdtType: boolean) => {
       if (assets) {
         Swap.Assets.fetchBalance(true);
         Swap.Order.fetchPosition(true);
@@ -91,6 +91,12 @@ export class Swap {
       Swap.Assets.fetchBalance(isUsdtType);
       Swap.Order.fetchPending(isUsdtType);
       Swap.Order.fetchPosition(isUsdtType);
+    }
+    useWs1060Position(() => {
+      const isUsdtType = Swap.Trade.base.isUsdtType;
+      //防止接口数据延迟1秒后再次执行请求
+      fetchPositionRelated(assets, isUsdtType);
+      setTimeout(fetchPositionRelated, 1000, assets, isUsdtType);
     });
     useWs1070((updates) => {
       const pendingU = [...Swap.Order.getPending(true)];
@@ -129,6 +135,11 @@ $axios.interceptors.request.use(async (request: any) => {
     if (walletId) {
       request.headers['ppw'] = walletId;
     }
+  }
+
+  const subWallet = request.params?.subWallet || request.data?.subWallet;
+  if (subWallet) {
+    request.headers['ppw'] = subWallet;
   }
   return request;
 });

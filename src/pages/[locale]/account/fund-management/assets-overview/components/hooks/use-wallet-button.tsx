@@ -8,49 +8,12 @@ import { Dropdown } from 'antd';
 import { memo, useCallback } from 'react';
 import { useImmer } from 'use-immer';
 import { WalletType } from '../types';
+import { Size } from '@/components/constants';
+import { Swap } from '@/core/shared';
+import { useAgreement } from '@/components/trade-ui/trade-view/swap/components/agreement';
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
+import { useCopyTradingSwapStore } from '@/store/copytrading-swap';
 
-const MobileActionButton = memo(({ onTransferClick }: { onTransferClick: () => void }) => {
-  const router = useRouter();
-  const items: any = [
-    {
-      label: LANG('提币'),
-      key: '0',
-      link: '/account/fund-management/asset-account/withdraw?code=USDT',
-    },
-    {
-      label: LANG('转账'),
-      key: '1',
-      link: '/account/fund-management/asset-account/transfer?code=USDT',
-    },
-  ];
-  const handleButtonClick = (item: any) => {
-    const selectedItem = items.find((i: any) => i.key === item.key);
-    router.push(selectedItem.link);
-  };
-  return (
-    <div className='mobile-action-button-wrapper'>
-      <Button type='primary' className='active'>
-        <TrLink
-          className={clsx('button')}
-          native
-          href='/account/fund-management/asset-account/recharge'
-          query={{ code: 'USDT' }}
-        >
-          {LANG('充值')}
-        </TrLink>
-      </Button>
-      <Button type='light-sub-2' className='button' onClick={() => onTransferClick()}>
-        {LANG('划转')}
-      </Button>
-      <Dropdown menu={{ items, onClick: handleButtonClick }} trigger={['click']}>
-        <div className='dropdown-btn'>
-          <span className='more'>{LANG('更多')}</span>
-          <CommonIcon name='common-arrow-down-0' size={12} />
-        </div>
-      </Dropdown>
-    </div>
-  );
-});
 const MobileSwapActionButton = memo(
   ({
     onTransferClick,
@@ -66,18 +29,16 @@ const MobileSwapActionButton = memo(
       {
         key: '0',
         label: LANG('划转'),
-
         link: '#',
-
         onClick: onTransferClick,
       },
 
-      {
-        key: '1',
-        label: LANG('创建子钱包'),
-        link: '#',
-        onClick: onWalletCreateClick,
-      },
+      // {
+      //   key: '1',
+      //   label: LANG('创建子钱包'),
+      //   link: '#',
+      //   onClick: onWalletCreateClick,
+      // },
     ];
     const handleButtonClick = (item: any) => {
       const selectedItem = items.find((i: any) => i.key === item.key);
@@ -95,7 +56,7 @@ const MobileSwapActionButton = memo(
             {LANG('交易')}
           </TrLink>
         </Button>
-        <Button type='light-sub-2'>
+        <Button >
           <TrLink className={clsx('button')} native href={'/convert'}>
             {LANG('闪兑')}
           </TrLink>
@@ -118,6 +79,7 @@ const ActionButton = memo(
     isTransfer,
     onTransferClick,
     onWalletCreateClick,
+    onTradeClick,
     query,
   }: {
     query?: { code: string };
@@ -127,11 +89,12 @@ const ActionButton = memo(
     isTransfer?: boolean;
     onTransferClick: () => void;
     onWalletCreateClick?: () => void;
+    onTradeClick?: () => void;
   }) => {
     if (isTransfer) {
       return (
         <div className='button-wrapper'>
-          <Button type='light-sub-2' className='button' onClick={() => onTransferClick()}>
+          <Button rounded size={Size.SM} onClick={() => onTransferClick()}>
             {label}
           </Button>
         </div>
@@ -140,7 +103,16 @@ const ActionButton = memo(
     if (onWalletCreateClick) {
       return (
         <div className='button-wrapper'>
-          <Button type='light-sub-2' className='button' onClick={() => onWalletCreateClick()}>
+          <Button size={Size.SM} rounded onClick={() => onWalletCreateClick()}>
+            {label}
+          </Button>
+        </div>
+      );
+    }
+    if (onTradeClick) {
+      return (
+        <div className='button-wrapper'>
+          <Button type={active && 'primary' || ''} size={Size.SM} rounded onClick={() => onTradeClick()}>
             {label}
           </Button>
         </div>
@@ -148,44 +120,64 @@ const ActionButton = memo(
     }
     return (
       <div className='button-wrapper'>
-        {active && (
-          <Button type='primary' className='active'>
-            <TrLink className={clsx('button')} native href={link} query={query}>
-              {label}
-            </TrLink>
-          </Button>
-        )}
-        {!active && (
-          <Button type='light-sub-2'>
-            <TrLink className={clsx('button')} native href={link} query={query}>
-              {label}
-            </TrLink>
-          </Button>
-        )}
+        <Button type={active && 'primary' || ''} rounded size={Size.SM}>
+          <TrLink style={{ color: active ? 'var(--text_white)' : 'var(--text_1)' }}
+            native
+            href={link}
+            query={query}>
+            {label}
+          </TrLink>
+        </Button>
       </div>
     );
   }
 );
 
-export const useWalletButton = (type: WalletType, { onWalletCreateClick }: { onWalletCreateClick: any }) => {
+export const useWalletButton = (type: WalletType, wallet: WalletKey, { onWalletCreateClick }: { onWalletCreateClick: any }) => {
+  const router = useRouter();
+  const { locale = 'en', theme } = router.query;
   const { isMobile } = useResponsive();
-  const enableLite = process.env.NEXT_PUBLIC_LITE_ENABLE === 'true';
+  const enableLite = false && process.env.NEXT_PUBLIC_LITE_ENABLE === 'true';
   const [state, setState] = useImmer({
     transferModalVisible: false,
     sourceAccount: ACCOUNT_TYPE.SPOT,
     targetAccount: enableLite ? ACCOUNT_TYPE.LITE : ACCOUNT_TYPE.SWAP_U,
   });
   const { transferModalVisible, sourceAccount, targetAccount } = state;
+  let { allow: agreeAgreement } = useAgreement();
+  const isCopyTrader = useCopyTradingSwapStore.use.isCopyTrader();
+
   const getTradeLink = () => {
     const isUsdtType = type === WalletType.ASSET_SWAP_U;
     if (type === WalletType.ASSET_SWAP || type === WalletType.ASSET_SWAP_U) {
-      return isUsdtType ? '/swap/btc-usdt' : '/swap/btc-usdt';
+      return isUsdtType ? '/swap/btc-usdt' : '/swap/btc-usd';
     }
     if (type === 'asset-lite') {
       return '/lite/btcusdt';
     }
     return '';
   };
+
+  const onTradeClick = useCallback(() => {
+    let href = `/${locale}`;
+    const isUsdtType = type === WalletType.ASSET_SWAP_U;
+    if (type === WalletType.ASSET_SWAP || type === WalletType.ASSET_SWAP_U) {
+      href += isUsdtType ? '/swap/btc-usdt' : '/swap/btc-usd';
+    }
+    if (type === 'asset-lite') {
+      href += '/lite/btcusdt';
+    }
+    if (type === WalletType.ASSET_SWAP || type === WalletType.ASSET_SWAP_U) {
+      if (wallet === WalletKey.COPY && isCopyTrader) {
+        Swap.Info.setWalletId(isUsdtType, WalletKey.COPY);
+      } else {
+        Swap.Info.setWalletId(isUsdtType, WalletKey.SWAP_U);
+      }
+    }
+    window.location.href = href;
+
+  }, [agreeAgreement, type, wallet, isCopyTrader]);
+
   const TRANSFER_COIN_BUTTON = { label: LANG('划转'), active: false, link: '', isTransfer: true };
 
   const BUTTONS_1 = [
@@ -195,14 +187,15 @@ export const useWalletButton = (type: WalletType, { onWalletCreateClick }: { onW
       link: getTradeLink(),
       theme: true,
       isTransfer: false,
+      onTradeClick: onTradeClick
     },
-    {
-      label: LANG('闪兑'),
-      active: false,
-      link: '/convert',
-      theme: true,
-      isTransfer: false,
-    },
+    // {
+    //   label: LANG('闪兑'),
+    //   active: false,
+    //   link: '/convert',
+    //   theme: true,
+    //   isTransfer: false,
+    // },
     {
       label: LANG('划转'),
       active: false,
@@ -213,14 +206,14 @@ export const useWalletButton = (type: WalletType, { onWalletCreateClick }: { onW
   ];
   const SWAP_BUTTON = [
     ...BUTTONS_1,
-    {
-      label: LANG('创建子钱包'),
-      active: false,
-      link: '#',
-      theme: false,
-      isTransfer: false,
-      onWalletCreateClick: onWalletCreateClick,
-    },
+    // {
+    //   label: LANG('创建子钱包'),
+    //   active: false,
+    //   link: '#',
+    //   theme: false,
+    //   isTransfer: false,
+    //   onWalletCreateClick: onWalletCreateClick,
+    // },
   ];
   const RECHARGE_COIN_BUTTON = {
     label: LANG('充值'),
@@ -240,7 +233,7 @@ export const useWalletButton = (type: WalletType, { onWalletCreateClick }: { onW
     RECHARGE_COIN_BUTTON,
     WITHDRAW_COIN_BUTTON,
     {
-      label: LANG('转账'),
+      label: LANG('内部转账'),
       active: false,
       link: '/account/fund-management/asset-account/transfer',
       query: { code: 'USDT' },
@@ -249,6 +242,10 @@ export const useWalletButton = (type: WalletType, { onWalletCreateClick }: { onW
     TRANSFER_COIN_BUTTON,
   ];
   const onTransferClick = useCallback(() => {
+    if (!agreeAgreement) {
+      Swap.Trade.setModal({ openContractVisible: true });
+      return;
+    }
     setState((draft) => {
       draft.transferModalVisible = true;
     });
@@ -267,21 +264,21 @@ export const useWalletButton = (type: WalletType, { onWalletCreateClick }: { onW
     if (type === WalletType.ASSET_SWAP_U) {
       setState((draft) => {
         draft.sourceAccount = ACCOUNT_TYPE.SPOT;
-        draft.targetAccount = ACCOUNT_TYPE.SWAP_U;
+        draft.targetAccount = wallet === WalletKey.COPY ? ACCOUNT_TYPE.COPY : ACCOUNT_TYPE.SWAP_U;
       });
     }
-  }, []);
+  }, [agreeAgreement, type, wallet]);
+
   const onTransferModalClose = () => {
     setState((draft) => {
       draft.transferModalVisible = false;
     });
   };
 
+
+
   const BUTTON_MAP = {
     [WalletType.ASSET_TOTAL]: () => {
-      if (isMobile) {
-        return <MobileActionButton onTransferClick={onTransferClick} />;
-      }
       return ASSET_TOTAL_BUTTONS.map((item: any) => {
         return (
           <ActionButton
@@ -296,6 +293,7 @@ export const useWalletButton = (type: WalletType, { onWalletCreateClick }: { onW
         );
       });
     },
+
     [WalletType.ASSET_SPOT]: () => {
       return [RECHARGE_COIN_BUTTON, WITHDRAW_COIN_BUTTON, TRANSFER_COIN_BUTTON].map((item: any) => {
         return (
@@ -311,6 +309,7 @@ export const useWalletButton = (type: WalletType, { onWalletCreateClick }: { onW
         );
       });
     },
+
     [WalletType.ASSET_SWAP]: () => {
       if (isMobile) {
         return (
@@ -328,6 +327,7 @@ export const useWalletButton = (type: WalletType, { onWalletCreateClick }: { onW
             active={item.active}
             onTransferClick={onTransferClick}
             onWalletCreateClick={(item as any).onWalletCreateClick}
+            onTradeClick={(item as any).onTradeClick}
             link={item.link}
             key={item.label}
             isTransfer={item?.isTransfer}
@@ -335,16 +335,17 @@ export const useWalletButton = (type: WalletType, { onWalletCreateClick }: { onW
         );
       });
     },
+
     [WalletType.ASSET_SWAP_U]: () => {
-      if (isMobile) {
-        return (
-          <MobileSwapActionButton
-            getTradeLink={getTradeLink}
-            onWalletCreateClick={onWalletCreateClick}
-            onTransferClick={onTransferClick}
-          />
-        );
-      }
+      // if (isMobile) {
+      //   return (
+      //     <MobileSwapActionButton
+      //       getTradeLink={getTradeLink}
+      //       onWalletCreateClick={onWalletCreateClick}
+      //       onTransferClick={onTransferClick}
+      //     />
+      //   );
+      // }
       return SWAP_BUTTON.map((item) => {
         return (
           <ActionButton
@@ -355,10 +356,12 @@ export const useWalletButton = (type: WalletType, { onWalletCreateClick }: { onW
             onWalletCreateClick={(item as any).onWalletCreateClick}
             key={item.label}
             isTransfer={item?.isTransfer}
+            onTradeClick={(item as any).onTradeClick}
           />
         );
       });
     },
+
     [WalletType.ASSET_LITE]: () => {
       return BUTTONS_1.map((item) => {
         return (

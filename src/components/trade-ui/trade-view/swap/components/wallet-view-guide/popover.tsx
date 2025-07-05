@@ -110,7 +110,7 @@ export const Popover = ({
             margin-top: 4px;
 
             :global(.button) {
-              background-color: var(--theme-trade-bg-color-2);
+              background-color: var(--fill_bg_1);
               color: var(--theme-font-color-1);
               height: 24px;
               font-size: 12px;

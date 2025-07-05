@@ -17,7 +17,7 @@ export const FundsList = ({ active }: { active: boolean }) => {
 
   return (
     <>
-      <div>
+      <div className='funds-wrapper'>
         <ListView data={data} loading={!data.length && loading}>
           {(index) => {
             const item = data[index];
@@ -25,6 +25,11 @@ export const FundsList = ({ active }: { active: boolean }) => {
             return <FundsItem key={index} data={item} />;
           }}
         </ListView>
+        <style jsx>{`
+          .funds-wrapper {
+            padding: 8px 0;
+          }
+        `}</style>
       </div>
     </>
   );

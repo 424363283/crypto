@@ -1,21 +1,61 @@
 import { MediaInfo } from '@/core/utils';
 
 export const BaseStyle = () => {
+  /**
+   * 新Light=Regular
+    新Regular=Medium
+    新Medium=Bold
+    新SemiBold=Black
+   */
   return (
     <style jsx global>
       {`
+          @font-face {
+          font-family: 'Lexend';
+          src: url('/fonts/Lexend-Light.ttf') format('truetype');
+          font-weight: 300;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'Lexend';
+          src: url('/fonts/Lexend-Regular.ttf') format('truetype');
+          font-weight: 400;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'Lexend';
+          src: url('/fonts/Lexend-Medium.ttf') format('truetype');
+          font-weight: 500;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'Lexend';
+          src: url('/fonts/Lexend-SemiBold.ttf') format('truetype');
+          font-weight: 600;
+          font-style: normal;
+        }
+        * {
+          -webkit-tap-highlight-color: transparent;
+        }
+
         html * {
-         font-family: PingFang SC, Source Sans Pro, sans-serif !important;
+          font-family: "Lexend", "PingFang SC", "Microsoft YaHei", Arial,  "Helvetica Neue",sans-serif !important;
           box-sizing: border-box;
+          @media ${MediaInfo.mobile} {
+            box-sizing: content-box;
+          }
         }
         html[lang='vi'] * {
-          font-family: PingFang SC, Source Sans Pro, sans-serif !important;
+          // font-family: 'HarmonyOS_Sans_SC', PingFang SC, Source Sans Pro, sans-serif !important;
+          font-family:"Lexend", "PingFang SC", "Microsoft YaHei", Arial,  "Helvetica Neue",sans-serif !important;
         }
         body {
           margin: 0;
           font-size: 14px;
           color: rgba(0, 0, 0, 0.65);
-          background: var(--theme-background-color-1);
+          background: var(--fill_bg_1);
+          font-family: 'Lexend' !important;
+
           overflow: overlay; /*滚动条会覆盖在页面之上*/
         }
         a {
@@ -59,7 +99,7 @@ export const BaseStyle = () => {
         .ant-input {
           &:focus {
             border: 1px solid var(--skin-primary-color);
-            box-shadow: 0 0 0 2px rgb(248 187 55 / 20%);
+            box-shadow: 0 0 0 2px rgb(7 130 139 / 20%);
           }
         }
         .ant-input:hover {
@@ -100,7 +140,7 @@ export const BaseStyle = () => {
           background-color: var(--theme-sub-button-bg-2);
         }
         :global(.ant-switch.ant-switch-checked .ant-switch-inner) {
-          background-color: var(--skin-primary-color);
+          background-color: var(--brand);
         }
         :global(.ant-switch.ant-switch-checked:hover:not(.ant-switch-disabled)) {
           background-color: var(--skin-primary-color);
@@ -111,18 +151,24 @@ export const BaseStyle = () => {
           opacity: 0.8;
         }
         /** dropdown button */
-        :global(.ant-dropdown .ant-dropdown-menu-vertical) {
-          background-color: var(--theme-background-color-2-3);
+        :global(.ant-dropdown-menu-vertical) {
+          background-color: var(--fill_pop)!important;
+          :global(.overlay-layer1) & {
+            background-color: var(--fill_pop)!important;
+          }
+          :global(.overlay-layer2) & {
+            background-color: var(--fill_pop_down)!important;
+          }
         }
         :global(.ant-dropdown .ant-dropdown-menu-vertical .ant-dropdown-menu-item) {
-          color: var(--theme-font-color-1);
+          color: var(--text_2);
+          background: transparent !important;
         }
         :global(.ant-dropdown .ant-dropdown-menu-vertical .ant-dropdown-menu-item.ant-dropdown-menu-item-active) {
-          background-color: var(--skin-primary-bg-color-opacity-1);
-          color: var(--skin-main-font-color);
+          color: var(--brand);
         }
         :global(.ant-spin-dot-item) {
-          background: var(--skin-table-loading-color) !important;
+          background: var(--brand) !important;
         }
         :root[theme='light'] {
           .ant-radio-wrapper-checked .ant-radio-checked .ant-radio-inner {
@@ -148,6 +194,24 @@ export const BaseStyle = () => {
             opacity: 0.54;
           }
         }
+        input[inputmode="numeric"]::-webkit-outer-spin-button,
+        input[inputmode="numeric"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[inputmode="numeric"] {
+            -moz-appearance: textfield;
+        }
+        input:-webkit-autofill {
+          -webkit-transition: color 99999s ease-in-out 0s, background-color 99999s ease-in-out 0s;
+          transition: color 99999s ease-in-out 0s, background-color 99999s ease-in-out 0s;
+          -webkit-text-fill-color: var(--text_1);
+        }
+
+        input:-webkit-autofill, input:-webkit-autofill:active, input:-webkit-autofill:focus, input:-webkit-autofill:hover {
+          -webkit-background-clip: text;
+        }
+
         .text-ellipsis {
           white-space: nowrap;
           text-overflow: ellipsis;

@@ -13,15 +13,15 @@ const TitleComponent = ({
 }) => {
   return (
     <>
-      <div className='title'>
+      <div className='top-title title'>
         {tabs.map((tab, index) => {
           return (
             <div key={tab}>
-              {index === 0 && (
+              {/* index === 0 && (
                 <span className='star-wrapper'>
                   <StarFilled style={{ marginRight: '6px' }} />
                 </span>
-              )}
+              ) */}
               <span className={`${getActive(activeIndex == index)} tab-item`} onClick={() => onTabsChange(index)}>
                 {tab}
               </span>
@@ -34,28 +34,38 @@ const TitleComponent = ({
         {`
           .title {
             display: flex;
-            height: 38px;
-            color: var(--theme-font-color-2);
-            padding: 0 10px;
+            gap: 24px;
+            position: relative;
             align-items: center;
-            font-size: 14px;
-            border-bottom: 1px solid var(--skin-border-color-1);
+            align-self: stretch;
+            padding: 0 16px 8px 16px;
+            &:after {
+              content: "";
+              display: block;
+              position: absolute;
+              bottom: -1px;
+              width: calc(100% - 32px);
+              border-bottom: 1px solid var(--common-line-color);
+            }
             > div {
               display: flex;
               cursor: pointer;
-              margin-right: 25px;
               .star-wrapper {
                 display: flex;
                 align-items: center;
               }
               .tab-item {
-                display: inline-block;
-                line-height: 36px;
-                border-bottom: 2px solid transparent;
+                color: var(--text_2);
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: normal;
                 &.active {
-                  border-bottom: 2px solid var(--skin-primary-color);
-                  color: var(--theme-font-color-1);
+                  color: var(--text_brand);
+                  font-size: 14px;
+                  font-style: normal;
                   font-weight: 500;
+                  line-height: normal;
                 }
               }
             }

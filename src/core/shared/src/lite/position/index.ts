@@ -1,5 +1,16 @@
 import { Loading } from '@/components/loading';
-import { closeLiteOrderApi, getLiteHistoryApi, getLitePlanOrdersApi, getLitePositionApi, liteAddMarginApi, liteAutoAddMarginApi, liteReverseOpenOrderApi, liteShiftStopLossApi, liteUpdateTPSLApi } from '@/core/api';
+import {
+  closeLiteOrderApi,
+  getLiteHistoryApi,
+  getLitePlanOrdersApi,
+  getLitePositionApi,
+  liteAddMarginApi,
+  liteAutoAddMarginApi,
+  liteReverseOpenOrderApi,
+  liteShiftStopLossApi,
+  liteUpdateTPSLApi,
+  getLiteHistoryFundsApi
+} from '@/core/api';
 import { FORMULAS } from '@/core/formulas';
 import { LANG } from '@/core/i18n';
 import { SUBSCRIBE_TYPES } from '@/core/network';
@@ -21,12 +32,12 @@ export class Position {
 
   public static pollingPosition = new Polling({
     interval: 2000,
-    callback: Position.fetchPositionList,
+    callback: Position.fetchPositionList
   });
 
   public static pollingPending = new Polling({
     interval: 2000,
-    callback: Position.fetchPendingList,
+    callback: Position.fetchPendingList
   });
 
   public static async init(inAssets = InAssetsType.NotInAssets) {
@@ -60,9 +71,15 @@ export class Position {
     Position.state.marketMap = { ...marketsMap };
     let profit = 0;
     Position.state.positionList.forEach((item: LiteListItem) => {
-      const { buy, opPrice, lever, margin, commodity } = item;
-      const price = marketsMap[commodity]?.price;
-      const income = FORMULAS.LITE_POSITION.positionProfitAndLoss(buy ? PositionSide.LONG : PositionSide.SHORT, price, opPrice, lever, margin);
+      const { buy, opPrice, lever, margin, commodity, contract } = item;
+      const price = marketsMap[contract]?.price;
+      const income = FORMULAS.LITE_POSITION.positionProfitAndLoss(
+        buy ? PositionSide.LONG : PositionSide.SHORT,
+        price,
+        opPrice,
+        lever,
+        margin
+      );
       profit = Number(income.toFixed(2).add(profit));
     });
     Trade.setFloatingProfit(profit);
@@ -76,10 +93,10 @@ export class Position {
       Position.state.loading = true;
     }
     const params = {
-      standard: Trade.state.accountType !== AccountType.SIMULATED,
+      standard: Trade.state.accountType !== AccountType.SIMULATED
     };
 
-    const { code, data } = await getLitePositionApi(params);
+    const { code, data = [] } = await getLitePositionApi(params);
 
     if (code === 200) {
       // 在资产页面不区分账户类型
@@ -97,7 +114,7 @@ export class Position {
     if (showLoading) {
       Position.state.loading = false;
     }
-    Assets.getLiteOccupiedBalance(Position.state.positionList).then((occupiedMargin) => {
+    Assets.getLiteOccupiedBalance(Position.state.positionList).then(occupiedMargin => {
       Trade.setOccupiedMargin(occupiedMargin);
     });
   }
@@ -110,10 +127,10 @@ export class Position {
       Position.state.loading = true;
     }
 
-    const { code, data } = await getLitePlanOrdersApi();
+    const { code, data = [] } = await getLitePlanOrdersApi();
 
     if (code === 200) {
-      Position.state.pendingList = data.filter((v) => v.state === 0);
+      Position.state.pendingList = data?.filter(v => v.state === 0);
     }
     if (showLoading) {
       Position.state.loading = false;
@@ -131,7 +148,7 @@ export class Position {
       const params = {
         standard: Trade.state.accountType !== AccountType.SIMULATED,
         size: 20,
-        commodityZone: 'crypto',
+        commodityZone: 'crypto'
       };
 
       const { code, data } = await getLiteHistoryApi(params);
@@ -147,12 +164,33 @@ export class Position {
           } else {
             // 选择体验金账户时，列表需要过滤掉 未使用体验金 的数据
             if (Trade.state.accountType === AccountType.TRIAL) {
-              Position.state.historyList = data.filter(({ bonusId }) => bonusId !== '0');
+              Position.state.historyList = data?.filter(({ bonusId }) => bonusId !== '0');
             } else {
-              Position.state.historyList = data.filter(({ bonusId }) => bonusId === '0');
+              Position.state.historyList = data?.filter(({ bonusId }) => bonusId === '0');
             }
           }
         }
+      }
+      Position.state.loading = false;
+    }
+  }
+
+  /**
+   * 拉取资金流水
+   */
+  public static async fetchHistoryFunds() {
+    if (Account.isLogin) {
+      Position.state.historyList = [];
+      Position.state.loading = true;
+
+      const params = {
+        page: 1,
+        size: 200
+      };
+
+      const { code, data } = await getLiteHistoryFundsApi(params);
+      if (code === 200) {
+        Position.state.historyList = data.list;
       }
       Position.state.loading = false;
     }
@@ -179,8 +217,10 @@ export class Position {
   public static updateCurrentListData() {
     switch (Position.state.selectedTab) {
       case LiteTabType.HISTORY:
-      case LiteTabType.FUNDS:
         Position.fetchHistoryList();
+        break;
+      case LiteTabType.FUNDS:
+        Position.fetchHistoryFunds();
         break;
     }
   }
@@ -213,10 +253,16 @@ export class Position {
     if (!marketMap) {
       return { income: 0, incomeRate: 0 };
     }
-    const { commodity, buy, opPrice, lever, margin, takeProfit, stopLoss } = data;
-    const price = marketMap[commodity]?.price || 0;
+    const { commodity, contract, buy, opPrice, lever, margin, takeProfit, stopLoss } = data;
+    const price = marketMap[contract]?.price || 0;
 
-    let income = FORMULAS.LITE_POSITION.positionProfitAndLoss(buy ? PositionSide.LONG : PositionSide.SHORT, price, opPrice, lever, margin);
+    let income = FORMULAS.LITE_POSITION.positionProfitAndLoss(
+      buy ? PositionSide.LONG : PositionSide.SHORT,
+      price,
+      opPrice,
+      lever,
+      margin
+    );
     income = Math.min(takeProfit, Math.max(stopLoss, income));
     const incomeRate = Number(income.div(margin).mul(100)) || 0;
     return { income, incomeRate };
@@ -225,14 +271,29 @@ export class Position {
   /**
    * 获取当前订单的止盈价和强平价
    */
-  public static calculateProfitAndLoss(data: LiteListItem, takeProfitRate?: number, stopLossRate?: number, newLever?: number) {
+  public static calculateProfitAndLoss(
+    data: LiteListItem,
+    takeProfitRate?: number,
+    stopLossRate?: number,
+    newLever?: number
+  ) {
     const { buy, lever, margin, opPrice, takeProfit, stopLoss } = data;
     takeProfitRate = takeProfitRate ?? Number(takeProfit.div(margin));
     stopLossRate = stopLossRate ?? Number(stopLoss.div(margin));
     newLever = newLever ?? lever;
 
-    const Fprice = FORMULAS.LITE_POSITION.positionCalculateProfitPrice(buy ? PositionSide.LONG : PositionSide.SHORT, opPrice, takeProfitRate, newLever);
-    const Lprice = FORMULAS.LITE_POSITION.positionCalculateStopPrice(buy ? PositionSide.LONG : PositionSide.SHORT, opPrice, stopLossRate, newLever);
+    const Fprice = FORMULAS.LITE_POSITION.positionCalculateProfitPrice(
+      buy ? PositionSide.LONG : PositionSide.SHORT,
+      opPrice,
+      takeProfitRate,
+      newLever
+    );
+    const Lprice = FORMULAS.LITE_POSITION.positionCalculateStopPrice(
+      buy ? PositionSide.LONG : PositionSide.SHORT,
+      opPrice,
+      stopLossRate,
+      newLever
+    );
 
     return { Fprice, Lprice };
   }
@@ -245,10 +306,30 @@ export class Position {
     const [maxFRate, minFRate] = [stopProfitRange[stopProfitRange.length - 1], stopProfitRange[0]];
     const [maxLRate, minLRate] = [stopLossRange[stopLossRange.length - 1], stopLossRange[0]];
 
-    const maxFprice = FORMULAS.LITE_POSITION.positionCalculateProfitPrice(buy ? PositionSide.LONG : PositionSide.SHORT, opPrice, maxFRate, lever);
-    const minFprice = FORMULAS.LITE_POSITION.positionCalculateProfitPrice(buy ? PositionSide.LONG : PositionSide.SHORT, opPrice, minFRate, lever);
-    const maxLprice = FORMULAS.LITE_POSITION.positionCalculateStopPrice(buy ? PositionSide.LONG : PositionSide.SHORT, opPrice, maxLRate, lever);
-    const minLprice = FORMULAS.LITE_POSITION.positionCalculateStopPrice(buy ? PositionSide.LONG : PositionSide.SHORT, opPrice, minLRate, lever);
+    const maxFprice = FORMULAS.LITE_POSITION.positionCalculateProfitPrice(
+      buy ? PositionSide.LONG : PositionSide.SHORT,
+      opPrice,
+      maxFRate,
+      lever
+    );
+    const minFprice = FORMULAS.LITE_POSITION.positionCalculateProfitPrice(
+      buy ? PositionSide.LONG : PositionSide.SHORT,
+      opPrice,
+      minFRate,
+      lever
+    );
+    const maxLprice = FORMULAS.LITE_POSITION.positionCalculateStopPrice(
+      buy ? PositionSide.LONG : PositionSide.SHORT,
+      opPrice,
+      maxLRate,
+      lever
+    );
+    const minLprice = FORMULAS.LITE_POSITION.positionCalculateStopPrice(
+      buy ? PositionSide.LONG : PositionSide.SHORT,
+      opPrice,
+      minLRate,
+      lever
+    );
 
     return { maxFprice, minFprice, maxLprice, minLprice };
   }
@@ -274,8 +355,18 @@ export class Position {
   public static calculateFRateByFPrice(data: LiteListItem, Fprice: number, Lprice: number) {
     const { buy, lever, opPrice } = data;
 
-    const FRate = FORMULAS.LITE_POSITION.positionCalculateFRateByFPrice(buy ? PositionSide.LONG : PositionSide.SHORT, Fprice, opPrice, lever);
-    const LRate = FORMULAS.LITE_POSITION.positionCalculateLRateByLPrice(buy ? PositionSide.LONG : PositionSide.SHORT, Lprice, opPrice, lever);
+    const FRate = FORMULAS.LITE_POSITION.positionCalculateFRateByFPrice(
+      buy ? PositionSide.LONG : PositionSide.SHORT,
+      Fprice,
+      opPrice,
+      lever
+    );
+    const LRate = FORMULAS.LITE_POSITION.positionCalculateLRateByLPrice(
+      buy ? PositionSide.LONG : PositionSide.SHORT,
+      Lprice,
+      opPrice,
+      lever
+    );
 
     return { FRate, LRate };
   }
@@ -304,14 +395,16 @@ export class Position {
   public static async batchClosePositionByIds() {
     Loading.start();
     const { positionList, hideOther } = Position.state;
-    const ids = positionList.filter(({ commodity }) => (hideOther ? commodity === Trade.state.id : true)).map(({ id }) => id);
+    const ids = positionList
+      .filter(({ commodity }) => (hideOther ? commodity === Trade.state.id : true))
+      .map(({ id }) => id);
     const res = await closeLiteOrderApi({ ids });
     if (res.code === 200) {
       const { successNum, failureNum } = res.data;
       message.success(
         LANG(`平仓成功{successNumber}单，失败{failNumber}单`, {
           successNumber: successNum,
-          failNumber: failureNum,
+          failNumber: failureNum
         })
       );
       // 平仓成功，刷新余额
@@ -347,7 +440,10 @@ export class Position {
     const { maxAmountOne } = Trade.state;
     const { volume, opPrice, margin } = data;
     if (maxAmountOne) {
-      return Math.min(Number(volume.mul(opPrice).div(lever).sub(margin).toFixed(2)), Number(maxAmountOne.div(lever).sub(margin)));
+      return Math.min(
+        Number(volume.mul(opPrice).div(lever).sub(margin).toFixed(2)),
+        Number(maxAmountOne.div(lever).sub(margin))
+      );
     } else {
       return Math.min(Number(volume.mul(opPrice).div(lever).sub(margin).toFixed(2)), Number(maxMargin.sub(margin)));
     }

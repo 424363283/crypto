@@ -30,6 +30,19 @@ export const useMoveRecordsColumns = () => {
     // LITE_SPOT: LANG('简易合约转币币'),
     // SWAP_LITE: LANG('永续转入简易合约'),
     // LITE_SWAP: LANG('简易合约转入永续'),
+    // SWAP_SPOT: LANG('永续{source}转现货', { source }),
+    // SPOT_SWAP: LANG('现货转永续{target}', { target }),
+    // SWAP_SWAP: LANG('永续{source}转入永续{target}', { source, target }),
+    // SPOT_FUND: LANG('币币转C2C'),
+    // FUND_SPOT: LANG('C2C转币币'),
+    // FUND_LITE: LANG('C2C转简易合约'),
+    // LITE_FUND: LANG('简易合约转C2C'),
+    // SWAP_FUND: LANG('永续{source}转C2C', { source }),
+    // FUND_SWAP: LANG('C2C转永续{target}', { target }),
+     
+    /**
+     * hide sub wallet name
+     */
     SWAP_SPOT: LANG('永续{source}转现货', { source }),
     SPOT_SWAP: LANG('现货转永续{target}', { target }),
     SWAP_SWAP: LANG('永续{source}转入永续{target}', { source, target }),
@@ -37,8 +50,8 @@ export const useMoveRecordsColumns = () => {
     FUND_SPOT: LANG('C2C转币币'),
     FUND_LITE: LANG('C2C转简易合约'),
     LITE_FUND: LANG('简易合约转C2C'),
-    SWAP_FUND: LANG('永续{source}转C2C', { source }),
-    FUND_SWAP: LANG('C2C转永续{target}', { target }),
+    SWAP_FUND: LANG('永续转C2C'),
+    FUND_SWAP: LANG('C2C转永续'),
   });
   return [
     {
@@ -68,7 +81,7 @@ export const useMoveRecordsColumns = () => {
           walletId: item.targetId || SWAP_DEFAULT_WALLET_ID,
           withHooks: false,
         })?.alias;
-        return LITE_TRANSFER_TYPES(source, target)[`${item?.source}_${item?.target}`];
+        return LITE_TRANSFER_TYPES(LANG(source), LANG(target))[`${item?.source}_${item?.target}`];
       },
     },
     {

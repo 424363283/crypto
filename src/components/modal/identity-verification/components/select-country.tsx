@@ -19,11 +19,11 @@ export const SelectCountryContent = () => {
   const [disabledBtn, setDisabledBtn] = useState(false);
   const [state, setState] = useImmer({
     firstName: '',
-    lastName: '',
+    lastName: ''
   });
   const { firstName, lastName } = state;
   const getSupportCountry = async (countryCode: string) => {
-    setApiState((draft) => {
+    setApiState(draft => {
       draft.countryId = countryCode;
     });
     const res = await getKycSupportCountryApi(countryCode);
@@ -40,19 +40,18 @@ export const SelectCountryContent = () => {
       countryId: countryId,
       device: 'web',
       firstName: firstName,
-      lastName: lastName,
+      lastName: lastName
     });
     Loading.end();
     if (result.code === 200) {
-      const { sdk_token,workflow_id, id } = result.data;
+      const { sdk_token, workflow_id, id } = result.data;
       if (sdk_token) {
-        setApiState((draft) => {
+        setApiState(draft => {
           draft.sdk_token = sdk_token;
           draft.workflow_run_id = id;
         });
       }
-      
-    }else{
+    } else {
       message.error(result.message);
     }
   };
@@ -62,12 +61,12 @@ export const SelectCountryContent = () => {
   };
   // 改变名字
   const _changeFirstName = (value: string): void => {
-    setState((draft) => {
+    setState(draft => {
       draft.firstName = value;
     });
   };
   const _changeLastName = (value: string): void => {
-    setState((draft) => {
+    setState(draft => {
       draft.lastName = value;
     });
   };
@@ -76,6 +75,7 @@ export const SelectCountryContent = () => {
       setDisabledBtn(false);
     }
   }, [firstName, lastName]);
+
   const renderNameInput = () => {
     return (
       <>
@@ -96,24 +96,26 @@ export const SelectCountryContent = () => {
       </>
     );
   };
+
   return (
-    <div className='select-country-container'>
-      <div className='top-step-bar'>
+    <div className="select-country-container">
+      <div className="top-step-bar">
         <HorizontalStepBar step={1} />
       </div>
-      <div className='bottom-select-country'>
-        <p className='label'>{LANG('请选择国家')}</p>
-        <SelectCountry hideCode onChange={onCountrySelect} />
+      <div className="bottom-select-country">
+        <p className="label">{LANG('请选择国家/地区')}</p>
+        <SelectCountry className="custom-select-country" onChange={onCountrySelect} small showLabel />
       </div>
       {showInput && renderNameInput()}
       <GoVerifyBtn
         onBtnClick={() => {
           showInput && handleNextOnfidoVerify();
-          setApiState((draft) => {
+          setApiState(draft => {
             draft.pageStep = showInput ? 'onfido-verify' : 'upload-identify';
           });
         }}
         disabled={disabledBtn}
+        btnText="下一步"
       />
       <style jsx>{styles}</style>
     </div>
@@ -123,7 +125,7 @@ const styles = css`
   .select-country-container {
     .top-step-bar {
       width: 100%;
-      margin-bottom: 30px;
+      margin-bottom: 24px;
     }
     :global(.basic-input-container .label) {
       color: var(--theme-font-color-3) !important;
@@ -140,8 +142,30 @@ const styles = css`
       }
 
       :global(.emulate-select-selected) {
-        background-color: var(--theme-background-color-8);
         border-radius: 6px;
+      }
+      :global(.custom-select-country) {
+        width: 100%;
+        height: 48px;
+        border-radius: 8px;
+        background: var(--fill_3);
+        padding: 0;
+        :global(.emulate-select-selected) {
+          padding: 0 16px;
+          display: flex;
+          justify-content: space-between;
+        }
+        :global(.select-country-action) {
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+    :global(.footer-button) {
+      :global(.common-button) {
+        border-radius: 40px;
+        height: 48px;
+        line-height: 48px;
       }
     }
   }

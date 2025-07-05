@@ -17,11 +17,6 @@ const styles = css`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    margin: 0 22px 0 0px;
-    border-radius: 5px;
-    height: 479px;
-    &:hover {
-      background-color: var(--theme-background-color-3);
-    }
+    height: 40px;
   }
 `;

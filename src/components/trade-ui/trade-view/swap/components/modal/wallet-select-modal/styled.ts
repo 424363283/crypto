@@ -62,36 +62,60 @@ const { className, styles } = css.resolve`
     }
 
     .wallets {
-      padding: 15.5px var(--theme-trade-modal-horizontal-padding) 21px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+      align-self: stretch;
       .wallet {
-        margin-bottom: 8px;
-        height: 60px;
-        border-radius: 5px;
-        border: 1px solid var(--theme-border-color-1);
-        padding: 0 16px;
         display: flex;
-        flex-direction: row;
+        padding: 16px;
         align-items: center;
-        justify-content: space-between;
+        gap: 40px;
+        align-self: stretch;
         cursor: pointer;
+        border-radius: 16px;
+        border: 1px solid var(--fill_line_3);
+        &:hover {
+          border: 1px solid var(--brand);
+        }
         .left {
           display: flex;
-          align-items: center;
+          flex-direction: column;
+          justify-content: center;
+          align-items: flex-start;
+          gap: 8px;
+          flex: 1 0 0;
           .texts {
-            margin-left: 12px;
-            :global(> div:first-child) {
-              line-height: 17px;
-              font-size: 14px;
-              font-weight: 500;
-              mix-blend-mode: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 8px;
+            flex: 1 0 0;
+            color: var(--text_2);
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            &.active {
+              color: var(--text_1);
+              font-size: 16px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
             }
             :global(> div:last-child) {
-              color: var(--theme-trade-text-color-3);
-              line-height: 15px;
-              font-size: 12px;
+              color: var(--text_2);
+              font-size: 14px;
+              font-style: normal;
               font-weight: 400;
+              line-height: 150%; /* 21px */
             }
           }
+        }
+        &.active {
+          border: 1px solid var(--brand);
         }
       }
     }

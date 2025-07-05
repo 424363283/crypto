@@ -7,13 +7,15 @@ import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
 import { useSpotTableColumns } from '../hooks/useSpotTableColumns';
 import { SpotTableUiMemo } from './spot-table-ui';
+import { LOCAL_KEY, localStorageApi } from '@/core/store';
 
 export const SpotTable = () => {
   const { noneZeroSpotAssets, allSpotAssets } = Account.assets.spotAssetsStore;
+  const hideSmallAsset: boolean = localStorageApi.getItem<boolean>(LOCAL_KEY.HIDE_SMALL_ASSET) ?? true;
   const [state, setState] = useImmer({
     tableData: noneZeroSpotAssets,
-    checked: true,
-    searchValue: '',
+    checked: hideSmallAsset,
+    searchValue: ''
   });
   const { tableData, checked, searchValue } = state;
 
@@ -30,23 +32,23 @@ export const SpotTable = () => {
   }
   const handleSearchValue = () => {
     if (searchValue) {
-      setState((draft) => {
+      setState(draft => {
         draft.tableData = noneZeroSpotAssets.filter((item: any) => item.code.includes(searchValue.toUpperCase()));
       });
     } else {
       const sortArr = sortCurrencies([...noneZeroSpotAssets]);
-      setState((draft) => {
+      setState(draft => {
         draft.tableData = sortArr;
       });
     }
   };
   useEffect(() => {
     if (!checked) {
-      setState((draft) => {
+      setState(draft => {
         draft.tableData = allSpotAssets;
       });
       if (searchValue) {
-        setState((draft) => {
+        setState(draft => {
           draft.tableData = allSpotAssets.filter((item: any) => item.code.includes(searchValue.toUpperCase()));
         });
       }
@@ -55,22 +57,22 @@ export const SpotTable = () => {
     handleSearchValue();
   }, [noneZeroSpotAssets, searchValue, checked]);
   const { columns, convertModalVisible, coin, setConvertModalVisible } = useSpotTableColumns({
-    data: tableData,
+    data: tableData
   }) as any;
 
   const onInputChange = useCallback((value: string) => {
-    setState((draft) => {
+    setState(draft => {
       draft.searchValue = value;
     });
   }, []);
-  const onCheckChange = useCallback(async (evt: CheckboxChangeEvent) => {
-    const targetChecked = evt.target.checked;
-    setState((draft) => {
-      draft.checked = targetChecked;
+  const onCheckChange = useCallback(async (value: boolean) => {
+    setState(draft => {
+      draft.checked = value;
+      localStorageApi.setItem(LOCAL_KEY.HIDE_SMALL_ASSET, value);
     });
   }, []);
   return (
-    <div className='spot-table-container'>
+    <div className="spot-table-container">
       <SpotTableUiMemo
         columns={columns}
         tableData={tableData}
@@ -85,8 +87,16 @@ export const SpotTable = () => {
 };
 const styles = css`
   .spot-table-container {
+    padding: 24px;
     @media ${MediaInfo.mobile} {
-      padding: 0 10px 20px;
+      padding: 16px;
+      :global(.ant-pagination-item:hover),
+      :global(.ant-pagination-item:focus),
+      :global(.ant-pagination-item-active) {
+        background: var(--brand);
+        color: var(--text_white);
+        font-weight: 500;
+      }
     }
   }
 `;

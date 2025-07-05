@@ -1,5 +1,5 @@
 import { clsx } from '@/core/utils';
-import React, { ReactNode, useEffect, useMemo } from 'react';
+import React, { ReactNode, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import css from 'styled-jsx/css';
 
@@ -8,7 +8,7 @@ const MobileModal = ({
   children,
   onClose,
   type = 'default',
-  zIndex,
+  zIndex
 }: {
   visible?: boolean;
   children?: ReactNode;
@@ -16,9 +16,19 @@ const MobileModal = ({
   type?: 'default' | 'bottom';
   zIndex?: any;
 }) => {
-  const [visible, setVisible] = React.useState(false);
-
+  const [visible, setVisible] = useState(false);
   const visibleClassName = type;
+
+  useEffect(() => {
+    return () => {
+      const $body = document.querySelector('body');
+      if ($body) {
+        $body.style.overflow = '';
+        $body.style.touchAction = '';
+        $body.style.position = '';
+      }
+    };
+  }, []);
 
   useEffect(() => {
     setTimeout(
@@ -27,21 +37,32 @@ const MobileModal = ({
       },
       _visible ? 10 : 400
     );
+  }, [_visible]);
+  useEffect(() => {
     // 打开弹窗时，禁止 body 滚动
     const $body = document.querySelector('body');
+    const visibleModal = document.querySelector('div.modal.bottom.visible');
     if ($body) {
-      if (_visible) {
+      if (visible) {
         $body.style.overflow = 'hidden';
-      } else {
+        // 阻止触摸事件
+        $body.style.touchAction = 'none';
+        $body.style.position = 'fixed';
+        $body.style.width = '100%';
+      } else if (!visible && !visibleModal) {
         $body.style.overflow = 'auto';
+        $body.style.touchAction = '';
+        $body.style.position = '';
       }
     }
     return () => {
-      if ($body) {
+      if ($body && !visibleModal) {
         $body.style.overflow = '';
+        $body.style.touchAction = '';
+        $body.style.position = '';
       }
     };
-  }, [_visible]);
+  }, [visible]);
 
   const { zIndexClassName, styles: zIndexStyles } = useMemo(() => {
     if (zIndex === undefined) {
@@ -67,10 +88,10 @@ const MobileModal = ({
       >
         {(_visible == true ? _visible : visible) && (
           <>
-            <div className='mask-content'>
-              <div className='mask' onClick={onClose}></div>
+            <div className="mask-content">
+              <div className="mask" onClick={onClose}></div>
               <ModalContext.Provider value={{ onClose }}>
-                <div className='content'>{children}</div>
+                <div className="content">{children}</div>
               </ModalContext.Provider>
             </div>
           </>
@@ -159,7 +180,7 @@ const styles = css`
 `;
 
 const ModalContext = React.createContext<{
-  onClose?: React.MouseEventHandler<HTMLDivElement>;
+  onClose?: (event?: React.MouseEvent<HTMLDivElement>) => void;
 }>({ onClose: () => {} });
 export const useModalTools = () => {
   return React.useContext(ModalContext);

@@ -5,37 +5,39 @@ import { LANG } from '@/core/i18n';
 import css from 'styled-jsx/css';
 import { useApiContext } from '../context';
 import { GoVerifyBtn } from './go-verify-btn';
+import YIcon from '@/components/YIcons';
+import { MediaInfo } from '@/core/utils';
 
 const InitialInfoModalContent = ({ remainAmount, unit }: { remainAmount: number; unit: string }) => {
   const { setApiState } = useApiContext();
   const { disabled } = useKycState();
   return (
-    <div className='first-id-card'>
-      <section className='top-user-auth'>
-        <p className='title'>{LANG('用户权益')}</p>
-        <div className='tips-item'>
-          <CommonIcon name='common-verified-icon-0' size={14} className='verified-icon' enableSkin />
-          {LANG('Withdraw')}: {remainAmount} {unit} {LANG('per day')}
+    <div className="first-id-card">
+      <section className="top-user-auth">
+        <p className="title">{LANG('用户权益')}</p>
+        <div className="tips-item">
+          <YIcon.checkIcon />
+          {LANG('提现额度')}: {remainAmount} {unit}/{LANG('天')}
         </div>
-        <div className='tips-item'>
-          <CommonIcon name='common-verified-icon-0' size={14} className='verified-icon' enableSkin />
+        <div className="tips-item">
+          <YIcon.checkIcon />
           {LANG('Other: Many other bonuses')}
         </div>
       </section>
-      <section className='bottom-cert-requirement'>
-        <p className='title'>{LANG('Certification requirement')}</p>
-        <div className='tips-item'>
-          <Image enableSkin src='/static/images/account/dashboard/id-small-icon.svg' width={14} height={14} />
+      <section className="bottom-cert-requirement">
+        <p className="title">{LANG('Certification requirement')}</p>
+        <div className="tips-item">
+          <YIcon.idCard />
           <span>{LANG('Identity Document')}</span>
         </div>
-        <div className='tips-item'>
-          <Image enableSkin src='/static/images/account/dashboard/selfie-icon.svg' width={14} height={14} />
+        <div className="tips-item">
+          <YIcon.photoIcon />
           <span>{LANG('Selfie')}</span>
         </div>
       </section>
       <GoVerifyBtn
         onBtnClick={() => {
-          setApiState((draft) => {
+          setApiState(draft => {
             draft.pageStep = 'select-country';
           });
         }}
@@ -51,45 +53,70 @@ const styles = css`
       margin-top: 30px;
     }
     :global(.basic-content) {
+      padding: 0 !important;
       :global(.first-id-card) {
-        :global(.top-user-auth) {
-          background-color: var(--theme-background-color-3-2);
-          padding: 14px 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        margin: 24px 0 0;
+        :global(.top-user-auth),
+        :global(.bottom-cert-requirement) {
           border-radius: 8px;
-          margin-bottom: 10px;
+          background: var(--fill_3);
+          display: flex;
+          padding: 12px 16px;
+          flex-direction: column;
+          justify-content: center;
+          gap: 8px;
+
           :global(.title) {
-            color: var(--const-color-grey);
-            font-size: 12px;
-            margin-bottom: 13px;
+            color: var(--text_2);
+             font-family: "Lexend";
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
           }
           :global(.tips-item) {
-            background-color: var(--theme-background-color-2-3);
-            padding: 8px 12px;
-            color: var(--theme-font-color-1);
-            margin-bottom: 10px;
-            border-radius: 6px;
-            :global(.verified-icon) {
-              margin-right: 8px;
-            }
+            display: flex;
+            padding: 12px;
+            align-items: center;
+            gap: 10px;
+            align-self: stretch;
+            border-radius: 8px;
+            background: var(--fill_bg_1);
+
+            color: var(--text_1);
+             font-family: "Lexend";
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
           }
         }
-        :global(.bottom-cert-requirement) {
-          background-color: var(--theme-background-color-3-2);
-          padding: 14px 15px;
-          border-radius: 8px;
-          :global(.title) {
-            font-weight: 500;
-            font-size: 16px;
-            color: var(--theme-font-color-1);
-            margin-bottom: 16px;
+
+        :global(.footer-button) {
+          margin-top: 0;
+          border-radius: 40px;
+          background: var(--text_brand);
+          display: flex;
+          height: 48px;
+          padding: 0px 16px;
+          justify-content: space-between;
+          align-items: center;
+          align-self: stretch;
+          :global(.nui-primary) {
+            &:hover {
+              background: none;
+            }
           }
-          :global(.tips-item) {
-            color: var(--theme-font-color-1);
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            :global(img) {
-              margin-right: 8px;
+          @media ${MediaInfo.mobile} {
+            padding: 0;
+            background: rgba(0, 0, 0, 0);
+            :global(button) {
+              height: 48px;
+              padding: 0;
+              margin: 0;
+              border-radius: 48px;
             }
           }
         }

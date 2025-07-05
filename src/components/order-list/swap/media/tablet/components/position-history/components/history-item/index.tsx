@@ -2,6 +2,7 @@ import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
 import { SWAP_HISTORY_ORDER_TYPES } from '@/core/shared/src/constants/order';
 import { ItemHeader } from '../../../item-header';
+import { MediaInfo } from '@/core/utils';
 
 export const HistoryItem = ({ data: item, onShare }: { data: any; onShare: any }) => {
   const { isUsdtType, priceUnitText } = Swap.Trade.base;
@@ -35,15 +36,6 @@ export const HistoryItem = ({ data: item, onShare }: { data: any; onShare: any }
   return (
     <>
       <div className='history-item'>
-        {/* <div className='title'>
-          <div className='code'>{name}</div>
-          <div className='time'>{dayjs(item.ctime).format('YYYY-MM-DD HH:mm:ss')}</div>
-        </div>
-        <div className='section'>
-          <div className='types'>
-            <span className={buy ? 'green' : 'red'}>{buy ? LANG('平多') : LANG('平空')}</span>
-          </div>
-        </div> */}
         <ItemHeader
           time={item.ctime}
           data={item}
@@ -81,16 +73,6 @@ export const HistoryItem = ({ data: item, onShare }: { data: any; onShare: any }
             <div>{LANG('平仓盈亏')}</div>
             <div className={Number(`${item.tradePnl}`.toFixed(incomeScale)) > 0 ? 'main-green' : 'main-red'}>
               {income} {Swap.Info.getCryptoData(item.symbol).settleCoin}
-              {/* <ImageHover
-                src='/static/images/lite/share.svg'
-                className={'share'}
-                width={20}
-                height={20}
-                hoverSrc='/static/images/lite/share_active.svg'
-                onClick={() => {
-                  onShare(item);
-                }}
-              /> */}
             </div>
           </div>
         </div>
@@ -103,6 +85,10 @@ export const HistoryItem = ({ data: item, onShare }: { data: any; onShare: any }
           border-radius: 8px;
           margin-bottom: 8px;
           padding: 0 var(--trade-spacing) var(--trade-spacing);
+          @media ${MediaInfo.mobile} {
+            margin: 0 0 8px;
+            padding: 0 var(--trade-spacing) 0;
+          }
           .title {
             display: flex;
             align-items: center;

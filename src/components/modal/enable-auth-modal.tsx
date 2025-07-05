@@ -7,6 +7,9 @@ import { clsx } from '@/core/utils';
 import { useState } from 'react';
 import css from 'styled-jsx/css';
 import { Button } from '../button';
+import { Size } from '../constants';
+import { useResponsive } from '@/core/hooks';
+import { MobileBottomSheet } from '../mobile-modal';
 
 enum BIND_OPTIONS {
   GA = 'ga',
@@ -15,9 +18,8 @@ enum BIND_OPTIONS {
 }
 const EnableAuthenticationModal = ({
   visible,
-  onClose = () => {},
+  onClose = () => { },
   user,
-  config,
 }: {
   visible: boolean;
   onClose?: () => void;
@@ -28,9 +30,10 @@ const EnableAuthenticationModal = ({
     closeBindGoogle?: boolean;
   };
 }) => {
-  const { closeBindPwd = false } = config || {};
   const router = useRouter();
   const [active, setActive] = useState(BIND_OPTIONS.GA);
+  const { isDesktop } = useResponsive();
+
   const goToBind = () => {
     const BIND_URL_MAP: { [key: string]: string } = {
       ga: '/account/dashboard?type=security-setting&option=google-verify',
@@ -42,17 +45,11 @@ const EnableAuthenticationModal = ({
     }
   };
   const { bindGoogle, bindEmail, bindPassword } = user || {};
-  return (
-    <BasicModal
-      open={visible}
-      width={580}
-      onCancel={onClose}
-      title={LANG('安全验证')}
-      cancelButtonProps={{ style: { display: 'none' } }}
-      okButtonProps={{ style: { display: 'none' } }}
-    >
-      <div className='modal'>
-        <div className='title'>{LANG('启用双重认证以提高您的账户安全，推荐绑定谷歌验证。')}</div>
+
+
+  const _main = () => {
+    return <>
+       <div className='modal'>
         <div className='section'>
           {!bindGoogle && (
             <div className='type'>
@@ -62,10 +59,9 @@ const EnableAuthenticationModal = ({
                   setActive(BIND_OPTIONS.GA);
                 }}
               >
-                <Image src='/static/images/account/ga-verify.svg' className='icon' width='80' height='80' enableSkin />
-                <div className='label'>{LANG('开启谷歌验证')}</div>
+                <Image src='/static/images/account/ga-verify.svg' className='icon' width='60' height='60' enableSkin />
               </div>
-              <div className='tips'>{LANG('推荐')}</div>
+              <div className='tips'>{LANG('未绑定身份验证器，无法提币和转账，请先绑定后再操作。')}</div>
             </div>
           )}
           {!bindEmail && (
@@ -79,15 +75,15 @@ const EnableAuthenticationModal = ({
                 <Image
                   src='/static/images/account/email-verify.svg'
                   className='icon'
-                  width='80'
-                  height='80'
+                  width='60'
+                  height='60'
                   enableSkin
                 />
                 <div className='label'>{LANG('开启邮箱验证')}</div>
               </div>
             </div>
           )}
-          {!bindPassword && !closeBindPwd && (
+          {/* {!bindPassword && !closeBindPwd && (
             <div className='type'>
               <div
                 className={clsx('t-box', active === BIND_OPTIONS.PWD && 'active')}
@@ -105,55 +101,67 @@ const EnableAuthenticationModal = ({
                 <div className='label'>{LANG('开启资金密码')}</div>
               </div>
             </div>
-          )}
+          )} */}
         </div>
-        <Button type='primary' className='button' onClick={goToBind}>
-          {LANG('立即设置')}
+        <Button type='primary' size={Size.LG} rounded className='button' onClick={goToBind}>
+          {LANG('去绑定')}
         </Button>
       </div>
       <style jsx>{styles}</style>
+    </>
+  }
+
+  return (
+    isDesktop?
+    <BasicModal
+      open={visible}
+      width={480}
+      onCancel={onClose}
+      title={LANG('安全验证')}
+      footer={null}
+      cancelButtonProps={{ style: { display: 'none' } }}
+      okButtonProps={{ style: { display: 'none' } }}
+    >
+      { _main() }
     </BasicModal>
+    :
+    <MobileBottomSheet
+      visible={visible}
+      content={_main()}
+      close={onClose}
+      hasBtn={false}
+      title={LANG('安全验证')}
+    />
   );
 };
 
 export default EnableAuthenticationModal;
 const styles = css`
   .modal {
-    padding: 0 0px 30px;
-    .title {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 80px;
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--theme-font-color-3);
-      margin-bottom: 20px;
-    }
     .section {
       display: flex;
       flex-direction: row;
       justify-content: space-around;
       align-items: flex-start;
       .type {
-        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        align-self: stretch;
         .t-box {
-          height: 200px;
-          cursor: pointer;
-          width: 250px;
-          background: var(--theme-background-color-4);
-          padding: 10px 16px 8px;
-          border-radius: 6px;
-          border: 2px solid #ebeef1;
           display: flex;
-          flex-direction: column;
           align-items: center;
           justify-content: center;
+          width: 80px;
+          height: 80px;
+          flex-shrink: 0;
+          border-radius: 16px;
+          border: 1px solid var(--fill_line_3);
           &:hover,
           &.active {
-            border-color: var(--skin-primary-color);
+            border-color: var(--fill_line_3);
           }
         }
 
@@ -169,22 +177,26 @@ const styles = css`
           text-align: center;
         }
         .tips {
-          margin-top: 8px;
-          height: 17px;
-          font-size: 12px;
-          font-weight: 500;
-          color: var(--theme-font-color-3);
-          line-height: 17px;
+          width: 196px;
+          color: var(--text_3);
+          text-align: center;
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 22px;
         }
       }
     }
     :global(.button) {
-      cursor: pointer;
-      text-align: center;
       width: 100%;
-      height: 50px;
-      line-height: 50px;
-      margin-top: 36px;
+      margin-top: 24px;
     }
   }
+  :global(.bottom-sheet-box){
+    .modal{
+     width:100%;
+     :global(.icon){
+      margin:0;
+     }
+    }
+  }  
 `;

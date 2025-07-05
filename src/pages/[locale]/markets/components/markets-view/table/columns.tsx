@@ -93,12 +93,12 @@ const TradeButton = ({
   const shouldShowDetailBtn = currentId === '2' && coinList.find((item: any) => item.symbol === coin);
   return (
     <div className='action-btn-area'>
-      {shouldShowDetailBtn && (
-        <Button className='trade' type='light-border-2' onClick={onDetailBtnClick}>
+      {/* shouldShowDetailBtn && (
+        <Button className='detail' width={88} rounded onClick={onDetailBtnClick}>
           {LANG('详情')}
         </Button>
-      )}
-      <Button className='trade' type='light-border-2' onClick={onTradeBtnClick}>
+      ) */}
+      <Button className='trade' width={88} rounded type='primary' onClick={onTradeBtnClick}>
         {LANG('交易')}
       </Button>
     </div>

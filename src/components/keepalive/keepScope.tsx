@@ -47,7 +47,7 @@ export const AliveScope1 = ({
   const handleScroll = useCallback(() => {
     if (!isInit) return;
     if (isCur) {
-      console.log(`[keep-alive]----开始滚动`, window.scrollY, name);
+      //console.log(`[keep-alive]----开始滚动`, window.scrollY, name);
       scrollPos.current = window.scrollY;
     }
   }, [isCur, isInit, name]);
@@ -55,11 +55,11 @@ export const AliveScope1 = ({
   const handleVisible = useCallback(
     (visible: boolean) => {
       if (visible) {
-        console.log(
-          `[keep-alive]----开始激活`,
-          data.get(name)?.scrollPos,
-          name,
-        );
+        // console.log(
+        //   `[keep-alive]----开始激活`,
+        //   data.get(name)?.scrollPos,
+        //   name,
+        // );
         window.scrollTo(0, data.get(name)?.scrollPos ?? 0);
         window.dispatchEvent(
           new CustomEvent(ACTIVATED_EVENT, {
@@ -67,7 +67,7 @@ export const AliveScope1 = ({
           })
         );
       } else {
-        console.log(`[keep-alive]----开始记录`, scrollPos.current, name);
+        //console.log(`[keep-alive]----开始记录`, scrollPos.current, name);
         update({ name, scrollY: scrollPos.current });
         window.dispatchEvent(
           new CustomEvent(DEACTIVATED_EVENT, {
@@ -90,7 +90,7 @@ export const AliveScope1 = ({
 
   useEffect(() => {
     const observer = new MutationObserver((mutationsList) => {
-      console.log(`[keep-alive]----dom`, window.scrollY);
+      //console.log(`[keep-alive]----dom`, window.scrollY);
 
       for (let mutation of mutationsList) {
         if (
@@ -147,11 +147,11 @@ export const AliveScope = ({
   const handleVisible = useCallback(
     (visible: boolean) => {
       if (visible) {
-        console.log(
-          `[keep-alive]----组件激活`,
-          name,
-          data.get(name)?.scrollPos
-        );
+        // console.log(
+        //   `[keep-alive]----组件激活`,
+        //   name,
+        //   data.get(name)?.scrollPos
+        // );
         window.scrollTo(0, data.get(name)?.scrollPos ?? 0);
         window.dispatchEvent(
           new CustomEvent(ACTIVATED_EVENT, {
@@ -159,7 +159,7 @@ export const AliveScope = ({
           })
         );
       } else {
-        console.log(`[keep-alive]----组件失活`, name);
+        //console.log(`[keep-alive]----组件失活`, name);
         window.dispatchEvent(
           new CustomEvent(DEACTIVATED_EVENT, {
             detail: { name },
@@ -175,7 +175,7 @@ export const AliveScope = ({
     const handleRouteChange = () => {
       // 离开页面时，记录位置
       if (isCur) {
-        console.log(`[keep-alive]----开始记录`, window.scrollY, name);
+        //console.log(`[keep-alive]----开始记录`, window.scrollY, name);
         update({ name, scrollY: window.scrollY });
       }
     };
@@ -213,7 +213,7 @@ export const AliveScope = ({
     window.onpopstate = function (event) {
       //当点击浏览器前进后退时，卸载组件
       if (isCur) {
-        console.log(`[keep-alive]----组件卸载`, name);
+        //console.log(`[keep-alive]----组件卸载`, name);
         unmount({ name });
       }
     };

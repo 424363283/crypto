@@ -16,7 +16,7 @@ const MobileFooter = () => {
           src='/static/images/common/logo.svg'
           width={192}
           height={50}
-          alt='y-mex logo'
+          alt='YMEX logo'
           className='footer-mobile-logo'
         />
       ) : (
@@ -24,7 +24,7 @@ const MobileFooter = () => {
           src='/static/images/common/logo_dark.svg'
           width={142}
           height={32}
-          alt='y-mex logo'
+          alt='YMEX logo'
           className='footer-mobile-logo'
         />
       )}

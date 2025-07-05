@@ -1,9 +1,10 @@
 import CommonIcon from '@/components/common-icon';
 import { clsx } from '@/core/utils';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { resetZeroHeight } from '../contract-menu';
+import { useKycState } from '@/core/hooks';
 
 export default function Menu({
   children,
@@ -19,6 +20,8 @@ export default function Menu({
   className,
   itemClassName,
   openContent,
+  boxRadius = '12px',
+  menuType
 }: {
   children: React.ReactNode;
   height: string;
@@ -33,19 +36,22 @@ export default function Menu({
   className?: string;
   itemClassName?: string;
   isIcon?: boolean; // 是否是icon，例如download icon menu
+  boxRadius?: string;
+  menuType?:string;
 }) {
+  const { updateKYCAsync } = useKycState(true);
   const { ref, inView } = useInView();
   const [hovering, setIsHovering] = useState(false);
   const onMenuMouseEnter = () => {
     setIsHovering(true);
-    if (isCommodity) {
-      const element = document.querySelector('.commodity-menu-box') as HTMLDivElement;
-      element && (element.style.height = height);
-    }
+    // if (isCommodity) {
+    //   const element = document.querySelector('.commodity-menu-box') as HTMLDivElement;
+    //   element && (element.style.height = height);
+    // }
   };
   const onMenuMouseLeave = () => {
     setIsHovering(false);
-    resetZeroHeight?.();
+    // resetZeroHeight?.();
   };
   const onSubMenuEnter = () => {
     setIsHovering(true);
@@ -53,6 +59,12 @@ export default function Menu({
   const onSubMenuLeave = () => {
     setIsHovering(false);
   };
+
+  useEffect(() => {
+    if(menuType === 'user' && hovering){
+      updateKYCAsync(true)
+    }
+  },[menuType,hovering])
   return (
     <>
       <div
@@ -64,23 +76,25 @@ export default function Menu({
         <div className={clsx('item', hovering && 'hovering', isActive && 'active-path', isIcon && 'icon-item')}>
           <div className={itemClassName}>
             {children}
-            {hot && <Image src='/static/images/common/hot.svg' width='15' height='15' alt='hot' className='hot' />}
+            {hot && <Image src='/static/images/common/hot.svg' width='16' height='16' alt='hot' className='hot' />}
             {showArrow && (
               <CommonIcon
-                name={hovering ? 'common-triangle-up-active-0' : 'common-tiny-triangle-down'}
-                size={14}
+                name={hovering ? 'common-tiny-triangle-down' : 'common-tiny-triangle-down'}
+                size={16}
                 enableSkin={hovering}
                 className={clsx('menu-arrow', hovering && 'hovering')}
               />
             )}
           </div>
         </div>
-        <div
-          className={clsx(isCommodity ? 'commodity-menu-box' : 'box', openContent && 'show-commodity-menu-box')}
-          onMouseLeave={onSubMenuLeave}
-          onMouseEnter={onSubMenuEnter}
-        >
-          {(!openContent ? inView : openContent) && content}
+        <div className={clsx('dropdown-list')}>
+          <div
+            className={clsx(isCommodity ? 'commodity-menu-box' : 'box', openContent && 'show-commodity-menu-box')}
+            onMouseLeave={onSubMenuLeave}
+            onMouseEnter={onSubMenuEnter}
+          >
+            {(!openContent ? inView : openContent) && content}
+          </div>
         </div>
       </div>
       <style jsx>
@@ -102,7 +116,7 @@ export default function Menu({
               font-size: 14px;
               font-weight: 500;
               margin: 0 12px;
-              color: var(--theme-font-color-1);
+              color: var(--text_1);
               > div {
                 min-height: 30px;
                 display: flex;
@@ -113,47 +127,47 @@ export default function Menu({
                 transition: all ease-in-out 0.2s;
                 transform: rotate(0deg);
                 background-size: cover;
-                margin-left: 1px;
+                margin-left: 8px;
               }
             }
 
             .item.hovering {
-              color: var(--skin-hover-font-color);
+              color: var(--brand);
               .menu-arrow {
                 background-image: url('/static/images/common/triangle-up-light.svg');
               }
             }
             .active-path {
-              border-bottom: 2px solid var(--skin-primary-color);
-              color: var(--skin-hover-font-color);
+              color: var(--text_brand);
             }
             .icon-item {
               padding: 0;
               margin-right: 0;
-              margin-left: 18px;
+              margin-left: 24px;
             }
             .box,
             .commodity-menu-box {
+              height: 100%;
+              min-width: ${width};
+              border-radius: ${boxRadius};
+              overflow: hidden;
+              background: var(--dropdown-select-bg-color);
+              box-shadow: 0px 4px 16px 0px var(--dropdown-select-shadow-color) !important;
+            }
+            .dropdown-list {
               position: absolute;
               height: 0;
-              min-width: ${width};
               transition: all 0.3s;
               top: 100%;
-              border-radius: 8px;
-              border-bottom-left-radius: 8px;
-              border-bottom-right-radius: 8px;
-              overflow: hidden;
               z-index: 999;
+              box-sizing: content-box;
               ${position}
             }
-
-            &:hover .box,
-            &:hover .commodity-menu-box,
+            &:hover .dropdown-list,
             .show-commodity-menu-box {
+              padding-top: 8px;
               top: 100% !important;
               height: ${height}!important;
-              box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.3) !important;
-              background-color: var(--theme-background-color-2) !important;
             }
           }
         `}

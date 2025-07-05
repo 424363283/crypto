@@ -4,73 +4,26 @@ import css from 'styled-jsx/css';
 import { Svg } from '@/components/svg';
 import { DropdownSelect } from '@/components/trade-ui/common/dropdown';
 import { clsxWithScope } from '@/core/utils';
+import { Swap } from '@/core/shared';
+import { LANG } from '@/core/i18n';
+import CommonIcon from '@/components/common-icon';
 
-const Index = ({ options, value, onChange }: { options: any[]; value?: string; onChange?: any }) => {
-  const [selected, setSelected] = useState(0);
-
-  const item = options[selected];
-
+const Index = ({ value, onChange }: { value?: string; onChange?: any }) => {
+  const { LIMIT_SPSL, MARKET_SPSL } = Swap.Trade.ORDER_TRADE_TYPE;
+  const options = [LANG('限价'), LANG('市价')];
+  const optionValues = [LIMIT_SPSL, MARKET_SPSL];
   return (
     <>
-      <div className={clsx('order-type-select')}>
-        <div
-          className={clsx('text', value === item[1] && 'active')}
-          onClick={() => {
-            onChange(item[1]);
-          }}
-        >
-          {item[0]}
-        </div>
-        <DropdownSelect
-          data={options}
-          onChange={(item, index) => {
-            onChange(item[1]);
-            setSelected(index);
-          }}
-          isActive={(v, index) => v[1] === value}
-          formatOptionLabel={(v) => v[0]}
-          overlayClassName={clsx('overlay')}
-          trigger={['hover', 'click']}
-          align={{ offset: [10, 0] }}
-        >
-          <div className={clsx('arrow')}>
-            <Svg src='/static/images/common/arrow_down.svg' width={12} height={12} />
-          </div>
-        </DropdownSelect>
-      </div>
-      {styles}
+      <DropdownSelect
+        data={options}
+        value={value === LIMIT_SPSL ? 0 : 1}
+        onChange={(item, index) => {
+          onChange(optionValues[index]);
+        }}
+      >
+      </DropdownSelect>
     </>
   );
 };
-
-const { className, styles } = css.resolve`
-  .order-type-select {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    .text {
-      font-size: 14px;
-      font-weight: 400;
-      color: var(--theme-trade-text-color-2);
-      line-height: 20px;
-      cursor: pointer;
-      &.active {
-        color: var(--skin-primary-color);
-      }
-    }
-    .arrow {
-      position: relative;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      height: 20px;
-      width: 16px;
-      top: 0px;
-    }
-  }
-`;
-const clsx = clsxWithScope(className);
 
 export default Index;

@@ -20,6 +20,7 @@ import { useEffect } from 'react';
 
 import { kChartEmitter } from '@/core/events';
 import dynamic from 'next/dynamic';
+import { Layer } from '@/components/constants';
 
 const CalculatorModal = dynamic(() => import('./components/modal/calculator-modal'), { ssr: false });
 const LeverModal = dynamic(() => import('./components/modal/lever-modal'), { ssr: false });
@@ -32,23 +33,24 @@ const SpslSettingModal = dynamic(() => import('./components/modal/spsl-setting-m
 const PaintOrderModal = dynamic(() => import('./components/modal/paint-order-modal'), { ssr: false });
 const PaintOrderOptionsModal = dynamic(() => import('./components/modal/paint-order-options-modal'), { ssr: false });
 const ModifyPositionMriceModal = dynamic(() => import('./components/modal/modify-position-price-modal') as never, {
-  ssr: false,
+  ssr: false
 });
 const TransferModal = dynamic(() => import('./components/modal/transfer-modal'), { ssr: false });
 const WalletSelectModal = dynamic(() => import('./components/modal/wallet-select-modal'), { ssr: false });
 const WalletSelectModalInTrade = dynamic(() => import('./components/modal/wallet-select-modal-in-trade'), {
-  ssr: false,
+  ssr: false
 });
 const WelcomeDemoModal = dynamic(() => import('./components/modal/welcome-demo-modal'), { ssr: false });
 const BounsUseModal = dynamic(() => import('./components/modal/bouns-use-modal'), { ssr: false });
 const WalleViewGuideGuide = dynamic(() => import('./components/bouns-guide/components/wallet-view-guide'), {
-  ssr: false,
+  ssr: false
 });
-const LightningOrder = dynamic(() => import('./components/lightning-order'), {
-  ssr: false,
+const LightningOrder = dynamic(() => import('@/components/trade-ui/trade-view/swap/components/lightning-order'), {
+  ssr: false
 });
+const OpenContractModal = dynamic(() => import('./components/modal/open-contract-modal'), { ssr: false });
 
-export const SwapTradeViewContent = () => {
+export const SwapTradeViewContent = ({ layer = Layer.Default }: { layer?: Layer }) => {
   const { isUsdtType, quoteId } = Swap.Trade.base;
 
   useEffect(() => {
@@ -57,7 +59,7 @@ export const SwapTradeViewContent = () => {
       const wallets = Swap.Assets.getWallets({ usdt: isUsdtType, withHooks: false });
 
       // 钱包id不存在 设置第一个
-      if (wallets?.length > 0 && wallets.findIndex((v) => v.wallet === walletId) === -1) {
+      if (wallets?.length > 0 && wallets.findIndex(v => v.wallet === walletId) === -1) {
         Swap.Info.setWalletId(isUsdtType, wallets[0].wallet);
       }
     });
@@ -73,8 +75,8 @@ export const SwapTradeViewContent = () => {
             price: Swap.Utils.minChangeFormat(
               Swap.Info.getCryptoData(quoteId, { withHooks: false }).minChangePrice,
               `${price}`
-            ),
-          },
+            )
+          }
         });
     };
     kChartEmitter.addListener(kChartEmitter.K_CHART_CLICK_CROSSHAIR_PRICE, func);
@@ -85,20 +87,27 @@ export const SwapTradeViewContent = () => {
   return (
     <WalleViewGuideGuide>
       <ToolBar wrapperClassName={clsx('order-view-padding')} />
-      <TradePositionMode />
-      <div className={clsx('order-view-padding')}>
-        <InputViewHeader />
-        <div className='swap-guide-step-3'>
-          <InputView />
-          <VolumeSlider />
+      <TradePositionMode layer={layer} />
+      <InputViewHeader />
+      <div className={clsx('order-placer-panel order-view-padding')}>
+        <div className="swap-guide-step-3">
+          <InputView layer={layer} />
+          <VolumeSlider layer={layer} />
         </div>
-        <div className='line'></div>
-        <SpslContent>
-          <SpslCheckbox />
-          <SpslInputs />
-        </SpslContent>
-        <OnlyReducePositionCheckbox />
-        <EffectiveTime />
+        <div className="line"></div>
+        <div className={clsx('advanced-setting')}>
+          <SpslContent>
+            <div className={clsx('order-spsl-setting')}>
+              <SpslCheckbox />
+              <SpslInputs layer={layer}/>
+            </div>
+          </SpslContent>
+          {/* TO-DO 组合成一个组件*/}
+          <div className={clsx('order-dealwith-type')}>
+            <OnlyReducePositionCheckbox />
+            <EffectiveTime />
+          </div>
+        </div>
       </div>
       <BottomView wrapperClassName={clsx('order-view-padding')} />
       {styles}
@@ -127,6 +136,7 @@ const SwapComponent = () => {
     paintOrderVisible,
     paintOrderOptionsVisible,
     modifyPositionMriceModalVisible,
+    openContractVisible
   } = Swap.Trade.store.modal;
 
   return (
@@ -138,7 +148,7 @@ const SwapComponent = () => {
       ) : (
         <SwapTradeViewContent />
       )}
-      <Desktop>{Account.isLogin && lightningOrder && <LightningOrder />}</Desktop>
+      {/* <Desktop>{Account.isLogin && lightningOrder && <LightningOrder />}</Desktop> */}
       {/* modal */}
       {marginTypeVisible && <MarginTypeModal />}
       {leverVisible && <LeverModal />}
@@ -156,6 +166,7 @@ const SwapComponent = () => {
       {paintOrderVisible && <PaintOrderModal />}
       {paintOrderOptionsVisible && <PaintOrderOptionsModal />}
       {modifyPositionMriceModalVisible && <ModifyPositionMriceModal />}
+      {openContractVisible && <OpenContractModal />}
       {/* other */}
       <OrderListener />
     </>
@@ -178,6 +189,7 @@ export const SwapMobileModals = () => {
     selectUnitVisible,
     paintOrderVisible,
     paintOrderOptionsVisible,
+    openContractVisible
   } = Swap.Trade.store.modal;
   return (
     <>
@@ -197,16 +209,52 @@ export const SwapMobileModals = () => {
       {paintOrderVisible && <PaintOrderModal />}
       {paintOrderOptionsVisible && <PaintOrderOptionsModal />}
       {demo && Account.isLogin && <WelcomeDemoModal />}
+      {openContractVisible && <OpenContractModal />}
+      {calculatorVisible && <CalculatorModal />}
     </>
   );
 };
 
 const { className, styles } = css.resolve`
   .order-view-padding {
-    padding: 0 10px;
+    padding: 0 16px;
     @media ${MediaInfo.mobile} {
       padding: 0;
+      margin: 0 0.5rem;
+      :global(.swap-guide-step-3) {
+        padding-bottom: 1.5rem;
+      }
     }
+  }
+  .advanced-setting {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    .order-spsl-setting {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .order-dealwith-type {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      @media ${MediaInfo.mobile} {
+        margin: 0;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--fill_line_1);
+      }
+    }
+  }
+  :global(.tool-bar) {
+    margin: 0 16px;
+  }
+  :global(.position-mode) {
+    margin: 0 16px;
+  }
+  .order-placer-panel {
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
 `;
 const clsx = clsxWithScope(className);

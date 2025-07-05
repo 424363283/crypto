@@ -1,9 +1,9 @@
 import { Lang } from '@/core/i18n/src';
-// import { Account } from '@/core/shared';
-import { DeviceInfo, toEAST8Time } from '@/core/utils';
+import { DeviceInfo, removeCookie, toEAST8Time } from '@/core/utils';
 import { isSwapDemo } from '@/core/utils/src/is';
 import axios from 'axios';
 import { TO_GMT8_API } from './constants';
+import { Account } from '@/core/shared';
 
 /**
  * 配置-AXIOS
@@ -18,18 +18,17 @@ const $Axios = ({ retry = Infinity, retryDelay = 1000, ...axiosConfig }) => {
   // @ts-ignore
   _axios.defaults.retryDelay = retryDelay;
   _axios.interceptors.request.use(async (request: any) => {
-  
     if (TO_GMT8_API.indexOf(request.url) > -1 && request?.params) {
       if (request.params?.createTimeGe) {
         request.params = {
           ...request.params,
-          createTimeGe: toEAST8Time(request.params.createTimeGe),
+          createTimeGe: toEAST8Time(request.params.createTimeGe)
         };
       }
       if (request.params?.createTimeLe) {
         request.params = {
           ...request.params,
-          createTimeLe: toEAST8Time(request.params.createTimeLe),
+          createTimeLe: toEAST8Time(request.params.createTimeLe)
         };
       }
     }
@@ -49,8 +48,11 @@ const $Axios = ({ retry = Infinity, retryDelay = 1000, ...axiosConfig }) => {
   });
 
   _axios.interceptors.response.use(
-    (response) => {
+    response => {
       if (+response.data?.code === 401) {
+        // removeCookie('TOKEN');
+        // document.documentElement.setAttribute('token', '');
+        // return Account.setLoginStatus(false);
         // Account.logout();
         return;
       }
@@ -77,10 +79,10 @@ const $Axios = ({ retry = Infinity, retryDelay = 1000, ...axiosConfig }) => {
         code,
         message,
         data,
-        headers: response.headers,
+        headers: response.headers
       } as any;
     },
-    (err) => {
+    err => {
       const httpstatus = [404]; // 无需重联的状态码
       if (httpstatus.includes(err?.response?.status) || !err.response) return Promise.reject(err);
       const config = err.config;
@@ -88,7 +90,7 @@ const $Axios = ({ retry = Infinity, retryDelay = 1000, ...axiosConfig }) => {
       config.__retryCount = config.__retryCount || 0;
       if (config.__retryCount >= config.retry) return Promise.reject(err);
       config.__retryCount += 1;
-      var backoff = new Promise<void>((resolve) => {
+      var backoff = new Promise<void>(resolve => {
         setTimeout(() => {
           config.retryDelay += 1000;
           resolve();

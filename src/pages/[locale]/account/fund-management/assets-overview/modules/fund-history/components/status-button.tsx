@@ -49,6 +49,10 @@ export const StatusButton = ({ status, isTransfer }: { status: number; isTransfe
       color: '#9E9E9D',
       background: 'var(--theme-background-color-3)',
     },
+    6: {
+      color: '#141717',
+      background: '#F5F5F3',
+    },
   };
   const colorStatus = [1, 2, 6, 3].includes(status) ? status : 0;
   const TITLE_MAP: { [key: string]: string } = {
@@ -65,6 +69,7 @@ export const StatusButton = ({ status, isTransfer }: { status: number; isTransfe
     1: LANG('成功'),
     2: LANG('失败'),
     3: LANG('待审核'),
+    6: LANG('已退币'),
   };
   if (isTransfer) {
     return TRANSFER_TITLE[status] ? (

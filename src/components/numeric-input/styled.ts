@@ -1,19 +1,41 @@
-import { clsxWithScope } from '@/core/utils';
+import { clsxWithScope, MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
 
 const { className, styles: _styles } = css.resolve`
   .components-numeric-input {
-    flex: 1;
+    flex: 1 auto;
     display: flex;
     align-items: center;
     position: relative;
     border: 1px solid transparent;
-    border-radius: 6px;
+    border-radius: 8px;
     height: 40px;
     margin: 10px 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text_1);
+    cursor: text;
+    border: 1px solid transparent !important;
+    :global(> *:not(input)) {
+      flex-shrink: 0;
+    }
     &.text-center {
       :global(input) {
         text-align: center;
+      }
+    }
+    :global(> *:last-child:not([class~='controller'])) {
+      &::before {
+        content: '';
+        width: 1px;
+        text-align: center;
+        height: 16px;
+        margin: 0 16px;
+        background: var(--fill_line_3);
+        @media ${MediaInfo.mobile} {
+          margin-right: 0;
+          margin-left: 1rem;
+        }
       }
     }
 
@@ -34,11 +56,11 @@ const { className, styles: _styles } = css.resolve`
     }
     input {
       border: 0;
-      border-radius: 6px;
-      flex: 1;
-      text-indent: 6px;
-      font-size: 13px;
-      color: #232e34;
+      border-radius: 8px;
+      text-indent: 0px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text_1);
       background: transparent;
       outline: none;
 
@@ -47,10 +69,10 @@ const { className, styles: _styles } = css.resolve`
         ime-mode: disabled;
       }
       &::placeholder {
-        color: var(--theme-font-color-placeholder) !important;
+        color: var(--text_2) !important;
       }
       &::-webkit-input-placeholder {
-        color: var(--theme-font-color-placeholder) !important;
+        color: var(--text_2) !important;
       }
     }
     .controller {
@@ -70,6 +92,27 @@ const { className, styles: _styles } = css.resolve`
         :global(> *) {
           flex: none;
           margin-right: 0;
+        }
+      }
+      &.v3 {
+        position: relative;
+        flex-direction: column;
+        overflow: visible;
+        justify-content: space-between;
+        height: auto;
+        :global(> *) {
+          flex: none;
+          margin-right: 0;
+          width: 12px;
+          height: 18px;
+        }
+        :global(+ *) {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          line-height: 14px;
+          font-size: 12px;
+          color: var(--text_2) !important;
         }
       }
       .add {
@@ -97,8 +140,12 @@ const { className, styles: _styles } = css.resolve`
     &.focus-active {
       &:hover,
       &.focus {
-        border-radius: 6px;
-        border: 1px solid var(--skin-primary-color) !important;
+        border-radius: 8px;
+        border: 1px solid transparent !important;
+        @media ${MediaInfo.mobile} {
+          outline: 1px solid var(--brand);
+          outline-offset: -1px;
+        }
       }
       /* &.focus {
         box-shadow: 0px 0px 0px 2px var(--skin-primary-color);

@@ -17,9 +17,25 @@ const { className, styles } = css.resolve`
           align-items: center;
           flex-wrap: wrap;
           cursor: pointer;
+          margin:4px 0 0;
           > :last-child {
-            margin-left: 3px;
+            margin-left: 4px;
           }
+        }
+        .margin-name{
+          height: 16px;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
+          border-radius: 4px;
+          background: var(--fill_pop);
+          color: var(--text_2);
+          font-size: 10px;
+          font-weight: 400;
+          padding:0 8px;
+        }
+        .lever-action{
+          display:flex;
         }
         .nowrap,
         .nowrap > div {
@@ -38,8 +54,6 @@ const { className, styles } = css.resolve`
           flex-direction: row;
           align-items: center;
           cursor: pointer;
-          white-space: nowrap;
-          /* flex-wrap: wrap; */
           &:hover {
             color: var(--skin-main-font-color);
           }
@@ -55,30 +69,30 @@ const { className, styles } = css.resolve`
         }
         .code-text {
           display: flex;
-          flex-direction: row;
-          align-items: center;
+          flex-direction: column;
+          align-items: flex-start;
           flex-wrap: wrap;
+          color: var(--text_1);
+          font-size: 12px;
+          font-weight: 500;
         }
         &:before {
           position: absolute;
           display: block;
           content: '';
           width: 4px;
-          height: 36px;
-          top: 50%;
+          bottom:1px;
+          top: 0;
           left: 1px;
-          margin-top: -21px;
-          background: transparent;
-          border-top: 2.4px solid transparent;
-          border-bottom: 2.4px solid transparent;
-          border-right: 2.4px solid transparent;
-          border-left: 4px solid transparent;
+          height: 72px;
+          margin: auto;
+          
         }
         &.buy:before {
-          border-left-color: var(--color-green);
+          background:var(--color-green);
         }
         &.sell:before {
-          border-left-color: var(--color-red);
+          background:var( --color-red);
         }
         .content {
           display: flex;
@@ -88,38 +102,16 @@ const { className, styles } = css.resolve`
       }
     }
 
-    .liquidation-price {
-      color: var(--skin-primary-color);
-    }
-    .button-actions {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      &.flex-end {
-        justify-content: flex-end;
+    .editIcon{
+      margin:0 0 0 4px;
+      :global(path){
+        fill:var(--text_2);
       }
-      :global(.sub-button) {
-        flex: none;
-        cursor: pointer;
-        text-align: center;
-        margin-right: 13px;
-        min-width: 57px;
-        height: 26px;
-        line-height: 24px;
-        padding: 0 8px;
-        border: 1px solid var(--theme-trade-border-color-1);
-        background: transparent;
-        font-size: 12px;
-        font-weight: 400;
-        color: var(--theme-trade-text-color-2);
-        margin-bottom: 3px;
-        &:hover {
-          color: var(--skin-primary-color);
-          border-color: var(--skin-primary-color);
-        }
-        &:last-child {
-          margin-right: 0;
-        }
+    }
+    .stroke-icon{
+      :global(path){
+        fill: none;
+        stroke:var(--text_2);
       }
     }
     .margin-wrapper {
@@ -144,11 +136,15 @@ const { className, styles } = css.resolve`
       display: flex;
       align-items: center;
       & > div {
-        margin-right: 6px;
         div {
           font-size: 12px;
           font-weight: 400;
         }
+      }
+      .income-rate{
+        color: var(--text_red);
+        font-size: 12px;
+        font-weight: 500;
       }
     }
     .follow-action {
@@ -168,6 +164,16 @@ const { className, styles } = css.resolve`
     .current-position,
     .current-position :global(div) {
       white-space: pre-wrap;
+    }
+  }
+  .custom-tooltip{
+    :global(.ant-tooltip-inner){
+      color: var(--text_3) !important;
+      font-size: 12px !important;
+      font-weight: 400 !important;
+      line-height: 150% !important;
+      border-radius: 6px !important;
+      background: var(--fill_pop) !important;;
     }
   }
 `;

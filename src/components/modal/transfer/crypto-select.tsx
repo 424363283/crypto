@@ -2,7 +2,7 @@ import { BasicInput, INPUT_TYPE } from '@/components/basic-input';
 import CoinLogo from '@/components/coin-logo';
 import { useResponsive, useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
-import { clsx } from '@/core/utils';
+import { clsx, MediaInfo } from '@/core/utils';
 import { Dropdown } from 'antd';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -157,11 +157,15 @@ const styles = css`
   @import 'src/core/styles/src/design.scss';
   .crypto-selected-content {
     width: 100%;
-    height: 40px;
-    background: #2d3546;
-    border-radius: 3px;
+    height: 48px;
+    background: var(--fill_3);
+    border-radius: 8px;
     display: flex;
     align-items: center;
+    @media ${MediaInfo.mobile}{
+      padding: 0 12px;
+      width: calc(100% - 24px);
+    }
     &.transfer-modal-light {
       background: #f5f5f5;
     }
@@ -222,7 +226,7 @@ const styles = css`
       line-height: 18px;
       font-size: 14px;
       font-weight: 400;
-      color: #fff;
+      color: var(--text_1);
       margin-right: 4px;
     }
     :global(.subname) {

@@ -12,6 +12,7 @@ import { SWAP_HISTORY_ORDER_TYPE } from './types';
 const SwapFilterWithTable = dynamic(() => import('./components/swap-filter-with-table'));
 
 import { isSwapDemo } from '@/core/utils/src/is';
+import { Size } from '@/components/constants';
 const _isSwapDemo = isSwapDemo();
 function SwapHistoryOrder({
   isSwapU,
@@ -39,6 +40,7 @@ function SwapHistoryOrder({
     <CommonContainer>
       <AssetTableCard>
         <TabBar
+          size={Size.XL}
           options={[
             { label: LANG('当前委托'), value: SWAP_HISTORY_ORDER_TYPE.CURRENT_COMMISSIONS },
             { label: LANG('历史委托'), value: SWAP_HISTORY_ORDER_TYPE.HISTORY_COMMISSIONS },

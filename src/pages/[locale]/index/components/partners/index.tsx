@@ -2,114 +2,93 @@ import { useTheme } from '@/core/hooks/src/use-theme';
 import { clsx } from '@/core/utils/src/clsx';
 import { MediaInfo } from '@/core/utils/src/media-info';
 import Image from 'next/image';
-
-const list1 = [
-  'banxa',
-  'blockchair',
-  'chainlink',
-  'coincodex',
-  'coindataflow',
-  'cointracking',
-  'coinify',
-  'coinledger',
-  'coinpaprika',
+const list3 = [
+  {
+    name: 'tangem',
+    suffix: 'png',
+    width: 420,
+    height: 120
+  },
+  {
+    name: 'coinify',
+    suffix: 'png',
+    width: 420,
+    height: 120
+  },
+  {
+    name: 'chainlink',
+    suffix: 'png',
+    width: 420,
+    height: 120
+  },
+  {
+    name: 'banxa',
+    suffix: 'png',
+    width: 420,
+    height: 120
+  },
+  {
+    name: 'xanpool',
+    suffix: 'png',
+    width: 450,
+    height: 120
+  },
+  {
+    name: 'moonpay',
+    suffix: 'png',
+    width: 540,
+    height: 120
+  },
+  {
+    name: 'blockchair',
+    suffix: 'png',
+    width: 540,
+    height: 120
+  },
+  {
+    name: 'tradingview',
+    suffix: 'png',
+    width: 570,
+    height: 120
+  },
+  {
+    name: 'coincodex',
+    suffix: 'png',
+    width: 570,
+    height: 120
+  },
+  {
+    name: 'coinpaprika',
+    suffix: 'png',
+    width: 570,
+    height: 120
+  }
 ];
-const list2 = ['fio', 'intothevlock', 'koinly', 'tradingview', 'transak', 'travala', 'divly', 'mercuryo', 'tangem'];
+const repeatList = [1, 1];
 export default function Partners() {
-  const { theme, isDark } = useTheme();
+  const { isDark } = useTheme();
 
   return (
-    <div className={clsx('container', theme)}>
-      <div className='gradient-l'></div>
-      <div className='right'>
-        <ul>
-          {list1?.map((item, key) => {
-            return (
-              <li key={item}>
-                <Image
-                  width={54}
-                  height={34}
-                  alt=''
-                  src={`/static/images/home/partners/${item}${isDark ? '-1' : ''}.svg`}
-                />
-              </li>
-            );
-          })}
-        </ul>
-        <ul>
-          {list1?.map((item, key) => {
-            return (
-              <li key={item}>
-                <Image
-                  width={54}
-                  height={34}
-                  alt=''
-                  src={`/static/images/home/partners/${item}${isDark ? '-1' : ''}.svg`}
-                />
-              </li>
-            );
-          })}
-        </ul>
-        <ul>
-          {list1?.map((item, key) => {
-            return (
-              <li key={item}>
-                <Image
-                  width={54}
-                  height={34}
-                  alt=''
-                  src={`/static/images/home/partners/${item}${isDark ? '-1' : ''}.svg`}
-                />
-              </li>
-            );
-          })}
-        </ul>
+    <div className={clsx('container')}>
+      <div className="left">
+        {repeatList.map((value, index) => (
+          <ul key={index}>
+            {list3?.map((item: any, key) => {
+              const { name, width, height, suffix } = item;
+              return (
+                <li key={key}>
+                  <Image
+                    width={width / 3}
+                    height={height / 3}
+                    alt=""
+                    src={`/static/images/home/partners/${isDark ? 'dark/' : ''}${name}.${suffix}`}
+                  />
+                </li>
+              );
+            })}
+          </ul>
+        ))}
       </div>
-      <div className='left'>
-        <ul>
-          {list2?.map((item, key) => {
-            return (
-              <li key={item}>
-                <Image
-                  width={54}
-                  height={34}
-                  alt=''
-                  src={`/static/images/home/partners/${item}${isDark ? '-1' : ''}.svg`}
-                />
-              </li>
-            );
-          })}
-        </ul>
-        <ul>
-          {list2?.map((item, key) => {
-            return (
-              <li key={item}>
-                <Image
-                  width={54}
-                  height={34}
-                  alt=''
-                  src={`/static/images/home/partners/${item}${isDark ? '-1' : ''}.svg`}
-                />
-              </li>
-            );
-          })}
-        </ul>
-        <ul>
-          {list2?.map((item, key) => {
-            return (
-              <li key={item}>
-                <Image
-                  width={54}
-                  height={34}
-                  alt=''
-                  src={`/static/images/home/partners/${item}${isDark ? '-1' : ''}.svg`}
-                />
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-      <div className='gradient-r'></div>
       <style jsx>{`
         @keyframes move_1 {
           from {
@@ -129,51 +108,29 @@ export default function Partners() {
           }
         }
         .container {
+          display: flex;
+          align-items: center;
+          gap: 56px;
           margin: 0 auto;
           width: 100%;
           overflow: hidden;
-          background: var(--theme-background-color-5);
           position: relative;
-          .gradient-l,
-          .gradient-r {
-            width: 360px;
-            height: 270px;
-            position: absolute;
-            top: -20px;
-            left: 0;
-            background: var(--theme-linear-gradient-left-color);
-            z-index: 1;
-            @media ${MediaInfo.tablet} {
-              width: 60px;
-            }
-            @media ${MediaInfo.mobile} {
-              width: 30px;
-            }
-          }
-          .gradient-r {
-            left: auto;
-            right: 0;
-            background: var(--theme-linear-gradient-right-color);
-          }
+          background: var(--fill_bg_1);
           > div {
             display: flex;
             align-items: center;
             ul {
               display: flex;
               align-items: center;
-              gap: 24px;
-              padding-inline-start: 24px;
+              gap: 80px;
               margin: 0;
+              padding-inline-start: 80px;
               li {
-                background: var(--theme-background-color-2);
                 display: flex;
-                height: 80px;
-                padding: 0 20px;
-                justify-content: center;
-                align-items: center;
-                border-radius: 8px;
-                box-shadow: 4px 4px 16px 0px rgba(224, 216, 177, 0.3);
-                min-width: 200px;
+                padding: 80px 0;
+                @media ${MediaInfo.mobile} {
+                  padding: 20px 0;
+                }
                 :global(img) {
                   max-height: 80px;
                   width: auto;
@@ -192,7 +149,6 @@ export default function Partners() {
               }
             }
             &.left {
-              margin: 16px 0 100px 0;
               ul {
                 animation: move_2 40s infinite linear;
               }

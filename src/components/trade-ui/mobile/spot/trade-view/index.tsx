@@ -9,16 +9,34 @@ import { BaseModalStyle } from '@/components/trade-ui/trade-view/spot-strategy/c
 import PositionButton from '@/components/trade-ui/trade-view/spot/components/position-button';
 import { OrderBookEmitter } from '@/core/events';
 import { useLocalStorage, useRouter, useTheme } from '@/core/hooks';
-import { LANG } from '@/core/i18n';
+import { LANG, TrLink } from '@/core/i18n';
 import { SUBSCRIBE_TYPES, useWs } from '@/core/network';
-import { LIST_TYPE, MarketsMap, SideType, Spot, SpotOrderType, TRADE_TAB } from '@/core/shared';
+import TradeInput from '@/components/trade-ui/trade-view/components/input';
+import TradeSettingIcon from '@/components/header/components/icon/trade-setting-icon';
+import { getKineState, setPositionLineTpSl, setPositionTpSlFun } from '@/store/kline';
+import {
+  // LIST_TYPE,
+  MarketsMap,
+  SideType,
+  Spot,
+  SpotOrderType,
+  TRADE_TAB
+} from '@/core/shared';
+import {
+  setIsH5CreateAnOrderFun
+} from '@/store/kline';
 import { LOCAL_KEY, SESSION_KEY, useAppContext } from '@/core/store';
 import { getActive, toMinNumber } from '@/core/utils';
-import { Tooltip, message } from 'antd';
+import { message } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useImmer } from 'use-immer';
-import { GridViewMobile } from './grid-view-mobile';
-import { InvestViewMobile } from './invest-view-mobile';
+// import { GridViewMobile } from './grid-view-mobile';
+// import { InvestViewMobile } from './invest-view-mobile';
+import clsx from 'clsx';
+// import Tooltip from '@/components/trade-ui/common/tooltip';
+import DepositModal from './deposit-modal';
+import { ACCOUNT_TYPE, TransferModal } from '@/components/modal';
+import { Layer } from '@/components/constants';
 
 const Trade = Spot.Trade;
 const Strategy = Spot.Strategy;
@@ -33,10 +51,12 @@ const TradeView = () => {
   const [visible, setVisible] = useState(false);
   const { isLogin } = useAppContext();
   const [showGrid, setShowGrid] = useState(false);
+  const { isH5CreateAnOrder } = getKineState();
 
   const [state, setState] = useImmer({
     sideType: SideType.BUY,
     transferModalVisible: false,
+    transferSelectModalVisible: false,
     marketMap: null as null | MarketsMap,
     buyPrice: '' as NS,
     sellPrice: '' as NS,
@@ -48,6 +68,7 @@ const TradeView = () => {
     priceTemp: '' as NS,
     minPrice: '' as NS,
     maxPrice: '' as NS,
+    newPrice: '' as NS
   });
 
   const [sliderData, setSliderData] = useImmer({
@@ -55,7 +76,7 @@ const TradeView = () => {
     step: 1,
     value: 0,
     min: 0,
-    max: 100,
+    max: 100
   });
 
   useEffect(() => {
@@ -75,8 +96,30 @@ const TradeView = () => {
     initialState();
   }, [tab, state.sideType]);
 
+
+
+  useEffect(() => {
+    if(isH5CreateAnOrder){
+          setVisible(true);
+    }
+
+  }, [isH5CreateAnOrder]);
+
+
+
+  useEffect(() => {
+    if(!visible){
+setIsH5CreateAnOrderFun(false)
+    }
+
+  }, [visible]);
+
+
+  
+
+
   const initialState = () => {
-    setState((draft) => {
+    setState(draft => {
       draft.initialPrice = false;
       draft.buyPrice = '';
       draft.sellPrice = '';
@@ -86,21 +129,22 @@ const TradeView = () => {
       draft.sellVolume = '';
       draft.minPrice = '';
       draft.maxPrice = '';
+      draft.newPrice = '';
     });
-    setSliderData((draft) => {
+    setSliderData(draft => {
       draft.value = 0;
     });
   };
 
-  useWs(SUBSCRIBE_TYPES.ws3001, (marketMap) => {
-    setState((draft) => {
+  useWs(SUBSCRIBE_TYPES.ws3001, marketMap => {
+    setState(draft => {
       draft.marketMap = { ...marketMap };
     });
   });
 
   useEffect(() => {
     const event = (price: string) => {
-      setState((draft) => {
+      setState(draft => {
         draft.buyPrice = price;
         state.buyVolume && (draft.buyAmount = price.mul(state.buyVolume).toFixed(currentSpotContract.amountDigit));
         draft.sellPrice = price;
@@ -121,7 +165,7 @@ const TradeView = () => {
     const maxPrice = state.priceTemp
       ?.mul(1?.add(currentSpotContract.limitAskPriceRate))
       ?.toFixed(currentSpotContract.digit);
-    setState((draft) => {
+    setState(draft => {
       draft.minPrice = minPrice;
       draft.maxPrice = maxPrice;
     });
@@ -130,12 +174,15 @@ const TradeView = () => {
   useEffect(() => {
     if (state.marketMap) {
       const marketItem = state.marketMap[routerId];
-      setState((draft) => {
-        if (!state.initialPrice && Number(marketItem?.price) > 0) {
-          draft.buyPrice = marketItem?.price;
-          draft.sellPrice = marketItem?.price;
-          draft.priceTemp = marketItem?.price;
-          draft.initialPrice = true;
+      setState(draft => {
+        if (Number(marketItem?.price) > 0) {
+          draft.newPrice = marketItem?.price;
+          if (!state.initialPrice) {
+            draft.buyPrice = marketItem?.price;
+            draft.sellPrice = marketItem?.price;
+            draft.priceTemp = marketItem?.price;
+            draft.initialPrice = true;
+          }
         }
       });
     }
@@ -147,7 +194,7 @@ const TradeView = () => {
   const onTabChanged = useCallback(
     (tab: SpotOrderType) => {
       if (tab === SpotOrderType.LIMIT) {
-        setState((draft) => {
+        setState(draft => {
           draft.buyAmount = '';
           draft.sellAmount = '';
           draft.buyVolume = '';
@@ -157,7 +204,7 @@ const TradeView = () => {
         });
         setTab(tab);
       } else {
-        setState((draft) => {
+        setState(draft => {
           draft.buyAmount = '';
           draft.sellVolume = '';
         });
@@ -170,14 +217,15 @@ const TradeView = () => {
   const ExchangeIconMemo = useMemo(() => {
     return (
       <CommonIcon
-        name='common-exchange-0'
+        name="common-exchange-0"
         width={11}
         height={12}
-        className='exchange'
+        className="exchange"
         enableSkin
         onClick={() => {
           if (isLogin) {
-            setState((draft) => {
+            setVisible(false);
+            setState(draft => {
               draft.transferModalVisible = true;
             });
           } else {
@@ -188,6 +236,12 @@ const TradeView = () => {
     );
   }, [isLogin]);
 
+
+
+
+
+
+
   const onBottomBtnClicked = (type: SideType) => {
     if (!isLogin) {
       const pathname = router.asPath;
@@ -195,7 +249,7 @@ const TradeView = () => {
       router.push('/login');
       return;
     }
-    setState((draft) => {
+    setState(draft => {
       draft.sideType = type;
     });
     setVisible(true);
@@ -216,11 +270,11 @@ const TradeView = () => {
 
   const onSliderChanged = useCallback(
     (val: number, isLimit: boolean) => {
-      setSliderData((draft) => {
+      setSliderData(draft => {
         draft.value = val;
       });
       if (isLogin) {
-        setState((draft) => {
+        setState(draft => {
           if (isLimit) {
             if (isBuy) {
               // 先通过可交易金额去反推可购买数量，但是数量存在小数的精度省略，所以再通过可购买数量来推出本次用于购买的金额
@@ -258,25 +312,24 @@ const TradeView = () => {
   const renderMarketPriceTrade = useCallback(() => {
     return (
       <>
-        <div className='container'>
-          <div className='row'>
-            <div className='input'>
-              <span>{LANG('价格')}</span>
-              <span>
-                {isBuy ? LANG('以市场上最优价格买入') : LANG('以市场上最优价格卖出')} {quoteCoin}
-              </span>
+        <div className="container">
+          <div className="box">
+            <div className="title">{LANG('价格')}</div>
+            <div className="market-input">
+              {isBuy ? LANG('以市场上最优价格买入') : LANG('以市场上最优价格卖出')} {quoteCoin}
             </div>
           </div>
-          <div className='row'>
+          <div className="box">
+            <div className="title">{LANG(isBuy ? '交易额' : '数量')}</div>
             <Input
-              label={isBuy ? LANG('成交额') : LANG('数量')}
+              layer={Layer.Overlay}
               placeholder={LANG('请输入')}
               unit={isBuy ? quoteCoin : coin}
               decimal={isBuy ? currentSpotContract.amountDigit : currentSpotContract.volumeDigit}
               min={isBuy ? minAmount : minVolume}
               value={isBuy ? state.buyAmount : state.sellVolume}
-              onChange={(val) =>
-                setState((draft) => {
+              onChange={val =>
+                setState(draft => {
                   if (isBuy) {
                     draft.buyAmount = val;
                   } else {
@@ -285,35 +338,48 @@ const TradeView = () => {
                 })
               }
             />
-          </div>
-          <div className='sliderWrapper row'>
             <Slider
+              layer={Layer.Overlay}
               percent={percent}
               isDark={isDark}
               grid={5}
               grids={[0, 25, 50, 75, 100]}
               onChange={(val: number) => onSliderChanged(val, true)}
               renderText={() => `${sliderData.value}%`}
+              railBgColor="var(--fill_2)"
+              tooltip={{ formatter: value => `${value}%` }}
               {...sliderData}
             />
           </div>
         </div>
         <style jsx>{`
           .container {
-            margin-top: 25px;
-            .row {
-              height: 36px;
-              color: var(--theme-font-color-2);
-              margin-bottom: 11px;
-              .input {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            border-bottom: 1px solid var(--fill_line_1);
+            .box {
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+              .market-input {
                 display: flex;
-                justify-content: space-between;
+                justify-content: center;
                 align-items: center;
-                padding: 0 12px;
-                line-height: 36px;
-                background: var(--theme-tips-color);
+                height: 2.5rem;
                 border-radius: 8px;
+                background: var(--fill_2);
+                color: var(--text_3);
+                font-weight: 500;
               }
+              :global(.unit) {
+                font-size: 12px;
+              }
+            }
+            .title {
+              color: var(--text_3);
+              font-size: 12px;
+              font-weight: 400;
             }
           }
         `}</style>
@@ -330,29 +396,37 @@ const TradeView = () => {
     minAmount,
     minVolume,
     isBuy,
-    sliderData.value,
+    sliderData.value
   ]);
 
   const renderLimitPriceTrade = useCallback(() => {
     return (
       <>
-        <div className='container'>
-          <div className='row'>
-            <Input
-              label={LANG('价格')}
-              unit={quoteCoin}
-              decimal={currentSpotContract.digit}
-              min={isBuy ? Number(state.minPrice) : 0}
-              max={isBuy ? 0 : Number(state.maxPrice)}
+        <div className="container">
+          <div className="box">
+            <div className="title">{LANG('价格')}</div>
+            <TradeInput
+              controllerV3
+              aria-label={LANG('价格')}
+              className={clsx('trade-input')}
+              // label={LANG('价格')}
+              type="number"
+              layer={Layer.Overlay}
               value={isBuy ? state.buyPrice : state.sellPrice}
-              onChange={(val) =>
-                setState((draft) => {
+              // min={minPrice.toFixed()}
+              // max={Number(maxPrice)}
+              min={0}
+              max={Number.MAX_SAFE_INTEGER}
+              step={1 / Math.pow(10, currentSpotContract.digit > 0 ? currentSpotContract.digit : 0)}
+              digit={currentSpotContract.digit}
+              onChange={val =>
+                setState(draft => {
                   if (isBuy) {
                     draft.buyPrice = val;
                     state.buyVolume &&
                       (draft.buyAmount = val.mul(state.buyVolume).toFixed(currentSpotContract.amountDigit));
                   } else {
-                    draft.sellPrice = val;
+                    draft.sellPrice = String(val);
                     state.sellVolume &&
                       (draft.sellAmount = val.mul(state.sellVolume).toFixed(currentSpotContract.amountDigit));
                   }
@@ -361,7 +435,7 @@ const TradeView = () => {
               onBlur={() => {
                 if (isBuy) {
                   if (state.buyPrice === '' || state.buyPrice === '0') {
-                    setState((draft) => {
+                    setState(draft => {
                       draft.buyPrice = state.minPrice;
                       if (state.buyVolume) {
                         draft.buyAmount = state.priceTemp.mul(state.buyVolume).toFixed(currentSpotContract.amountDigit);
@@ -370,7 +444,7 @@ const TradeView = () => {
                   }
                 } else {
                   if (state.sellPrice === '' || state.sellPrice === '0') {
-                    setState((draft) => {
+                    setState(draft => {
                       draft.sellPrice = '';
                       if (state.sellVolume) {
                         draft.sellAmount = state.priceTemp
@@ -381,17 +455,44 @@ const TradeView = () => {
                   }
                 }
               }}
+              suffix={() => (
+                <div className={clsx('price-suffix ')}>
+                  <div
+                    style={{ color: 'var(--text_brand)', cursor: 'pointer', userSelect: 'none', whiteSpace: 'nowrap' }}
+                    className={clsx('newest')}
+                    onClick={() => {
+                      setState(draft => {
+                        if (isBuy) {
+                          draft.buyPrice = draft.newPrice;
+                          state.buyVolume &&
+                            (draft.buyAmount = newPrice.mul(state.buyVolume).toFixed(currentSpotContract.amountDigit));
+                        } else {
+                          draft.sellPrice = String(draft.newPrice);
+                          state.sellVolume &&
+                            (draft.sellAmount = draft.newPrice
+                              .mul(state.sellVolume)
+                              .toFixed(currentSpotContract.amountDigit));
+                        }
+                      });
+                    }}
+                  >
+                    {LANG('最新价')}
+                  </div>
+                </div>
+              )}
             />
           </div>
-          <div className='row'>
+          <div className="box">
+            <div className="title">{LANG('数量')}</div>
             <Input
-              label={LANG('数量')}
+              layer={Layer.Overlay}
               unit={coin}
               decimal={currentSpotContract.volumeDigit}
               min={0}
+              // type='number'
               value={isBuy ? state.buyVolume : state.sellVolume}
-              onChange={(val) =>
-                setState((draft) => {
+              onChange={val =>
+                setState(draft => {
                   if (isBuy) {
                     draft.buyVolume = val;
                     draft.buyAmount =
@@ -405,15 +506,17 @@ const TradeView = () => {
               }
             />
           </div>
-          <div className='row'>
+          <div className="box">
+            <div className="title">{LANG('交易额')}</div>
             <Input
-              label={LANG('交易额')}
+              layer={Layer.Overlay}
               unit={quoteCoin}
               decimal={currentSpotContract.amountDigit}
               min={0}
+              // type='number'
               value={isBuy ? state.buyAmount : state.sellAmount}
-              onChange={(val) =>
-                setState((draft) => {
+              onChange={val =>
+                setState(draft => {
                   if (isBuy) {
                     draft.buyAmount = val;
                     draft.buyVolume =
@@ -426,35 +529,38 @@ const TradeView = () => {
                 })
               }
             />
-          </div>
-          <div className='sliderWrapper row'>
             <Slider
+              layer={Layer.Overlay}
               percent={percent}
               isDark={isDark}
               grid={5}
               grids={[0, 25, 50, 75, 100]}
               onChange={(val: number) => onSliderChanged(val, true)}
               renderText={() => `${sliderData.value}%`}
+              railBgColor="var(--fill_2)"
+              tooltip={{ formatter: value => `${value}%` }}
               {...sliderData}
             />
           </div>
         </div>
         <style jsx>{`
           .container {
-            margin-top: 25px;
-            .row {
-              height: 36px;
-              color: var(--theme-font-color-2);
-              margin-bottom: 11px;
-              .input {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 0 12px;
-                line-height: 36px;
-                background: var(--theme-tips-color);
-                border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            border-bottom: 1px solid var(--fill_line_1);
+            .box {
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+              :global(.unit) {
+                font-size: 12px;
               }
+            }
+            .title {
+              color: var(--text_3);
+              font-size: 12px;
+              font-weight: 400;
             }
           }
         `}</style>
@@ -477,7 +583,7 @@ const TradeView = () => {
     sliderData.value,
     coin,
     quoteCoin,
-    isLogin,
+    isLogin
   ]);
 
   const onOpenOrderClicked = useCallback(
@@ -488,19 +594,43 @@ const TradeView = () => {
       );
 
       const price = isLimit ? (isBuy ? state.buyPrice : state.sellPrice) : 0;
+      if (volume <= 0) {
+        if (isLimit) {
+          return message.error(
+            LANG('最小下单数量{volume}', {
+              volume: `${currentSpotContract.volumeMin} ${coin}`
+            }),
+            1
+          );
+        } else {
+          if (isBuy) {
+            return message.error(
+              LANG('交易额需大于{volume}', { volume: `${currentSpotContract.amountMin} ${quoteCoin}` }),
+              1
+            );
+          } else {
+            return message.error(
+              LANG('最小下单数量{volume}', { volume: `${currentSpotContract.volumeMin} ${coin}` }),
+              1
+            );
+          }
+        }
+      }
       if (routerId && volume > 0) {
         Loading.start();
-        const result = await Trade.openOrderByMarketPrice(
+        const result = await Trade.openOrder(
           side,
           isLimit ? SpotOrderType.LIMIT : SpotOrderType.MARKET,
           routerId,
-          Number(price),
-          Number(volume)
+          isLimit ? Number(price) : 0,
+          volume,
+          sliderData.value
         );
         if (result.code === 200) {
           setVisible(false);
           message.success(LANG('委托提交成功'));
           initialState();
+          Trade.getBalance();
         } else {
           message.error(result.message);
         }
@@ -525,61 +655,68 @@ const TradeView = () => {
 
   return (
     <>
-      <div className='container'>
+      <div className="container">
         {showGrid ? (
           <>
-            <button className='back' onClick={onQuitClicked}>
+            <button className="back" onClick={onQuitClicked}>
               {LANG('退出策略')}
             </button>
-            <button className='create' onClick={onCreateGridClicked}>
+            <button className="create" onClick={onCreateGridClicked}>
               {LANG('创建策略')}
             </button>
           </>
         ) : (
           <>
-            <div className='bot' onClick={() => setShowGrid(true)}>
+            {/* <div className='bot' onClick={() => setShowGrid(true)}>
               <CommonIcon name='common-grid-robot-active-0' size={23} className='robot-icon' enableSkin />
               Bots
-            </div>
-            <button className='buy' onClick={() => onBottomBtnClicked(SideType.BUY)}>
+            </div> */}
+            <div className="button buy" onClick={() => onBottomBtnClicked(SideType.BUY)}>
               {LANG('买入____2')}
-            </button>
-            <button className='sell' onClick={() => onBottomBtnClicked(SideType.SELL)}>
+            </div>
+            <div className="button sell" onClick={() => onBottomBtnClicked(SideType.SELL)}>
               {LANG('卖出____2')}
-            </button>
+            </div>
           </>
         )}
       </div>
-      <MobileModal visible={visible} onClose={() => setVisible(false)} type='bottom'>
+      <MobileModal visible={visible} onClose={() => setVisible(false)} type="bottom">
         <BottomModal
-          title={LANG('币币交易')}
-          confirmText={`${isBuy ? LANG('买入____2') : LANG('卖出____2')} ${coin}`}
-          onConfirm={() => onOpenOrderClicked(isBuy ? SideType.BUY : SideType.SELL)}
+          // title={LANG('币币交易')}
+          renderTitle={() => (
+            <div className="trade-view-title">
+              <span>{LANG('币币交易')}</span>
+              <TradeSettingIcon size={20} />
+            </div>
+          )}
+          displayConfirm={false}
+          className="trade-modal"
+          // confirmText={`${isBuy ? LANG('买入____2') : LANG('卖出____2')} ${coin}`}
+          // onConfirm={() => onOpenOrderClicked(isBuy ? SideType.BUY : SideType.SELL)}
         >
-          <div className='trade-view-modal'>
+          <div className="trade-view-modal">
             <PositionButton
               positionSide={state.sideType}
               greenText={LANG('买入____2')}
               redText={LANG('卖出____2')}
-              onChange={(positionSide) =>
-                setState((draft) => {
+              onChange={positionSide =>
+                setState(draft => {
                   draft.sideType = positionSide;
                 })
               }
             />
-            <ul className='tab-wrapper'>
+            <ul className="tab-wrapper">
               <li className={getActive(isLimit)} onClick={() => onTabChanged(SpotOrderType.LIMIT)}>
-                {LANG('限价交易')}
+                {LANG('限价')}
               </li>
               {currentSpotContract.market && (
                 <li className={getActive(!isLimit)} onClick={() => onTabChanged(SpotOrderType.MARKET)}>
-                  {LANG('市价交易')}
+                  {LANG('市价')}
                 </li>
               )}
-              <li>
+              {/* <li>
                 <Tooltip
-                  color='#fff'
-                  placement='topRight'
+                  placement="topRight"
                   trigger={'click'}
                   arrow={false}
                   title={
@@ -588,31 +725,70 @@ const TradeView = () => {
                       : LANG('市价委托是指按照目前市场价格进行快速买卖。')
                   }
                 >
-                  <Svg src={'/static/images/trade/tips.svg'} width='17' height='17' />
+                  <div className={clsx('info')}>
+                    <CommonIcon name="common-info-0" size={16} />
+                  </div>
                 </Tooltip>
-              </li>
+              </li> */}
             </ul>
-            <div className='balance-wrapper'>
-              <span className='label'>{LANG('可用')}</span>
-              {isBuy ? (
-                <span className='balance'>{`${(isLogin ? quoteCoinBalance : 0).toFormat()} ${quoteCoin}`}</span>
-              ) : (
-                <span className='balance'>{`${isLogin ? coinBalance : 0} ${coin}`}</span>
-              )}
-              {ExchangeIconMemo}
+            <div className="input-wrapper">{isLimit ? renderLimitPriceTrade() : renderMarketPriceTrade()}</div>
+            <div className="balance-wrapper">
+              <span className="label">{LANG('可用')}:</span>
+              <div className="balance">
+                {isBuy ? (
+                  <span>{`${(isLogin ? quoteCoinBalance : 0).toFormat(2)} ${quoteCoin}`}</span>
+                ) : (
+                  <span>{`${isLogin ? coinBalance : 0} ${coin}`}</span>
+                )}
+                {ExchangeIconMemo}
+              </div>
             </div>
-            <div className='input-wrapper'>{isLimit ? renderLimitPriceTrade() : renderMarketPriceTrade()}</div>
+            <div
+              className={clsx('button-wrapper', isBuy ? 'buy' : 'sell')}
+              onClick={() => onOpenOrderClicked(isBuy ? SideType.BUY : SideType.SELL)}
+            >
+              {LANG(isBuy ? '确定买入' : '确定卖出')}
+            </div>
           </div>
         </BottomModal>
       </MobileModal>
-      {(selectType === null || selectType === LIST_TYPE.GRID) && <GridViewMobile />}
-      {selectType === LIST_TYPE.INVEST && <InvestViewMobile />}
+      <DepositModal
+        visible={state.transferModalVisible}
+        coin={coin}
+        onClose={() =>
+          setState(draft => {
+            draft.transferModalVisible = false;
+          })
+        }
+        openTransfer={() =>
+          setState(draft => {
+            draft.transferModalVisible = false;
+            draft.transferSelectModalVisible = true;
+          })
+        }
+      />
+      <TransferModal
+        open={state.transferSelectModalVisible}
+        onCancel={() =>
+          setState(draft => {
+            draft.transferSelectModalVisible = false;
+          })
+        }
+        defaultSourceAccount={ACCOUNT_TYPE.SWAP_U}
+        defaultTargetAccount={ACCOUNT_TYPE.SPOT}
+        onTransferDone={() => Trade.getBalance()}
+      />
+
+      {/* (selectType === null || selectType === LIST_TYPE.GRID) && <GridViewMobile /> */}
+      {/* selectType === LIST_TYPE.INVEST && <InvestViewMobile /> */}
       <BaseModalStyle />
       <style jsx>{`
         .container {
+          position: relative;
           display: flex;
-          justify-content: space-between;
           align-items: center;
+          padding: 0 1rem;
+          gap: 8px;
           .bot {
             display: flex;
             flex-direction: column;
@@ -620,6 +796,27 @@ const TradeView = () => {
             align-items: center;
             margin: 0 20px;
             color: var(--theme-font-color-3);
+          }
+          .button {
+            display: flex;
+            justify-content: center;
+            flex: 1;
+            height: 2.5rem;
+            line-height: 2.5rem;
+            border-radius: 2.5rem;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text_white);
+            margin-right: 0;
+            &:nth-child(2) {
+              margin-right: 0;
+            }
+            &.buy {
+              background: var(--color-green);
+            }
+            &.sell {
+              background: var(--color-red);
+            }
           }
           button {
             flex: 1;
@@ -647,37 +844,74 @@ const TradeView = () => {
           }
         }
         :global(.trade-view-modal) {
+          padding: 0 0.5rem;
           .tab-wrapper {
+            display: flex;
+            align-items: center;
             padding: 0;
             margin: 0;
-            margin-top: 25px;
+            margin-top: 8px;
+            height: 2.5rem;
+            gap: 1.5rem;
             li {
-              display: inline-block;
-              margin-right: 17px;
-              color: var(--theme-font-color-2);
-              &:last-child {
-                margin-right: 0;
-                float: right;
-                margin-top: 2px;
-              }
+              color: var(--text_2);
               &.active {
-                color: var(--skin-main-font-color);
+                color: var(--brand);
                 font-weight: 500;
               }
             }
           }
+          .input-wrapper {
+            margin-top: 8px;
+            :global(.price-suffix) {
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              line-height: 14px;
+              :global(.newest) {
+                user-select: none;
+                cursor: pointer;
+                font-size: 12px;
+                font-weight: 400;
+                color: var(--text_brand);
+                margin-right: 0px;
+                white-space: nowrap;
+                padding: 0 1rem;
+              }
+            }
+          }
           .balance-wrapper {
-            margin-top: 25px;
+            margin-top: 1rem;
             font-size: 12px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
             .label {
-              color: var(--theme-font-color-2);
-              margin-right: 3px;
+              color: var(--text_3);
             }
             .balance {
-              color: var(--theme-font-color-1);
-              margin-right: 3px;
+              display: flex;
+              align-items: center;
+              justify-content: flex-end;
+              color: var(--text_1);
+              gap: 4px;
+            }
+          }
+          .button-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 2.5rem;
+            height: 2.5rem;
+            margin-top: 1.5rem;
+            color: var(--text_white);
+            font-size: 14px;
+            font-weight: 500;
+            &.buy {
+              background: var(--color-green);
+            }
+            &.sell {
+              background: var(--color-red);
             }
           }
         }
@@ -685,6 +919,21 @@ const TradeView = () => {
         :global(.ant-tooltip-arrow:before) {
           background: var(--theme-background-color-2-3) !important;
           color: var(--theme-font-color-1) !important;
+        }
+        :global(.header) {
+          gap: 12px;
+        }
+        :global(.title) {
+          flex: 1;
+          .trade-view-title {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+        }
+        :global(.trade-modal) {
+          background: var(--fill_pop)!important;
         }
       `}</style>
     </>

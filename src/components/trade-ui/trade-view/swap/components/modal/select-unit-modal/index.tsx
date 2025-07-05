@@ -1,3 +1,4 @@
+import Radio from '@/components/Radio';
 import { Loading } from '@/components/loading';
 import { BottomModal, MobileModal } from '@/components/mobile-modal';
 import Modal, { ModalFooter, ModalTitle } from '@/components/trade-ui/common/modal';
@@ -53,21 +54,20 @@ export const SelectUnitModal = () => {
     ],
     [
       LANG('按价值下单'),
-      `${LANG('请填写订单价值，可通过调整杠杠来修改下单所需保证金。')} ${
-        !isUsdtType ? `1 ${LANG('张')}=1${Swap.Info.getPriceUnitText(false)}` : ''
+      `${LANG('请填写订单价值，可通过调整杠杠来修改下单所需保证金。')} ${!isUsdtType ? `1 ${LANG('张')}=1${Swap.Info.getPriceUnitText(false)}` : ''
       }`,
       unitOpts[1],
       UNIT_MODE.VOL,
     ],
   ];
-  if (isUsdtType) {
-    options.push([
-      LANG('按保证金下单'),
-      LANG('请填写订单成本，包括起始保证金及开平仓手续费。修改杠杆不会改变成本。'),
-      '',
-      UNIT_MODE.MARGIN,
-    ]);
-  }
+  // if (isUsdtType) {
+  //   options.push([
+  //     LANG('按保证金下单'),
+  //     LANG('请填写订单成本，包括起始保证金及开平仓手续费。修改杠杆不会改变成本。'),
+  //     '',
+  //     UNIT_MODE.MARGIN,
+  //   ]);
+  // }
 
   const content = (
     <>
@@ -76,14 +76,18 @@ export const SelectUnitModal = () => {
           const active = value === currentValue;
           return (
             <div className={clsx('item', active && 'active')} key={i} onClick={() => setValue(value as string)}>
-              <div className={clsx('select')}></div>
               <div className='right'>
                 <div className='header'>
                   <div className='title'>{title}</div>
-                  <div className='unit'>{unit}</div>
                 </div>
                 <div className='info'>{info}</div>
               </div>
+              <div className='unit'>{unit}</div>
+              <Radio
+                label={''}
+                checked={active}
+                {...{ width: 16, height: 16 }}
+              />
             </div>
           );
         })}
@@ -95,68 +99,54 @@ export const SelectUnitModal = () => {
       </div>
       <style jsx>{`
         .content {
-          padding: 20px 0;
-          color: var(--theme-trade-text-color-1);
           .item {
             cursor: pointer;
-            padding: 12px 16px;
-            margin-bottom: 10px;
-            background: var(--theme-trade-sub-button-bg);
-            border: 1px solid var(--theme-trade-sub-button-bg);
-            border-radius: 6px;
+            margin-bottom: 24px;
+            border: 1px solid var(--fill_line_3);
+            border-radius: 16px;
             display: flex;
+            padding: 16px;
+            align-items: center;
+            gap: 40px;
+            &:hover {
+              border: 1px solid var(--brand);
+            }
             &:last-child {
               margin-bottom: 0;
             }
-            .select {
-              margin-right: 8px;
-              margin-top: 3px;
-              border-radius: 50%;
-              height: 16px;
-              width: 16px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              border: 1px solid var(--skin-primary-color);
-              &::before {
-                content: '';
-                display: block;
-                height: 10px;
-                width: 10px;
-                border-radius: 50%;
-              }
-            }
             .right {
               flex: 1;
+              color: var(--text_2);
               .header {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 .title {
-                  font-size: 14px;
-                  font-weight: '500';
+                  font-size: 16px;
+                  font-weight: 400;
                 }
-                .unit {
-                  font-size: 14px;
-                  font-weight: '500';
-                }
+
               }
               .info {
-                color: var(--theme-trade-text-color-3);
                 margin-top: 4px;
                 font-size: 12px;
               }
             }
+            .unit {
+              font-size: 16px;
+              font-weight: 400;
+              color: var(--text_1);
+            }
             &.active {
-              border: 1px solid var(--skin-primary-color);
-              .select::before {
-                background: var(--skin-primary-color);
+              .header {
+                color: var(--text_1);
               }
+              border: 1px solid var(--brand);
             }
           }
           .warning {
             margin-top: 15px;
-            color: var(--theme-trade-text-color-3);
+            color: var(--text_red);
             font-size: 12px;
             font-weight: 400;
           }

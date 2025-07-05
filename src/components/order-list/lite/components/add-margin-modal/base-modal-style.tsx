@@ -1,7 +1,7 @@
 export const BaseModalStyle = () => {
-    return (
-      <style jsx global>
-        {`
+  return (
+    <style jsx global>
+      {`
           .ant-modal.baseModal {
             .ant-modal-close {
               &:hover {
@@ -10,19 +10,30 @@ export const BaseModalStyle = () => {
             }
             .ant-modal-content {
               padding: 0;
-              border-radius: 4px;
-              background: var(--theme-trade-modal-color);
+              border-radius: 24px;
+              background: var(--fill_pop);
               .ant-modal-header {
                 padding: 16px 24px;
                 margin: 0;
-                border-bottom: 1px solid var(--theme-trade-border-color-1);
-                background: var(--theme-trade-modal-color);
+                background:transparent;
+
+
                 .ant-modal-title {
-                  text-align: center;
-                  color: var(--theme-font-color-1);
-                  font-size: 18px;
-                  line-height: 22px;
+                  font-size: 16px;
                   font-weight: 500;
+                  color: var(--text_1);
+                }
+              }
+
+              .ant-modal-close{
+                color:var(--text_2);
+                width:24px;
+                height:24px;
+                top:16px;
+                right:24px;
+                &:hover{
+                  color:var(--text_2);
+                  background:transparent !important;
                 }
               }
               .ant-modal-body {
@@ -32,8 +43,7 @@ export const BaseModalStyle = () => {
               .ant-modal-footer {
                 display: flex;
                 justify-content: center;
-                padding: 20px 25px;
-                margin-top: 0;
+                padding: 0;
                 .ant-btn {
                   background: #eaeaea;
                   color: #6e6f72;
@@ -44,19 +54,32 @@ export const BaseModalStyle = () => {
                   font-weight: 500;
                   border: none;
                   padding: 0;
+                  border-radius:20px;
                 }
                 .ant-btn-primary {
-                  background: linear-gradient(to right, #ffcd6d, #ffb31f);
-                  color: #fff;
+                  display: flex;
+                  height: 48px;
+                  padding: 0px 16px;
+                  justify-content: center;
+                  align-items: center;
+                 
+                  border-radius: 40px;
+                  background: var(--text_brand);
+
+                  color: var(--text_white);
+                  font-size: 16px;
+                  font-weight: 500;
+
+
                   :disabled {
                     opacity: 0.5;
+                    border-radius:20px;
                   }
                 }
               }
             }
           }
         `}
-      </style>
-    );
-  };
-  
+    </style>
+  );
+};

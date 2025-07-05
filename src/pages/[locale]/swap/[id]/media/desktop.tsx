@@ -6,7 +6,7 @@ import TradeCountDown from '@/components/trade-count-down';
 import { HeaderAnnouncement } from '@/components/trade-ui/header-announcement';
 import { HeaderFavorite } from '@/components/trade-ui/header-favorite';
 import { KlineHeader } from '@/components/trade-ui/kline-header';
-import { ORDER_BOOK_TYPES, OrderBook } from '@/components/trade-ui/order-book';
+import { ORDER_BOOK_TYPES, OrderBook } from '@/components/trade-ui/order-book/swapIndex';
 import { RecentTrades } from '@/components/trade-ui/recent-trades';
 import { TradeGuide } from '@/components/trade-ui/trade-guide';
 import { TradeGuideBar } from '@/components/trade-ui/trade-guide-bar';
@@ -21,7 +21,6 @@ const HeaderSwapDemoGuide = dynamic(() => import('@/components/header/components
   ssr: false,
   loading: () => <div />,
 });
-const MarginRatio = dynamic(() => import('../../components/margin-ratio'), { ssr: false, loading: () => <div /> });
 const Assets = dynamic(() => import('../../components/assets'), { ssr: false, loading: () => <div /> });
 const ContractDetails = dynamic(() => import('../../components/contract-details'), {
   ssr: false,
@@ -49,7 +48,6 @@ export const DesktopNoSSR = () => {
         OrderBook={<OrderBook type={ORDER_BOOK_TYPES.SWAP} />}
         RecentTrades={<RecentTrades />}
         OrderList={<OrderList.SwapDesktop />}
-        MarginRatio={<MarginRatio />}
         Assets={<Assets />}
         ContractDetails={<ContractDetails />}
         NetworkInfo={<NetworkInfo />}

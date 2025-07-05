@@ -37,19 +37,22 @@ export default memo(TradeBtn);
 const styles = css`
   .trade-btn {
     display: inline-block;
-    padding: 0 10px;
-    line-height: 32px;
-    font-size: 14px;
+    padding: 0 16px;
+    line-height: 40px;
+    font-size: 16px;
     font-weight: 500;
-    color: var(--theme-font-color-1);
+    color: var(--text_white);
     border-radius: 4px;
     cursor: pointer;
-    min-width: 68px;
+    min-width: 88px;
     text-align: center;
-    border: 1px solid var(--theme-border-color-2);
+    height:40px;
+    border-radius: 24px;
+    background: var(--btn_brand);
+    border: 1px solid var(--btn_brand);
     &:hover {
-      background: var(--skin-primary-color);
-      /* color: var(--theme-btn-font-color); */
+      background: var(--btn_brand_hover);
+      color: var(--text_white);
     }
   }
 `;

@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
 import { BasicInput } from '../../basic-input';
 import { store } from '../store';
+import { Size } from '@/components/constants';
+import { useResponsive } from '@/core/hooks';
 interface ITEM_PROPS {
   key: string;
   label: string;
@@ -31,9 +33,12 @@ const SUGGEST_ITEMS: ITEM_PROPS[] = [
 ];
 type InputEmailProps = { className?: string } & Partial<Pick<BasicInputProps, 'type' | 'label'>> &
   Omit<BasicInputProps, 'type' | 'label'>;
+
 export const InputEmail = (props: InputEmailProps) => {
-  const { className, label = LANG('电子邮箱'), ...rest } = props;
+  const { className, label = LANG('邮箱地址'), ...rest } = props;
   const [val, setVal] = useState('');
+  const { isMobile } = useResponsive();
+
   const urlEmailValue = getUrlQueryParams('email');
 
   const onChange = (value: string) => {
@@ -71,18 +76,29 @@ export const InputEmail = (props: InputEmailProps) => {
   };
   return (
     <div className={clsx('login-email-container', className)}>
-      <Dropdown menu={{ items: getItems(), onClick }} placement='bottom' open={isVisible()}>
+      <Dropdown
+        overlayClassName='input-email-tips'
+        overlayStyle={{
+          borderRadius: '16px',
+          backgroundColor: 'var(--dropdown-select-bg-color)',
+          boxShadow: '0px 4px 16px 0px var(--dropdown-select-shadow-color)',
+        }}
+        menu={{ items: getItems(), onClick }}
+        placement='bottom'
+        open={isVisible()}>
         <BasicInput
           placeholder={LANG('请输入邮箱地址')}
           type={INPUT_TYPE.EMAIL}
+          size={isMobile ? Size.LG : Size.XL}
           {...rest}
           value={val}
           className='email-input'
           label={label}
+          clearable={true}
           autoComplete='off'
           autoCapitalize='off'
           onInputChange={onChange}
-        ></BasicInput>
+        />
       </Dropdown>
       <style jsx>{styles}</style>
     </div>
@@ -90,8 +106,7 @@ export const InputEmail = (props: InputEmailProps) => {
 };
 const styles = css`
   .login-email-container {
-    margin-bottom: 30px;
-    :global(.email-input) {
+   .email-input {
       :global(.error-input-tips) {
         position: absolute;
         font-size: 12px;
@@ -102,17 +117,11 @@ const styles = css`
       margin-left: 10px;
     }
   }
-  :global(.ant-dropdown) {
+  :global(.input-email-tips.ant-dropdown) {
     :global(.ant-dropdown-menu) {
-      background-color: var(--theme-background-color-2);
       :global(.ant-dropdown-menu-title-content) {
         color: var(--theme-font-color-1);
         padding: 6px 8px;
-        &:hover {
-          color: var(--skin-color-active);
-          background-color: var(--theme-background-color-3);
-          border-radius: 8px;
-        }
       }
     }
   }

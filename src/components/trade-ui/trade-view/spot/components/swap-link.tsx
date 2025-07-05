@@ -33,7 +33,7 @@ const SwapLink = () => {
     <>
       <TrLink href={`/swap/${id}`} className={`swap-link ${theme}`}>
         <button>
-          <span>{level}X</span>
+          <span>{level}x</span>
           <CommonIcon name='common-trade-arrow-right-0' size={12} enableSkin />
         </button>
       </TrLink>

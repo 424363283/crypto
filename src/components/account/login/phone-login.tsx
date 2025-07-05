@@ -5,28 +5,34 @@ import { useBtnStatus } from '../hooks/useBtnStatus';
 import { TAB_TYPE } from '../types';
 import { LoginButton } from './login-btn';
 import { ThirdPartBtns } from '../components/third-part-btns';
-import { Desktop, Mobile, MobileOrTablet } from '@/components/responsive';
+import { Desktop, MobileOrTablet } from '@/components/responsive';
 import { LoginFooter } from './login-footer';
-import { AutoLogin } from './auto-login';
+import { LoginForgetButton } from './login-resetpwd';
+import { LoginSwitchLoginReg } from './login-switch-register-reg';
+import { useKeyboardScroll } from '@/hooks/useKeyboardScroll';
 
 export const PhoneLogin = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
   const [shouldDisableBtn] = useBtnStatus(TAB_TYPE.PHONE_LOGIN);
+  useKeyboardScroll();
   return (
     <div>
-    <MobileOrTablet forceInitRender={false}>
-      <InputPhone showLabel={true} />
-      <PasswordInput showLabel={true} />
-    </MobileOrTablet>
-    <Desktop >
-      <InputPhone showLabel={false} />
-      <PasswordInput showLabel={false} />
-      <AutoLogin />
-    </Desktop>
+      <MobileOrTablet forceInitRender={false}>
+        <InputPhone showLabel={true} />
+        <PasswordInput showLabel={true} />
+      </MobileOrTablet>
+      <Desktop >
+        <InputPhone showLabel={false} />
+        <PasswordInput showLabel={false} />
+      </Desktop>
+      <LoginForgetButton />
       <LoginButton shouldDisableBtn={shouldDisableBtn} onLoginSuccess={onLoginSuccess} />
-      <ThirdPartBtns />
       <MobileOrTablet forceInitRender={false}>
         <LoginFooter />
       </MobileOrTablet>
+      <Desktop >
+        <LoginSwitchLoginReg />
+      </Desktop>
+      <ThirdPartBtns />
     </div>
   );
 };

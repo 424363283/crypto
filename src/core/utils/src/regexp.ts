@@ -27,4 +27,9 @@ export const isEmail = (email: string): boolean => {
   export const isUrl = (url: string): boolean => {
     return /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/.test(url);
   };
+
+  // 用户UID
+  export const isUserId = (uid: string): boolean => {
+    return /^\d+$/.test(uid);
+  };
   

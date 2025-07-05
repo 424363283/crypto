@@ -8,7 +8,7 @@ export const GuideMenu = () => {
         {(visible) => {
           return (
             <div className={'book-icon'}>
-              <CommonIcon size={18} name='common-info-book' />
+              <CommonIcon size={24} name='common-info-book-0' />
             </div>
           );
         }}

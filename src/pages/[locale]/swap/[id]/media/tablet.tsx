@@ -12,7 +12,6 @@ import { TradeGuideBar } from '@/components/trade-ui/trade-guide-bar';
 import { TradeView } from '@/components/trade-ui/trade-view';
 import dynamic from 'next/dynamic';
 
-const MarginRatio = dynamic(() => import('../../components/margin-ratio'), { ssr: false, loading: () => <div /> });
 const Assets = dynamic(() => import('../../components/assets'), { ssr: false, loading: () => <div /> });
 const ContractDetails = dynamic(() => import('../../components/contract-details'), {
   ssr: false,
@@ -32,7 +31,6 @@ export const TabletNoSSR = () => {
         OrderBook={<OrderBook type={ORDER_BOOK_TYPES.SWAP} />}
         RecentTrades={<RecentTrades />}
         OrderList={<OrderList.SwapTablet />}
-        MarginRatio={<MarginRatio />}
         Assets={<Assets />}
         ContractDetails={<ContractDetails />}
         NetworkInfo={<NetworkInfo />}

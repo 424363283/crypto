@@ -108,7 +108,7 @@ export const FilterBar = ({ onSubmit, defaultWallet }: { onSubmit: any; defaultW
             <div className={clsx('section', 'time-dropwown')}>
               <DropdownSelect
                 value={walleetOptionIndex}
-                data={[{ alias: LANG('全部') }, ...wallets].map((v) => v.alias)}
+                data={[{ alias: '全部' }, ...wallets].map((v) => LANG(v.alias))}
                 onChange={async (_, i) => {
                   if (i === 0) {
                     store.wallet = '';

@@ -1,4 +1,4 @@
-import { getSwapAgreementApi, getSwapContractDetailApi, getSwapGetAgreementApi, getSwapGetLeverageFindApi, getSwapGetRiskDetailApi, getSwapNotificationSettingApi, postSwapPriceProtectApi, postSwapUpdateLeverApi, postSwapUpdateUnitApi, swapGetContractRiskListApi, swapGetPositionTypeApi, swapSetNotificationSettingApi, swapUpdateMarginTypeApi, swapUpdatePositionTypeApi } from '@/core/api';
+import { getSwapAgreementApi, getSwapContractDetailApi, getSwapGetAgreementApi, getSwapGetLeverageFindApi, getSwapGetRiskDetailApi, getSwapNotificationSettingApi, postSwapPriceProtectApi, postSwapUpdateLeverApi, postSwapUpdateUnitApi, swapGetContractRiskListApi, swapGetPositionTypeApi, swapSetNotificationSettingApi, swapUpdateMarginTypeApi, swapUpdatePositionTypeApi} from '@/core/api';
 import { SWAP_DEFAULT_WALLET_ID } from '@/core/shared/src/swap/modules/info/constants';
 import { LOCAL_KEY } from '@/core/store';
 import { Debounce, cachePromise, dispatchGeolocation } from '@/core/utils';
@@ -7,13 +7,24 @@ import { Account } from '../../../account';
 import { TradeMap } from '../../../trade/trade-map';
 import { POSITION_MODE, UNIT_MODE } from './constants';
 import { InfoField } from './field';
+import { SideType } from '../../../spot';
+import { orderInstance as Order } from '../order';
+import { MARGIN_TYPE } from '../trade/constants';
+import { R } from '@/core/network';
 export class Info extends InfoField {
-  _fetchContractDetailDebounce = new Debounce(() => {}, 200);
+  _fetchContractDetailDebounce = new Debounce(() => { }, 200);
+  _newMarginMode = process.env.NEXT_PUBLIC_NEW_MARGIN_MODE === 'true';//新保证金模式
 
   init({ resso }: any) {
     this.store = resso(
       {
-        // 账号币对杠杆信息
+        /**
+         *  账号币对杠杆信息
+         *  marginType: 0
+         *  leverageLevel: 10, 
+         *  leverageLevelBuy: 20, 
+         *  leverageLevelSell: 50 
+         */
         leverFindData: {},
         // 账号币对风险信息
         riskDetailData: {},
@@ -46,6 +57,7 @@ export class Info extends InfoField {
           warn4: 0,
           warn5: 0,
         },
+        isCopyTrader: false
       },
       { auth: true, nameSpace: !isSwapDemo() ? LOCAL_KEY.SHARED_SWAP_INFO : LOCAL_KEY.SHARED_SWAP_DEMO_INFO, whileList: ['leverFindData', 'riskDetailData', 'riskListData', 'unitMode', 'positionMode', 'agreement', 'priceProtection', 'walletId'] }
     );
@@ -148,11 +160,24 @@ export class Info extends InfoField {
     try {
       const result = await getSwapGetLeverageFindApi(usdt, { code: id });
       if (result['code'] == 200) {
-        this.store.leverFindData = { ...this.store.leverFindData, [id]: result['data'] };
+        let lever = result['data']?.leverageLevel;
+        let leverageItem = { ...result['data'] };
+        if (this._newMarginMode && this.getTwoWayMode(usdt)) {
+          const { marginType, leverageLevelBuy, leverageLevelSell, marginLeverage } = this.store.leverFindData[id];
+          leverageItem = { ...leverageItem, ...this.store.leverFindData[id] };
+          leverageItem.leverageLevelBuy = marginLeverage?.[leverageItem.marginType]?.leverageLevelBuy || leverageLevelBuy || lever;
+          leverageItem.leverageLevelSell = marginLeverage?.[leverageItem.marginType]?.leverageLevelSell || leverageLevelSell || lever;
+        }
+        this.store.leverFindData = { ...this.store.leverFindData, [id]: leverageItem };
         this.leverFindErrorData[id] = null;
-
         // 获取杠杆对应风险信息
-        this.fetchRiskDetail(id, result['data']['leverageLevel']);
+        if (this._newMarginMode && this.getTwoWayMode(usdt)) {
+          // this.fetchRiskDetail(id, [leverageItem.leverageLevelBuy, leverageItem.leverageLevelSell]);
+          this.fetchRiskDetail(id, leverageItem.leverageLevel);
+
+        } else {
+          this.fetchRiskDetail(id, leverageItem.leverageLevel);
+        }
       } else {
         this.leverFindErrorData[id] = result;
       }
@@ -162,26 +187,89 @@ export class Info extends InfoField {
   }
 
   /// 获取风险详情
-  async fetchRiskDetail(code: string, lever: any) {
+  async fetchRiskDetail(code: string, lever: string | string[]) {
     const id = code.toUpperCase();
-    const key = `${id}_${lever}`;
-
+    const levers = Array.isArray(lever) ? lever : [lever];
     try {
-      const result = await getSwapGetRiskDetailApi(id, lever);
-      if (result['code'] == 200) {
-        this.store.riskDetailData = { ...this.store.leverFindData, [key]: result['data'] };
+      const results: R<Record<string, string | number>>[] = [];
+      for(let leverage of levers) {
+        const res = await getSwapGetRiskDetailApi(id, leverage);
+        results.push(res);
       }
+      const riskDetailData = { ...this.store.riskDetailData };
+      const regex = /(.*)(_\d+)$/;
+      //清楚交易对杠杆修改之前的数据
+      for (let name in riskDetailData) {
+        const match = name.match(regex);
+        if (match && match[1] === id) {
+          delete riskDetailData[name];
+        }
+      }
+      const dataList = levers.reduce((total, leverage, index) => {
+        const key = `${id}_${leverage}`;
+        const res = results[index];
+        return {
+          ...total,
+          ...(res?.code === 200 ? { [key]: res.data } : {})
+        };
+      }, {});
+      this.store.riskDetailData = { ...riskDetailData, ...this.store.leverFindData, ...dataList };
+
     } catch (e) {
       console.error('fetchRiskDetail', e);
     }
   }
+
+
+  /// 获取风险详情
+  // async fetchRiskDetail(code: string, lever: any) {
+  //   const id = code.toUpperCase();
+  //   const key = `${id}_${lever}`;
+  //
+  //   try {
+  //     const result = await getSwapGetRiskDetailApi(id, lever);
+  //     if (result['code'] == 200) {
+  //       const riskDetailData = { ...this.store.riskDetailData };
+  //       const isUsdtType = this.getIsUsdtType(id);
+  //       if (!this._newMarginMode || !this.getTwoWayMode(isUsdtType)) {
+  //         const regex = /(.*)(_\d+)$/;
+  //         for (let name in riskDetailData) {
+  //           const match = name.match(regex);
+  //           if (match && match[1] === id) {
+  //             delete riskDetailData[name];
+  //           }
+  //         }
+  //       }
+  //       this.store.riskDetailData = { ...riskDetailData, ...this.store.leverFindData, [key]: result['data'] };
+  //     }
+  //   } catch (e) {
+  //     console.error('fetchRiskDetail', e);
+  //   }
+  // }
+
+  /// 获取风险详情
+  // async fetchRiskDetail(code: string, lever: any) {
+  //   const id = code.toUpperCase();
+  //   const key = `${id}_${lever}`;
+  //
+  //   try {
+  //     const result = await getSwapGetRiskDetailApi(id, lever);
+  //     if (result['code'] == 200) {
+  //       this.store.riskDetailData = { ...this.store.leverFindData, [key]: result['data'] };
+  //     }
+  //   } catch (e) {
+  //     console.error('fetchRiskDetail', e);
+  //   }
+  // }
+
   /// 获取风险详情
   async fetchPositionType(usdt: boolean) {
     try {
       const result: any = await swapGetPositionTypeApi(usdt);
       if (result['code'] == 200) {
         const data = result['data'];
-        const unit = [UNIT_MODE.VOL, UNIT_MODE.COIN, UNIT_MODE.MARGIN][data['unitModel'] - 1] || UNIT_MODE.VOL;
+        // const unit = [UNIT_MODE.VOL, UNIT_MODE.COIN, UNIT_MODE.MARGIN][data['unitModel'] - 1] || UNIT_MODE.VOL;
+        const unit = [UNIT_MODE.VOL, UNIT_MODE.COIN][data['unitModel'] - 1] || UNIT_MODE.VOL;
         const mode = data['positionType'] == 2;
         const priceProtection = data['priceProtection'] == 1;
         this.store.totalWallet = { ...this.store.totalWallet, [usdt ? 'u' : 'c']: data['totalWallet'] || 0 };
@@ -226,8 +314,14 @@ export class Info extends InfoField {
   /// 更新保证金模式
   async updateMarginType(usdt: boolean, { id: _id, type }: { id: string; type: number }) {
     const id = _id.toUpperCase();
+    const isUsdtType = this.getIsUsdtType(id);
+    let result: { code: number, message: string };
+    if (this._newMarginMode && this.getTwoWayMode(isUsdtType)) {
+      result = { code: 200, message: "" };
 
-    const result = await swapUpdateMarginTypeApi(usdt, { id, type });
+    } else {
+      result = await swapUpdateMarginTypeApi(usdt, { id, type });
+    }
     if (result['code'] == 200) {
       this.store.leverFindData = { ...this.store.leverFindData, [id]: { ...this.getLeverFindData(id), marginType: type } };
       this.fetchLeverageFind(usdt, id);
@@ -250,19 +344,50 @@ export class Info extends InfoField {
     }
   }
   /// 更新杠杆
-  async updateLever(usdt: boolean, { id: _id, lever, wallet }: { id: string; lever: number; wallet?: string }) {
+  async updateLever(usdt: boolean, { id: _id, lever, wallet, side, pid }: { id: string; lever: number; wallet?: string; side?: SideType, pid?: string }) {
     const symbol = _id.toUpperCase();
-   
-    const result = await postSwapUpdateLeverApi(usdt, { symbol, userLeverage: lever, subWallet: wallet });
-    if (result['code'] == 200) {
-      this.store.leverFindData = { ...this.store.leverFindData, [symbol]: { ...this.getLeverFindData(symbol), leverageLevel: Number(lever) } };
-      this.fetchLeverageFind(usdt, symbol);
-      // updatePending(isUsdtType);
-      // updatePositions(isUsdtType);
-    }
-    return result;
-  }
+    if (this._newMarginMode && this.getTwoWayMode(usdt)) {
+      let result: { code: number, message: string };
+      if (pid) {
+        result = await postSwapUpdateLeverApi(usdt, { symbol, userLeverage: lever, subWallet: wallet, positionId: pid });
+      } else {
+        const isBuy = Number(side) === SideType.BUY;
+        const { marginType } = this.store.leverFindData[symbol] || {};
+        const { buyPosition, sellPosition } = Order.getTwoWayPosition({ usdt: usdt, openPosition: false, code: symbol, marginType });
+        const position = isBuy ? buyPosition : sellPosition;
+        const { buyPending, sellPending } = Order.getTwoWayPending({ usdt: usdt, code: symbol, marginType });
+        const pending = isBuy ? buyPending : sellPending;
+        const hasPositionOrOrder = position || pending;
+        if (hasPositionOrOrder) {
+          result = await postSwapUpdateLeverApi(usdt, { symbol, userLeverage: lever, subWallet: wallet, ...position ? { positionId: position.positionId } : {} });
+        } else {
+          result = { code: 200, message: "" };
+        }
+        if (result['code'] == 200) {
+          const leverageLevel = { ...Number(side) === SideType.BUY ? { leverageLevelBuy: Number(lever) } : { leverageLevelSell: Number(lever) } };
+          let { marginLeverage } = this.store.leverFindData[symbol];
+          marginLeverage = { ...marginLeverage, [marginType]: { ...marginLeverage[marginType], ...leverageLevel } };
+          this.store.leverFindData = { ...this.store.leverFindData, [symbol]: { ...this.getLeverFindData(symbol), marginLeverage, ...leverageLevel } };
+          this.fetchLeverageFind(usdt, symbol);
+        }
+      }
+      return result;
 
+    } else {
+      const result = await postSwapUpdateLeverApi(usdt, { symbol, userLeverage: lever, subWallet: wallet });
+      if (result['code'] == 200) {
+        this.store.leverFindData = { ...this.store.leverFindData, [symbol]: { ...this.getLeverFindData(symbol), leverageLevel: Number(lever) } };
+        this.fetchLeverageFind(usdt, symbol);
+        // updatePending(isUsdtType);
+        // updatePositions(isUsdtType);
+      }
+      return result;
+    }
+  }
+    // 是否是带单员
+    setIsShareTrader(data: any) {
+      this.store.isCopyTrader = data
+    }
   /// 获取通知设置
   async getNotificationSetting() {
     const result = await getSwapNotificationSettingApi();
@@ -278,6 +403,33 @@ export class Info extends InfoField {
     }
     return result;
   }
+
+  async syncLeverageFind(usdt: boolean, code: string) {
+    const id = code.toUpperCase();
+    if (this._newMarginMode && this.getTwoWayMode(usdt)) {
+      const { marginLeverage: prevMarginLeverage } = this.store.leverFindData[id] || {};
+      const marginLeverage = Object.values(MARGIN_TYPE).reduce((items, type, index) => {
+        const { buyPosition, sellPosition } = Order.getTwoWayPosition({ usdt: usdt, openPosition: false, code: id, marginType: type });
+        const { buyPending, sellPending } = Order.getTwoWayPending({ usdt: usdt, code: id, marginType: type });
+        const leverageLevelBuy = buyPosition?.leverage || buyPending?.leverageLevel || 0;
+        const leverageLevelSell = sellPosition?.leverage || sellPending?.leverageLevel || 0;
+        return {
+          ...items,
+          [type]: {
+            ...items[type],
+            ...(leverageLevelBuy > 0 && { leverageLevelBuy }),
+            ...(leverageLevelSell > 0 && { leverageLevelSell })
+          }
+        };
+      }, { ...prevMarginLeverage } as Record<number, any>);
+      const leverageItem = { ...this.store.leverFindData[id], marginLeverage };
+      const { marginType, leverageLevelBuy, leverageLevelSell } = leverageItem;
+      leverageItem.leverageLevelBuy = marginLeverage[marginType]?.leverageLevelBuy || leverageLevelBuy;
+      leverageItem.leverageLevelSell = marginLeverage[marginType]?.leverageLevelSell || leverageLevelSell;
+      this.store.leverFindData = { ...this.store.leverFindData, [id]: leverageItem };
+    }
+  }
 }
 
 export const infoInstance = new Info();
+

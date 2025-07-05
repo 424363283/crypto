@@ -21,11 +21,12 @@ export type BalanceData = {
   unrealisedPNL: number;
   currency: string;
   voucherAmount: number;
+  equity?: number;
 };
 type StoreType = Store<{}>;
 
 export class AssetsField {
-  DEFAULT_BALANCE: BalanceData = { accb: 0, positionMargin: 0, frozen: 0, bonusAmount: 0, availableBalance: 0, canWithdrawAmount: 0, unrealisedPNL: 0, voucherAmount: 0, currency: '' };
+  DEFAULT_BALANCE: BalanceData = { accb: 0, positionMargin: 0, frozen: 0, bonusAmount: 0, availableBalance: 0, canWithdrawAmount: 0, unrealisedPNL: 0, voucherAmount: 0, currency: '', equity: 0 };
 
   // late
   store: StoreType = {} as StoreType;
@@ -133,7 +134,8 @@ export class AssetsField {
       return balance;
     }
   }
-
+  //全仓：可用余额=钱包余额accb-仓位保证金positionMargin-冻结金额frozen+未实现亏损unrealisedPNL（只计算亏损，不计算盈利）
+  //逐仓：可用余额=钱包余额accb-仓位保证金positionMargin-冻结金额frozen
   getDisplayBalance({ code, walletId }: { code: string; walletId: string }) {
     // const { positionCrossIncomeLoss, positionProfitAndLoss } = this.state;
     const usdt = Info.getIsUsdtType(code || '');
@@ -141,18 +143,19 @@ export class AssetsField {
     const { isLogin } = useAppContext();
     const { marginType } = Info.getLeverFindData(code);
     Socket.store.data1050;
-    const calcData = Calculate.positionData({ usdt: usdt, data: Order.getPosition(usdt), symbol: code, twoWayMode: Info.getTwoWayMode(usdt) });
+    const calcData = Calculate?.positionData({ usdt: usdt, data: Order?.getPosition(usdt), symbol: code, twoWayMode: Info.getTwoWayMode(usdt) });
 
     const crossIncomeLoss = usdt ? calcData.wallets?.[walletId]?.allCrossIncomeLoss : calcData.wallets?.[walletId]?.data[code]?.crossIncomeLoss;
-    const balanceData = this.getBalanceData({ code, walletId });
-    const twoWayMode = Info.getTwoWayMode(usdt);
+    const balanceData = this?.getBalanceData({ code, walletId });
+    const twoWayMode = Info?.getTwoWayMode(usdt);
     const positionLoaded = Order.store.positionLoaded;
 
     let balance: string | number = Calculate.balance({
       usdt: usdt,
       twoWayMode,
       balanceData,
-      isCross: marginType === 1,
+      // isCross: marginType === 1,
+      isCross: true,
       crossIncome: Number(crossIncomeLoss || 0),
     });
     const balanceDigit = this.getBalanceDigit({ code });

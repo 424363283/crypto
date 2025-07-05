@@ -60,8 +60,8 @@ export const SpotHistoryCommissionTable = () => {
     const params: any = {
       openTypes: '0,2',
       rows: 13,
-      createTimeGe: startDate,
-      createTimeLe: endDate,
+      orderTimeGe: startDate,
+      orderTimeLe: endDate,
     };
     if (symbol !== LANG('全部') && !!symbol) {
       params['symbol'] = symbol;

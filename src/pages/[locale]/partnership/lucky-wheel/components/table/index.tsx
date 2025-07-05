@@ -11,6 +11,7 @@ import { Tooltip } from 'antd';
 import dayjs from 'dayjs';
 import React, { Key, useEffect, useState } from 'react';
 import Tag from './components/tag';
+import { Size } from '@/components/constants';
 
 const TextMAP: Record<number, string> = {
   1: LANG('现金'),
@@ -125,6 +126,7 @@ const TableBox: React.FC<{}> = () => {
   return (
     <div className='box-table'>
       <TabBar
+        size={Size.XL}
         options={[
           { label: LANG('邀请记录'), value: '1' },
           { label: LANG('奖励记录'), value: '2' },
@@ -230,7 +232,7 @@ const TableBox: React.FC<{}> = () => {
       <style jsx>{`
         .box-table {
           position: relative;
-          background-color: var(--spec-background-color-2);
+          background-color: var(--fill_bg_1);
           overflow: hidden;
           width: 486px;
           height: 762px;

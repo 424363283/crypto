@@ -1,37 +1,46 @@
-import { clsxWithScope } from '@/core/utils';
+import { clsxWithScope, MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
 
 const { className, styles } = css.resolve`
   .modal-content {
   }
   .content {
-    padding-top: 20px;
+    @media ${MediaInfo.mobile} {
+      padding: 0 0.5rem;
+    }
     .row {
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
+      &:first-child {
+        margin-bottom: 24px;
+      }
       &:last-child {
         margin-bottom: 0;
       }
 
       > :global(*):first-child {
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 400;
-        color: var(--theme-trade-text-color-3);
+        color: var(--text_2);
         &.code {
-          color: var(--theme-trade-text-color-1);
+          font-size: 16px;
+          color: var(--text_1);
         }
       }
       > :global(*):last-child {
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 400;
-        color: var(--theme-trade-text-color-1);
+        color: var(--text_1);
+        &.side {
+          font-size: 16px;
+        }
       }
     }
     .danger {
-      color: var(--color-error);
+      color: var(--text_red);
       font-size: 12px;
       font-weight: 400;
       line-height: 12px;
@@ -41,11 +50,11 @@ const { className, styles } = css.resolve`
       display: flex;
       flex-direction: row;
       align-items: center;
-      margin: 0 0 22px;
+      margin: 0 0 24px;
       .checkbox {
         cursor: pointer;
-        width: 15px;
-        height: 15px;
+        width: 14px;
+        height: 14px;
         overflow: hidden;
         line-height: 0;
         &.active {
@@ -54,10 +63,10 @@ const { className, styles } = css.resolve`
       }
       .text {
         margin-left: 5px;
-        font-size: 12px;
+        font-size: 14px;
         line-height: 12px;
         font-weight: 400;
-        color: var(--theme-trade-text-color-3);
+        color: var(--text_2);
       }
     }
   }
@@ -99,8 +108,13 @@ const { className, styles } = css.resolve`
   .line {
     width: 100%;
     height: 1px;
-    background-color: var(--theme-trade-border-color-1);
+    background-color: var(--fill_line_3);
     margin: 23px 0;
+  }
+  @media ${MediaInfo.mobile} {
+    :global(.tooltip) {
+      padding-left: 1.5rem;
+    }
   }
 `;
 const clsx = clsxWithScope(className);

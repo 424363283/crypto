@@ -31,7 +31,7 @@ export const usePlanCommissionColumns = () => {
               alt=''
             />
             <div className='text'>{item.commodity}</div>
-            <div>{item.lever}X</div>
+            <div>{item.lever}x</div>
           </div>
         );
       },

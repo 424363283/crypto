@@ -6,13 +6,13 @@ export const colorMap = {
     },
     // 二级背景色
     '--theme-trade-bg-color-2': {
-      dark: '#202323',
-      light: '#fafafa',
+      light: "#FFFFFF",
+      dark: "#121212",
     },
     // 三级背景色 盘口 最新成交 背景色
     '--theme-trade-bg-color-3': {
-      dark: '#2A2E2E',
-      light: '#ffffff',
+      light: "#FFFFFF",
+      dark: "#121212",
     },
     // 四级背景色 如输入框，按钮背景色
     '--theme-trade-bg-color-4': {
@@ -91,8 +91,8 @@ export const colorMap = {
     },
     // 布局间距
     '--theme-trade-layout-gap': {
-      dark: '5px',
-      light: '5px',
+      dark: '2px',
+      light: '2px',
     },
     '--theme-trade-input-bg': {
       dark: '#4C5252',

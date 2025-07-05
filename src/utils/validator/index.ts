@@ -1,11 +1,5 @@
-export { isCN } from './is-cn';
-export { isDevelopmentEnv } from './is-development-env';
+
 export { isLocalHost } from './is-local-host';
-export { isMobile } from './is-mobile';
 export { isNumber } from './is-number';
 export { isSameDomain } from './is-same-domain';
 export { isServerSideRender } from './is-server-side-render';
-export { shouldChangeVersion } from './should-change-version';
-export { isEqualDigit } from './is-equal-digit';
-export { isFloat } from './is-float';
-export { isInt } from './is-int';

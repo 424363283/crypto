@@ -4,6 +4,7 @@ import { RangePickerProps } from 'antd/es/date-picker';
 import dayjs, { Dayjs } from 'dayjs';
 import React from 'react';
 import { clsx, styles } from './styled';
+import CommonIcon from '../common-icon';
 
 const { RangePicker } = DatePicker;
 
@@ -40,10 +41,10 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   }
   return (
       <div className={clsx('picker-content', wrapperClassName)}>
-        <Svg src='/static/images/swap/calendar_active.svg' width={15} className={clsx('icon')} />
         <RangePicker
             className={clsx('picker', className)}
             popupClassName={dropdownClassName}
+            prefix={<CommonIcon name='common-calendar' className={clsx('icon')} size={16} />}
             // separator={LANG('至')}
             separator={''}
             {...others}

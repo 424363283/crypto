@@ -13,7 +13,30 @@ import { PositionItemType } from '@/core/shared/src/swap/modules/order/field';
 import { clsx } from '@/core/utils';
 import Pointer from './components/pointer';
 
-export const MarginRatio = () => {
+export enum MARGIN_RATIO {
+  RATE = 'rate',
+  MARGIN = 'margin',
+  BALANCE = 'balance'
+}
+
+const MARGIN_RATIO_LIST: { [key in MARGIN_RATIO]: { title: string; titleTip: string } } = {
+  [MARGIN_RATIO.RATE]: {
+    title: LANG('保证金率'),
+    titleTip: LANG('保证金率 = 维持保证金/保证金余额。你的持仓将在保证金率达到100%时遭到强平。')
+  },
+  [MARGIN_RATIO.MARGIN]: {
+    title: LANG('维持保证金'),
+    titleTip: LANG('维持仓位所需的最低保证金余额。')
+  },
+  [MARGIN_RATIO.BALANCE]: {
+    title: LANG('保证金余额'),
+    titleTip: LANG('保证金余额=钱包余额+未实现盈亏；')
+  }
+}
+
+const defaultList = [MARGIN_RATIO.RATE, MARGIN_RATIO.MARGIN, MARGIN_RATIO.BALANCE];
+
+export const MarginRatio = ({ showHeader = true, showSettleCoin = true, list = defaultList }: { showHeader?: boolean, showSettleCoin?: boolean, list?: MARGIN_RATIO[] }) => {
   const { isDark } = useTheme();
   const twoWayMode = Swap.Trade.twoWayMode;
   const agreeAgreement = true;
@@ -45,15 +68,14 @@ export const MarginRatio = () => {
   const fixed = isUsdtType ? 2 : basePrecision;
 
   const _formatOptionLabel = (v: any) =>
-    `${Swap.Info.getCryptoData(v.symbol?.toUpperCase(), { withHooks: false }).name} ${
-      v.side === '1' ? LANG('多') : LANG('空')
+    `${Swap.Info.getCryptoData(v.symbol?.toUpperCase(), { withHooks: false }).name} ${v.side === '1' ? LANG('多') : LANG('空')
     }`;
   const _isOptionActive = (v: any) => v.symbol === option.symbol && v.side === option.side;
 
   return (
     <>
       <div className={clsx('margin-rate', !isDark && 'light')}>
-        <div className={'title'}>
+        {showHeader && <div className={'title'}>
           {LANG('保证金率')}
           {!!positionData.length && agreeAgreement && (
             <DropdownSelect
@@ -69,40 +91,36 @@ export const MarginRatio = () => {
               </div>
             </DropdownSelect>
           )}
-        </div>
-        <div className={'row'}>
-          <Tooltip
-            placement='topLeft'
-            title={LANG('保证金率 = 维持保证金/保证金余额。你的持仓将在保证金率达到100%时遭到强平。')}
-          >
-            <InfoHover>{LANG('保证金率')}</InfoHover>
-          </Tooltip>
-          <div className={'pointer'}>
-            <Pointer value={rate} />
-            <div className={'rate'}>{(rate * 100).toFixed(2)}%</div>
-          </div>
-        </div>
-        <div className={'row'}>
-          <Tooltip placement='topLeft' title={LANG('维持仓位所需的最低保证金余额。')}>
-            <InfoHover>{LANG('维持保证金')}</InfoHover>
-          </Tooltip>
-          <div>
-            {margin?.toFormat(fixed)} {settleCoin}
-          </div>
-        </div>
-        <div className={'row'}>
-          <Tooltip
-            placement='topLeft'
-            title={LANG(
-              '「全仓」保证金余额=账户权益+未实现盈亏；「逐仓」保证金余额=仓位保证金+未实现盈亏；当保证金余额<=维持保证金时遭到强平'
-            )}
-          >
-            <InfoHover>{LANG('保证金余额')}</InfoHover>
-          </Tooltip>
-          <div>
-            {balance.toFormat(fixed)} {settleCoin}
-          </div>
-        </div>
+        </div>}
+        {list.map((name: MARGIN_RATIO, index: number) => {
+          let item: { title: string; titleTip: string } = MARGIN_RATIO_LIST[name];
+          return (
+            <div className={'row'} key={index}>
+              <Tooltip
+                placement='topLeft'
+                title={item.titleTip}
+              >
+                <InfoHover hoverColor={false}>{item.title}</InfoHover>
+              </Tooltip>
+              {name == MARGIN_RATIO.RATE && (
+                <div className={'pointer'}>
+                  <Pointer value={rate} />
+                  <div className={'rate'}>{(rate * 100).toFixed(2)}%</div>
+                </div>
+              )}
+              {name == MARGIN_RATIO.MARGIN && (
+                <div>
+                  {margin?.toFormat(fixed)} {showSettleCoin && settleCoin}
+                </div>
+              )}
+              {name == MARGIN_RATIO.BALANCE && (
+                <div>
+                  {balance.toFormat(fixed)} {showSettleCoin && settleCoin}
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
       <style jsx>{`
         .margin-rate {
@@ -134,6 +152,7 @@ export const MarginRatio = () => {
             align-items: center;
             justify-content: space-between;
             margin-bottom: 15px;
+            height: 14px;
             &:last-child {
               margin-bottom: 0;
             }
@@ -143,13 +162,13 @@ export const MarginRatio = () => {
                 line-height: 14px;
                 font-size: 12px;
                 font-weight: 400;
-                color: var(--theme-trade-text-color-2);
+                color: var(--text_3);
               }
               &:nth-child(2) {
                 line-height: 10px;
                 font-size: 12px;
-                font-weight: 500;
-                color: var(--theme-trade-text-color-1);
+                font-weight: 400;
+                color: var(--text_1);
               }
             }
           }
@@ -183,17 +202,51 @@ const useOption = (positionData: PositionItemType[]) => {
     option:
       Account.isLogin && positionData.length > 0
         ? positionData.find((v) => {
-            if (option.symbol) {
-              return v.symbol === option.symbol && v.side === option.side;
-            }
-            return v.symbol.toUpperCase() === quoteId;
-          }) || positionData[0]
+          if (option.symbol) {
+            return v.symbol === option.symbol && v.side === option.side;
+          }
+          return v.symbol.toUpperCase() === quoteId;
+        }) || positionData[0]
         : { symbol: quoteId, side: '' },
     setOption,
   };
 };
-
 const getDatas = ({ isUsdtType, positionData, balanceData, position, twoWayMode, flagPrice }: any) => {
+  const crypto = position.symbol;
+  const isCross = position.marginType === 1;
+  const walletId = Swap.Info.getWalletId(isUsdtType);
+
+  const calculateData = useMemo(
+    () => Swap.Calculate.positionData({ usdt: isUsdtType, data: positionData, symbol: crypto, twoWayMode }),
+    [positionData, crypto, twoWayMode, flagPrice]
+  );
+
+  const data = calculateData.list.find((v: any) => v?.positionId === position?.positionId) || {
+    positionMarginRate: 0,
+    income: 0,
+  };
+
+  // 保证金余额=钱包余额accb+未实现盈亏unrealisedPNL(所有类型合约仓位未实现盈亏)
+  let balance = Number(balanceData.accb) + calculateData.list.reduce((total, item) => {
+    total += item.income;
+    return total;
+  }, 0);
+  if (isUsdtType) {
+
+    if (!isCross) {
+    } else {
+
+    }
+  }
+  if (!crypto) return { balance: 0, rate: 0, margin: 0 };
+  return {
+    rate: data.positionMarginRate,
+    margin: position?.mm,
+    balance: Number.isNaN(balance) ? 0 : balance,
+  };
+};
+// 已经废弃的旧计算公式
+const getDatas_deprecated = ({ isUsdtType, positionData, balanceData, position, twoWayMode, flagPrice }: any) => {
   const crypto = position.symbol;
   const isCross = position.marginType === 1;
   const walletId = Swap.Info.getWalletId(isUsdtType);
@@ -217,11 +270,11 @@ const getDatas = ({ isUsdtType, positionData, balanceData, position, twoWayMode,
   if (isUsdtType) {
     // 「全仓」保证金余额=可用余额+仓位占用保证金+单仓位未实现盈亏=AB+PM+UNPNL (因为之前positionsAccb已减去盈亏，此处不再减)
     // 「逐仓」保证金余额=仓位占用保证金+单仓位未实现盈亏=PM+UNPNL
-    balance = Number(calculateData.wallets[walletId]?.positionsAccb) + Number(position.margin || 0) ;
+    balance = Number(calculateData.wallets[walletId]?.positionsAccb) + Number(position.margin || 0);
     if (!isCross) {
       balance = Number(position.margin) + data.income;
       // console.log('逐仓 保证金余额= ',' position.margin + ',Number(position.margin || 0),' income =',data.income , ' balance = ',balance)
-    }else{
+    } else {
       // console.log('全仓 保证金余额= ','positionsAccb +',Number(calculateData.wallets[walletId]?.positionsAccb),' position.margin + ',Number(position.margin || 0),' income = ',data.income , ' balance = ',balance)
 
     }

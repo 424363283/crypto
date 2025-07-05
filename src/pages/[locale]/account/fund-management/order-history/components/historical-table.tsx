@@ -1,11 +1,13 @@
 import Table from '@/components/table';
 import { MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
+import { HistoricalTableStyle } from './historical-table-style';
 export default function HistoricalTable(props: any) {
   return (
     <>
-      <Table className='historical-table' {...props} />
+      <Table className="historical-table" {...props} />
       <style jsx>{styles}</style>
+      <HistoricalTableStyle />
     </>
   );
 }
@@ -47,6 +49,15 @@ const styles = css`
         font-size: 12px;
         font-weight: 400;
         color: var(--theme-font-color-2);
+      }
+    }
+    @media ${MediaInfo.mobileOrTablet} {
+      :global(.ant-pagination-item:hover),
+      :global(.ant-pagination-item:focus),
+      :global(.ant-pagination-item-active) {
+        background: var(--brand);
+        color: var(--text_white);
+        font-weight: 500;
       }
     }
   }

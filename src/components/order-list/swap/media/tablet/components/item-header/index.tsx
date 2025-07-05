@@ -3,6 +3,7 @@ import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
 import dayjs from 'dayjs';
 import { ItemWallet } from '../item-wallet';
+import { MediaInfo } from '@/core/utils';
 
 export const ItemHeader = ({
   data,
@@ -38,7 +39,7 @@ export const ItemHeader = ({
             <div>
               {!!data.leverageLevel && (
                 <div className='gray margin-type'>
-                  {data.marginType === 1 ? LANG('全仓') : LANG('逐仓')} {data.leverageLevel}X
+                  {data.marginType === 1 ? LANG('全仓') : LANG('逐仓')} {data.leverageLevel}x
                 </div>
               )}
             </div>
@@ -77,6 +78,9 @@ export const ItemHeader = ({
           margin-bottom: 10px;
           &:first-child {
             margin-top: var(--trade-spacing);
+          }
+          @media ${MediaInfo.mobile} {
+            padding: 0 0 var(--trade-spacing);
           }
           .row {
             display: flex;

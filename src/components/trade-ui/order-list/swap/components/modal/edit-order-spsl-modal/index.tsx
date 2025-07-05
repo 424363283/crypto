@@ -59,7 +59,7 @@ const EditOrderSpslModal = ({
   const [ckey, setCkey] = useState(() => +new Date());
   const [ckey1, setCkey1] = useState(() => +new Date());
   const [ckey2, setCkey2] = useState(() => +new Date());
-  const isBuy = data.side === '1';
+  const isBuy = data?.side === '1';
   const isSpslType = ['2', '1'].includes(`${data['strategyType']}`);
 
   const code = data.symbol;

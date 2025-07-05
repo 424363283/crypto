@@ -3,7 +3,7 @@ import { useRouter } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { OrderBookItem, Swap, TradeMap } from '@/core/shared';
 import { Position } from '@/core/shared/src/spot/position';
-import { formatDefaultText, formatNumber2Ceil, isSpot, isSwap } from '@/core/utils';
+import { formatDefaultText, formatNumber2Ceil, isSpot, isSwap, MediaInfo } from '@/core/utils';
 import { Tooltip } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { ListDataType, ORDER_BOOK_TYPES } from '.';
@@ -172,11 +172,12 @@ export const OrderList = ({
                 mouseEnterDelay={0}
                 mouseLeaveDelay={0}
                 overlayClassName='order-book-tooltip'
+
               >
                 <div
                   onMouseEnter={() => setHoverCount(index)}
                   onMouseLeave={() => setHoverCount(null)}
-                  className={`${Number(hoverCount) > index ? 'active' : ''}`}
+                  className={`order-book-item ${Number(hoverCount) > index ? 'active' : ''}`}
                 >
                   <OrderItem
                     item={item}
@@ -208,27 +209,32 @@ export const OrderList = ({
           display: flex;
           flex-direction: ${type == OrderTypes.BUY ? 'column' : 'column-reverse'};
           flex: 1;
+          justify-content: flex-end;
         }
         :global(.order-book-tooltip) {
           :global(.ant-tooltip-inner) {
             width: 227px;
-            height: 92px;
             word-break: break-word;
             font-size: 12px;
-            padding: 10px;
+            padding: 16px;
             font-weight: 400;
-            background-color: var(--theme-background-color-2-3);
+            background-color: var(--fill_pop);
             color: var(--theme-font-color-1);
+            border-radius: 16px;
+            box-shadow: 0px 4px 16px 0px var(--dropdown-select-shadow-color) !important;
           }
           :global(.ant-tooltip-arrow::before) {
-            background: var(--theme-background-color-2-3);
+            background: var(--fill_pop);
           }
           :global(.tooltip-text) {
             cursor: pointer;
           }
         }
+        .order-book-item{
+          height:20px;
+        }
         .active {
-          background-color: var(--theme-order-book-hover);
+          background-color: var(--fill_3);
         }
       `}</style>
     </>
@@ -251,17 +257,17 @@ const ItemTipsContent = ({
   return (
     <>
       <div className='content'>
-        <div>
+        <div className="item-content">
           <span>{LANG('均价')}</span>
           <span>≈ {price ?? ''}</span>
         </div>
-        <div>
+        <div className="item-content">
           <span>
             {LANG('合计')} {coin ?? ''}
           </span>
           <span>{coinTotal ?? ''}</span>
         </div>
-        <div>
+        <div className="item-content">
           <span>
             {LANG('合计')} {quoteCoin ?? ''}
           </span>
@@ -270,14 +276,12 @@ const ItemTipsContent = ({
       </div>
       <style jsx>{`
         .content {
-          > div {
+          .item-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            line-height: 14px;
-            &:last-child {
-              margin-bottom: 0;
+            &:nth-child(2) {
+              padding:16px 0;
             }
           }
         }

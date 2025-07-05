@@ -28,7 +28,7 @@ interface MenuProps {
   arrow?: boolean;
 }
 
-const Menu = ({ title, tips, hot, className, subMenu, active, onHover, href, arrow = true, newTag }: MenuProps) => {
+const Menu = ({ title, tips, hot, className, subMenu, active, onHover, href, arrow = false, newTag }: MenuProps) => {
   const { ref, inView } = useInView();
   const content = (
     <div className={clsx(active ? 'hover' : '', 'menu-wrapper', className)} ref={ref}>
@@ -52,8 +52,8 @@ const Menu = ({ title, tips, hot, className, subMenu, active, onHover, href, arr
         {arrow && (
           <CommonIcon
             name={active ? 'common-arrow-right-active-0' : 'common-arrow-right-0'}
-            width={22}
-            height={14}
+            width={24}
+            height={24}
             className='arrow'
             enableSkin
           />
@@ -83,9 +83,19 @@ const menuStyles = css`
       display: flex;
       align-items: center;
       justify-content: space-between;
-      width: 304px;
+      width: 100%;
       .item-wrapper {
-        padding: 16px;
+        color: var(--text_2)!important;
+        :global(>*:nth-last-child(2)) {
+          color: var(--text_1);
+        }
+        :global(>*:nth-child(2)) {
+          color: var(--text_3);
+        }
+        :global(a) {
+          color: inherit;
+        }
+
         :global(.title) {
           display: flex;
           flex-direction: row;
@@ -98,9 +108,8 @@ const menuStyles = css`
             flex-direction: row;
             align-items: center;
             line-height: 14px;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 500;
-            color: var(--theme-font-color-1);
             :global(.hot) {
               line-height: 0;
               margin-left: 5px;
@@ -142,10 +151,9 @@ const menuStyles = css`
         :global(.tips) {
           line-height: 15px;
           white-space: pre-wrap;
-          padding-top: 11px;
+          padding-top: 8px;
           font-size: 12px;
-          font-weight: 400;
-          color: var(--theme-font-color-3);
+          font-weight: 300;
           display: block;
         }
       }
@@ -157,13 +165,23 @@ const menuStyles = css`
     .sub-menu {
       position: absolute;
       top: 0;
-      bottom: 6px;
-      left: 324px;
-      border-left: 1px solid var(--skin-border-color-1);
+      bottom: 0px;
+      left: 253px;
+      width: 276px;
+      padding: 16px 24px;
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        top: 16px;
+        bottom: 16px;
+        width: 1px;
+        background: var(--fill_line_2);
+      }
     }
   }
   .hover .left-wrapper {
-    background-color: var(--theme-background-color-3);
     border-radius: 6px;
     .sub-menu {
       z-index: 1;
@@ -173,7 +191,7 @@ const menuStyles = css`
     .item-wrapper {
       :global(.title) {
         :global(.text) {
-          color: var(--skin-hover-font-color);
+          color: var(--text_brand);
         }
       }
     }
@@ -212,7 +230,7 @@ const ContractMenu = ({ onContractLeftMenuHover }: { onContractLeftMenuHover: (i
           subMenu={<Perpetual />}
           href='/swap/btc-usd'
         /> */}
-        {/* {enableLite && (
+        { enableLite && (
           <Menu
             title={LANG('简易合约')}
             tips={LANG('适合初学者的简单差价合约交易')}
@@ -221,7 +239,7 @@ const ContractMenu = ({ onContractLeftMenuHover }: { onContractLeftMenuHover: (i
             subMenu={<Simple active={subIndex === 0} />}
             href='/lite/btcusdt'
           />
-        )} */}
+        )}
         {/* <Menu
           title={LANG('杠杆代币')}
           tips={LANG('永不爆仓，安享收益')}
@@ -252,17 +270,20 @@ export { ContractMenu };
 
 const styles = css`
   :global(.contract-menu-wrapper) {
-    width: 340px;
-    height: 480px;
-    background: var(--theme-background-color-2);
-    box-shadow: 0px 8px 12px -5px rgba(0, 0, 0, 0.28);
+    width: 253px;
+    height: 296px;
+    background: var(--dropdown-select-bg-color);
     box-sizing: border-box;
-    padding: 16px;
     position: relative;
+    border-radius: 12px;
     .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
       z-index: 999;
       position: relative;
       height: 100%;
+      padding: 16px 24px;
     }
     .empty-sub-menu {
       width: 265px;

@@ -32,12 +32,12 @@
       .spActive {
         @extend .sp;
         color: #000;
-        background: #782CE8;
-        border-color: #782CE8;
+        background: #07828B;
+        border-color: #07828B;
       }
       .play {
         margin: 10px 0 15px 0;
-        background-color: #782CE8;
+        background-color: #07828B;
         color: #000;
         font-size: 14px;
         text-align: center;
@@ -75,7 +75,7 @@
       flex-direction: column;
       .play {
         margin: 10px 0 15px 0;
-        background-color: #782CE8;
+        background-color: #07828B;
         color: #000;
         font-size: 14px;
         text-align: center;
@@ -93,7 +93,7 @@
   .searchBtn {
     padding-left: 20px;
     margin: 18px;
-    background-color: #782CE8;
+    background-color: #07828B;
     color: #000;
     font-size: 14px;
     text-align: center;
@@ -126,7 +126,7 @@
   }
   .itemActive {
     @extend .item;
-    background-color: #782CE8;
+    background-color: #07828B;
     color: #000;
   }
 }

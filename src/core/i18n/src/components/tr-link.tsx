@@ -5,9 +5,7 @@ import { useRouter } from 'next/router';
 import { memo, useEffect, useState } from 'react';
 
 function removeLastSlash(pathname: string) {
-  if (pathname.endsWith('/')) {
-    pathname = pathname.slice(0, -1);
-  }
+  if (pathname.endsWith('/')) pathname = pathname.slice(0, -1);
   return pathname;
 }
 
@@ -41,6 +39,7 @@ export const useTrHref = ({ href, isTheme }: { href?: string; isTheme?: boolean 
 
   return { getPathname, pathname: pathname };
 };
+
 export type TrLinkProps = {
   children: React.ReactNode;
   href: string;
@@ -57,11 +56,13 @@ export type TrLinkProps = {
 const TrLinkMemo = ({ children, href = '', native = false, theme: isTheme, query = {}, ...props }: TrLinkProps) => {
   const { pathname } = useTrHref({ href, isTheme }); // 下一个路由地址
   const router = useRouter(); //当前
+  
   // 防止不同页面跳转时，对应页面的语言文件没有被正确加载
   const noLastSlashPathname = removeLastSlash(pathname);
   const currentFirPath = getFirstPathAfterLocale(router.asPath) || '/index';
   const nextFirstPath = getFirstPathAfterLocale(pathname) || '/';
   const shouldUseNative = !currentFirPath?.startsWith(nextFirstPath);
+
   if (native || shouldUseNative) {
     const _href = noLastSlashPathname + (Object.keys(query).length ? `?${new URLSearchParams(query).toString()}` : '');
     return (
@@ -70,6 +71,7 @@ const TrLinkMemo = ({ children, href = '', native = false, theme: isTheme, query
       </a>
     );
   }
+
   return (
     <Link href={{ pathname: pathname, query }} {...props} prefetch={false}>
       {children}

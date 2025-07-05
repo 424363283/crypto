@@ -2,7 +2,7 @@ import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { MobileHeaderDownload } from '@/components/header/download';
 import { useNativeAPP, useRouter } from '@/core/hooks';
-import { getOtherLink, isSearchRU } from '@/core/utils';
+import { getOtherLink, isSearchRU, MediaInfo } from '@/core/utils';
 import { clsx } from '@/core/utils/src/clsx';
 import React, { ReactNode, useEffect } from 'react';
 import { Mobile } from '../responsive';
@@ -16,6 +16,7 @@ const UniversalLayout = React.memo(
     bgColor = '#fff',
     hideBorderBottom = false,
     header,
+    headerBgColor,
     shouldRender = true,
   }: {
     children: React.ReactNode;
@@ -25,6 +26,7 @@ const UniversalLayout = React.memo(
     bgColor?: string;
     hideBorderBottom?: boolean;
     header?: ReactNode;
+    headerBgColor?: string;
     shouldRender?: boolean;
   }) => {
     const [showDownload, setShowDownload] = React.useState(true);
@@ -51,16 +53,22 @@ const UniversalLayout = React.memo(
           </Mobile>
         )}
 
-        {!hideHeader && !isNativeAPP && (header || <Header hideBorderBottom={hideBorderBottom} />)}
+        {!hideHeader && !isNativeAPP && (header || <Header backgroundColor={headerBgColor} hideBorderBottom={hideBorderBottom} />)}
         <main className={clsx('main', className)}>{children}</main>
         {!hideFooter && !isNativeAPP && <Footer />}
         <style jsx>{`
           .uni-layout {
-            background-color: ${bgColor};
+            background-color: var(--fill_bg_2);
             .main {
-              min-height: ${hideHeader ? '100vh' : 'calc(100vh - 64px)'};
               display: flex;
               flex-direction: column;
+              min-height: calc(100vh - 56px);
+              min-height: 100% !important;
+              margin-bottom: 24px;
+              @media ${MediaInfo.mobile} {
+               margin: 0 !important;
+               gap: 8px;
+              }
             }
           }
         `}</style>

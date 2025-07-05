@@ -5,7 +5,7 @@ export class Debounce {
   
     public run(func?: Function) {
       this.fn = func ?? this.fn;
-      let args = arguments;
+      const args = arguments;
       if (this.timer) {
         clearTimeout(this.timer);
       }
@@ -15,18 +15,25 @@ export class Debounce {
     }
   }
   
-  export const debounce = <T extends any[]>(fn: (...args: T) => void, delay: number = 500) => {
+  export const debounce = <T extends any[]>(fn: (...args: T) => any, delay: number = 500) => {
     let timerId: ReturnType<typeof setTimeout> | null;
+    let isRunning = false;
   
-    return (...args: T) => {
+    return async (...args: T) => {
+      if (isRunning) return;
+  
       if (timerId) {
         clearTimeout(timerId);
       }
   
-      timerId = setTimeout(() => {
-        fn(...args);
+      try {
+        isRunning = true;
+        const result = await fn(...args);
+        return result;
+      } finally {
+        isRunning = false;
         timerId = null;
-      }, delay);
+      }
     };
   };
   

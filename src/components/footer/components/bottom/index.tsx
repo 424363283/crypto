@@ -15,8 +15,8 @@ export default function Bottom({ className }: { className?: string }) {
   useEffect(() => {
     setCurrentYear(dayjs().format('YYYY'));
   }, []);
-  const TERMS_URL = `https://support.y-mex.com/hc/${language}/articles/5691838199183-Terms-of-Use`;
-  const PRIVACY_URL = `https://support.y-mex.com/hc/${language}/articles/5691793917839-Privacy-Terms`;
+  const TERMS_URL = `https://ymex.zendesk.com/hc/${language}/articles/11306769511567-YMEX-FAQ`;
+  const PRIVACY_URL = `https://ymex.zendesk.com/hc/${language}/articles/11309246960399-YMEX-服務條款`;
 
   return (
     <>

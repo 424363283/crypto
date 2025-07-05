@@ -5,10 +5,12 @@ import { useOrderData } from '@/components/order-list/swap/hooks/use-order-data'
 import { usePageListener } from '@/components/order-list/swap/hooks/use-page-listener';
 import { store } from '@/components/order-list/swap/store';
 import { Account } from '@/core/shared';
-import { clsx } from '@/core/utils';
+import { useEffect } from 'react';
+import { clsx, MediaInfo } from '@/core/utils';
 import dynamic from 'next/dynamic';
 import { UnLoginView } from '../../../components/un-login-view';
-
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
+import { useCopyTradingSwapStore } from '@/store/copytrading-swap';
 const PositionList = dynamic(() => import('./components/position-list'), { ssr: false, loading: () => <div /> });
 const PendingList = dynamic(() => import('./components/pending-list'), { ssr: false, loading: () => <div /> });
 const HistoryList = dynamic(() => import('./components/history-list'), { ssr: false, loading: () => <div /> });
@@ -17,18 +19,24 @@ const FinishedList = dynamic(() => import('./components/finished-list'), { ssr: 
 const PositionHistory = dynamic(() => import('./components/position-history'), { ssr: false, loading: () => <div /> });
 
 export const Index = () => {
+  const fetchShareTrader = useCopyTradingSwapStore.use.fetchShareTrader();
+   const isCopyTrader = useCopyTradingSwapStore.use.isCopyTrader();
   const { tabIndex, hide } = store;
   const { positions, pending } = useOrderData({ hide });
+   const filterPositions = positions.filter(item => isCopyTrader || item.subWallet !== WalletKey.COPY); 
   const isLogin = Account.isLogin;
-  const tabs = useListTabs({ positions, pending });
+  const tabs = useListTabs({ positions: filterPositions, pending });
   usePageListener();
+  useEffect(() => {
+    fetchShareTrader();
+  }, []);
 
   return (
     <>
-      <div className='order-list'>
-        <div className='tabbar'>
+      <div className="order-list">
+        <div className="tabbar">
           <GradienScrollRow>
-            <div className='content'>
+            <div className="content">
               {tabs.map((v, index) => {
                 const active = tabIndex === index;
                 return (
@@ -46,7 +54,7 @@ export const Index = () => {
           </GradienScrollRow>
         </div>
         {isLogin ? (
-          <div className='tab-content'>
+          <div className="tab-content">
             <ListContent tabIndex={tabIndex} />
           </div>
         ) : (
@@ -61,6 +69,10 @@ export const Index = () => {
               padding: 0 15px;
               height: 42px;
               white-space: nowrap;
+              @media ${MediaInfo.mobile} {
+                padding: 0 1rem;
+                height: 2.5rem;
+              }
               .tab {
                 display: inline-block;
                 user-select: none;
@@ -71,14 +83,18 @@ export const Index = () => {
                 font-size: 14px;
                 font-weight: 500;
                 white-space: nowrap;
-                color: var(--theme-trade-text-color-3);
-                margin-right: 25px;
+                color: var(--text_2);
+                margin-right: 24px;
                 &:last-child {
                   margin-right: 15px;
                 }
+                @media ${MediaInfo.mobile} {
+                  font-size: 14px;
+                  line-height: 2.5rem;
+                }
               }
               .tab[data-active='true'] {
-                color: var(--theme-trade-text-color-1);
+                color: var(--text_brand);
                 &::before {
                   position: absolute;
                   bottom: 0;
@@ -87,6 +103,12 @@ export const Index = () => {
                   width: 100%;
                   height: 2px;
                   background: var(--skin-primary-color);
+                }
+                @media ${MediaInfo.mobile} {
+                  color: var(--text_brand);
+                  &::before {
+                    display: none;
+                  }
                 }
               }
             }
@@ -102,12 +124,12 @@ export const Index = () => {
 
 const ListContent = ({ tabIndex }: { tabIndex: number }) => {
   const contents: any = [
-    <PositionList key='1' />,
-    <PendingList key='2' />,
-    <HistoryList key='3' active={tabIndex == 2} />,
-    <FinishedList key='4' active={tabIndex == 3} />,
-    // <PositionHistory key='5' active={tabIndex == 4} />, // TODO
-    <FundsList key='5' active={tabIndex == 4} />, 
+    <PositionList key="1" />,
+    <PendingList key="2" />,
+    <HistoryList key="3" active={tabIndex == 2} />,
+    <FinishedList key="4" active={tabIndex == 3} />,
+    <PositionHistory key='5' active={tabIndex == 4} />, 
+    <FundsList key="5" active={tabIndex == 5} />
   ];
 
   return (

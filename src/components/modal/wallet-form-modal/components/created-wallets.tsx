@@ -57,13 +57,13 @@ export const CreatedWallets = ({
             justify-content: space-between;
             font-size: 12px;
             > div {
-              color: var(--theme-trade-text-color-3);
+              color: var(--text_3);
               span {
-                color: var(--theme-trade-text-color-1);
+                color: var(--text_1);
               }
             }
             .more {
-              color: var(--theme-font-color-small-yellow);
+              color: var(--text_brand);
             }
           }
           .list {
@@ -73,7 +73,7 @@ export const CreatedWallets = ({
             .item {
               display: flex;
               border-radius: 6px;
-              border: 1px solid var(--theme-border-color-1);
+              border: 1px solid var(--fill_line_3);
               padding: 16px;
               margin-bottom: 10px;
               .texts {
@@ -84,7 +84,7 @@ export const CreatedWallets = ({
                 .name {
                   font-size: 14px;
                   font-weight: 500;
-                  color: var(--theme-trade-text-color-1);
+                  color: var(--text_1);
                 }
                 .remark {
                   width: 100%;

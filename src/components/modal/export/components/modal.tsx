@@ -27,13 +27,13 @@ export const Modal = (props: { onClose: () => void; type?: EXPORTS_TYPE; digital
     if (!start || !end) {
       return;
     }
-    setStartDate(dayjs(start).format('YYYY-MM-DD H:m:s'));
-    setEndDate(dayjs(end).format('YYYY-MM-DD H:m:s'));
+    setStartDate(start.startOf('day').format('YYYY-MM-DD H:m:s'));
+    setEndDate(end.endOf('day').format('YYYY-MM-DD H:m:s'));
   };
   useEffect(() => {
     const { start = '', end = '' } = getDayjsDateRange(new Date(), date, true);
     _onChangeDate([start, end]);
-  }, [date, startDate, endDate]);
+  }, [date]);
   const EXPORT_METHODS_MAP = {
     [EXPORTS_TYPE.DEPOSIT_FIAT]: getDepositExportApi, // 法币/充币记录
     [EXPORTS_TYPE.SPOT_ORDER]: getSpotHistoryExportApi, // 现货交易记录
@@ -88,13 +88,15 @@ export const Modal = (props: { onClose: () => void; type?: EXPORTS_TYPE; digital
   return (
     <BasicModal
       open={visible}
-      okButtonProps={{ style: { display: 'none' } }}
-      cancelButtonProps={{ style: { display: 'none' } }}
+      destroyOnClose
       onCancel={onClose}
       width={380}
       zIndex={1000}
       closable
       title={modalTitle}
+      hasCancel={false}
+      okText={LANG('导出')}
+      onOk={_export}
     >
       <div className='modal-content'>
         <div className='modal-date'>
@@ -109,11 +111,6 @@ export const Modal = (props: { onClose: () => void; type?: EXPORTS_TYPE; digital
           <div className='tips'>
             <p>{LANG('每日最多可导出数据{number}次', { number: 3 })}</p>
             <p>{LANG('每次导出数据最多{number}条', { number: 10000 })}</p>
-          </div>
-          <div className='button'>
-            <Button className='export' onClick={_export} type='primary'>
-              {LANG('导出')}
-            </Button>
           </div>
         </div>
       </div>

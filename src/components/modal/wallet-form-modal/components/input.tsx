@@ -33,15 +33,15 @@ export const Input = ({
             input {
               height: 40px;
               border-radius: 5px;
-              background-color: var(--theme-trade-modal-input-bg);
+              background-color: var(--fill_3);
               padding-left: 13px;
               box-shadow: unset;
               border: 0;
               width: 100%;
               font-size: 14px;
-              color: var(--theme-font-color-1);
+              color: var(--text_1);
               &::placeholder {
-                color: var(--theme-font-color-3);
+                color: var(--text_2);
               }
             }
           }

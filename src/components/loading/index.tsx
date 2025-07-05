@@ -63,15 +63,15 @@ export class Loading {
   static view({ style, className, small }: LoadingViewProps) {
     return (
       <>
-        <div key='light' className={clsx('y-mex-loading', small && 'small', className)} style={style}>
-          <Image src={'/static/images/loading/light-1.png'} width='60' height='60' enableSkin />
-          <Image src={'/static/images/loading/light-2.png'} width='70' height='70' enableSkin />
-          <Image src={'/static/images/loading/light-3.png'} width='80' height='80' enableSkin />
+        <div key='light' className={clsx('ymex-loading', small && 'small', className)} style={style}>
+          <Image src={'/static/images/loading/loading.gif'} width='120' height='120' enableSkin />
+          {/* <Image src={'/static/images/loading/light-2.png'} width='70' height='70' enableSkin /> */}
+          {/* <Image src={'/static/images/loading/light-3.png'} width='80' height='80' enableSkin /> */}
         </div>
 
         <style jsx global>
           {`
-            .y-mex-loading {
+            .ymex-loading {
               position: relative;
               width: 80px;
               height: 80px;

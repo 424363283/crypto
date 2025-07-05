@@ -10,6 +10,9 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import css from 'styled-jsx/css';
 import { StatusButton } from '../status-button';
 import WithdrawDetailModal from '../withdraw-detail-modal';
+import Tooltip from '@/components/trade-ui/common/tooltip';
+import clsx from 'clsx';
+import { useResponsive } from '@/core/hooks';
 
 type RechargeItem = {
   address: string;
@@ -36,6 +39,7 @@ type RechargeItem = {
 };
 
 export const useRechargeColumns = () => {
+  const { isMobile } = useResponsive();
   const formatBankCard = (bankCard = '') => {
     return bankCard?.length <= 50 ? (
       bankCard
@@ -81,11 +85,18 @@ export const useRechargeColumns = () => {
     {
       title: LANG('币种'),
       dataIndex: 'currency',
-      render: (value: string) => {
+      render: (value: string, item: RechargeItem) => {
         return (
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <CoinLogo coin={value} width={18} key={value} height={18} />
             <span>{value}</span>
+            {item.sourceCurrency !== item.currency && <Tooltip
+              placement='topRight'
+              arrow={false}
+              title={LANG('由于充值源头币种与实际到账币种不一致，实际到账时会转换为USDT。')}
+            >
+              <CommonIcon name='common-info-0' size={16} />
+            </Tooltip>}
           </div>
         );
       },
@@ -97,7 +108,7 @@ export const useRechargeColumns = () => {
         let formatMoney = item?.amount?.toFormat();
         return (
           <div className={'fw-300'}>
-            {formatMoney} {item.sourceCurrency}
+            {formatMoney} {item.currency}
           </div>
         );
       },
@@ -106,23 +117,23 @@ export const useRechargeColumns = () => {
     {
       title: LANG('充币地址'),
       render: (val: RechargeItem, item: any) => {
-        const { web, url } = switchBlockUrl(item);
-        let arrowFunction = web === '' ? () => {} : () => window.open(web + '?from=y-mex', '_blank');
+        const transactionDetailsUrl = item.txUrl + item.txid;
+        const addressDetailUrl = item.addressUrl + item.address;
         const bankCard = formatBankCard(item?.address) || '--';
         return (
           <div className={'addressBox'} style={{ fontSize: '12px' }}>
             <div className={'address fw-300'} style={{ whiteSpace: 'nowrap' }}>
-              {bankCard}
+              <span className='address-url' onClick={() => { addressDetailUrl && window.open(addressDetailUrl, '_blank') }} >{bankCard}</span>
               {item.address && (
                 <CopyToClipboard text={item.address} onCopy={(_text, bool) => onCopy(_text, bool, item?.address)}>
                   <div className='copy-btn'>
-                    <CommonIcon size={8} name='common-copy-2-grey-0' />
+                    <CommonIcon size={16} name='common-copy' />
                   </div>
                 </CopyToClipboard>
               )}
             </div>
             {item.address !== '' && item.status === 1 && item?.txid?.length !== 32 && (
-              <BlockUrl onBlockUrlClick={arrowFunction} url={url} />
+              <BlockUrl onBlockUrlClick={() => { transactionDetailsUrl && window.open(transactionDetailsUrl, '_blank') }} url='' />
             )}
             <style jsx>{styles}</style>
           </div>
@@ -149,25 +160,41 @@ export const useRechargeColumns = () => {
       },
     },
   ];
-
   return columns;
 };
+
 const styles = css`
-  .addressBox .address {
+  .addressBox {
     display: flex;
-    align-items: center;
-    @media ${MediaInfo.mobileOrTablet} {
-      justify-content: end;
-    }
-    .copy-btn {
+    .address {
       display: flex;
-      cursor: pointer;
       align-items: center;
-      justify-content: center;
-      margin-left: 6px;
-      padding: 4px;
-      border-radius: 6px;
-      background-color: var(--theme-background-color-disabled-light);
+      @media ${MediaInfo.mobileOrTablet} {
+        justify-content: end;
+      }
+      .address-url {
+        color: var(--text_1);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 14px; /* 100% */
+        text-decoration-line: underline;
+        text-decoration-style: solid;
+        text-decoration-skip-ink: auto;
+        text-decoration-thickness: auto;
+        text-underline-offset: auto;
+        text-underline-position: from-font;
+        cursor: pointer;
+      }
+      .copy-btn {
+        display: flex;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        margin-left: 8px;
+        border-radius: 6px;
+      }
     }
   }
+
 `;

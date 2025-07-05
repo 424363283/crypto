@@ -1,3 +1,4 @@
+import { MediaInfo } from '@/core/utils';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
 
@@ -62,23 +63,7 @@ const LeverInput = ({ value, min, max, symbol, isNegative = true, onChange, disa
   };
 
   const _getSymbolLeft = useCallback((length: number) => {
-    switch (length) {
-      case 0: {
-        return 10;
-      }
-      case 1: {
-        return 17;
-      }
-      case 2: {
-        return 25;
-      }
-      case 3: {
-        return length * 11;
-      }
-      default: {
-        return 18 + length * 7;
-      }
-    }
+    return (length + 2) * 8 + 1;
   }, []);
 
   const _onBlur = () => {
@@ -92,16 +77,17 @@ const LeverInput = ({ value, min, max, symbol, isNegative = true, onChange, disa
 
   return (
     <>
-      <div className='input-wrap'>
+      <div className="input-wrap">
         <input
-          type='text'
+          type="text"
+          inputMode="decimal"
           value={originVal}
           onInput={_onInput}
           onBlur={_onBlur}
           onChange={_onChange}
           disabled={disabled}
         />
-        <span className='symbol' style={{ left: _getSymbolLeft(String(originVal).length) }}>
+        <span className="symbol" style={{ left: _getSymbolLeft(String(originVal).length) }}>
           {symbol}
         </span>
       </div>
@@ -116,37 +102,31 @@ const styles = css`
   .input-wrap {
     position: relative;
     input {
-      background: var(--theme-background-color-3);
-      color: var(--theme-font-color-1);
+      background: var(--fill_input_1);
+      color: var(--text_1);
       width: 100%;
-      padding: 9px;
+      padding: 0 16px;
       height: 36px;
       border-radius: 8px;
       font-size: 14px;
-      font-weight: 400;
+      font-weight: 500;
       touch-action: manipulation;
       -webkit-appearance: none;
       overflow: visible;
       border: 0;
       outline: none;
+      @media ${MediaInfo.mobile} {
+        width: -webkit-fill-available;
+      }
     }
     .symbol {
-      color: #333333;
+      color: var(--text_1);
       position: absolute;
       font-size: 14px;
       pointer-events: none;
       font-weight: 400;
       user-select: none;
       top: 9px;
-    }
-  }
-  .dark {
-    input {
-      background: #2d3546;
-      color: #fff;
-    }
-    .symbol {
-      color: #fff;
     }
   }
 `;

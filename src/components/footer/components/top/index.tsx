@@ -53,9 +53,9 @@ export default function Top() {
     <div className={setResponsiveClsx('footer-top-wrapper', 'tablet-footer-top-wrapper')}>
       <div className='left-wrapper'>
         {isDark ? (
-          <Image src='/static/images/common/logo.svg' width={192} height={50} alt='y-mex logo' />
+          <Image src='/static/images/common/logo.svg' width={192} height={50} alt='YMEX logo' />
         ) : (
-          <Image src='/static/images/common/logo_dark.svg' width={192} height={50} alt='y-mex logo' />
+          <Image src='/static/images/common/logo_dark.svg' width={192} height={50} alt='YMEX logo' />
         )}
       </div>
       <Desktop>

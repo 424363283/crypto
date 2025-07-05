@@ -2,6 +2,7 @@ import { SearchInput } from '@/components/basic-input';
 import CommonIcon from '@/components/common-icon';
 import { DesktopOrTablet, Mobile } from '@/components/responsive';
 import Table from '@/components/table';
+import CheckboxItem from '@/components/trade-ui/trade-view/swap/components/checkbox-item';
 import { useRouter } from '@/core/hooks';
 import { LANG, TrLink } from '@/core/i18n';
 import { SpotItem } from '@/core/shared';
@@ -14,7 +15,7 @@ import { useImmer } from 'use-immer';
 
 type SpotTableProps = {
   onInputChange: (value: string) => void;
-  onCheckChange: (evt: CheckboxChangeEvent) => void;
+  onCheckChange: (value: boolean) => void;
   checked: boolean;
   columns: SpotItem;
   tableData: SpotItem[];
@@ -25,31 +26,35 @@ const SpotTableUi = (props: SpotTableProps) => {
   const { onInputChange, onCheckChange, checked, columns, tableData } = props;
   const { query } = useRouter();
   const [state, setState] = useImmer({
-    page: 1,
+    page: 1
   });
   const { page } = state;
   // 设置页数
   const _setPage = (page: number) => {
-    setState((draft) => {
+    setState(draft => {
       draft.page = page;
     });
   };
   return (
     <>
-      <div className='spot-table-header'>
-        <p className='title'>{LANG('资产明细')}</p>
+      <div className="spot-table-header">
+        <p className="title">{LANG('资产明细')}</p>
         <DesktopOrTablet>
-          <div className='header-right'>
-            <SearchInput onChange={onInputChange} prefix />
-            <MemoCheckBox className='hide-small-asset' checked={checked} onChange={onCheckChange}>
-              {LANG('隐藏小额资产')}
-            </MemoCheckBox>
-            <CommonIcon name='common-verticle-line-0' size={16} />
-            <CommonIcon name='common-power-exchange-0' size={16} enableSkin />
+          <div className="header-right">
+            <SearchInput width={300} onChange={onInputChange} prefix />
+            <CheckboxItem
+              className="hide-small-asset"
+              label={LANG('隐藏小额资产')}
+              value={checked}
+              radioAttrs={{ width: 18, height: 18 }}
+              onChange={onCheckChange}
+            />
+            <CommonIcon className="hidden" name="common-verticle-line-0" size={16} />
+            <CommonIcon className="hidden" name="common-power-exchange-0" size={16} enableSkin />
             <TrLink
-              href='/account/fund-management/assets-overview'
+              href="/account/fund-management/assets-overview"
               query={{ type: query.type, module: 'power-exchange' }}
-              className='exchange-link'
+              className="exchange-link hidden"
             >
               {LANG('小额兑换算力')}
             </TrLink>
@@ -57,14 +62,20 @@ const SpotTableUi = (props: SpotTableProps) => {
         </DesktopOrTablet>
       </div>
       <Mobile>
-        <div className='mobile-spot-header'>
-          <SearchInput onChange={onInputChange} prefix width={145} />
-          <MemoCheckBox className='hide-small-asset' checked={checked} onChange={onCheckChange}>
-            {LANG('隐藏小额资产')}
-          </MemoCheckBox>
+        <div className="mobile-spot-header">
+          <SearchInput onChange={onInputChange} prefix width={240} />
+          <CheckboxItem
+              className="hide-small-asset"
+              label={LANG('隐藏小额资产')}
+              value={checked}
+              onChange={value => {
+                _setPage(1);
+                onCheckChange(value);
+              }}
+            />
         </div>
       </Mobile>
-      <Mobile>
+      {/* <Mobile>
         <div className='small-assets'>
           <CommonIcon name='common-power-exchange-0' size={16} enableSkin />
           <TrLink
@@ -75,11 +86,11 @@ const SpotTableUi = (props: SpotTableProps) => {
             {LANG('小额兑换算力')}
           </TrLink>
         </div>
-      </Mobile>
+      </Mobile> */}
       <Table
-        className='spot-table'
+        className="spot-table"
         showMobileTable
-        rowClassName='spot-table-row'
+        rowClassName="spot-table-row"
         columns={columns}
         rowKey={(record: any) => record?.code}
         pagination={{
@@ -88,30 +99,30 @@ const SpotTableUi = (props: SpotTableProps) => {
           defaultPageSize: 10,
           hideOnSinglePage: true,
           onChange: _setPage,
-          showSizeChanger: false,
+          showSizeChanger: false
         }}
         dataSource={tableData}
+        isHistoryList
       />
+
       <style jsx>{styles}</style>
     </>
   );
 };
 const styles = css`
   .spot-table-header {
-    height: 55px;
-    padding: 14px 10px 14px 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid var(--theme-border-color-2);
-    background-color: var(--theme-background-color-2);
+    background-color: var(--fill_bg_1);
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     @media ${MediaInfo.mobile} {
-      padding: 14px 0;
+      height: auto;
+      padding: 0;
     }
     .title {
-      color: var(--theme-font-color-6);
+      color: var(--text_1);
       font-size: 16px;
       font-weight: 500;
     }
@@ -119,12 +130,16 @@ const styles = css`
       display: flex;
       align-items: center;
       :global(.hide-small-asset) {
-        color: var(--theme-font-color-6);
-        font-size: 12px;
+        color: var(--text_3);
+        font-size: 14px;
         margin-left: 20px;
+        :global(.icon-radio .icon-span) {
+          color: var(--text_2);
+          font-size: 14px;
+        }
       }
       :global(.exchange-link) {
-        color: var(--skin-main-font-color);
+        color: var(--text_3);
       }
     }
   }
@@ -132,27 +147,29 @@ const styles = css`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 13px 0px;
+    padding: 24px 0 12px;
+    border-bottom: 1px solid var(--fill_line_1);
     :global(.hide-small-asset) {
-      color: var(--theme-font-color-6);
+      color: var(--text_3);
       font-size: 12px;
-      margin-left: 20px;
+      margin-left: 10px;
+      flex: 1 0 auto;
+      :global(.ant-checkbox + span) {
+        padding-inline-end: 0;
+      }
     }
   }
   .small-assets {
-    background-color: var(--skin-primary-bg-color-opacity-3);
+    background-color: var(--fill_bg_1);
     border-radius: 8px;
     height: 37px;
     display: flex;
     align-items: center;
     justify-content: center;
-    :global(.exchange-link) {
-      color: var(--skin-main-font-color);
-    }
   }
   :global(.spot-table) {
     min-height: calc(100vh - 540px);
-    background-color: var(--theme-background-color-2);
+    background-color: var(--fill_bg_1);
     :global(.code-name-header) {
       display: flex;
       align-items: center;
@@ -160,45 +177,37 @@ const styles = css`
     }
 
     :global(.money-box) {
+      display: flex;
+      flex-direction: column;
+      line-height: normal;
+      gap: 8px;
       :global(.target) {
-        color: var(--theme-font-color-3);
+        color: var(--text_3);
         font-size: 12px;
+        font-weight: 400;
       }
     }
     :global(.right-box) {
       display: flex;
       text-align: left;
-      justify-content: flex-start;
+      justify-content: flex-end;
       align-items: center;
-      :global(.operate-button) {
-        cursor: pointer;
-        margin-right: 15px;
-        font-weight: 400;
-        display: inline-block;
-        min-width: 88px;
-        padding: 6px 0;
-        border-radius: 5px;
-        font-size: 12px;
-        color: var(--theme-font-color-1);
-        vertical-align: middle;
-        text-align: center;
-        background-color: var(--theme-background-color-14);
-      }
-      :global(:nth-child(1)) {
-        background: var(--skin-primary-color);
-        border: none;
-        color: var(--skin-font-color);
+      gap: 8px;
+      :global(> :not(button)) {
+        &:last-child {
+          margin-left: 8px;
+        }
       }
     }
     :global(table) {
-      padding: 0 10px;
+      padding: 0;
     }
     :global(.ant-table-content .ant-table-tbody) {
       :global(.ant-table-placeholder) {
         height: calc(100vh - 600px);
       }
       :global(td.ant-table-cell-row-hover) {
-        background-color: var(--theme-background-color-2-5) !important;
+        background-color: var(--fill_bg_1) !important;
       }
     }
   }

@@ -17,24 +17,24 @@ export default function BindEmail() {
       pathname: '/account/dashboard',
       query: {
         type: 'security-setting',
-        option: 'verify',
+        option: 'verify'
       },
       state: {
         sence: SENCE.BIND_EMAIL,
         email,
         countryCode,
-        countryId,
-      },
+        countryId
+      }
     });
   };
   return (
     <AccountBox title={LANG('开启邮箱验证')} prompt={LANG('邮箱验证用于提现和修改安全设置，开启后不可修改跟关闭')}>
-      <div className='bind-email-container'>
+      <div className="bind-email-container">
         <InputEmail withBorder label={LANG('新邮箱地址')} placeholder={LANG('请输入邮箱地址')} />
         <button
           className={clsx('pc-v2-btn', shouldDisableBtn ? 'disabled' : '')}
           onClick={handleNewEmail}
-          style={{ marginTop: '10px' }}
+          style={{ marginTop: '10px', padding: 0 }}
         >
           {LANG('确定')}
         </button>
@@ -46,6 +46,7 @@ export default function BindEmail() {
 const styles = css`
   .bind-email-container {
     width: 530px;
+    margin: auto;
     button {
       width: 100%;
     }

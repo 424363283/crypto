@@ -1,4 +1,11 @@
-import { getCommonBaseInfoApi, getLiteConfigInfoApi, getLiteFeeApi, liteLimitOrderApi, liteMarketOrderApi, setLiteConfigInfoApi } from '@/core/api';
+import {
+  getCommonBaseInfoApi,
+  getLiteConfigInfoApi,
+  getLiteFeeApi,
+  liteLimitOrderApi,
+  liteMarketOrderApi,
+  setLiteConfigInfoApi
+} from '@/core/api';
 import { FORMULAS } from '@/core/formulas';
 import { LANG } from '@/core/i18n';
 import { SUBSCRIBE_TYPES } from '@/core/network';
@@ -12,6 +19,7 @@ import { Position } from '../position';
 import { LoadingType } from '../position/types';
 import { state } from './state';
 import { AccountType, OrderType, PositionSide, StopType } from './types';
+import { Swap } from '@/core/shared';
 
 // 简单合约交易逻辑
 export class Trade {
@@ -23,6 +31,7 @@ export class Trade {
     defaultStopProfitRate: 0,
     closeConfirm: false,
     orderConfirm: false,
+    deferPref: false
   };
   // 存储简单合约接口返回手续费
   private static fee = {} as {
@@ -34,17 +43,20 @@ export class Trade {
   private static isInitialized = false;
   // 初始化
   public static async init(id: string) {
+    const formatPair = (symbolId: string): string => symbolId.replace(/^([a-z]+)(usdt)$/i, '$1-$2');
+    Swap.Info.fetchContractDetail(formatPair(id));
+    Trade.dispatchWsListener();
     if (Trade.id !== id) {
       Trade.id = id;
       Trade.state.id = id;
       await Trade.getTradeInfo(id);
       Trade.setMaxMargin();
-      Trade.dispatchWsListener();
       if (Trade.isInitialized) {
         // id变化，重新获取费率
-        Trade.state.feex = +Trade.fee[id];
+        Trade.state.feex = +Trade.fee[id]?.[1] || 0;
       }
-      if (Account.isLogin && !Trade.isInitialized) {
+      // Account.isLogin &&
+      if (!Trade.isInitialized) {
         Trade.state.isLogin = true;
         await Trade.getUSDTScale();
         await Trade.getSettingsInfo();
@@ -104,6 +116,9 @@ export class Trade {
 
     if (tradeMapItem) {
       Trade._tradeMapItem = tradeMapItem;
+      Trade.state.name = tradeMapItem.name;
+      Trade.state.coin = tradeMapItem.coin;
+      Trade.state.contract = tradeMapItem.contract;
       Trade.state.currentCommodityDigit = tradeMapItem.digit;
       Trade.state.positionPrecision = tradeMapItem.positionPrecision;
       Trade.state.isFollow = tradeMapItem.isFollow;
@@ -123,33 +138,57 @@ export class Trade {
         Trade.state.marginRange = tradeMapItem.margin0List;
         Trade.state.amountRange = tradeMapItem.amount0List;
       }
+      Trade.state.defer = tradeMapItem.defer;
+      Trade.state.deferDays = tradeMapItem.deferDays;
+      Trade.state.deferFee = tradeMapItem.deferFee;
+      Trade.state.volumeDigit = tradeMapItem.volumeDigit;
     }
   }
   // 获取配置接口
   private static async getSettingsInfo() {
-    const { data, code } = await getLiteConfigInfoApi();
-    if (code === 200 && data) {
+    const result = await getLiteConfigInfoApi();
+    if (result && result.code === 200) {
+      const { data } = result;
       this.defaultSettingInfo.closeConfirm = data.confirmClose;
       this.defaultSettingInfo.orderConfirm = data.confirmPlace;
       this.defaultSettingInfo.defaultStopLossRate = data.sl || -1;
       this.defaultSettingInfo.defaultStopProfitRate = data.tp || 3;
+      this.defaultSettingInfo.deferPref = data.deferPref;
 
-      Trade.state.closeConfirm = data.confirmClose;
-      Trade.state.orderConfirm = data.confirmPlace;
       Trade.state.defaultStopLossRate = data.sl || -1;
       Trade.state.defaultStopProfitRate = data.tp || 3;
-
+      Trade.state.closeConfirm = data.confirmClose;
+      Trade.state.orderConfirm = data.confirmPlace;
+      // Trade.state.stopLoss = data.sl * -1 || -1;
       Trade.state.stopLoss = data.sl || -1;
       Trade.state.stopProfit = data.tp || 3;
-
       Trade.state.overnight = data.overnight;
+      Trade.state.deferPref = data.deferPref;
+      Trade.state.deferOrderChecked = data.deferPref && Trade.state.defer && Trade.state.deferFee > 0;
+    } else {
+      this.defaultSettingInfo.closeConfirm = false;
+      this.defaultSettingInfo.orderConfirm = false;
+      this.defaultSettingInfo.defaultStopLossRate = -1;
+      this.defaultSettingInfo.defaultStopProfitRate = 3;
+      this.defaultSettingInfo.deferPref = false;
+
+      Trade.state.defaultStopLossRate = -1;
+      Trade.state.defaultStopProfitRate = 3;
+      Trade.state.closeConfirm = false;
+      Trade.state.orderConfirm = false;
+      Trade.state.stopLoss = -1;
+      Trade.state.stopProfit = 3;
+      Trade.state.overnight = false;
+      Trade.state.deferPref = false;
+      Trade.state.deferOrderChecked = false;
     }
   }
   // 最大下单保证金
   private static setMaxMargin() {
     const { leverageRange, leverage, amountRange } = Trade.state;
-    const max = FORMULAS.LITE.maxMargin(amountRange, leverageRange, leverage);
-    Trade.state.marginRange = [Trade.state.marginRange[0], max];
+    const max = FORMULAS.LITE.maxLevelMargin(amountRange, leverageRange, leverage);
+    Trade.state.marginRange = [Trade.state.marginRange[0], Trade.state.isMarginRangeLimited ? max : Number.MAX_SAFE_INTEGER];
+    // console.log('maxLevelMargin max',max,'marginRange',Trade.state.marginRange)
   }
   // 获取接口手续费因子
   private static async getFee() {
@@ -157,10 +196,28 @@ export class Trade {
     if (code === 200) {
       for (const key in data) {
         const _item = data[key];
-        Trade.fee[key] = _item.charge;
+        // Trade.fee[key] = _item.charge;
+
+        // {
+        //   "chargeUnit": -3,
+        //   "chargeOriginal": -3,
+        //   "chargeUnitList": [
+        //       -3,
+        //       0.4
+        //   ],
+        //   "chargeCoinList": [
+        //       -3,
+        //       0.4
+        //   ],
+        //   "coins": true,
+        //   "discountType": 2,
+        //   "discountVal": 1,
+        //   "petSkillList": null
+        // }
+        Trade.fee[key] = _item.chargeCoinList?.map((num, index) => (index === 0 ? num : num / 1000)) || [];
         // 默认获取设置费率因子
         if (key == Trade.id) {
-          Trade.state.feex = +Trade.fee[key];
+          Trade.state.feex = +Trade.fee[key]?.[1] || 0;
         }
       }
     }
@@ -168,7 +225,7 @@ export class Trade {
   // 计算手续费
   private static calcFee() {
     const { leverage, margin } = Trade.state;
-    const feex = Trade.fee[Trade.id];
+    const feex = Trade.fee[Trade.id]?.[1] || 0;
     const fee = FORMULAS.LITE.fee(margin, leverage, feex);
     Trade.changeFee(fee);
   }
@@ -180,6 +237,9 @@ export class Trade {
       if (accountType == AccountType.REAL) {
         const { data } = await Account.assets.getLiteAsset(true);
         Trade.state.balance = +data.money;
+        Trade.state.frozen = +data.frozen;
+        Trade.state.holdings = +data.position;
+        Trade.state.plan = +data.plan;
         // Trade.state.balance = 0.0321312312;
         Trade.state.deductionTotal = +data.lucky;
       }
@@ -208,7 +268,7 @@ export class Trade {
    * 2. 限价采用 输入价格
    */
   private static calcPosition() {
-    const { margin, leverage, marketBuyPrice, marketSellPrice, orderType, limitPrice, positionSide } = Trade.state;
+    const { margin, leverage, marketBuyPrice, marketSellPrice, orderType, limitPrice, positionSide, volumeDigit } = Trade.state;
     let price = 0;
     if (orderType == OrderType.MARKET) {
       if (positionSide == PositionSide.LONG) {
@@ -221,9 +281,10 @@ export class Trade {
     if (orderType == OrderType.LIMIT && limitPrice) {
       price = +limitPrice;
     }
-
-    const position = FORMULAS.LITE.position(margin, price, leverage);
-    Trade.state.position = +position.toFixed(4);
+    if (price > 0) {
+      const position = FORMULAS.LITE.position(margin, price, leverage);
+      Trade.state.position = +position.toRound(volumeDigit);
+    }
   }
 
   private static calcTotalMargin() {
@@ -232,13 +293,20 @@ export class Trade {
   // 根据比例计算止盈止损价格
   private static calcStopPrice() {
     const priceDigit = Trade._tradeMapItem.digit;
-    let price = Trade.state.positionSide == PositionSide.LONG ? Trade.state.marketBuyPrice : Trade.state.marketSellPrice;
+    let price =
+      Trade.state.positionSide == PositionSide.LONG ? Trade.state.marketBuyPrice : Trade.state.marketSellPrice;
     if (Trade.state.orderType == OrderType.LIMIT) {
       price = Trade.state.limitPrice;
     }
     const Lrate = Trade.state.stopLoss;
     const Frate = Trade.state.stopProfit;
-    const data = FORMULAS.LITE.tradeStopLossAndStopProfitPrice(Trade.state.positionSide, price, Lrate, Frate, Trade.state.leverage);
+    const data = FORMULAS.LITE.tradeStopLossAndStopProfitPrice(
+      Trade.state.positionSide,
+      price,
+      Lrate,
+      Frate,
+      Trade.state.leverage
+    );
     Trade.state.stopProfitPrice = data.Fprice.toFixed(priceDigit);
     Trade.state.stopLossPrice = data.Lprice.toFixed(priceDigit);
   }
@@ -253,11 +321,12 @@ export class Trade {
   }
   // 计算限价 委托价格范围
   private static calcLimitPriceRange() {
+    console.log('calcLimitPriceRange');
     const priceDigit = Trade._tradeMapItem.digit;
     const type = Trade.state.positionSide;
-    const price = type ? Trade.state.marketBuyPrice : Trade.state.marketSellPrice;
-    const max = price.mul(1 + Trade._tradeMapItem.planOpenUpper);
-    const min = price.mul(1 - Trade._tradeMapItem.planOpenLower);
+    const price = type == PositionSide.LONG ? Trade.state.marketBuyPrice : Trade.state.marketSellPrice;
+    const max = Trade.state.isPriceRangeLimited ? price.mul(1 + Trade._tradeMapItem.planOpenUpper) : String(Number.MAX_SAFE_INTEGER);
+    const min = Trade.state.isPriceRangeLimited ? price.mul(1 - Trade._tradeMapItem.planOpenLower) : '0';
     Trade.state.limitPriceRange = [min.toFixed(priceDigit), max.toFixed(priceDigit)];
   }
 
@@ -286,7 +355,13 @@ export class Trade {
       price = Trade.state.limitPrice;
     }
     const { leverage, stopLossRange, stopProfitRange } = Trade.state;
-    const data = FORMULAS.LITE.tradeStopLossAndStopProfitPriceRange(type, price, leverage, stopLossRange, stopProfitRange);
+    const data = FORMULAS.LITE.tradeStopLossAndStopProfitPriceRange(
+      type,
+      price,
+      leverage,
+      stopLossRange,
+      stopProfitRange
+    );
     Trade.state.FPriceRange = [data.FminPrice.toFixed(priceDigit), data.FmaxPrice.toFixed(priceDigit)];
     Trade.state.LPriceRange = [data.LminPrice.toFixed(priceDigit), data.LmaxPrice.toFixed(priceDigit)];
   }
@@ -313,6 +388,12 @@ export class Trade {
     Trade.state.orderConfirm = !Trade.state.orderConfirm;
   }
   /**
+   * 用户设置下单递延偏好配置
+   */
+  public static changeDeferPrefSetting(value: boolean): void {
+    Trade.state.deferPref = value;
+  }
+  /**
    * 用户设置默认止损比例配置
    * @param val 默认止损比例 传入例如0.1（10%）
    */
@@ -335,11 +416,13 @@ export class Trade {
    * 用户非保存关闭设置，恢复默认设置
    */
   public static resetTradeSetting(): void {
-    const { defaultStopLossRate, defaultStopProfitRate, closeConfirm, orderConfirm } = this.defaultSettingInfo;
+    const { defaultStopLossRate, defaultStopProfitRate, closeConfirm, orderConfirm, deferPref } =
+      this.defaultSettingInfo;
     Trade.state.defaultStopLossRate = defaultStopLossRate;
     Trade.state.defaultStopProfitRate = defaultStopProfitRate;
     Trade.state.closeConfirm = closeConfirm;
     Trade.state.orderConfirm = orderConfirm;
+    Trade.state.deferPref = deferPref;
   }
   /**
    * 用户设置默认止盈比例配置
@@ -361,6 +444,12 @@ export class Trade {
     }
   }
   /**
+   * 用户设置下单区递延开关
+   */
+  public static changeDeferOrderSetting(value: boolean): void {
+    Trade.state.deferOrderChecked = value;
+  }
+  /**
    * 交易设置保存
    */
   public static async saveTradeSetting(): Promise<boolean> {
@@ -371,8 +460,16 @@ export class Trade {
         sl: Trade.state.defaultStopLossRate,
         tp: Trade.state.defaultStopProfitRate,
         overnight: Trade.state.overnight,
+        deferPref: Trade.state.deferPref
       });
       if (code == 200) {
+        this.defaultSettingInfo.closeConfirm = Trade.state.closeConfirm;
+        this.defaultSettingInfo.orderConfirm = Trade.state.orderConfirm;
+        this.defaultSettingInfo.defaultStopLossRate = Trade.state.defaultStopLossRate;
+        this.defaultSettingInfo.defaultStopProfitRate = Trade.state.defaultStopProfitRate;
+        this.defaultSettingInfo.deferPref = Trade.state.deferPref;
+
+        Trade.state.deferOrderChecked = Trade.state.deferPref;
         Trade.state.stopLoss = Trade.state.defaultStopLossRate;
         Trade.state.stopProfit = Trade.state.defaultStopProfitRate;
         return true;
@@ -490,7 +587,8 @@ export class Trade {
    */
   public static changeAddMargin(margin: string): void {
     // 保证的区间
-    const m = Trade.state.marginRange;
+    // const m = Trade.state.marginRange;
+    const {marginRange: m, balance, leverage, feex, USDTScale} = Trade.state;
 
     const [min, max] = [0, m[m.length - 1]];
     if (margin == 'All') {
@@ -498,7 +596,8 @@ export class Trade {
         Trade.changeMargin(max.toFixed(Trade.state.USDTScale));
       } else {
         if (Trade.state.balance >= min) {
-          Trade.changeMargin(Trade.state.balance.toFixed(Trade.state.USDTScale));
+          // All=可用/(1+杠杆*手续费率)
+          Trade.changeMargin(balance.div((1).add(leverage.mul(feex))).toFixed(USDTScale));
         }
       }
     } else {
@@ -537,6 +636,7 @@ export class Trade {
       Trade.setMaxMargin(); // 计算可开最大保证金
       Trade.calcFee(); // 计算手续费
       Trade.calcPosition(); // 计算仓位
+      Trade.updateStopRateGroup(); // 计算止盈止损相关数据
     } else {
       return console.error(`Leverage must be between ${min} and ${max}`);
     }
@@ -550,6 +650,8 @@ export class Trade {
       Trade.state.positionSide = side;
       // 切换仓位方向，计算委托成交价
       Trade.calcLimitPriceDealRange();
+      // 计算止盈止损相关数据
+      Trade.updateStopRateGroup();
     } else {
       return console.error('Position side error');
     }
@@ -609,8 +711,19 @@ export class Trade {
     price = Number(price);
     if (isNaN(price)) return console.error('Price must be a number');
     if (price < 0) return console.error('Price must be greater than 0');
-    const lastPrice = Trade.state.positionSide == PositionSide.LONG ? Trade.state.marketBuyPrice : Trade.state.marketSellPrice;
-    const { Frate, Lrate } = FORMULAS.LITE.tradeStopLossAndStopProfitRate(Trade.state.positionSide, price, lastPrice, Trade.state.leverage);
+    //应该是委托价
+    let lastPrice =
+      Trade.state.positionSide == PositionSide.LONG ? Trade.state.marketBuyPrice : Trade.state.marketSellPrice;
+    //这里增加了限价委托价计算
+    if (Trade.state.orderType == OrderType.LIMIT) {
+      lastPrice = Trade.state.limitPrice;
+    }
+    const { Frate, Lrate } = FORMULAS.LITE.tradeStopLossAndStopProfitRate(
+      Trade.state.positionSide,
+      price,
+      lastPrice,
+      Trade.state.leverage
+    );
     if (type == StopType.STOP_LOSS) {
       // 止损为正数才是合理区间
       if (+Lrate >= 0) {
@@ -671,7 +784,7 @@ export class Trade {
    */
   public static changeSelectCard(bonusId: string) {
     const { bonusList, feex, leverage } = Trade.state;
-    const bonus = bonusList.find((item) => item.id === bonusId);
+    const bonus = bonusList.find(item => item.id === bonusId);
     if (!bonus) return;
     Trade.state.bonusId = bonusId;
     const { lever, amount } = bonus;
@@ -691,7 +804,7 @@ export class Trade {
   /**
    * 手续费
    */
-  private static changeFee(fee: string) {
+  public static changeFee(fee: string) {
     if (fee == '') {
       Trade.state.tradeFee = 0;
       return;
@@ -702,7 +815,7 @@ export class Trade {
       const { bonusList, bonusId, feex, leverage } = Trade.state;
       // 获取当前卡券保证金面额
       if (bonusId) {
-        const { amount } = bonusList.find((item) => item.id === bonusId);
+        const { amount } = bonusList.find(item => item.id === bonusId);
         if (amount) {
           const { margin, fee } = FORMULAS.LITE.tradeExperienceFormula(amount, leverage, feex);
           Trade.state.margin = margin;
@@ -731,6 +844,7 @@ export class Trade {
     const buy = Trade.state.positionSide === PositionSide.LONG;
     const identity = getUUID(16);
     const commodity = Trade.state.id;
+    const contract = Trade.state.contract;
     const platform = 'pc';
     const lever = Trade.state.leverage;
     const margin = Trade.state.margin;
@@ -739,15 +853,35 @@ export class Trade {
     const stopLoss = Trade.state.stopLoss;
     const takeProfit = Trade.state.stopProfit;
     const bonusId = Trade.state.bonusId;
+    const defer = Trade.state.defer && Trade.state.deferOrderChecked;
+    if (!Account.isLogin) {
+      return {
+        code: 500,
+        message: LANG('请先登录')
+      };
+    }
     if (!margin) {
       return {
         code: 500,
-        message: LANG('请输入保证金'),
+        message: LANG('请输入保证金')
       };
     }
     // 市价下单
     if (OrderType.MARKET === Trade.state.orderType) {
-      const config: any = { identity, platform, commodity, buy, margin, lever, stopLoss, takeProfit, standard, volume };
+      const config: any = {
+        identity,
+        platform,
+        commodity,
+        buy,
+        margin,
+        lever,
+        stopLoss,
+        takeProfit,
+        standard,
+        volume,
+        contract,
+        defer,
+      };
       // 体验账户，那么携带卡券id
       if (Trade.state.accountType == AccountType.TRIAL) {
         config['bonusId'] = bonusId;
@@ -764,7 +898,7 @@ export class Trade {
       } catch (e: any) {
         return {
           code: 500,
-          message: e.message,
+          message: e.message
         };
       }
     }
@@ -777,14 +911,14 @@ export class Trade {
           if (+limitFinalPrice < +limitPriceDeal) {
             return {
               code: 500,
-              message: LANG('成交价格必须大于等于 {price}', { price: limitPriceDeal }),
+              message: LANG('成交价格必须大于等于 {price}', { price: limitPriceDeal })
             };
           }
         } else {
           if (limitFinalPrice > limitPriceDeal) {
             return {
               code: 500,
-              message: LANG('成交价格必须小于等于 {price}', { price: limitPriceDeal }),
+              message: LANG('成交价格必须小于等于 {price}', { price: limitPriceDeal })
             };
           }
         }
@@ -793,6 +927,8 @@ export class Trade {
         identity,
         platform,
         commodity,
+        contract,
+        volume,
         buy,
         margin,
         lever,
@@ -802,6 +938,7 @@ export class Trade {
         safetyPrice: Number(limitFinalPrice), // 用户没有输入委托成交价的话，按 0 处理
         triggerPrice: Trade.state.limitPrice,
         triggerType: buy ? 1 : 2,
+        defer,
       };
       try {
         const result = await liteLimitOrderApi(config);
@@ -815,7 +952,7 @@ export class Trade {
       } catch (e: any) {
         return {
           code: 500,
-          message: e.message,
+          message: e.message
         };
       }
     }
@@ -840,7 +977,7 @@ export class Trade {
     Trade.state.orderType = orderType?.type || OrderType.MARKET;
     // 初始化如果是限价，设置默认价格
     if (Trade.state.orderType == OrderType.LIMIT) {
-      Trade.changeOrderType(OrderType.LIMIT);
+      // Trade.changeOrderType(OrderType.LIMIT);
     }
   }
 

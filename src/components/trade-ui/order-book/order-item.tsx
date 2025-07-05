@@ -6,7 +6,7 @@ import { OrderItemAmount } from './order-item-amount';
 import { OrderItemPrice } from './order-item-price';
 import { OrderItemTotal } from './order-item-total';
 import { OrderTypes } from './types';
-
+import { RootColor } from '@/core/styles/src/theme/global/root';
 const _OrderItem = ({
   item,
   accAmount,
@@ -30,16 +30,18 @@ const _OrderItem = ({
         }}
       >
         {showDot && <div className='order-item-dot' />}
-        <div className='order-item-left'>
-          <OrderItemPrice item={item} />
-        </div>
-        <div className='order-item-center'>
-          <OrderItemAmount item={item} />
-        </div>
-        <div className='order-item-right'>
-          <OrderItemTotal item={item} accAmount={accAmount} />
-          <div className='order-item-bg' style={{ width: `${(accAmount / maxAmount) * 100}%` }}></div>
-        </div>
+        <div className='order-item-vaule'>
+          <div className='order-item-left'>
+            <OrderItemPrice item={item} />
+          </div>
+          <div className='order-item-center'>
+            <OrderItemAmount item={item} />
+          </div>
+          <div className='order-item-right'>
+            <OrderItemTotal item={item} accAmount={accAmount} />
+          </div>
+          </div>
+        <div className='order-item-bg' style={{ width: `${(accAmount / maxAmount) * 100}%` }}></div>
       </div>
       <style jsx>{`
         .order-item {
@@ -49,11 +51,25 @@ const _OrderItem = ({
           justify-content: space-between;
           cursor: pointer;
           position: relative;
-          color: ${isDark ? '#E5E5E4' : ' var(--theme-trade-text-color-1)'};
-
+          color: var(--text_1);
+          text-align: right;
+          font-family: "Lexend";
+          font-weight: 400;
+          height:20px;
           &:hover {
             background: var(--theme-order-book-hover) !important;
           }
+
+          .order-item-bg {
+              position: absolute;
+              top: 0;
+              right: 16px;
+              height: 100%;
+              width: 100%;
+              background-color: var(${type == OrderTypes.BUY ?'--color-green-10' : '--color-red-10'});
+              transition: width 0.3s;
+              z-index: 1
+            }
 
           .order-item-dot {
             width: 4px;
@@ -70,13 +86,13 @@ const _OrderItem = ({
             align-items: center;
           }
           .order-item-left {
-            padding-left: 12px;
-            color: var(${type == OrderTypes.BUY ? ' --color-green' : ' --color-red'});
+            color: var(${type == OrderTypes.BUY ? '--color-green' : '--color-red'});
             flex: 1;
             text-align: left;
+            font-size:12px
           }
           .order-item-center {
-            padding-right: 12px;
+            padding-right: 16px;
             flex: 1;
             display: flex;
           }
@@ -84,18 +100,12 @@ const _OrderItem = ({
             flex: 1;
             flex-direction: row-reverse;
             position: relative;
-            padding-right: 12px;
-
-            .order-item-bg {
-              position: absolute;
-              top: 0;
-              left: 0;
-              height: 100%;
-              width: 100%;
-              background-color: var(${type == OrderTypes.BUY ? ' --color-green' : ' --color-red'});
-              opacity: 0.1;
-              transition: width 0.3s;
-            }
+          }
+          .order-item-vaule {
+            position: absolute;
+            z-index:2;
+            padding: 0 16px;
+            width: -webkit-fill-available;
           }
         }
       `}</style>

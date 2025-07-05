@@ -37,7 +37,7 @@ const TrackModal = ({ data, visible, onClose }: { data?: any; visible?: any; onC
   const { isMobile } = useResponsive();
   const { minChangePrice, maxCallBackRate } = Swap.Info.getCryptoData(data?.symbol);
   const { track } = Swap.Info.getOrderConfirm(isUsdtType);
-  const isBuy = data.side === '1';
+  const isBuy = data?.side === '1';
   const [marketList, setMarketList] = useState<any>([]);
   const baseShowPrecision = Number(data.baseShowPrecision) || 0;
   useWs(SUBSCRIBE_TYPES.ws3001, (data) => {

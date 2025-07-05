@@ -4,11 +4,14 @@ import { LANG } from '@/core/i18n';
 import { Lite, LiteListItem, TradeMap } from '@/core/shared';
 import { THEME } from '@/core/store';
 import { getActive, toMinNumber } from '@/core/utils';
-import { Modal } from 'antd';
+import { useResponsive } from '@/core/hooks';
+import { Modal, Button } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
 import { BaseModalStyle } from './add-margin-modal/base-modal-style';
+import { BottomModal, MobileModal } from '@/components/mobile-modal';
+import { MediaInfo } from '@/core/utils';
 
 const Position = Lite.Position;
 const Trade = Lite.Trade;
@@ -25,7 +28,7 @@ export enum TabType {
   /**
    * 金额
    */
-  AMOUNT,
+  AMOUNT
 }
 
 interface Props {
@@ -36,12 +39,13 @@ interface Props {
 
 const SettingModal = ({ tab, setTab, theme }: Props) => {
   const { settingModalData: _, marketMap } = Position.state;
+  const { isMobile } = useResponsive();
   const [stopProfitRange, setStopProfitRange] = useState([0, 0]);
   const [stopLossRange, setStopLossRange] = useState([0, 0]);
 
   const settingModalData = _ as LiteListItem;
 
-  const { opPrice, commodity, margin, lever, buy, priceDigit, commodityName } = settingModalData;
+  const { opPrice, commodity, contract, margin, lever, buy, priceDigit, commodityName } = settingModalData;
 
   const [realFRate, setRealFRate] = useState(Number(settingModalData.takeProfit.div(margin)));
   const [realLRate, setRealLRate] = useState(Number(settingModalData.stopLoss.div(margin)));
@@ -51,7 +55,7 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
     takeProfitPrice: 0,
     stopLossPrice: 0,
     takeProfitAmount: 0,
-    stopLossAmount: 0,
+    stopLossAmount: 0
   });
 
   const { maxFprice, minFprice, maxLprice, minLprice } = Position.calculatePriceRange(
@@ -66,7 +70,7 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
   );
 
   useEffect(() => {
-    TradeMap.getLiteTradeMap().then(async (list) => {
+    TradeMap.getLiteTradeMap().then(async list => {
       const lite = list?.get(commodity);
       if (lite) {
         setStopProfitRange(lite.takeProfitList);
@@ -74,16 +78,6 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
       }
     });
   }, []);
-
-  const renderTitle = useMemo(() => {
-    return (
-      <div className='modalTitle'>
-        <span>{commodityName}</span>
-        <span>{lever}X</span>
-        {buy ? <span className='main-green'>{LANG('买涨')}</span> : <span className='main-red'>{LANG('买跌')}</span>}
-      </div>
-    );
-  }, [settingModalData]);
 
   const income = useMemo(() => {
     const { income } = Position.calculateIncome(settingModalData, marketMap);
@@ -93,8 +87,8 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
   const renderPercentBtns = (Range: number[], n: number, onClick: (c: number) => void) => {
     return (
       <ul>
-        {Range.map((num) => (
-          <li key={num} className={getActive(n === Number(num))} onClick={() => onClick(Number(num))}>
+        {Range.map((num, index) => (
+          <li key={index} className={getActive(n === Number(num))} onClick={() => onClick(Number(num))}>
             {num.mul(100)}%
           </li>
         ))}
@@ -111,26 +105,26 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
       const [fixed2realFRate, fixed2realLRate] = [Number(realFRate.toFixed(2)), Number(realLRate.toFixed(2))];
       setRealFRate(fixed2realFRate);
       setRealLRate(fixed2realLRate);
-      setState((draft) => {
+      setState(draft => {
         draft.takeProfitRate = fixed2realFRate;
         draft.stopLossRate = fixed2realLRate;
       });
       setTab(TabType.RATIO);
     } else if (index === TabType.PRICE) {
       if (tab === TabType.AMOUNT) {
-        setState((draft) => {
+        setState(draft => {
           draft.takeProfitPrice = cachePriceInAmount.Fprice;
           draft.stopLossPrice = cachePriceInAmount.Lprice;
         });
       } else {
-        setState((draft) => {
+        setState(draft => {
           draft.takeProfitPrice = cachePriceInRatio.Fprice;
           draft.stopLossPrice = cachePriceInRatio.Lprice;
         });
       }
       setTab(TabType.PRICE);
     } else {
-      setState((draft) => {
+      setState(draft => {
         draft.takeProfitAmount = Number(margin.mul(realFRate).toFixed(2));
         draft.stopLossAmount = Number(margin.mul(realLRate).toFixed(2));
       });
@@ -147,7 +141,7 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
   }, [realFRate, realLRate, settingModalData]);
 
   const onTakeProfitPriceChanged = useCallback((val: number) => {
-    setState((draft) => {
+    setState(draft => {
       draft.takeProfitPrice = val;
     });
     const { FRate } = Position.calculateFRateByFPrice(settingModalData, val, state.stopLossPrice);
@@ -156,7 +150,7 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
 
   const onStopLossPriceChanged = useCallback(
     (val: number) => {
-      setState((draft) => {
+      setState(draft => {
         draft.stopLossPrice = val;
       });
       const maxStopLoss = stopLossRange[stopLossRange.length - 1];
@@ -172,7 +166,7 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
   );
 
   const onTakeProfitAmountChanged = useCallback((val: number) => {
-    setState((draft) => {
+    setState(draft => {
       draft.takeProfitAmount = val;
     });
     const FRate = Number(val.div(margin));
@@ -180,7 +174,7 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
   }, []);
 
   const onStopLossAmountChanged = useCallback((val: number) => {
-    setState((draft) => {
+    setState(draft => {
       draft.stopLossAmount = val;
     });
     const LRate = Number(val.div(margin));
@@ -193,31 +187,32 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
     Position.setSettingModalData(null);
   }, [realFRate, realLRate, settingModalData]);
 
-  return (
+  const content = (
     <>
-      <Modal
-        title={renderTitle}
-        className={`${theme} baseModal settingModal`}
-        open={settingModalData !== null}
-        okText={LANG('确认')}
-        cancelText={LANG('取消')}
-        width={400}
-        onCancel={() => Position.setSettingModalData(null)}
-        onOk={onOKClicked}
-        closable={false}
-      >
-        <ModalClose className='close-icon' onClose={() => Position.setSettingModalData(null)} />
-        <div className='setting-modal-header'>
-          <div className='row'>
-            <div>
-              {LANG('开仓价')}&{LANG('当前价')}
-            </div>
-            <div>{LANG('收益')}</div>
+      <div className="modal-content">
+        {' '}
+        <div className="modalTitle">
+          <span className="symbolName">{commodityName}</span>
+          <span className="leverage">{lever}x</span>
+          <div className="position-side">
+            {buy ? (
+              <span className="main-green">{LANG('买涨')}</span>
+            ) : (
+              <span className="main-red">{LANG('买跌')}</span>
+            )}
           </div>
-          <div className='row price'>
-            <div>
-              {opPrice} → {marketMap[commodity]?.price || 0}
-            </div>
+        </div>
+        <div className="setting-modal-header">
+          <div className="item-info">
+            <p>{LANG('开仓价')}</p>
+            <span>{opPrice}</span>
+          </div>
+          <div className="item-info">
+            <p>{LANG('当前价')}</p>
+            <span>{marketMap[contract]?.price || 0}</span>
+          </div>
+          <div className="item-info">
+            <p>{LANG('收益')}</p>
             <div className={income >= 0 ? 'main-green' : 'main-red'}>
               <span>
                 {income >= 0 ? '+' : ''}
@@ -226,7 +221,7 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
             </div>
           </div>
         </div>
-        <div className='switch-type'>
+        <div className="switch-type">
           <div className={`tabs ${getActive(tab === 0)}`} onClick={() => onTabClicked(0)}>
             {LANG('比例')}
           </div>
@@ -239,12 +234,12 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
         </div>
         {tab === TabType.RATIO && (
           <div>
-            <div className='fake'>
+            <div className="fake">
               <PercentInput
                 label={`${LANG('止盈')}:`}
                 value={state.takeProfitRate.mul(100)}
-                onChange={(val) => {
-                  setState((draft) => {
+                onChange={val => {
+                  setState(draft => {
                     draft.takeProfitRate = Number(val.div(100));
                   });
                   setRealFRate(Number(val.div(100)));
@@ -253,27 +248,28 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
                 min={Number(stopProfitRange[0]?.mul(100))}
                 theme={theme}
               />
-              {renderPercentBtns(stopProfitRange.slice(1), state.takeProfitRate, (val) => {
-                setState((draft) => {
+              {renderPercentBtns(stopProfitRange, state.takeProfitRate, val => {
+                setState(draft => {
                   draft.takeProfitRate = val;
                 });
                 setRealFRate(val);
               })}
             </div>
-            <div className='row'>
+            <div className="row">
               <div>
-                {LANG('盈利金额')}：{Number(margin.mul(state.takeProfitRate).toFixed(2))}
+                {LANG('盈利金额')}：<span>{Number(margin.mul(state.takeProfitRate).toFixed(2))}</span>
               </div>
               <div>
-                {LANG('止盈价')}：{cachePriceInRatio.Fprice.toFixed(priceDigit)}
+                {LANG('止盈价')}：<span>{cachePriceInRatio.Fprice.toFixed(priceDigit)}</span>
               </div>
             </div>
-            <div className='fake'>
+            <div className="form-line"></div>
+            <div className="fake">
               <PercentInput
                 label={`${LANG('止损')}:`}
                 value={state.stopLossRate.mul(100)}
-                onChange={(val) => {
-                  setState((draft) => {
+                onChange={val => {
+                  setState(draft => {
                     draft.stopLossRate = Number(val.div(100));
                   });
                   setRealLRate(Number(val.div(100)));
@@ -283,33 +279,46 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
                 isNegative={false}
                 theme={theme}
               />
-              {renderPercentBtns(stopLossRange.slice(1), state.stopLossRate, (val) => {
-                setState((draft) => {
+              {renderPercentBtns(stopLossRange, state.stopLossRate, val => {
+                setState(draft => {
                   draft.stopLossRate = val;
                 });
                 setRealLRate(val);
               })}
             </div>
-            <div className='row'>
+            <div className="row">
               <div>
-                {LANG('亏损金额')}：{Number(margin.mul(state.stopLossRate).toFixed(2))}
+                {LANG('亏损金额')}：<span>{Number(margin.mul(state.stopLossRate).toFixed(2))}</span>
               </div>
               <div>
-                {LANG('强平价')}：{cachePriceInRatio.Lprice.toFixed(priceDigit)}
+                {LANG('强平价')}：<span>{cachePriceInRatio.Lprice.toFixed(priceDigit)}</span>
               </div>
             </div>
           </div>
         )}
         {tab === TabType.PRICE && (
           <div>
-            <div className='fake'>
+            <div className="fake">
               <PercentInput
+                inputType={'price'}
                 label={`${LANG('止盈')}:`}
                 value={state.takeProfitPrice}
-                onChange={(val) => onTakeProfitPriceChanged(Number(val))}
-                max={Number(maxFprice.toFixed(priceDigit))}
-                min={Number(minFprice.toFixed(priceDigit))}
-                placeholder={`${minFprice.toFixed(priceDigit)}~${maxFprice.toFixed(priceDigit)}`}
+                onChange={val => onTakeProfitPriceChanged(Number(val))}
+                min={
+                  buy
+                    ? Number(Math.abs(minFprice).toFixed(priceDigit))
+                    : Number(Math.abs(maxFprice).toFixed(priceDigit))
+                }
+                max={
+                  buy
+                    ? Number(Math.abs(maxFprice).toFixed(priceDigit))
+                    : Number(Math.abs(minFprice).toFixed(priceDigit))
+                }
+                placeholder={
+                  buy
+                    ? `${Math.abs(minFprice).toFixed(priceDigit)}~${Math.abs(maxFprice).toFixed(priceDigit)}`
+                    : `${Math.abs(maxFprice).toFixed(priceDigit)}~${Math.abs(minFprice).toFixed(priceDigit)}`
+                }
                 addStep={toMinNumber(priceDigit)}
                 minusStep={toMinNumber(priceDigit)}
                 decimal={priceDigit}
@@ -317,22 +326,28 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
                 theme={theme}
               />
             </div>
-            <div className='row'>
+            <div className="row">
               <div>
-                {LANG('盈利金额')}：{Number(margin.mul(realFRate).toFixed(2))}
+                {LANG('盈利金额')}：<span>{Number(margin.mul(realFRate).toFixed(2))}</span>
               </div>
               <div>
-                {LANG('盈利百分比')}：{realFRate.mul(100).toFixed(2)}%
+                {LANG('盈利百分比')}：<span>{realFRate.mul(100).toFixed(2)}%</span>
               </div>
             </div>
-            <div className='fake'>
+            <div className="form-line"></div>
+            <div className="fake">
               <PercentInput
+                inputType={'price'}
                 label={`${LANG('止损')}:`}
                 value={state.stopLossPrice}
-                onChange={(val) => onStopLossPriceChanged(Number(val))}
-                max={Number(minLprice.toFixed(priceDigit))}
-                min={Number(maxLprice.toFixed(priceDigit))}
-                placeholder={`${maxLprice.toFixed(priceDigit)}~${minLprice.toFixed(priceDigit)}`}
+                onChange={val => onStopLossPriceChanged(Number(val))}
+                max={buy ? Number(minLprice.toFixed(priceDigit)) : Number(maxLprice.toFixed(priceDigit))}
+                min={buy ? Number(maxLprice.toFixed(priceDigit)) : Number(minLprice.toFixed(priceDigit))}
+                placeholder={
+                  buy
+                    ? `${maxLprice.toFixed(priceDigit)}~${minLprice.toFixed(priceDigit)}`
+                    : `${minLprice.toFixed(priceDigit)}~${maxLprice.toFixed(priceDigit)}`
+                }
                 addStep={toMinNumber(priceDigit)}
                 minusStep={toMinNumber(priceDigit)}
                 decimal={priceDigit}
@@ -340,26 +355,27 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
                 theme={theme}
               />
             </div>
-            <div className='row'>
+            <div className="row">
               <div>
-                {LANG('亏损金额')}：{Number(margin.mul(realLRate).toFixed(2))}
+                {LANG('亏损金额')}：<span>{Number(margin.mul(realLRate).toFixed(2))}</span>
               </div>
               <div>
-                {LANG('亏损百分比')}：{realLRate.mul(100).toFixed(2)}%
+                {LANG('亏损百分比')}：<span>{realLRate.mul(100).toFixed(2)}%</span>
               </div>
             </div>
           </div>
         )}
         {tab === TabType.AMOUNT && (
           <div>
-            <div className='fake'>
+            <div className="fake">
               <PercentInput
+                inputType={'price'}
                 label={`${LANG('止盈')}:`}
                 value={state.takeProfitAmount}
-                onChange={(val) => onTakeProfitAmountChanged(Number(val))}
+                onChange={val => onTakeProfitAmountChanged(Number(val))}
                 max={maxFAmount}
                 min={minFAmount}
-                placeholder={`${minFprice.toFixed(priceDigit)}~${maxFprice.toFixed(priceDigit)}`}
+                placeholder={`${minFAmount.toFixed(priceDigit)}~${maxFAmount.toFixed(priceDigit)}`}
                 addStep={0.01}
                 minusStep={0.01}
                 decimal={2}
@@ -367,19 +383,21 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
                 theme={theme}
               />
             </div>
-            <div className='row'>
+            <div className="row">
               <div>
-                {LANG('止盈价')}：{cachePriceInAmount.Fprice.toFixed(priceDigit)}
+                {LANG('止盈价')}：<span>{cachePriceInAmount.Fprice.toFixed(priceDigit)}</span>
               </div>
               <div>
-                {LANG('盈利百分比')}：{realFRate.mul(100).toFixed(2)}%
+                {LANG('盈利百分比')}：<span>{realFRate.mul(100).toFixed(2)}%</span>
               </div>
             </div>
-            <div className='fake'>
+            <div className="form-line"></div>
+            <div className="fake">
               <PercentInput
+                inputType={'price'}
                 label={`${LANG('止损')}:`}
                 value={state.stopLossAmount}
-                onChange={(val) => onStopLossAmountChanged(Number(val))}
+                onChange={val => onStopLossAmountChanged(Number(val))}
                 max={maxLAmount}
                 min={minLAmount}
                 placeholder={`${maxLAmount}~${minLAmount}`}
@@ -391,16 +409,275 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
                 theme={theme}
               />
             </div>
-            <div className='row'>
+            <div className="row">
               <div>
-                {LANG('强平价')}：{cachePriceInAmount.Lprice.toFixed(priceDigit)}
+                {LANG('强平价')}：<span>{cachePriceInAmount.Lprice.toFixed(priceDigit)}</span>
               </div>
               <div>
-                {LANG('亏损百分比')}：{realLRate.mul(100).toFixed(2)}%
+                {LANG('亏损百分比')}：<span>{realLRate.mul(100).toFixed(2)}%</span>
               </div>
             </div>
           </div>
         )}
+      </div>{' '}
+      <style jsx>{styles}</style>
+    </>
+  );
+
+  if (isMobile) {
+    return (
+      <MobileModal visible={settingModalData !== null} onClose={() => Position.setSettingModalData(null)} type="bottom">
+        <BottomModal title={LANG('设置')} confirmText={LANG('确认')} onConfirm={onOKClicked}>
+          {content}
+        </BottomModal>
+      </MobileModal>
+    );
+  }
+
+  return (
+    <>
+      <Modal
+        title={LANG('设置')}
+        className={`${theme} baseModal settingModal`}
+        open={settingModalData !== null}
+        okText={LANG('确认')}
+        width={480}
+        onOk={onOKClicked}
+        cancelText={null}
+        cancelButtonProps={{ style: { display: 'none' } }}
+        closable={false}
+        centered
+      >
+        <ModalClose className="close-icon" onClose={() => Position.setSettingModalData(null)} />
+        {content}
+        {/* <div className="modalTitle">
+          <span className="symbolName">{commodityName}</span>
+          <span className="leverage">{lever}x</span>
+          <div className="position-side">
+            {buy ? (
+              <span className="main-green">{LANG('买涨')}</span>
+            ) : (
+              <span className="main-red">{LANG('买跌')}</span>
+            )}
+          </div>
+        </div>
+        <div className="setting-modal-header">
+          <div className="item-info">
+            <p>{LANG('开仓价')}</p>
+            <span>{opPrice}</span>
+          </div>
+          <div className="item-info">
+            <p>{LANG('当前价')}</p>
+            <span>{marketMap[contract]?.price || 0}</span>
+          </div>
+          <div className="item-info">
+            <p>{LANG('收益')}</p>
+            <div className={income >= 0 ? 'main-green' : 'main-red'}>
+              <span>
+                {income >= 0 ? '+' : ''}
+                {Number(income.toFixed(2))}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="switch-type">
+          <div className={`tabs ${getActive(tab === 0)}`} onClick={() => onTabClicked(0)}>
+            {LANG('比例')}
+          </div>
+          <div className={`tabs ${getActive(tab === 1)}`} onClick={() => onTabClicked(1)}>
+            {LANG('价格')}
+          </div>
+          <div className={`tabs ${getActive(tab === 2)}`} onClick={() => onTabClicked(2)}>
+            {LANG('金额')}
+          </div>
+        </div>
+        {tab === TabType.RATIO && (
+          <div>
+            <div className="fake">
+              <PercentInput
+                label={`${LANG('止盈')}:`}
+                value={state.takeProfitRate.mul(100)}
+                onChange={val => {
+                  setState(draft => {
+                    draft.takeProfitRate = Number(val.div(100));
+                  });
+                  setRealFRate(Number(val.div(100)));
+                }}
+                max={Number(stopProfitRange[stopProfitRange.length - 1]?.mul(100))}
+                min={Number(stopProfitRange[0]?.mul(100))}
+                theme={theme}
+              />
+              {renderPercentBtns(stopProfitRange, state.takeProfitRate, val => {
+                setState(draft => {
+                  draft.takeProfitRate = val;
+                });
+                setRealFRate(val);
+              })}
+            </div>
+            <div className="row">
+              <div>
+                {LANG('盈利金额')}：<span>{Number(margin.mul(state.takeProfitRate).toFixed(2))}</span>
+              </div>
+              <div>
+                {LANG('止盈价')}：<span>{cachePriceInRatio.Fprice.toFixed(priceDigit)}</span>
+              </div>
+            </div>
+            <div className="form-line"></div>
+            <div className="fake">
+              <PercentInput
+                label={`${LANG('止损')}:`}
+                value={state.stopLossRate.mul(100)}
+                onChange={val => {
+                  setState(draft => {
+                    draft.stopLossRate = Number(val.div(100));
+                  });
+                  setRealLRate(Number(val.div(100)));
+                }}
+                max={Number(stopLossRange[0]?.mul(100))}
+                min={Number(stopLossRange[stopLossRange.length - 1]?.mul(100))}
+                isNegative={false}
+                theme={theme}
+              />
+              {renderPercentBtns(stopLossRange, state.stopLossRate, val => {
+                setState(draft => {
+                  draft.stopLossRate = val;
+                });
+                setRealLRate(val);
+              })}
+            </div>
+            <div className="row">
+              <div>
+                {LANG('亏损金额')}：<span>{Number(margin.mul(state.stopLossRate).toFixed(2))}</span>
+              </div>
+              <div>
+                {LANG('强平价')}：<span>{cachePriceInRatio.Lprice.toFixed(priceDigit)}</span>
+              </div>
+            </div>
+          </div>
+        )}
+        {tab === TabType.PRICE && (
+          <div>
+            <div className="fake">
+              <PercentInput
+                inputType={'price'}
+                label={`${LANG('止盈')}:`}
+                value={state.takeProfitPrice}
+                onChange={val => onTakeProfitPriceChanged(Number(val))}
+                min={
+                  buy
+                    ? Number(Math.abs(minFprice).toFixed(priceDigit))
+                    : Number(Math.abs(maxFprice).toFixed(priceDigit))
+                }
+                max={
+                  buy
+                    ? Number(Math.abs(maxFprice).toFixed(priceDigit))
+                    : Number(Math.abs(minFprice).toFixed(priceDigit))
+                }
+                placeholder={
+                  buy
+                    ? `${Math.abs(minFprice).toFixed(priceDigit)}~${Math.abs(maxFprice).toFixed(priceDigit)}`
+                    : `${Math.abs(maxFprice).toFixed(priceDigit)}~${Math.abs(minFprice).toFixed(priceDigit)}`
+                }
+                addStep={toMinNumber(priceDigit)}
+                minusStep={toMinNumber(priceDigit)}
+                decimal={priceDigit}
+                isPrice
+                theme={theme}
+              />
+            </div>
+            <div className="row">
+              <div>
+                {LANG('盈利金额')}：<span>{Number(margin.mul(realFRate).toFixed(2))}</span>
+              </div>
+              <div>
+                {LANG('盈利百分比')}：<span>{realFRate.mul(100).toFixed(2)}%</span>
+              </div>
+            </div>
+            <div className="form-line"></div>
+            <div className="fake">
+              <PercentInput
+                inputType={'price'}
+                label={`${LANG('止损')}:`}
+                value={state.stopLossPrice}
+                onChange={val => onStopLossPriceChanged(Number(val))}
+                max={buy ? Number(minLprice.toFixed(priceDigit)) : Number(maxLprice.toFixed(priceDigit))}
+                min={buy ? Number(maxLprice.toFixed(priceDigit)) : Number(minLprice.toFixed(priceDigit))}
+                placeholder={
+                  buy
+                    ? `${maxLprice.toFixed(priceDigit)}~${minLprice.toFixed(priceDigit)}`
+                    : `${minLprice.toFixed(priceDigit)}~${maxLprice.toFixed(priceDigit)}`
+                }
+                addStep={toMinNumber(priceDigit)}
+                minusStep={toMinNumber(priceDigit)}
+                decimal={priceDigit}
+                isPrice
+                theme={theme}
+              />
+            </div>
+            <div className="row">
+              <div>
+                {LANG('亏损金额')}：<span>{Number(margin.mul(realLRate).toFixed(2))}</span>
+              </div>
+              <div>
+                {LANG('亏损百分比')}：<span>{realLRate.mul(100).toFixed(2)}%</span>
+              </div>
+            </div>
+          </div>
+        )}
+        {tab === TabType.AMOUNT && (
+          <div>
+            <div className="fake">
+              <PercentInput
+                inputType={'price'}
+                label={`${LANG('止盈')}:`}
+                value={state.takeProfitAmount}
+                onChange={val => onTakeProfitAmountChanged(Number(val))}
+                max={maxFAmount}
+                min={minFAmount}
+                placeholder={`${minFAmount.toFixed(priceDigit)}~${maxFAmount.toFixed(priceDigit)}`}
+                addStep={0.01}
+                minusStep={0.01}
+                decimal={2}
+                isPrice
+                theme={theme}
+              />
+            </div>
+            <div className="row">
+              <div>
+                {LANG('止盈价')}：<span>{cachePriceInAmount.Fprice.toFixed(priceDigit)}</span>
+              </div>
+              <div>
+                {LANG('盈利百分比')}：<span>{realFRate.mul(100).toFixed(2)}%</span>
+              </div>
+            </div>
+            <div className="form-line"></div>
+            <div className="fake">
+              <PercentInput
+                inputType={'price'}
+                label={`${LANG('止损')}:`}
+                value={state.stopLossAmount}
+                onChange={val => onStopLossAmountChanged(Number(val))}
+                max={maxLAmount}
+                min={minLAmount}
+                placeholder={`${maxLAmount}~${minLAmount}`}
+                addStep={0.01}
+                minusStep={0.01}
+                decimal={2}
+                isNegative={false}
+                isPrice
+                theme={theme}
+              />
+            </div>
+            <div className="row">
+              <div>
+                {LANG('强平价')}：<span>{cachePriceInAmount.Lprice.toFixed(priceDigit)}</span>
+              </div>
+              <div>
+                {LANG('亏损百分比')}：<span>{realLRate.mul(100).toFixed(2)}%</span>
+              </div>
+            </div>
+          </div>
+        )} */}
       </Modal>
       <BaseModalStyle />
       <style jsx>{styles}</style>
@@ -411,33 +688,117 @@ const SettingModal = ({ tab, setTab, theme }: Props) => {
 export default SettingModal;
 
 const styles = css`
-  :global(.settingModal) {
-    font-weight: 600;
+  :global(.ant-modal.baseModal.settingModal) {
     :global(.close-icon) {
       cursor: pointer;
       position: absolute;
-      top: 7px;
+      top: 16px;
       right: 11px;
     }
-    :global(.modalTitle) {
-      text-align: center;
-      font-size: 16px;
-      font-weight: 500;
-      line-height: 22px;
-      :global(span) {
-        margin: 0 3px;
+    :global(.ant-modal-content) {
+      padding: 24px !important;
+      border-radius: 24px !important;
+    }
+    :global(.ant-modal-header) {
+      border-bottom: none;
+      background: transparent;
+      padding: 0;
+      :global(.ant-modal-title) {
+        text-align: left !important;
+        color: var(--text_1);
+        font-size: 16px;
+        font-weight: 500;
       }
     }
+    :global(.ant-modal-body) {
+      padding: 24px 0 0 !important;
+    }
+
+    :global(.ant-btn-primary) {
+      width: 100% !important;
+      padding: 0 !important;
+    }
+
+    :global(.ant-modal-footer) {
+      margin: 24px 0 0;
+    }
+
+    .modalTitle {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .symbolName {
+      color: var(--text_1);
+      font-size: 16px;
+      font-weight: 500;
+      padding: 0 4px 0 0;
+    }
+    .leverage {
+      border-radius: 4px;
+      background: var(--fill_3);
+      min-width: 48px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text_2);
+    }
+
+    .row {
+      color: var(--text_2);
+      font-size: 14px;
+      font-weight: 400;
+      span {
+        color: var(--text_1);
+        font-weight: 500;
+      }
+    }
+
+    .form-line {
+      margin: 24px 0;
+      width: 100%;
+      border-top: 1px solid var(--fill_line_1);
+    }
+
+    .position-side {
+      border-radius: 4px;
+      background: var(--green_10);
+      min-width: 48px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span {
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+      }
+    }
+
     .setting-modal-header {
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(121, 130, 150, 0.15);
+      padding: 24px 0;
+      border-bottom: 1px solid var(--fill_line_1);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      align-self: stretch;
+    }
+    .item-info {
+      color: var(--text_1);
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      display: flex;
+      gap: 4px;
+      flex-direction: column;
     }
     .row {
       display: flex;
       justify-content: space-between;
-      color: var(--theme-font-color-3);
-      font-size: 12px;
-      font-weight: 600;
+      color: var(--text_2);
+      font-size: 14px;
+      font-weight: 400;
       &.price {
         color: #333;
         font-size: 16px;
@@ -447,28 +808,20 @@ const styles = css`
       }
     }
     .switch-type {
-      border-bottom: 1px solid rgba(121, 130, 150, 0.15);
       display: flex;
-      margin: 10px 0 15px;
-      padding-bottom: 10px;
+      margin: 24px 0;
+      gap: 24px;
       .tabs {
         text-align: center;
         cursor: pointer;
-        margin-right: 40px;
-        font-size: 14px;
-        color: var(--theme-font-color-3);
+        color: var(--text_2);
+        text-align: center;
+        font-size: 16px;
+        font-weight: 500;
+
         &.active {
-          color: var(--skin-primary-color) !important;
+          color: var(--text_brand) !important;
           position: relative;
-          &:after {
-            position: absolute;
-            content: ' ';
-            width: 100%;
-            height: 2px;
-            background-color: var(--skin-primary-color);
-            bottom: -10px;
-            left: 0;
-          }
         }
       }
     }
@@ -476,20 +829,19 @@ const styles = css`
       :global(ul) {
         display: flex;
         align-items: center;
-        margin-top: 15px;
         padding: 0;
         :global(li) {
           user-select: none;
           cursor: pointer;
           flex: 1;
-          margin: 0 5px;
+          margin: 0 8px;
           text-align: center;
           font-size: 12px;
-          height: 25px;
-          line-height: 24px;
-          border-radius: 3px;
-          background: var(--theme-trade-tips-color);
-          color: var(--theme-font-color-1);
+          height: 26px;
+          line-height: 26px;
+          border-radius: 4px;
+          background: var(--fill_3);
+          color: var(--text_2);
           &:first-child {
             margin-left: 0;
           }
@@ -501,6 +853,149 @@ const styles = css`
       :global(.active) {
         color: var(--skin-primary-color) !important;
         border-color: var(--skin-primary-color) !important;
+      }
+      :global(.container) {
+        margin: 16px 0;
+      }
+    }
+  }
+  @media ${MediaInfo.mobile} {
+    :global(.modal-content) {
+      display: flex;
+      flex-direction: column;
+      padding: 0 8px;
+    }
+    :global(.modalTitle) {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    :global(.symbolName) {
+      color: var(--text_1);
+      font-size: 16px;
+      font-weight: 500;
+      padding: 0 4px 0 0;
+    }
+    :global(.leverage) {
+      border-radius: 4px;
+      background: var(--fill_3);
+      min-width: 3rem;
+      height: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text_2);
+    }
+
+    :global(.row) {
+      color: var(--text_2);
+      font-size: 14px;
+      font-weight: 400;
+      :global(span) {
+        color: var(--text_1);
+        font-weight: 500;
+      }
+    }
+
+    :global(.form-line) {
+      margin: 1rem 0;
+      width: 100%;
+      border-top: 1px solid var(--fill_line_1);
+    }
+
+    :global(.position-side) {
+      border-radius: 4px;
+      background: var(--green_10);
+      min-width: 48px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      :global(span) {
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+      }
+    }
+
+    :global(.setting-modal-header) {
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--fill_line_1);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      align-self: stretch;
+    }
+    :global(.item-info) {
+      color: var(--text_1);
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      display: flex;
+      gap: 4px;
+      flex-direction: column;
+    }
+    :global(.row) {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text_2);
+      font-size: 14px;
+      font-weight: 400;
+      :global(&.price) {
+        color: #333;
+        font-size: 16px;
+        :global(> div:last-child) {
+          font-size: 18px;
+        }
+      }
+    }
+    :global(.switch-type) {
+      display: flex;
+      margin: 1rem 0;
+      gap: 1.5rem;
+      :global(.tabs) {
+        text-align: center;
+        cursor: pointer;
+        color: var(--text_2);
+        text-align: center;
+        font-size: 16px;
+        font-weight: 500;
+      }
+      :global(.active) {
+        color: var(--text_brand) !important;
+        position: relative;
+      }
+    }
+    :global(.fake) {
+      :global(ul) {
+        display: flex;
+        align-items: center;
+        padding: 0;
+        gap: 1rem;
+        margin: 0;
+        margin-bottom: 1rem;
+        :global(li) {
+          user-select: none;
+          cursor: pointer;
+          flex: 1;
+          margin: 0;
+          text-align: center;
+          font-size: 12px;
+          height: 26px;
+          line-height: 26px;
+          border-radius: 4px;
+          background: var(--fill_3);
+          color: var(--text_2);
+        }
+      }
+      :global(.active) {
+        color: var(--skin-primary-color) !important;
+        border-color: var(--skin-primary-color) !important;
+      }
+      :global(.container) {
+        margin: 0;
+        margin-top: 1rem;
+        margin-bottom: 8px;
       }
     }
   }

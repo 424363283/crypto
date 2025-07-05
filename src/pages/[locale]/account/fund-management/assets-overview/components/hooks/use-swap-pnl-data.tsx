@@ -4,11 +4,13 @@ import { message } from '@/core/utils';
 import { useEffect } from 'react';
 import { useImmer } from 'use-immer';
 import { WalletType } from '../types';
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
 
 interface SwapPnlDataProps {
   startDate?: string | number;
   endDate?: string | number;
   type: WalletType;
+  wallet: WalletKey;
 }
 export interface SwapReportPnls {
   date: number;
@@ -20,7 +22,7 @@ export interface SwapReportPnls {
   transferAmount: number; // 净划入
 }
 export const useSwapPnlData = (props: SwapPnlDataProps) => {
-  const { startDate = '', endDate = '', type } = props;
+  const { startDate = '', endDate = '', type, wallet } = props;
   const [state, setState] = useImmer({
     totalProfit: 0, //总盈利
     totalLoss: 0, // 总亏损
@@ -35,8 +37,9 @@ export const useSwapPnlData = (props: SwapPnlDataProps) => {
   });
 
   // 永续盈亏汇总 可接受日期作为参数
-  const getSwapPnlReports = async (params?: { start: number | string; end: number | string }) => {
-    const { start, end } = params || {};
+  // TO-DO 添加钱包类型 筛选数据(如跟单数据)
+  const getSwapPnlReports = async (params?: { start: number | string; end: number | string; wallet: WalletKey }) => {
+    const { start, end, wallet } = params || {};
     Loading.start();
     const SWAP_PNL_REQUESTS: any = {
       [WalletType.ASSET_SWAP]: async () =>
@@ -48,8 +51,10 @@ export const useSwapPnlData = (props: SwapPnlDataProps) => {
         await getSwapUProfitsReportsApi({
           beginDate: Number(start) || 0,
           endDate: Number(end) || 0,
+          subWallet: wallet
         }),
     };
+    // TO-DO 添加钱包类型筛选数据(如跟单)
     const res = await SWAP_PNL_REQUESTS[type]();
     if (res.code === 200) {
       const { totalProfit, totalLoss, reportPnls, avgProfit, avgLoss, pnlRate, profitDay, lossDay, flatDay, winRate } =
@@ -77,9 +82,10 @@ export const useSwapPnlData = (props: SwapPnlDataProps) => {
       getSwapPnlReports({
         start: startDate,
         end: endDate,
+        wallet: wallet
       });
     }
-  }, [startDate, endDate, type]);
+  }, [startDate, endDate, type, wallet]);
 
   return {
     ...state,

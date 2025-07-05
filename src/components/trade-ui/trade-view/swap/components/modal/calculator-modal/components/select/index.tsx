@@ -10,6 +10,8 @@ import { Option } from '@/components/trade-ui/common/dropdown/select';
 import { Dropdown } from 'antd';
 import { useState } from 'react';
 import { clsx, styles } from './styled';
+import CommonIcon from '@/components/common-icon';
+import { Layer } from '@/components/constants';
 
 /**
  * @prop {{value:any, label:string}} options 选项
@@ -21,11 +23,13 @@ const Select = ({
   value: selectValue,
   onChange,
   className,
+  layer = Layer.Default
 }: {
   options: any;
   value: any;
   onChange: (v: any) => any;
   className?: string;
+  layer?: Layer;
 }) => {
   const [open, setOpen] = useState(false);
   const { isDark } = useTheme();
@@ -55,7 +59,7 @@ const Select = ({
     <div className={clsx('content', className, !isDark && 'light')}>
       {option && <span className={clsx(onlyOne && 'no-arrow')}>{option?.label}</span>}
       {option && !onlyOne && (
-        <Svg src='/static/images/common/arrow_down.svg' width={12} height={12} className={clsx('arrow')} />
+        <CommonIcon name='common-tiny-triangle-down' size={16} />
       )}
     </div>
   );
@@ -65,7 +69,7 @@ const Select = ({
   return (
     <>
       <Dropdown
-        overlayClassName={clsx('dropdown-select-overlay')}
+        overlayClassName={clsx('dropdown-select-overlay', `overlay-layer${layer}`)}
         open={open}
         onOpenChange={setOpen}
         menu={{ items: [] }}

@@ -50,18 +50,19 @@ const BottomLoginLog = () => {
       align: 'right',
       title: LANG('时间'),
       dataIndex: 'date',
-      hideColumn: true,
+      // hideColumn: true,
     },
   ];
-  if (isMobile) {
-    columns.unshift({
-      dataIndex: 'date',
-      hideTitle: true,
-      render: (value: string) => {
-        return <span className='login-title-time'>{value}</span>;
-      },
-    } as any);
-  }
+
+  // if (isMobile) {
+  //   columns.unshift({
+  //     dataIndex: 'date',
+  //     hideTitle: true,
+  //     render: (value: string) => {
+  //       return <span className='login-title-time'>{value}</span>;
+  //     },
+  //   } as any);
+  // }
   return (
     <div className='bottom-login-record'>
       <div className='title'>{LANG('最近登录记录')}</div>
@@ -73,7 +74,8 @@ const BottomLoginLog = () => {
         rowClassName='table-row'
         total={total}
         page={current}
-        pagination={{ current, pageSize: 10, total, onChange: _onChange, showSizeChanger: false }}
+        isHistoryList
+        pagination={isMobile ? false : { current, pageSize: 10, total, onChange: _onChange, showSizeChanger: false }}
       />
       <style jsx>{styles}</style>
     </div>
@@ -81,15 +83,23 @@ const BottomLoginLog = () => {
 };
 const styles = css`
   .bottom-login-record {
-    background: var(--theme-background-color-2);
+    background: var(--fill_bg_1);
+    border-radius: 8px;
+    padding: 24px;
+    @media ${MediaInfo.mobile} {
+      padding: 16px;
+    }
+    flex:1;
     .title {
-      padding: 30px 0px 4px;
       font-size: 16px;
       font-weight: 600;
-      color: var(--theme-font-color-1);
+      color: var(--text_1);
+      @media ${MediaInfo.mobile} {
+        font-weight: 500;
+      }
     }
     :global(.login-title-time) {
-      color: var(--theme-font-color-1);
+      color: var(--text_1);
       font-size: 14px;
       @media ${MediaInfo.mobile} {
         display: flex;
@@ -98,11 +108,14 @@ const styles = css`
     }
     :global(.login-record-table) {
       :global(.mobile-table-card) {
+        margin:0;
+        padding:24px 0;
         :global(.mobile-card-item) {
-          &:nth-child(3) {
-            :global(.card-item-content) {
-              color: var(--theme-font-color-3);
-            }
+          :global(.card-item-title){
+              color: var(--text_2);
+          }
+          &:last-child{
+            margin:0;
           }
         }
       }
@@ -110,14 +123,14 @@ const styles = css`
         :global(.ant-table-cell) {
           font-weight: normal;
           padding-left: 0;
-          color: var(--theme-font-color-3);
+          color: var(--text_3);
           font-size: 12px;
           padding-bottom: 0;
         }
       }
       :global(.ant-table-tbody) {
         :global(.ant-table-row:nth-child(2n)) {
-          background: var(--theme-background-color-8) !important;
+          // background: var(--brand_20) !important;
           :global(td:first-child) {
             border-top-left-radius: 5px;
             border-bottom-left-radius: 5px;
@@ -128,20 +141,20 @@ const styles = css`
           }
         }
         :global(.ant-table-row .ant-table-cell-row-hover) {
-          background: transparent !important;
+          // background: transparent !important;
         }
         :global(.ant-table-cell) {
           padding-left: 5px;
           padding-right: 5px;
           font-weight: 400;
           &:nth-child(2) {
-            color: var(--theme-font-color-3);
+            color: var(--text_1);
           }
         }
       }
     }
     :global(.bottom-pagination) {
-      padding: 15px 0;
+      padding: 15px 0 0;
     }
   }
 `;

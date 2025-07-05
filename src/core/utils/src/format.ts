@@ -119,4 +119,20 @@ function formatRgbStringToHex(rgb: string): string {
   return '#' + toHex(r) + toHex(g) + toHex(b);
 }
 
-export { FCR, completeNum, formatDate, formatDefaultText, formatNumber2Ceil, formatRgbStringToHex, formatVolume, roundToNDigits, truncateToTwoDecimals };
+function hiddenTxt(txt: string, aheadNum: number, behindNum: number, numstar: number = 4) {
+  if (typeof txt === 'string') {
+    let regExp = new RegExp(`(.{${aheadNum}}).*(.{${behindNum}})$`);
+    if (numstar == 0) {
+      return txt.replace(regExp, "$1$2");
+    }
+    if (numstar == 2) {
+      return txt.replace(regExp, "$1**$2");
+    }
+    if (numstar == 3) {
+      return txt.replace(regExp, "$1***$2");
+    }
+    return txt.replace(regExp, "$1****$2");
+  }
+  return txt;
+}
+export { FCR, completeNum, formatDate, formatDefaultText, formatNumber2Ceil, formatRgbStringToHex, formatVolume, roundToNDigits, truncateToTwoDecimals, hiddenTxt };

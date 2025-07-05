@@ -23,11 +23,31 @@ export const STORAGE_KLINE_PRICE_TYPE_KEY = 'ymex_kline_price_type';
 
 export const STORAGE_FAVORITE_RESOLUTION_KEY = 'ymex_kline_favorite_resolution';
 
-export const STORAGE_SHOW_LIQUIDATION_LINE_KEY = 'ymex_kline_liquidation'
+export const STORAGE_SHOW_LIQUIDATION_LINE_KEY = 'ymex_kline_liquidation';
 
-export const STORAGE_SHOW_POSIITION_TPSL_LINE_KEY = 'ymex_kline_positiontpslline'
+export const STORAGE_SHOW_POSIITION_TPSL_LINE_KEY = 'ymex_kline_positiontpsl';
 
-export const SUPPORT_RESOLUTIONS = ['Time', '1', '3', '5', '15', '30', '60', '120', '240', '360', '480', '720', '1D', '1W', '1M'];
+export const STORAGE_SHOW_CURRENT_ENTRUST_LINE_KEY = 'ymex_kline_current_entrust';
+
+export const STORAGE_SHOW_COUNT_DOWN = 'ymex_count_down';
+
+export const SUPPORT_RESOLUTIONS = [
+  'Time',
+  '1',
+  '3',
+  '5',
+  '15',
+  '30',
+  '60',
+  '120',
+  '240',
+  '360',
+  '480',
+  '720',
+  '1D',
+  '1W',
+  '1M'
+];
 
 export interface ResolutionInfo {
   slug: string;
@@ -37,7 +57,7 @@ export interface ResolutionInfo {
   tvRes: string;
   full: string;
   isDefault: boolean;
-  index: number
+  index: number;
 }
 
 export const ALL_RESOLUTION_INFO: ResolutionInfo[] = [
@@ -132,15 +152,15 @@ export const ALL_RESOLUTION_INFO: ResolutionInfo[] = [
     isDefault: false,
     index: 10
   },
-  {
-    slug: '8H',
-    resolution: '480',
-    res: '480',
-    full: '8H',
-    tvRes: '8h',
-    isDefault: false,
-    index: 11
-  },
+  // {
+  //   slug: '8H',
+  //   resolution: '480',
+  //   res: '480',
+  //   full: '8H',
+  //   tvRes: '8h',
+  //   isDefault: false,
+  //   index: 11
+  // },
   {
     slug: '12H',
     resolution: '720',

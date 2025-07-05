@@ -20,6 +20,7 @@ export const LANGUAGE = {
   'en-gb': 'en-gb',
   'en-in': 'en-in',
   'en-kz': 'en-kz',
+  'zh-tw': 'zh-tw',
   de: 'de',
   da: 'da',
   it: 'it',
@@ -29,34 +30,34 @@ export const LANGUAGE = {
 export const getLanguageMap = {
   [LANGUAGE.en]: 'English',
   // [LANGUAGE.ko]: '한국어',
-  [LANGUAGE.vi]: 'Tiếng Việt',
-  [LANGUAGE.ru]: 'Русский',
-  [LANGUAGE.id]: 'Bahasa',
-  [LANGUAGE.ja]: '日本語',
-  [LANGUAGE.pt]: 'Português',
-  [LANGUAGE.tr]: 'Türkçe',
-  [LANGUAGE.es]: 'Español',
-  [LANGUAGE.fr]: 'Français',
-  [LANGUAGE.th]: 'ไทย',
-  [LANGUAGE.tl]: 'Tagalog',
+  // [LANGUAGE.vi]: 'Tiếng Việt',
+  // [LANGUAGE.ru]: 'Русский',
+  // [LANGUAGE.id]: 'Bahasa',
+  // [LANGUAGE.ja]: '日本語',
+  // [LANGUAGE.pt]: 'Português',
+  // [LANGUAGE.tr]: 'Türkçe',
+  // [LANGUAGE.es]: 'Español',
+  // [LANGUAGE.fr]: 'Français',
+  // [LANGUAGE.th]: 'ไทย',
+  // [LANGUAGE.tl]: 'Tagalog',
   [LANGUAGE.zh]: '简体中文',
-  [LANGUAGE['zh-TW']]: '繁體中文',
-  [LANGUAGE['en-ae']]: 'English(UAE)',
-  [LANGUAGE['en-za']]: 'English(Africa)',
-  [LANGUAGE['en-gb']]: 'English(UK)',
-  [LANGUAGE['en-in']]: 'English(India)',
-  [LANGUAGE['en-kz']]: 'English(Kazakhstan)',
-  [LANGUAGE.de]: 'German',
-  [LANGUAGE.da]: 'Dansk',
-  [LANGUAGE.it]: 'Italiano',
-  [LANGUAGE.pl]: 'Polski',
+  [LANGUAGE['zh-tw']]: '繁體中文',
+  // [LANGUAGE['en-ae']]: 'English(UAE)',
+  // [LANGUAGE['en-za']]: 'English(Africa)',
+  // [LANGUAGE['en-gb']]: 'English(UK)',
+  // [LANGUAGE['en-in']]: 'English(India)',
+  // [LANGUAGE['en-kz']]: 'English(Kazakhstan)',
+  // [LANGUAGE.de]: 'German',
+  // [LANGUAGE.da]: 'Dansk',
+  // [LANGUAGE.it]: 'Italiano',
+  // [LANGUAGE.pl]: 'Polski',
 };
 
 export const getLanguageHelp = (locale: string) => {
   return (
     {
       [LANGUAGE.zh]: 'zh-cn', // 中文
-      [LANGUAGE['zh-TW']]: 'zh-tw', // 中文
+      [LANGUAGE['zh-tw']]: 'zh-tw', // 中文
       [LANGUAGE.vi]: 'vi', // 越南
       [LANGUAGE.id]: 'id-id', // 印尼
       [LANGUAGE.ru]: 'ru', // 俄罗斯
@@ -69,7 +70,7 @@ export const getLanguageHelp = (locale: string) => {
 export const getAcceptLanguage = (locale: string) => {
   return {
     [LANGUAGE.zh]: 'zh-CN',
-    [LANGUAGE['zh-TW']]: 'zh-TW',
+    [LANGUAGE['zh-tw']]: 'zh-TW',
     [LANGUAGE.en]: 'en-US',
     [LANGUAGE.vi]: 'vi-VN',
     [LANGUAGE.ru]: 'ru-RU',

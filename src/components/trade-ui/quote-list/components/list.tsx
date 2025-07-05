@@ -4,9 +4,11 @@ import { LANG, TradeLink } from '@/core/i18n';
 import { DEFAULT_ORDER, Group, MarketItem, SwapTradeItem, TradeMap } from '@/core/shared';
 import { LOCAL_KEY, resso, storeTradeCollapse, useResso } from '@/core/store';
 import { clsx } from '@/core/utils';
-import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ListItem } from './item';
 import QuoteSearch from './search';
+import { Layer } from '@/components/constants';
+import { QuoteListContext } from '..';
 
 enum SORT_TYPE {
   'NAME' = 'name',
@@ -73,6 +75,7 @@ export const List = ({
   const [isScroll, setIsScroll] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
   const [swapTradeMap, setSwapTradeMap] = useState<Map<string, SwapTradeItem> | undefined>();
+  const { quoteListApi } = useContext(QuoteListContext);
 
   useEffect(() => {
     isSwap &&
@@ -195,16 +198,9 @@ export const List = ({
             {LANG('名称')}
             <span>
               <CommonIcon
-                className='up'
-                name={sort[SORT_TYPE.NAME] === 1 ? 'common-sort-up-active-0' : 'common-sort-up-0'}
-                width={5}
-                height={5}
-                enableSkin
-              />
-              <CommonIcon
-                name={sort[SORT_TYPE.NAME] === -1 ? 'common-sort-down-active-0' : 'common-sort-down-0'}
-                width={5}
-                height={5}
+                name={sort[SORT_TYPE.NAME] === 1 ? 'common-sort-up-active-icon' : (sort[SORT_TYPE.NAME] === -1 ? 'common-sort-down-active-icon' : 'common-sort-icon')}
+                width={16}
+                height={16}
                 enableSkin
               />
             </span>
@@ -212,16 +208,9 @@ export const List = ({
           <div className='title-item' onClick={clickSort.bind(this, SORT_TYPE.PRICE)}>
             <span>
               <CommonIcon
-                className='up'
-                name={sort[SORT_TYPE.PRICE] === 1 ? 'common-sort-up-active-0' : 'common-sort-up-0'}
-                width={5}
-                height={5}
-                enableSkin
-              />
-              <CommonIcon
-                name={sort[SORT_TYPE.PRICE] === -1 ? 'common-sort-down-active-0' : 'common-sort-down-0'}
-                width={5}
-                height={5}
+                name={sort[SORT_TYPE.PRICE] === 1 ? 'common-sort-up-active-icon' : (sort[SORT_TYPE.PRICE] === -1 ? 'common-sort-down-active-icon' : 'common-sort-icon')}
+                width={16}
+                height={16}
                 enableSkin
               />
             </span>
@@ -230,16 +219,9 @@ export const List = ({
           <div className='title-item' onClick={clickSort.bind(this, SORT_TYPE.CHANGE)}>
             <span>
               <CommonIcon
-                className='up'
-                name={sort[SORT_TYPE.CHANGE] === 1 ? 'common-sort-up-active-0' : 'common-sort-up-0'}
-                width={5}
-                height={5}
-                enableSkin
-              />
-              <CommonIcon
-                name={sort[SORT_TYPE.CHANGE] === -1 ? 'common-sort-down-active-0' : 'common-sort-down-0'}
-                width={5}
-                height={5}
+                name={sort[SORT_TYPE.CHANGE] === 1 ? 'common-sort-up-active-icon' : (sort[SORT_TYPE.CHANGE] === -1 ? 'common-sort-down-active-icon' : 'common-sort-icon')}
+                width={16}
+                height={16}
                 enableSkin
               />
             </span>
@@ -249,13 +231,15 @@ export const List = ({
         <style jsx>{`
           .title {
             display: flex;
-            height: 30px;
             display: flex;
             align-items: center;
             font-size: 12px;
+            line-height: 14px;
+            padding: 0 16px;
+            margin-bottom: 8px;
             white-space: nowrap;
             > div {
-              color: var(--theme-font-color-2);
+              color: var(--text_2);
               cursor: pointer;
               display: flex;
               align-items: center;
@@ -264,13 +248,9 @@ export const List = ({
                 display: flex;
                 flex-direction: column;
                 margin-left: 2px;
-                :global(.up) {
-                  margin-bottom: 2px;
-                }
               }
             }
             > div:nth-child(1) {
-              padding-left: 10px;
               width: 140px;
             }
             > div:nth-child(2) {
@@ -278,7 +258,6 @@ export const List = ({
               flex-flow: row-reverse;
             }
             > div:nth-child(3) {
-              padding-right: 10px;
               flex-flow: row-reverse;
               flex: 1;
             }
@@ -297,6 +276,17 @@ export const List = ({
       setScrollKey(+new Date());
     }
   }, [visible]);
+
+  useEffect(() => {
+    quoteListApi.current.clearSearchInput = () => {
+      setSearch('');
+    };
+    // 清理函数
+    return () => {
+      quoteListApi.current.clearSearchInput = () => { };
+    };
+  }, []);
+
   return (
     <>
       <div className='quote-wrapper'>
@@ -389,7 +379,7 @@ export const List = ({
             })}
             {sortData(data).length === 0 && (
               <div className='empty-wrapper'>
-                <EmptyComponent text={LANG('暂无商品')} active />
+                <EmptyComponent text={LANG('暂无商品')} active layer={Layer.Overlay} />
               </div>
             )}
           </div>
@@ -400,8 +390,7 @@ export const List = ({
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 16px 0;
-          padding-bottom: 3px;
+          margin-bottom: 16px;
           :global(.search-wrap) {
             flex: 1;
           }
@@ -412,6 +401,7 @@ export const List = ({
           overflow: auto;
           flex: 1;
           content-visibility: auto;
+          margin-bottom: 8px;
           .empty-wrapper {
             flex: 1;
             display: flex;

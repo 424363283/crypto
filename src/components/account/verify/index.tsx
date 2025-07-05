@@ -25,13 +25,17 @@ import { getIdentity } from '@/core/utils/src/crypto';
 import { MediaInfo } from '@/core/utils/src/media-info';
 import { message } from '@/core/utils/src/message';
 import { isCaptcha } from '@/core/utils/src/regexp';
-import { useEffect } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
 import { useImmer } from 'use-immer';
 import { ACCOUNT_ROUTE_PATH } from '../constants';
 import { BindEmailVerify } from './bind-email';
 import { BindGaVerify } from './bind-ga';
 import { BindPhoneVerify } from './bind-phone';
+import { Size } from '@/components/constants';
+import TabBar from '@/components/tab-bar';
+import { INPUT_VERIFICATION_CODE_TYPE } from '../types';
+import { useResponsive } from '@/core/hooks';
 interface params {
   amount?: string;
   payment?: string;
@@ -73,7 +77,10 @@ export const VerifyForm = (props: {
   withdrawData?: IWitdraw;
   modelSence?: string;
   autoSend?: boolean;
+  title?: ReactNode
 }) => {
+
+  const [tabKey, setTabKey] = useState(INPUT_VERIFICATION_CODE_TYPE.EMAIL);
   const { emailCode, smsCode } = store;
   const {
     prev,
@@ -86,9 +93,11 @@ export const VerifyForm = (props: {
     transferData = {},
     withdrawData,
     autoSend = false,
+    title
   } = props;
 
   const router = useRouter();
+  const { isMobile } = useResponsive();
   const { state: routerState, routerStore } = router || {};
   const { sence: _sence, countryCode, phone, email, countryId } = routerState || {};
   store.phone = phone;
@@ -97,7 +106,7 @@ export const VerifyForm = (props: {
   store.closeVerify = true;
   const [state, setState] = useImmer({
     vHash: '',
-    securityOptions: [] as { type: string }[],
+    securityOptions: [] as { type: string, target: string }[],
     gaCode: '',
     shouldDisableBtn: true,
     sence: '' as any,
@@ -107,6 +116,7 @@ export const VerifyForm = (props: {
     showBindEmail: false,
     verifyToken: '', // verify 接口返回的token
   });
+
   const {
     securityOptions,
     gaCode,
@@ -119,6 +129,7 @@ export const VerifyForm = (props: {
     verifyToken,
     showBindPhone,
   } = state;
+
   const checkShouldDisableBtn = () => {
     return securityOptions.some((option) => {
       switch (option.type) {
@@ -152,15 +163,17 @@ export const VerifyForm = (props: {
       });
     }
   }, [securityOptions, emailCode, smsCode, gaCode]);
+
   useEffect(() => {
     return () => routerStore.clearCache('state');
   }, []);
+
   const onGaInputChange = (value: string) => {
     setState((draft) => {
       draft.gaCode = value;
     });
   };
-  // console.log('verify-sence', sence, routerState);
+
   const onAllSceneSuccess = async (result: { code: number; data: { token: string }; message: string }) => {
     // 解绑验证项相关
     const UNBIND_OPTIONS: any = {
@@ -332,7 +345,10 @@ export const VerifyForm = (props: {
         }
       },
       [SENCE.CREATE_TRANSFER]: async () => {
-        const res = await postAccountInnerTransferApi(transferData as ITransfer);
+        const res = await postAccountInnerTransferApi({
+          token: result?.data.token,
+          ...(transferData as ITransfer)
+        });
         if (res?.code === 200) {
           store.isVerifySuccess = true;
           onDone?.(true);
@@ -446,7 +462,7 @@ export const VerifyForm = (props: {
     if (sence === SENCE.UNBIND_GA && !hasGaOption) {
       securityOptions.push({ type: 'ga', target: '', option: 1 });
     }
-    securityOptions.sort(function (a, b) {
+    securityOptions.sort(function(a, b) {
       if (a.type === 'phone') {
         return -1;
       } else if (a.type === 'email' && b.type !== 'phone') {
@@ -509,19 +525,22 @@ export const VerifyForm = (props: {
     if (showBindEmail) {
       return <BindEmailVerify token={verifyToken} />;
     }
+
     return securityOptions.map((item) => {
       if (item.type === 'ga' && sence !== SENCE.BIND_GA) {
         // 解绑时需要
         return (
           <div className='verification-item' key={item.type}>
             <BasicInput
-              label={LANG('谷歌验证码')}
-              placeholder={LANG('请输入Google验证码')}
+              label={LANG('身份验证器')}
+              placeholder={LANG('请输入验证码')}
               type={INPUT_TYPE.CAPTCHA}
+              size={isMobile ? Size.LG : Size.XL}
               value={gaCode}
               withBorder
               onInputChange={onGaInputChange}
             />
+            {renderResetButton()}
           </div>
         );
       }
@@ -529,6 +548,12 @@ export const VerifyForm = (props: {
         <div className='verification-item' key={item.type}>
           <InputVerificationCode
             type={item.type === 'email' ? LOCAL_KEY.INPUT_VERIFICATION_EMAIL : LOCAL_KEY.INPUT_VERIFICATION_PHONE}
+            label={<p
+              className='agree-item'
+              dangerouslySetInnerHTML={{
+                __html: LANG(`请输入发送至{type} {target} 的6位验证码`, { type: LANG(item.type == 'email' ? '邮箱' : '手机'), target: `<span class='varify-target'>${item.target}</span>` })
+              }}
+            ></p>}
             scene={sence}
             withBorder
             withdrawData={{
@@ -546,7 +571,7 @@ export const VerifyForm = (props: {
   const isSenceGa = sence === SENCE.BIND_GA;
   const renderResetButton = () => {
     const { hideResetType = false } = routerState || {};
-    const resetHideType = isSenceGa ? false : hideResetType; // ga验证不隐藏，点击验证码不可用 跳转绑定手机和邮箱，hideResetType会被重置为true
+    const resetHideType = isSenceGa ? true : hideResetType; // ga验证不隐藏，点击验证码不可用 跳转绑定手机和邮箱，hideResetType会被重置为true
     if (bindOptionsSize > 1 && !resetHideType) {
       return (
         <div className={clsx('reset-wrapper', isSenceGa && 'reset-ga-type-wrapper')}>
@@ -559,13 +584,14 @@ export const VerifyForm = (props: {
   const PrevBtn = () => {
     if (prev && !showBindGa) {
       return (
-        <Button type='light-border-2' className='btn-prev' onClick={() => prev(1)}>
+        <Button rounded className='btn-prev' onClick={() => prev(1)}>
           {LANG('上一步')}
         </Button>
       );
     }
     return null;
   };
+
   const shouldShowConfirmBtn = !showBindGa && !showBindEmail && !showBindPhone;
   const renderBottom = () => {
     return (
@@ -577,7 +603,7 @@ export const VerifyForm = (props: {
               className={clsx('confirm-btn')}
               onClick={handleVerifyCode}
               disabled={shouldDisableBtn}
-              height={40}
+              rounded
               width='100%'
               type='primary'
             >
@@ -585,12 +611,25 @@ export const VerifyForm = (props: {
             </Button>
           ) : null}
         </div>
-        {renderResetButton()}
       </div>
     );
   };
   return (
     <div className='verify-form'>
+      { title && <div className='title'>{title}</div> }
+      {/*securityOptions.length > 0 && <TabBar
+        options={securityOptions.reduce((list, item) => {
+          if (item.type === 'email') {
+            list.push({ label: LANG('邮箱'), value: INPUT_VERIFICATION_CODE_TYPE.EMAIL });
+          } else if (item.type === 'phone') {
+            list.push({ label: LANG('手机'), value: INPUT_VERIFICATION_CODE_TYPE.PHONE });
+          }
+          return list;
+
+        }, [])}
+        value={tabKey}
+        onChange={setTabKey}
+      /> */}
       {renderContent()}
       {renderBottom()}
       <style jsx>{styles}</style>
@@ -600,29 +639,71 @@ export const VerifyForm = (props: {
 const styles = css`
   .verify-form {
     width: 530px;
-    @media ${MediaInfo.mobile} {
-      width: 100%;
+    margin: auto;
+    .title {
+      color: var(--text_1);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 20px;
+      padding: 20px 0 40px 0;
+      @media ${MediaInfo.mobile}{
+        padding: 24px 0 ;
+      }
     }
-    .confirm-btn {
-      width: 100%;
+    :global( .tab-bar ) {
+      margin-bottom: 24px;
+      border-bottom-style: solid !important;
+      border-bottom: 1px solid var(--fill_line_2);
+      :global(.tabs) {
+        :global(.active>div) {
+          &::after {
+            content: "";
+            width: 0;
+            height: 0;
+            background: transparent;
+          }
+        }
+      } 
     }
-    :global(.verify-bottom) {
-      position: relative;
-      margin-top: 10px;
+    :global(.verification-item ) {
+      :global(.basic-input-container) {
+        :global(.label) {
+          font-size: 14px;
+          font-weight: 400;
+          color: var(--text_3);
+          margin-bottom: 8px;
+          :global(.agree-item .varify-target) {
+            font-weight: 500;
+            color: var(--text_1);
+          }
+        }
+      }
       :global(.reset-wrapper) {
-        margin: 20px 0 0;
+        margin: 0;
         text-align: left;
         :global(span) {
           font-size: 14px;
-          font-weight: 500;
-          color: var(--theme-font-color-6);
-          border-bottom: 1px solid var(--theme-font-color-6);
+          font-weight: 400;
+          color: var(--text_brand);
+          border-bottom: 1px solid var(--text_brand);
           cursor: pointer;
         }
       }
       :global(.reset-ga-type-wrapper) {
         text-align: center;
       }
+    }
+    
+    :global(.tab-bar) {
+      padding: 0;
+    }
+    @media ${MediaInfo.mobile} {
+      width: 100%;
+    }
+    
+    :global(.verify-bottom) {
+      position: relative;
+      margin-top: 40px; 
     }
 
     :global(.verify-btn-wrapper) {
@@ -631,21 +712,29 @@ const styles = css`
       align-items: center;
       justify-content: space-between;
       margin: 0 auto;
+      gap: 24px;
       :global(.btn-prev) {
         cursor: pointer;
-        height: 40px;
-        line-height: 40px;
+        height: 56px;
+        line-height: 56px;
         text-align: center;
         min-width: 200px;
-        margin-right: 10px;
+        flex: 1;
         @media ${MediaInfo.mobile} {
           min-width: auto;
           flex: 1;
+          height: 48px;
+          line-height: 48px;
         }
       }
       :global(.confirm-btn) {
+        height: 56px;
+        line-height: 56px;
+        flex: 1;
         @media ${MediaInfo.mobile} {
           flex: 1;
+          height: 48px;
+          line-height: 48px;
         }
       }
     }

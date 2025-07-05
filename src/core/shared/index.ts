@@ -66,7 +66,9 @@ export * from './src/affiliate/summary/types'
 export * from './src/affiliate/team'
 export * from './src/affiliate/team/types'
 export * from './src/affiliate/user-detail'
+export * from './src/copy'
 
+export * from './src/partner'
 
 
 export * from './src/wallet'

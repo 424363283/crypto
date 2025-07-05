@@ -52,13 +52,13 @@ const _FundingRateCountdown = ({ type }: { type: FundingRateType }) => {
           diff = rateTime - dayjs().valueOf();
         }
       } else if (type == FundingRateType.LITE) {
-        const res = await getLiteFundingRateApi(query.id as string);
-        if (res.code === 200) {
-          setActive(true);
-          setEndTime(res.data?.nextFundTime);
-          setRate(res.data?.fundRate);
-          diff = res.data?.nextFundTime - dayjs().valueOf();
-        }
+        // const res = await getLiteFundingRateApi(query.id as string);
+        // if (res.code === 200) {
+        //   setActive(true);
+        //   setEndTime(res.data?.nextFundTime);
+        //   setRate(res.data?.fundRate);
+        //   diff = res.data?.nextFundTime - dayjs().valueOf();
+        // }
       }
     } catch (error) {}
     const { h, m, s } = getHms(diff);
@@ -100,10 +100,10 @@ const _FundingRateCountdown = ({ type }: { type: FundingRateType }) => {
 
   return (
     <span>
-      <span style={{ color: 'var(--skin-hover-font-color)' }}>
+      <span className={Number(myRate) >= 0 ? 'main-raise' : 'main-fall'}>
         {formatDefaultText(time != '--:--:--' && (Number(myRate) === 0 ? '0'.toFixed(rateDigit) : myRate))}%
       </span>{' '}
-      / {time}
+      / <span style={{display: 'inline-block', textAlign:'left', minWidth:'50px'}}>{time}</span>
     </span>
   );
 };

@@ -30,5 +30,5 @@ async function del<T = any>(url: string, data?: any, config?: AxiosRequestConfig
 export const http = {
   get,
   post,
-  del,
+  del
 };

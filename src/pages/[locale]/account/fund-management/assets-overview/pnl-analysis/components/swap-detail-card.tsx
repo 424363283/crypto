@@ -31,7 +31,7 @@ export default function SwapDetailCard(props: SwapDetailProps) {
       align: 'left',
       dataIndex: 'date',
       render: (value: string) => {
-        return <span style={{ color: 'var(--const-color-grey)' }}>{dayjs(value).format('YYYY/MM/DD')}</span>;
+        return <span style={{ color: 'var(--text_2)' }}>{dayjs(value).format('YYYY/MM/DD')}</span>;
       },
     },
     {
@@ -81,7 +81,9 @@ export default function SwapDetailCard(props: SwapDetailProps) {
       render: (value: string) => {
         return (
           <span>
-            {value?.mul(100)?.toFixed(2)} {symbolUnit}
+            {value.toFixed(2)}
+
+             {symbolUnit}
           </span>
         );
       },
@@ -93,6 +95,7 @@ export default function SwapDetailCard(props: SwapDetailProps) {
         dataSource={shadowPnls}
         columns={columns}
         showMobileTable
+        isHistoryList
         className='swap-detail-table'
         pagination={{ current: page, pageSize: 10, onChange: _onChange, showSizeChanger: false }}
       />
@@ -103,33 +106,17 @@ export default function SwapDetailCard(props: SwapDetailProps) {
 }
 const styles = css`
   :global(.swap-pnl-detail) {
+    width: 100%;
+    :global(.swap-detail-table .ant-table-thead > tr > th) {
+      padding-left: 0px;
+    }
     :global(.swap-detail-table .ant-table-tbody) {
-      :global(.ant-table-row:nth-child(2n)) {
-        background: var(--theme-background-color-8-1) !important;
-        :global(td:first-child) {
-          border-top-left-radius: 5px;
-          border-bottom-left-radius: 5px;
-        }
-        :global(td:last-child) {
-          border-top-right-radius: 5px;
-          border-bottom-right-radius: 5px;
-        }
-      }
       :global(.ant-table-row td) {
         border-bottom: none;
+        padding-left: 0;
       }
       :global(.ant-table-row .ant-table-cell-row-hover) {
         background: transparent !important;
-      }
-      :global(.ant-table-cell .green) {
-        color: var(--color-green);
-        font-size: 14px;
-        font-weight: 500;
-      }
-      :global(.ant-table-cell .red) {
-        color: var(--color-red);
-        font-size: 14px;
-        font-weight: 500;
       }
     }
     :global(.bottom-pagination) {

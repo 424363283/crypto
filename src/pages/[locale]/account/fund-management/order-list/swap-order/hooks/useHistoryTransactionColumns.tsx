@@ -50,19 +50,19 @@ export const useHistoryTransactionColumns = () => {
         return <span className={isBuy ? 'raise' : 'fall'}>{isBuy ? LANG('买入') : LANG('卖出')}</span>;
       },
     },
-    {
-      title: LANG('子钱包账户'),
-      dataIndex: 'subWallet',
-      render: (v: string, item: any) => {
-        return (
-          <span>
-            {_isSwapDemo
-              ? LANG('模拟交易账户')
-              : item?.alias || Swap.Assets.getWallet({ walletId: v, usdt: isUsdtType, withHooks: false })?.alias}
-          </span>
-        );
-      },
-    },
+    // {
+    //   title: LANG('子钱包账户'),
+    //   dataIndex: 'subWallet',
+    //   render: (v: string, item: any) => {
+    //     return (
+    //       <span>
+    //         {_isSwapDemo
+    //           ? LANG('模拟交易账户')
+    //           : item?.alias || Swap.Assets.getWallet({ walletId: v, usdt: isUsdtType, withHooks: false })?.alias}
+    //       </span>
+    //     );
+    //   },
+    // },
     {
       title: LANG('类型'),
       dataIndex: 'type',

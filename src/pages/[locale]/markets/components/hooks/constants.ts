@@ -10,11 +10,11 @@ const PERPETUAL_OPTIONS = [
     id: PERPETUAL_OPTION_ID.SWAP_USDT,
     key: 'perpetual.usdt',
   },
-  {
-    name: LANG('币本位合约'),
-    id: PERPETUAL_OPTION_ID.SWAP_COIN,
-    key: 'perpetual.crypto',
-  },
+  // {
+  //   name: LANG('币本位合约'),
+  //   id: PERPETUAL_OPTION_ID.SWAP_COIN,
+  //   key: 'perpetual.crypto',
+  // },
 ];
 const LITE_OPTIONS = [
   {
@@ -22,43 +22,38 @@ const LITE_OPTIONS = [
     id: LITE_OPTION_ID.ALL,
     key: 'contract.crypto',
   },
-  {
-    name: LANG('主流区'),
-    id: LITE_OPTION_ID.MAIN_STREAM,
-    key: 'contract.mainstream',
-  },
-  {
-    name: LANG('创新区'),
-    id: LITE_OPTION_ID.CREATIVE_AREA,
-    key: 'contract.innovation',
-  },
-  {
-    name: LANG('带单区'),
-    id: LITE_OPTION_ID.COPY_ORDER,
-    key: 'contract.copy',
-  },
+  // {
+  //   name: LANG('加密货币'),
+  //   id: LITE_OPTION_ID.CRYPTO,
+  //   key: 'contract.mainstream',
+  // },
+  // {
+  //   name: LANG('带单区'),
+  //   id: LITE_OPTION_ID.COPY_ORDER,
+  //   key: 'contract.copy',
+  // },
 ];
 const FAVORITE_OPTIONS = [
-  // {
-  //   name: LANG('现货'),
-  //   id: FAVORITE_OPTION_ID.SPOT,
-  //   key: 'favorites.spot',
-  // },
   {
-    name: LANG('U本位合约'),
+    name: LANG('币币'),
+    id: FAVORITE_OPTION_ID.SPOT,
+    key: 'favorites.spot',
+  },
+  {
+    name: LANG('合约'),
     id: FAVORITE_OPTION_ID.SWAP_USDT,
     key: 'favorites.swap_usdt',
   },
-  {
-    name: LANG('币本位合约'),
-    id: FAVORITE_OPTION_ID.SWAP_COIN,
-    key: 'favorites.swap_coin',
-  },
   // {
-  //   name: LANG('简易合约'),
-  //   id: FAVORITE_OPTION_ID.LITE,
-  //   key: 'favorites.contract',
+  //   name: LANG('币本位合约'),
+  //   id: FAVORITE_OPTION_ID.SWAP_COIN,
+  //   key: 'favorites.swap_coin',
   // },
+  {
+    name: LANG('简易合约'),
+    id: FAVORITE_OPTION_ID.LITE,
+    key: 'favorites.contract',
+  },
   // {
   //   name: 'LVTs',
   //   id: FAVORITE_OPTION_ID.ETF,

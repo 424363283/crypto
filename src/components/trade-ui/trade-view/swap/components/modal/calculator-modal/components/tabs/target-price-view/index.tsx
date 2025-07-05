@@ -9,6 +9,8 @@ import { TradeTypeBar } from '../../trade-type-bar';
 import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
 import { useStore } from '../../../store';
+import css from 'styled-jsx/css';
+import { Layer } from '@/components/constants';
 
 export const TargetPriceView = () => {
   const { isUsdtType, cryptoData, initMargins, isBuy } = useStore();
@@ -39,21 +41,45 @@ export const TargetPriceView = () => {
   const results = [[LANG('目标价格'), `${result.targetPrice} ${isUsdtType ? 'USDT' : 'USD'}`]];
 
   return (
-    <ResultLayout disabled={!openPrice || !rate} onSubmit={_onSubmit}>
-      <div>
-        <QuoteSelect
-          onChange={() => {
-            _resetInputs();
-          }}
-        />
-        <TradeTypeBar />
-        <LeverSlider />
-        <PriceInput value={openPrice} onChange={setOpenPrice} newPriceEnable />
-        <RateOfReturnInput value={rate} onChange={setRate} />
-      </div>
-      <Result results={results} />
-    </ResultLayout>
+    <>
+      <ResultLayout disabled={!openPrice || !rate} onSubmit={_onSubmit}>
+        <div className={'target-price-view'}>
+          <QuoteSelect
+            layer={Layer.Overlay}
+            onChange={() => {
+              _resetInputs();
+            }}
+          />
+          <TradeTypeBar />
+          <LeverSlider />
+          <div className={'input-item'}>
+            <div className={'label'}>{LANG('开仓价格')}</div>
+            <PriceInput label = {null} value={openPrice} onChange={setOpenPrice} newPriceEnable />
+          </div>
+          <div className={'input-item'}>
+            <div className={'label'}>{LANG('回报率')}</div>
+            <RateOfReturnInput label={null} value={rate} onChange={setRate} />
+          </div>
+        </div>
+        <Result results={results} />
+      </ResultLayout>
+      <style jsx>{styles}</style>
+    </>
   );
 };
 
+const styles = css`
+  .target-price-view {
+    .input-item {
+      >.label {
+        color: var(--text_3);
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 16px;
+      }
+
+    }
+
+  }
+`;
 export default TargetPriceView;

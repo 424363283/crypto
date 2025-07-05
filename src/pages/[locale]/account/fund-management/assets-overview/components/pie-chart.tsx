@@ -1,14 +1,15 @@
-import { useTheme } from '@/core/hooks';
+import { useResponsive, useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Account, Rate } from '@/core/shared';
 import { MediaInfo, clsx } from '@/core/utils';
 import * as echarts from 'echarts';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import css from 'styled-jsx/css';
+import { AssetItem } from '../modules/asset-overview/components/asset-item';
 
 let myChart: any;
 
-const color = ['#EBB30E', '#43BC9C', '#2C66D1', '#F04E3F', '#C5C5C4'];
+const color = ['#07828B', '#F0BA30', '#2C66D1', '#F04E3F', '#C5C5C4'];
 
 const PieCharts: React.FC = () => {
   const { isDark } = useTheme();
@@ -17,19 +18,45 @@ const PieCharts: React.FC = () => {
   const [newIndex, setNewIndex] = useState<number | ''>('');
   const [coinName, setCoinName] = useState('');
   const [proportionValue, setProportionValue] = useState('0');
-  const [data, setData] = useState<{ name: string; proportion: string; balance: string }[]>([]);
+  const [data, setData] = useState<{ name: string; proportion: string; balance: string }[]>([
+    {
+      "name": "USDT",
+      "proportion": "0.00",
+      "balance": "0"
+    },
+    {
+      "name": LANG("其他"),
+      "proportion": "0.00",
+      "balance": "0"
+    }
+  ]);
   const { allSpotAssets, spotTotalBalance } = Account.assets.spotAssetsStore;
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const { isMobile } = useResponsive();
+  useEffect(() => {
+
+    let item = data[selectedIndex];
+    if (item) {
+      onMouseMove(selectedIndex, item.name, item.proportion);
+    }
+  }, [selectedIndex, data]);
+
   useEffect(() => {
     const handleAllSpotAssets = async () => {
       if (spotTotalBalance) {
-        const list = allSpotAssets?.filter((v) => v.total);
+        // const list = allSpotAssets?.filter((v) => v.total);
+        const list = [...allSpotAssets];
         const formatList = (await _formatData(list)) as any;
-        setData(formatList);
+        if (formatList?.length > 0) {
+          setData(formatList);
+        }
       }
     };
     handleAllSpotAssets();
   }, [spotTotalBalance, allSpotAssets]);
-
+  const calWidth = useMemo(() => {
+    return isMobile ? '200px' : '120px'
+  }, [isMobile])
   useLayoutEffect(() => {
     if (typeof document === 'undefined') return;
     const myData = data.map(({ proportion }) => proportion);
@@ -42,9 +69,10 @@ const PieCharts: React.FC = () => {
         {
           name: 'pie-chart-asset',
           type: 'pie',
-          radius: ['62%', '76%'],
-          center: [80, '50%'],
-          avoidLabelOverlap: false,
+          radius: ['72%', '87%'],
+          center: ['50%', '50%'],
+          padAngle: 1,
+          hoverAnimation: false,
           label: {
             show: !data.length,
             position: 'center',
@@ -54,20 +82,27 @@ const PieCharts: React.FC = () => {
           },
           emphasis: {
             label: {
-              color: isDark ? '#fff' : '#141717',
+              color: isDark ? '#FFFFFF' : '#2B2F33',
               zIndex: 111,
               show: true,
               fontSize: 16,
               fontWeight: '500',
               lineHeight: 20, // 设置行高以垂直居中文案
               formatter: function (params: any) {
-                const content = `${params.value}%\n{coinName|${coinName}}`;
+                const content = `{coinValue|${params.value}%}\n{coinName|${coinName}}`;
                 return content;
               },
               rich: {
+                coinValue: {
+                  fontSize: 16,
+                  fontWeight: '500',
+                  lineHeight: '24',
+                  color: isDark ? '#FFFFFF' : '#2B2F33',
+                },
                 coinName: {
                   fontSize: 12,
-                  color: '#9e9e9d',
+                  lineHeight: '20',
+                  color: isDark ? '#717171' : '#9FA1A6'
                 },
               },
             },
@@ -83,10 +118,12 @@ const PieCharts: React.FC = () => {
       ],
     };
     myChart.setOption(option);
-
     _seriesMouseMove();
-  }, [data, coinName]);
+  }, [data, coinName, isDark]);
 
+  useEffect(() => {
+    myChart?.resize();
+  }, [isMobile])
   useEffect(() => {
     if (newIndex === '') {
       _downplay(index);
@@ -110,7 +147,7 @@ const PieCharts: React.FC = () => {
         setCoinName(a.data.name);
       });
       myChart.on('mouseout', 'series', () => {
-        setNewIndex('');
+        // setNewIndex('');
       });
     }
   };
@@ -141,10 +178,10 @@ const PieCharts: React.FC = () => {
         return {
           name: item.code,
           proportion: item.local?.div(newTotal).mul(100).toFixed(2),
-          balance: item.targetU,
+          balance: item.targetU?.add(item?.lite?.planMargin || 0).add(item?.lite?.positionMargin || 0)
         };
       })
-      ?.filter((item) => item?.proportion > 0);
+    // ?.filter((item) => item?.proportion > 0);
     if (list.length <= 10) {
       return arr;
     } else {
@@ -167,7 +204,8 @@ const PieCharts: React.FC = () => {
           proportion: 100?.sub(previousTotalProportion),
           balance: spotTotalBalance.sub(previousTotalBalance),
         },
-      ].filter((item) => item.proportion > 0);
+      ]
+      // .filter((item) => item.proportion > 0);
     }
   };
   const onMouseMove = (idx: number, name: string, proportion: string) => {
@@ -179,6 +217,7 @@ const PieCharts: React.FC = () => {
     setNewIndex('');
     setCoinName('');
   };
+
   return (
     <div className='pie-chart'>
       <div
@@ -186,19 +225,35 @@ const PieCharts: React.FC = () => {
         ref={pieChartRef}
         className='pie-chart-asset'
         style={{
-          width: '136px',
-          height: '126px',
+          width: calWidth,
+          height: calWidth,
         }}
       />
       <div className='pie-chart-legend'>
+        {data?.filter(v => isMobile || Number(v.proportion) > 0).map(({ name, proportion, balance }, index) => {
+          const active = newIndex === index;
+          return (
+            <AssetItem
+              key={name}
+              title={name}
+              amount={balance}
+              color={color[index]}
+              percent={proportion?.div(100)}
+              className={clsx('legend', active && 'active')}
+            />
+          );
+        })}
+      </div>
+      {/* <div className='pie-chart-legend'>
         {data?.map(({ name, proportion, balance }, index) => {
           const active = newIndex === index;
           return (
             <div
               key={name}
               className={clsx('legend', active && 'active')}
-              onMouseMove={() => onMouseMove(index, name, proportion)}
-              onMouseOut={() => onMouseOut(name)}
+              onMouseMove={() => setSelectedIndex(index)}
+              // onMouseMove={() => onMouseMove(index, name, proportion)}
+              // onMouseOut={() => onMouseOut(name)}
               style={{
                 color: active ? color[index] : '#333',
               }}
@@ -218,7 +273,7 @@ const PieCharts: React.FC = () => {
             </div>
           );
         })}
-      </div>
+      </div> */}
       <style jsx>{styles}</style>
     </div>
   );
@@ -228,9 +283,11 @@ const styles = css`
     width: 100%;
     display: flex;
     align-items: center;
+    gap: 64px;
     @media ${MediaInfo.mobile} {
       flex-direction: column;
       padding-left: 0;
+      gap: 0;
     }
     :global(.pie-chart-asset) {
       position: relative;
@@ -241,39 +298,37 @@ const styles = css`
         content: '';
         z-index: -2;
         position: absolute;
-        width: 62px; /* 外层圆环的宽度 */
-        height: 62px; /* 外层圆环的高度 */
-        background-color: var(--theme-background-color-2-4); /* 外层圆环的背景色 */
+        width: calc(100% - 48px); /* 外层圆环的宽度 */
+        height: calc(100% - 48px); /* 外层圆环的高度 */
+        background-color: var(--fill_bg_1); /* 外层圆环的背景色 */
         border-radius: 50%;
-        border: 25px solid var(--theme-background-color-2-4);
-        top: 6px;
-        left: 24px;
+        border: 24px solid var(--fill_3);
+        top: -1px;
+        left: 0px;
         box-sizing: content-box; /* 使用 content-box 让边框不占用容器的尺寸 */
-      }
-      &::after {
-        content: '';
-        z-index: -1;
-        position: absolute;
-        width: 60px; /* 中间圆形的宽度 */
-        height: 60px; /* 中间圆形的高度 */
-        background-color: var(--theme-background-color-2); /* 中间圆形的背景色 */
-        border-radius: 50%;
-        top: 34px; /* 调整中间圆形的位置 */
-        left: 50px; /* 调整中间圆形的位置 */
+        @media ${MediaInfo.mobile} { 
+          width: calc(100% - 80px); /* 外层圆环的宽度 */
+          height: calc(100% - 80px); /* 外层圆环的高度 */
+          border: 40px solid var(--fill_3);
+        }
       }
     }
     .pie-chart-legend {
       display: flex;
+      flex: 1 auto;
       flex-direction: column;
-      width: 40%;
-      margin-left: 20px;
-      margin-top: 10px;
+      overflow: auto;
+      max-height: 146px;
+      gap: 16px;
       @media ${MediaInfo.mobile} {
         margin-left: 0px;
         margin-top: 20px;
         width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px 56px;
       }
-      .legend {
+      :global(.legend) {
         border-radius: 2px;
         display: flex;
         justify-content: space-between;
@@ -281,9 +336,8 @@ const styles = css`
         display: flex;
         align-items: center;
         font-size: 14px;
-        padding: 4px 7px;
         &:hover {
-          background-color: var(--theme-background-color-3);
+          background-color: unset;
           border-radius: 5px;
         }
         .left-info {
@@ -304,9 +358,9 @@ const styles = css`
           }
           i {
             display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 3px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
             margin-right: 10px;
           }
         }

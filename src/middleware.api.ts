@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 import { defaultLang, LANGUAGE } from '@/core/i18n/src/constants';
 import type { Locale } from 'antd/es/locale';
 import { getLocaleFromPath ,getFirstPathAfterLocale} from '@/core/utils';
-import { constant } from 'lodash';
+import constant from 'lodash/constant';
 import next from 'next';
 
 const PUBLIC_FILE = /\.(.*)$/;

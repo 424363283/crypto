@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react';
 
 interface AvatarProps extends ImageProps {
   src: string;
+  width?: number;
+  height?: number;
 }
-const Avatar = ({ src, ...props }: AvatarProps) => {
+const Avatar = ({ src, width=76, height=76, ...props }: AvatarProps) => {
   const [avatar, setAvatar] = useState(src);
 
   useEffect(() => {
@@ -13,11 +15,11 @@ const Avatar = ({ src, ...props }: AvatarProps) => {
 
   return (
     <Image
-      width={76}
-      height={76}
-      src={avatar || '/static/images/account/user.png'}
+      width={width}
+      height={height}
+      src={avatar || '/static/images/account/avatar.svg'}
       onError={() => {
-        setAvatar('/static/images/account/user.png');
+        setAvatar('/static/images/account/avatar.svg');
       }}
       {...props}
       alt='avatar'

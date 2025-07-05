@@ -1,13 +1,14 @@
+import { Layer } from '@/components/constants';
 import Input from '@/components/trade-ui/trade-view/components/input';
 import MinChangeInput from '@/components/trade-ui/trade-view/components/input/min-change-input';
 import { PriceTypeSelect } from '@/components/trade-ui/trade-view/swap/components/pricet-type-select';
 import { useTheme } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Swap } from '@/core/shared';
-import { clsx } from '@/core/utils';
+import { clsx, MediaInfo } from '@/core/utils';
 import css from 'styled-jsx/css';
 
-export const SpslInputs = () => {
+export const SpslInputs = ({ layer = Layer.Default }: { layer?: Layer }) => {
   const spslMode = Swap.Trade.store.spslMode;
   const { stopProfitPrice, stopLossPrice, stopProfitPriceType, stopLossPriceType, editEnable } = spslMode;
 
@@ -23,7 +24,7 @@ export const SpslInputs = () => {
   }
   return (
     <>
-      <div className='spsl-section'>
+      <div className="spsl-section">
         {editEnable ? (
           <div className={clsx('spsl-info', !isDark && 'light')}>
             {spslMode.stopProfitEnable && (
@@ -46,20 +47,22 @@ export const SpslInputs = () => {
         ) : (
           <div className={clsx('spsl-inputs')}>
             <Input
+              layer={layer}
               aria-label={LANG('止盈')}
               inputComponent={MinChangeInput}
               label={LANG('止盈')}
-              type='number'
+              type="number"
               value={stopProfitPrice}
               onChange={(stopProfitPrice: any) => Swap.Trade.onChangeSpslSetting({ stopProfitPrice })}
               min={0}
+              max={99999999}
               step={_minChangePrice}
               digit={baseShowPrecision}
-              blankDisplayValue=''
+              blankDisplayValue=""
               enableMinChange={stopProfitPriceType == Swap.Trade.PRICE_TYPE.NEW}
               suffix={() => (
                 <PriceTypeSelect
-                  onChange={(stopProfitPriceType) => {
+                  onChange={stopProfitPriceType => {
                     const next: any = { stopProfitPriceType };
                     if (stopProfitPriceType == Swap.Trade.PRICE_TYPE.NEW && Number(stopProfitPrice) > 0) {
                       next.stopProfitPrice = Swap.Utils.minChangeFormat(_minChangePrice, stopProfitPrice);
@@ -71,20 +74,22 @@ export const SpslInputs = () => {
               )}
             />
             <Input
+              layer={layer}
               aria-label={LANG('止损')}
               inputComponent={MinChangeInput}
               label={LANG('止损')}
-              type='number'
+              type="number"
               value={stopLossPrice}
               onChange={(stopLossPrice: any) => Swap.Trade.onChangeSpslSetting({ stopLossPrice })}
               min={0}
+              max={99999999}
               step={_minChangePrice}
               digit={baseShowPrecision}
-              blankDisplayValue=''
+              blankDisplayValue=""
               enableMinChange={stopLossPriceType == Swap.Trade.PRICE_TYPE.NEW}
               suffix={() => (
                 <PriceTypeSelect
-                  onChange={(stopLossPriceType) => {
+                  onChange={stopLossPriceType => {
                     const next: any = { stopLossPriceType };
                     if (stopLossPriceType == Swap.Trade.PRICE_TYPE.NEW && Number(stopLossPrice) > 0) {
                       next.stopLossPrice = Swap.Utils.minChangeFormat(_minChangePrice, stopLossPrice);
@@ -106,13 +111,18 @@ export const SpslInputs = () => {
 const styles = css`
   .spsl-section {
     .spsl-inputs {
-      margin-top: 10px;
+      display: flex ;
+      flex-direction: column;
+      gap: 16px;
+      :global(.trade-view-input) {
+        margin: 0;
+      }
+
       & > *:last-child {
         margin-bottom: 0;
       }
       :global(input) {
-        text-align: right;
-        padding-right: 10px;
+        padding-left: 10px;
       }
     }
     .spsl-info {

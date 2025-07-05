@@ -1,19 +1,26 @@
 import { INPUT_TYPE } from '@/components/basic-input';
-import { LANG } from '@/core/i18n/src/page-lang';
+import { LANG, Lang } from '@/core/i18n/src/page-lang';
 import { clsx } from '@/core/utils/src/clsx';
 import { getRuParam } from '@/core/utils/src/get';
 import { Checkbox } from 'antd';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import css from 'styled-jsx/css';
 import { BasicInput } from '../../basic-input';
 import { store } from '../store';
+import { Size } from '@/components/constants';
+import { Desktop, MobileOrTablet } from '@/components/responsive';
+import { useResponsive } from '@/core/hooks';
 
 export const InputInvitationCode = () => {
+  const lang = document.documentElement.lang;
+  // 语言参数
+  const hcLang = Lang.getAcceptLanguage(lang)?.toLowerCase();
   const ruParam = getRuParam() || '';
   const [showInput, setShowInput] = useState(false);
   const [ruValue, setRuValue] = useState(ruParam);
   const [showGreyCheckbox, setShowGreyCheckbox] = useState(false);
+  const {isMobileOrTablet} = useResponsive();
 
   const handleShowInput = () => {
     setShowInput(!showInput);
@@ -34,21 +41,30 @@ export const InputInvitationCode = () => {
     setRuValue(value);
   };
   const arrowIcon = showInput ? '/static/images/common/triangle-up.svg' : '/static/images/common/triangle-down.svg';
+
+  useEffect(() => {
+    setShowInput(!isMobileOrTablet);
+
+  }, [isMobileOrTablet]);
+
   return (
     <div className='invitation-wrapper'>
-      <p className={clsx('code-title')} onClick={handleShowInput}>
-        {LANG('邀请码（选填）')}
-        <Image src={arrowIcon} width={14} height={14} alt='icon' className='icon' />
-      </p>
+      <MobileOrTablet>
+        <p className={clsx('code-title')} onClick={handleShowInput}>
+          {LANG('邀请码')}
+          <Image src={arrowIcon} width={14} height={14} alt='icon' className='icon' />
+        </p>
+      </MobileOrTablet>
       {showInput ? (
         <BasicInput
-          placeholder={LANG('请输入邀请码')}
+          placeholder={LANG('邀请码（选填）')}
           label={''}
           onInputChange={handleInputRuParam}
           hideErrorTips
           disabled={!!ruParam}
           value={ruValue}
           type={INPUT_TYPE.NORMAL_TEXT}
+          size={isMobileOrTablet? Size.LG : Size.XL}
         />
       ) : null}
       <div className='check-box'>
@@ -56,12 +72,15 @@ export const InputInvitationCode = () => {
         <p
           className='agree-item'
           dangerouslySetInnerHTML={{
-            __html: LANG(`我已阅读并同意YMEX的{permission1}和{permission2}`, {
-              permission1: `<a href="https://support.y-mex.com/hc/en-us/articles/5691838199183-Terms-of-Use">${LANG(
+            __html: LANG(`注册账号即表示我同意 YMEX的 {permission1}、{permission2}、{permission3}。`, {
+              permission1: `<a href="https://support.y-mex.com/hc/${ hcLang }/articles/11321062587663-%E7%94%A8%E6%88%B6%E5%8D%94%E8%AD%B0">${LANG(
                 '用户协议'
               )}</a>`,
-              permission2: `<a href="https://support.y-mex.com/hc/en-us/articles/5691793917839-Privacy-Terms">${LANG(
-                '隐私政策'
+              permission2: `<a href="https://support.y-mex.com/hc/${ hcLang }/articles/11396201168143-%E5%90%88%E7%B4%84%E6%9C%8D%E5%8B%99%E5%8D%94%E8%AD%B0">${LANG(
+                '合约服务协议'
+              )}</a>`,
+              permission3: `<a href="https://support.y-mex.com/hc/${ hcLang }/articles/11321192583311-%E9%9A%B1%E7%A7%81%E6%94%BF%E7%AD%96">${LANG(
+                '隐私协议'
               )}</a>`,
             }),
           }}
@@ -83,7 +102,7 @@ const styles = css`
       align-items: center;
       font-weight: 400;
       font-size: 14px;
-      color: var(--theme-font-color-1);
+      color: var(--text_3);
       :global(.icon) {
         margin-left: 0px;
       }
@@ -98,9 +117,9 @@ const styles = css`
         font-weight: 400;
         margin-left: 10px;
         line-height: 18px;
-        color: var(--theme-font-color-3);
+        color: var(--text_3);
         :global(a) {
-          color: var(--skin-main-font-color);
+          color: var(--text_1);
           cursor: pointer;
         }
       }

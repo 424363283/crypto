@@ -1,7 +1,7 @@
 import CoinLogo from '@/components/coin-logo';
 import { LANG } from '@/core/i18n';
 import { useAppContext } from '@/core/store';
-import { clsx } from '@/core/utils';
+import { MediaInfo, clsx } from '@/core/utils';
 import dayjs from 'dayjs';
 import { StatusButton } from '../status-button';
 
@@ -45,7 +45,7 @@ export const useTransferRecordColumns = () => {
     },
     {
       title: LANG('交易ID'),
-      dataIndex: 'txid',
+      dataIndex: 'id',
       render: (value: string) => {
         return <div className={'fw-300'}>{value}</div>;
       },
@@ -53,8 +53,9 @@ export const useTransferRecordColumns = () => {
     },
     {
       title: LANG('类型'),
-      render: () => {
-        return <div className={locale === 'zh' ? '' : 'fw-300'}>{LANG('转出')}</div>;
+      dataIndex: 'type',
+      render: (value: number) => {
+        return <div className={locale === 'zh' ? '' : 'fw-300'}>{value == 100 ? LANG('转入') : LANG('转出') }</div>;
       },
     },
     {
@@ -62,7 +63,7 @@ export const useTransferRecordColumns = () => {
       dataIndex: 'currency',
       render: (value: string) => {
         return (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', ...MediaInfo.isMobile ? { justifyContent: 'flex-end' } : {} }}>
             <CoinLogo coin={value} width={18} key={value} height={18} />
             <span>{value}</span>
           </div>
@@ -73,9 +74,10 @@ export const useTransferRecordColumns = () => {
     {
       title: LANG('输入/出金额'),
       render: (val: any, item: TransferRecord) => {
+        const isOut = item.type === 200;
         return (
-          <div className='fw-300'>
-            {item.amount?.toFormat()} {item.currency}
+          <div className={ clsx('fw-300', isOut ? 'main-red' : 'main-green') }>
+            {isOut ? '-' : '+'}{item.amount?.toFormat()} {item.currency}
           </div>
         );
       },

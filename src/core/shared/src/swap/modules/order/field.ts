@@ -1,5 +1,7 @@
 import { LANG } from '@/core/i18n';
 import { Store } from '@/core/store/src/resso';
+import { MARGIN_TYPE } from '../trade/constants';
+import { Swap } from '../..';
 
 export type PositionItemType = {
   side: string;
@@ -64,6 +66,8 @@ export type PendingItemType = {
   triggerPrice: string | null;
   type: string;
   volume: number;
+  linkedOrderId: string;
+  isAssociatedOrder: boolean;
 };
 
 export type StoreType = Store<{
@@ -106,7 +110,7 @@ export class OrderField {
     return data;
   }
   positionIsSame(v: PositionItemType, option: PositionItemType) {
-    return v.symbol === option.symbol && v.positionSide === option.positionSide && v.subWallet === option.subWallet;
+    return v.symbol === option.symbol && v.positionSide === option.positionSide && v.subWallet === option.subWallet && v.marginType === option.marginType;
   }
   getPending(usdt: boolean, { walletId }: { walletId?: string } = {}) {
     const { u, c } = this.store.pending;
@@ -118,14 +122,15 @@ export class OrderField {
     return data;
   }
 
-  getTwoWayPosition = ({ usdt, openPosition, code }: { usdt: boolean; openPosition: boolean; code: string }) => {
+  getTwoWayPosition = ({ usdt, openPosition, code, marginType }: { usdt: boolean; openPosition: boolean; code: string, marginType?: number }) => {
     let buyPosition: PositionItemType | undefined;
     let sellPosition: PositionItemType | undefined;
-    const positionData = this.getPosition(usdt);
+    const walletId = Swap.Info.getWalletId(Swap.Trade.base.isUsdtType);
+    const positionData = this.getPosition(usdt, {walletId});
 
     if (!openPosition) {
       positionData.forEach((v) => {
-        if (v.symbol.toUpperCase() === code) {
+        if (v.symbol.toUpperCase() === code && (!marginType ? true : (v.marginType === marginType))) {
           if (v.side === '1') {
             buyPosition = v;
           } else {
@@ -137,7 +142,24 @@ export class OrderField {
 
     return { buyPosition, sellPosition };
   };
+  getTwoWayPending = ({ usdt, code, marginType}: { usdt: boolean; code: string, marginType?: number}) => {
+    let buyPending: PendingItemType | undefined;
+    let sellPending: PendingItemType | undefined;
+    const walletId = Swap.Info.getWalletId(Swap.Trade.base.isUsdtType);
+    const positionData = this.getPending(usdt, {walletId});
 
+    positionData.forEach((v) => {
+      if (v.symbol.toUpperCase() === code && (!marginType ? true : (v.marginType === marginType))) {
+        if (v.side === '1') {
+          buyPending = v;
+        } else {
+          sellPending = v;
+        }
+      }
+    });
+
+    return { buyPending, sellPending };
+  }
   formatPendingType(item: PendingItemType) {
     let strategyType = '';
     const isLimit = item.type === '1' || item.type === '4';

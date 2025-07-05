@@ -13,6 +13,7 @@ import { InfoItem } from './components/info-item';
 import { MySwitch } from './components/my-switch';
 import { NotificationsSettings } from './components/notifications-settings';
 import { clsx, styles } from './styled';
+import { DesktopOrTablet, Mobile } from '@/components/responsive';
 
 export const PreferenceMenu = ({
   onlyContent,
@@ -28,7 +29,7 @@ export const PreferenceMenu = ({
       }),
     []
   );
-  const { isMobile } = useResponsive();
+  // const { isMobile } = useResponsive();
   const { positionVisible } = store;
   const isUsdtType = Swap.Trade.base.isUsdtType;
   const twoWayMode = Swap.Trade.twoWayMode;
@@ -40,6 +41,8 @@ export const PreferenceMenu = ({
     track,
     reverse,
   } = Swap.Info.getOrderConfirm(isUsdtType);
+  const plainOptions = { limitOrderConfirm,  marketOrderConfirm, limitSpsl, marketSpsl };
+  const checkedList = Object.values(plainOptions).filter(item => item);
   const router = useRouter();
   const { isLogin } = useAppContext();
   const { lightningOrder, tradeNoticeSound } = Swap.Info.getTradePreference(isUsdtType);
@@ -50,7 +53,7 @@ export const PreferenceMenu = ({
       return;
     }
     if (!isBounsWallet) {
-      store.positionVisible =  !store.positionVisible;
+      store.positionVisible = !store.positionVisible;
       // if (!isMobile) {
       //   store.positionVisible = !store.positionVisible;
       //   if (store.positionVisible) {
@@ -71,13 +74,15 @@ export const PreferenceMenu = ({
       <div className={clsx('content')}>
         <div>
           {isUsdtType && (
-            <InfoItem
-              label={LANG('仓位模式')}
-              value={marketOrderConfirm}
-              valueInfo={isBounsWallet ? LANG('体验金子钱包仅支持单向持仓') : null}
-              onClick={_handlePositionVisible}
-              valueLabel={twoWayMode ? LANG('双向持仓') : LANG('单向持仓')}
-            />
+            <div className={clsx('position-mode')}>
+              <InfoItem
+                label={isUsdtType ? LANG('U本位账户仓位模式') : LANG('币本位账户仓位模式')}
+                value={twoWayMode}
+                valueInfo={isBounsWallet ? LANG('体验金子钱包仅支持单向持仓') : null}
+                onClick={_handlePositionVisible}
+                valueLabel={twoWayMode ? LANG('双向持仓') : LANG('单向持仓')}
+              />
+            </div>
           )}
 
           {/* <InfoItem
@@ -124,21 +129,30 @@ export const PreferenceMenu = ({
             value={tradeNoticeSound}
             onChange={(v: any) => Swap.Info.setTradePreference(isUsdtType, { tradeNoticeSound: v })}
           />
-          <InfoItem
+          {/* <InfoItem
             label={LANG('闪电下单')}
             value={lightningOrder}
             onChange={(v: any) => Swap.Info.setTradePreference(isUsdtType, { lightningOrder: v })}
-          />
+          /> */}
           {/* <NotificationsSettings /> */}
+          <DesktopOrTablet>
           <div className={clsx('section-title')}>
             {LANG('下单确认')}
             <MySwitch
-              value={limitOrderConfirm || marketOrderConfirm || limitSpsl || marketSpsl || track || reverse}
+              value={checkedList.length > 0}
               onChange={(v: boolean) => {
                 _setPreference({ market: v, limit: v, limitSpsl: v, marketSpsl: v, track: v, reverse: v });
               }}
             />
           </div>
+          </DesktopOrTablet>
+          <Mobile>
+          <InfoItem
+            label={LANG('下单确认')}
+            value={checkedList.length > 0}
+            onChange={(v: any) =>  _setPreference({ market: v, limit: v, limitSpsl: v, marketSpsl: v, track: v, reverse: v })}
+          />
+          </Mobile>
           <InfoItem
             label={LANG('市价订单')}
             value={marketOrderConfirm}
@@ -167,6 +181,7 @@ export const PreferenceMenu = ({
           /> */}
           {/* <InfoItem label={LANG('反向开仓')} value={reverse} onChange={(v: any) => _setPreference({ reverse: v })} /> */}
         </div>
+        <div className={clsx('line')}> <div /></div>
       </div>
       {styles}
       <SwapPositionModeModal visible={positionVisible} onClose={_handlePositionVisible} zIndex={100000} />

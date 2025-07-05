@@ -32,5 +32,24 @@ export const Agreement = ({ children, allow: _allow }: { children: any; allow?: 
   if (!useAppContext().isLogin) {
     return children;
   }
-  return <>{loading ? <LoadingView /> : !allow ? <ContentView onArgee={onArgee} /> : children}</>;
+  return <>
+    {
+      loading ? <LoadingView /> : !allow ? <div className='agreement-wrapper'><ContentView onArgee={onArgee} /></div> : children
+    }
+    <style jsx>
+      {`
+        .agreement-wrapper {
+          :global(.agreement) {
+            padding-bottom: 0 !important;
+            &:after {
+              content: '';
+              width: 100%;
+              margin-top: 32px;
+              border-bottom: 2px solid var(--fill_line_1);
+            }
+          }
+        }
+      `}
+    </style>
+  </>;
 };

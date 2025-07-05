@@ -11,7 +11,7 @@ import css from 'styled-jsx/css';
 const KlineViewRight = ({
   Chart,
   OrderBook,
-  RecentTrades,
+  RecentTrades
 }: {
   Chart?: React.ReactNode;
   OrderBook: React.ReactNode;
@@ -27,7 +27,7 @@ const KlineViewRight = ({
       const group = await Group.getInstance();
       item = await TradeMap.getSpotById(id);
       const spotList = group.getSpotList;
-      const spotItem = spotList.find((item) => item.id === id);
+      const spotItem = spotList.find(item => item.id === id);
       spotItem && item && (item.fullname = spotItem.fullname);
       if (item) {
         const resultCommodityInfo = await getCommonCommodityInfoApi(item.coin);
@@ -42,7 +42,7 @@ const KlineViewRight = ({
   }, [id]);
 
   return (
-    <div className='kline-view-right'>
+    <div className="kline-view-right">
       <div className={clsx('right-title')}>
         {Chart && (
           <span className={tab === 0 ? 'active' : ''} onClick={() => setTab(0)}>
@@ -53,13 +53,13 @@ const KlineViewRight = ({
           {LANG('盘口')}
         </span>
         <span className={tab === 2 ? 'active' : ''} onClick={() => setTab(2)}>
-          {LANG('交易')}
+          {LANG('最近成交')}
         </span>
-        <Mobile>
+        {/* <Mobile>
           <span className={tab === 3 ? 'active' : ''} onClick={() => setTab(3)}>
             {LANG('概述')}
           </span>
-        </Mobile>
+        </Mobile> */}
       </div>
       {Chart && (
         <div className={clsx('right-box', tab === 0 && 'show')}>
@@ -82,10 +82,13 @@ const styles = css`
   .kline-view-right {
     border-radius: var(--theme-trade-layout-radius);
     display: flex;
-    background-color: var(--theme-trade-bg-color-2);
+    background-color: var(--fill_bg_1);
     flex-direction: column;
     overflow: hidden;
     height: 100%;
+    @media ${MediaInfo.mobile} {
+      border-radius: 0;
+    }
   }
   .right-title {
     height: 44px;
@@ -98,9 +101,6 @@ const styles = css`
     width: max-content;
     min-width: 100vw;
     color: var(--theme-trade-text-color-3);
-    @media ${MediaInfo.mobile} {
-      border-bottom: 1px solid var(--theme-trade-border-color-1);
-    }
     span {
       cursor: pointer;
       margin-right: 20px;
@@ -115,6 +115,23 @@ const styles = css`
       font-weight: 500;
       color: var(--theme-font-color-1);
       border-bottom: 2px solid var(--skin-hover-font-color);
+      @media ${MediaInfo.mobile} {
+        border-bottom: 0;
+      }
+    }
+    @media ${MediaInfo.mobile} {
+      height: 2.5rem;
+      padding: 0 1rem;
+      span {
+        padding: 0;
+        padding-right: 1.25rem;
+        font-size: 12px;
+        color: var(--text_2);
+        margin: 0;
+        &.active {
+          color: var(--brand);
+        }
+      }
     }
   }
   .right-box {

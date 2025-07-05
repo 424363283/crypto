@@ -29,10 +29,12 @@ const { className, styles } = css.resolve`
   .history-list {
     :global(th),
     :global(td) {
-      &:nth-last-child(1),
-      &:nth-last-child(2) {
+      &:nth-last-child(1) {
         text-align: right !important;
       }
+    }
+    .order-type-select-wrapper {
+      padding: 16px 24px;
     }
   }
 `;

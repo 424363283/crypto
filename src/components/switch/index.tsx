@@ -25,7 +25,7 @@ const { className, styles: _styles } = css.resolve`
     }
     &.my-switch-bg3 {
       &.ant-switch {
-        background: rgba(121, 130, 150, 0.3) !important;
+        background: var(--text_2) !important;
       }
     }
     &.ant-switch :global(.ant-switch-inner) {
@@ -33,7 +33,12 @@ const { className, styles: _styles } = css.resolve`
     }
     &.ant-switch-checked {
       &.ant-switch {
-        background: var(--skin-color-active) !important;
+        background: var(--brand) !important;
+      }
+    }
+    :global(.ant-switch-handle) {
+      &:before {
+        background-color: var(--text_white);
       }
     }
   }

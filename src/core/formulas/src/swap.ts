@@ -598,7 +598,8 @@ export const SWAP = {
       const estimateLoss = Math.min(0, Number(isBuy ? Number(flag).sub(position2) : position2.sub(flag)));
       // 委托成本 =  预估起始保证金 + 预估手续费 + abs(预估亏损)
       // EIM + EF + abs(EL)
-      const margin = estimateMargin + estimateFee + format(Math.abs(estimateLoss));
+      // const margin = estimateMargin + estimateFee + format(Math.abs(estimateLoss));
+      const margin = estimateMargin + estimateFee;
       return margin;
     },
     /**
@@ -619,7 +620,7 @@ export const SWAP = {
     marginRate(volume: number, avgCostPrice: number, contractFactor: number, liquidationPrice: number, liqFeeRate: number, margin: number, MMR: number, income: number, isCross: boolean, ACCB: number, bonusAmount: number) {
       const formula1 = avgCostPrice ? volume * contractFactor * avgCostPrice : 0;
       // 开平仓手续费  VOL*S/LP*R
-      let fee1 = liquidationPrice ? volume * contractFactor * liquidationPrice * Number(liqFeeRate) : 0;
+      const fee1 = liquidationPrice ? volume * contractFactor * liquidationPrice * Number(liqFeeRate) : 0;
       // if (!isBuy) {
       //   // VOL*S*LP*R
       //   fee1 = liquidationPrice ? volume * contractFactor * liquidationPrice * Number(liqFeeRate) : 0;
@@ -672,8 +673,7 @@ export const SWAP = {
      */
     income(isBuy: boolean, volume: number, contractFactor: number, avgCostPrice: number, flagPrice: number) {
       let income: number | string = 0;
-      if (!flagPrice) return 0;
-
+      if (flagPrice < 0) return 0;
       if (isBuy) {
         // 买 Vol*S*(FP -HP)
         income = Number(volume).mul(contractFactor).mul(flagPrice.sub(avgCostPrice));
@@ -727,7 +727,7 @@ export const SWAP = {
       // TP	计算器-目标价格	Buy	HP*(1+ROE/100*IMR)   --这里的roe是输入框中输入的数值，IMR=1/杠杆倍数	根据盈利率ROE公式倒推目标价格
       // Sell	HP*(1-ROE/100*IMR)                   --这里的roe是输入框中输入的数值，IMR=1/杠杆倍数
 
-      let var1 = roe.div(100).mul(initMargins); // ROE/100*IMR
+      const var1 = roe.div(100).mul(initMargins); // ROE/100*IMR
       let price: string | number = 0;
       if (isBuy) {
         price = Number(openPrice).mul(Number(1).add(var1));
@@ -856,16 +856,21 @@ export const SWAP = {
      * @returns
      */
     balance(isCross: boolean, isTransfer: boolean, twoWayMode: boolean, accb: number, positionMargin: number, frozen: number, crossIncome: number, bonusAmount: number) {
-      let value: string | number = Number(accb.sub(positionMargin)).sub(frozen);
+      let value: string | number = 0;
+
+      if (isCross) {
+        value = Number(accb.sub(positionMargin)).sub(frozen).add(crossIncome);
+      } else {
+        value = Number(accb.sub(positionMargin)).sub(frozen);
+      }
 
       if (!isTransfer) {
         if (!twoWayMode) {
           value = value.add(bonusAmount);
         }
       }
-      // if (isCross) {
-      value = Number(value.add(crossIncome));
-      // }
+      value = Number(value);
+
       return value < 0 ? 0 : value;
     },
     positionROE(isCross: boolean, margin: number, currentPosition: number, contractFactor: number, flagPrice: number, lever: number, income: number) {

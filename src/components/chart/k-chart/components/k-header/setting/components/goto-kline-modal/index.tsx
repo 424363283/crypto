@@ -466,7 +466,7 @@ const { className, styles } = css.resolve`
       .remarks {
         color: #9e9e9d;
         font-size: 12px;
-        font-family: BYDFi-Regular;
+        font-family: YMEX-Regular;
         margin-bottom: 19px;
       }
     }

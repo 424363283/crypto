@@ -1,6 +1,8 @@
 import { PasswordInput } from '@/components/basic-input';
+import { Button } from '@/components/button';
+import { Size } from '@/components/constants';
 import { Loading } from '@/components/loading';
-import { useRouter } from '@/core/hooks';
+import { useResponsive, useRouter } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Account } from '@/core/shared';
 import { MediaInfo, clsx, message } from '@/core/utils';
@@ -19,6 +21,8 @@ export const ResetPwdForm = () => {
     confirmPwdError: true,
   });
   const { originPwd, newPwd, confirmNewPwd, originPwdError, newPwdError, confirmPwdError } = inputState;
+  const { isMobile } = useResponsive();
+
   const onInputOriginPassword = (value: string, hasError: boolean = false) => {
     setInputState((draft) => {
       draft.originPwd = value;
@@ -81,13 +85,9 @@ export const ResetPwdForm = () => {
         customErrorTips={getPasswordNotMatchTips()}
         onInputChange={onInputConfirmPassword}
       />
-      <button
-        className={clsx('pc-v2-btn', shouldDisableBtn ? 'disabled' : '')}
-        onClick={submit}
-        style={{ marginTop: '10px' }}
-      >
+      <Button type='primary' size={isMobile ? Size.LG :Size.XL} style={{width:'100%', marginTop:'10px'}} rounded disabled={shouldDisableBtn} onClick={submit}>
         {LANG('提交')}
-      </button>
+      </Button>
       <style jsx>{styles}</style>
     </div>
   );
@@ -95,6 +95,7 @@ export const ResetPwdForm = () => {
 const styles = css`
   .reset-pwd-wrapper {
     width: 530px;
+    margin: auto;
     @media ${MediaInfo.mobile} {
       width: 100%;
     }

@@ -1,54 +1,17 @@
-// import { OverlayFigure, OverlayTemplate, utils, Coordinate } from 'klinecharts';
+import {
+  OverlayFigure,
+  OverlayTemplate,
+  utils,
+  Coordinate
+} from '@/components/YKLine/StockChart/OriginalKLine/index.esm';
 
-import { OverlayFigure, OverlayTemplate, utils, Coordinate } from '@/components/YKLine/StockChart/OriginalKLine/index.esm';
-
-function createOverlayTooltipFigures (coordinate: Coordinate, text: string, color: string, backgroundColor: string) {
-  const GAP = 2;
-  const PADDING = 10;
-  const textWidth = utils.calcTextWidth(text) + PADDING * 2;
-  return [
-    {
-      type: 'polygon',
-      attrs: {
-        coordinates: [
-          { x: coordinate.x, y: coordinate.y - GAP },
-          { x: coordinate.x + 3, y: coordinate.y - GAP - 5 },
-          { x: coordinate.x - 3, y: coordinate.y - GAP - 5 }
-        ]
-      },
-      styles: {
-        style: 'fill',
-        color: backgroundColor
-      }
-    },
-    {
-      type: 'text',
-      attrs: {
-        x: coordinate.x,
-        y: coordinate.y - GAP - 5,
-        width: textWidth,
-        height: 22,
-        align: 'center',
-        baseline: 'bottom',
-        text
-      },
-      styles: {
-        style: 'fill',
-        backgroundColor,
-        color,
-        paddingLeft: PADDING,
-        paddingTop: 6
-      }
-    }
-  ];
-}
-
+//爆仓线
 const liquidationLine: OverlayTemplate = {
   name: 'liquidationLine',
   totalStep: 2,
   createPointFigures: ({ coordinates, bounding, overlay }) => {
-    const PADDING = 8;
-    const HEIGHT = 22;
+    const PADDING = 4;
+    const HEIGHT = 20;
     const backgroundColor = overlay.styles?.backgroundColor;
     const directionColor = overlay.styles?.directionColor;
     const profitLossColor = overlay.styles?.profitLossColor;
@@ -63,13 +26,15 @@ const liquidationLine: OverlayTemplate = {
 
     const reverseTooltip = overlay.extendData.reverseTooltip;
     const closeTooltip = overlay.extendData.closeTooltip;
+    let tipsWidth = bounding.width - volumeTextRectWidth - 68; // 爆仓文案的距离左边边的距离
+    let tpSlWidth = bounding.width - (volumeTextRectWidth + 68 + profitLossTextWidth); // 爆仓文案方向距离左边的距离
 
     let figures: OverlayFigure[] = [
       {
         type: 'text',
         ignoreEvent: true,
         attrs: {
-          x: offsetLeft + PADDING,
+          x: tpSlWidth,
           y: y,
           width: profitLossTextWidth,
           height: HEIGHT,
@@ -80,13 +45,16 @@ const liquidationLine: OverlayTemplate = {
         styles: {
           style: 'stroke_fill',
           borderStyle: 'solid',
-          borderColor: profitLossColor,
-          color: profitLossColor,
+          borderColor: 'none',
+          color: '#fff',
           backgroundColor,
-          borderRadius: 0,
+          borderRadius: '0',
           paddingTop: 5,
           paddingLeft: PADDING,
-          paddingRight: PADDING
+          paddingRight: PADDING,
+          borderRadius: [4, 0, 0, 4],
+           fontFamily: "Lexend",
+          fontSize: 10
         }
       },
       // 数量
@@ -94,7 +62,7 @@ const liquidationLine: OverlayTemplate = {
         type: 'text',
         ignoreEvent: true,
         attrs: {
-          x: offsetLeft + profitLossTextWidth + PADDING,
+          x: tipsWidth,
           y: y,
           width: volumeTextRectWidth,
           height: HEIGHT,
@@ -104,9 +72,9 @@ const liquidationLine: OverlayTemplate = {
         },
         styles: {
           style: 'stroke_fill',
-          borderColor: directionColor,
-          backgroundColor: directionColor,
-          color: '#fff',
+          borderColor: '#47413A',
+          backgroundColor: '#47413A',
+          color: '#F0BA30',
           borderRadius: 0,
           paddingTop: 5,
           paddingLeft: (volumeTextRectWidth - volumeTextWidth) / 2,
@@ -117,13 +85,15 @@ const liquidationLine: OverlayTemplate = {
         type: 'line',
         ignoreEvent: true,
         attrs: {
-          coordinates: [{ x: offsetLeft + profitLossTextWidth + volumeTextRectWidth, y }, { x: bounding.width, y }],
+          coordinates: [
+            { x: tipsWidth + volumeTextRectWidth, y },
+            { x: bounding.width, y }
+          ]
         },
         styles: {
-          style: 'dashed',
           color: directionColor
         }
-      },
+      }
     ];
 
     return figures;
@@ -138,7 +108,8 @@ const liquidationLine: OverlayTemplate = {
           x: 0,
           y: coordinates[0].y,
           baseline: 'middle',
-          text: `${utils.formatThousands(overlay.points[0].value!.toFixed(precision.price), thousandsSeparator)}`
+          // text: `${utils.formatThousands(overlay.points[0].value!.toFixed(precision.price), thousandsSeparator)}`
+          text: overlay?.points[0]?.value
         },
         styles: {
           style: 'fill',
@@ -150,11 +121,9 @@ const liquidationLine: OverlayTemplate = {
           paddingRight: 4,
           paddingBottom: 4
         }
-      },
+      }
     ];
-  },
+  }
 };
-
-
 
 export default liquidationLine;

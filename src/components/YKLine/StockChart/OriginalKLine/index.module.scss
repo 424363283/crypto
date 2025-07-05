@@ -2,3 +2,73 @@
   height: 100%;
   width: 100%;
 }
+.createOrderOverlay {
+  display: flex;
+  height: 20px;
+  position: absolute;
+  z-index: 1000;
+
+}
+
+
+.addTraderBtnTagContainer {
+  display: flex;
+  color: var(--Color-Text-text-primary, #FFF);
+  text-align: center;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: "Lexend";
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  cursor: pointer;
+}
+
+.addTraderBtn {
+  display: flex;
+  height: 20px;
+  padding: 0px 4px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px 0px 0px 4px;
+  background: var(--Color-Brand-brand, #07828B);
+}
+
+.addTraderBtnTag {
+  display: flex;
+  padding: 0px 4px;
+  align-items: center;
+  gap: 4px;
+  align-self: stretch;
+  color: var(--Color-Text-text-primary, #FFF);
+  text-align: center;
+  leading-trim: both;
+
+  text-edge: cap;
+  font-family: "Lexend";
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  background: var(--Color-Fill-fill-projection, #121212);
+}
+
+.addTradeBtnType {
+  display: flex;
+  padding: 0px 4px;
+  align-items: center;
+  gap: 4px;
+  align-self: stretch;
+  color: var(--Color-Text-text-primary, #FFF);
+  text-align: center;
+  leading-trim: both;
+  text-edge: cap;
+  font-family: "Lexend";
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  border-radius: 0px 4px 4px 0px;
+  background: var(--Color-Fill-fill-projection, #121212);
+}

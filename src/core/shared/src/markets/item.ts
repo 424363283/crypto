@@ -22,6 +22,11 @@ export class MarketItem {
    */
   public quoteCoin: string;
   /**
+   * @description 商品的行情code
+   * @example USDT
+   */
+  public quoteCode: string;
+  /**
    * @description 币种
    * @example BTC
    */
@@ -109,6 +114,7 @@ export class MarketItem {
     this.name = data.name;
     this.quoteCoin = data.quoteCoin;
     this.coin = data.coin;
+    this.quoteCode = data.quoteCode;
     this.digit = data.digit || 0;
     this.onlineTime = data.onlineTime || 0;
     this.price = formatDefaultText(data.price, this.isOpen);

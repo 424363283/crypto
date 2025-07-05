@@ -1,80 +1,79 @@
 import KlineViewRight from './kline-view-right';
 
 export const SpotMobileLayout = ({
+  QuoteHeader,
   QuoteInfo,
   KlineView,
   OrderBook,
   RecentTrades,
   OrderList,
   TradeView,
-  HotQuote,
+  HeaderAnnouncement
 }: {
+  QuoteHeader: React.ReactNode;
   QuoteInfo: React.ReactNode;
   KlineView: React.ReactNode;
   OrderBook: React.ReactNode;
   RecentTrades: React.ReactNode;
   OrderList: React.ReactNode;
   TradeView: React.ReactNode;
-  HotQuote: React.ReactNode;
+  HeaderAnnouncement: React.ReactNode;
 }) => {
   return (
     <>
-      <div id='spot-layout'>
-        <div className='hot-quote bg'>{HotQuote}</div>
-        <div className='spot-header bg'>{QuoteInfo}</div>
-        <div className='spot-body'>
+      <div id="spot-layout">
+        <div className="announcement">{HeaderAnnouncement}</div>
+        <div className="spot-header bg">{QuoteHeader}</div>
+        <div className="spot-info bg">{QuoteInfo}</div>
+        <div className="spot-body">
           <KlineViewRight Chart={KlineView} OrderBook={OrderBook} RecentTrades={RecentTrades} />
         </div>
-        <div className='spot-footer'>{OrderList}</div>
-        <div className='spot-trade-view'>{TradeView}</div>
+        <div className="spot-footer bg">{OrderList}</div>
+        <div className="spot-trade-view">{TradeView}</div>
       </div>
       <style jsx>{`
         #spot-layout {
-          overflow: auto;
           flex: 1;
           background-color: var(--theme-trade-bg-color-1);
-          padding: var(--theme-trade-layout-gap);
+          // padding: var(--theme-trade-layout-gap);
           padding-bottom: 0;
           display: flex;
           flex-direction: column;
-          .hot-quote {
-            height: 48px;
-            border-radius: var(--theme-trade-layout-radius);
-            display: flex;
-            align-items: center;
-          }
           .spot-header {
-            min-height: 110px;
-            border-radius: var(--theme-trade-layout-radius);
-            padding: 15px;
-            margin-top: var(--theme-trade-layout-gap);
+            position: sticky;
+            top: 2.75rem;
+            z-index: 100;
+          }
+          .spot-info,
+          .spot-body,
+          .spot-footer {
+            overflow: hidden;
+            width: 100%;
+            margin-bottom: var(--theme-trade-layout-gap);
           }
           .spot-body {
-            height: 415px;
-            border-radius: var(--theme-trade-layout-radius);
-            background: var(--theme-trade-bg-color-2);
-            margin-top: var(--theme-trade-layout-gap);
+            :global(.mobile-header) {
+              overflow-x: auto;
+            }
           }
           .bg {
-            background-color: var(--theme-trade-bg-color-2);
+            background-color: var(--fill_bg_1);
             overflow: hidden;
           }
           .spot-footer {
-            min-height: 375px;
-            overflow: auto;
-            border-radius: var(--theme-trade-layout-radius);
-            background: var(--theme-trade-bg-color-2);
-            margin-top: var(--theme-trade-layout-gap);
-            padding-bottom: 70px;
+            flex: 1;
+            margin-bottom: 0;
           }
           .spot-trade-view {
             position: fixed;
             z-index: 3;
             left: 0;
+            right: 0;
             bottom: 0;
-            height: 70px;
             width: 100%;
-            background-color: var(--theme-trade-bg-color-6);
+            padding: 8px 0;
+            background: var(--fill_1);
+            box-shadow: 0px -4px 8px 0px var(--fill_1);
           }
         }
       `}</style>

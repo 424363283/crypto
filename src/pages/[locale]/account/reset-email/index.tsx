@@ -2,6 +2,7 @@ import { AccountBox } from '@/components/account/components/account-box';
 import { InputEmail } from '@/components/account/components/input-email';
 import { InputVerificationCode } from '@/components/account/components/verification-code';
 import { store } from '@/components/account/store';
+import { Size } from '@/components/constants';
 import { postAccountBindEmailApi } from '@/core/api';
 import { useRouter } from '@/core/hooks/src/use-router';
 import { LANG } from '@/core/i18n';
@@ -20,7 +21,7 @@ export default function ResetEmail() {
       code: emailCode,
       token: router.state.token,
       email,
-      reset: true,
+      reset: true
     });
     if (result.code === 200) {
       await Account.logout();
@@ -31,8 +32,8 @@ export default function ResetEmail() {
   };
   return (
     <AccountBox title={LANG('开启邮箱验证')} prompt={LANG('邮箱验证用于提现和修改安全设置，开启后不可修改跟关闭')}>
-      <div className='reset-email-container'>
-        <InputEmail withBorder label={LANG('新邮箱地址')} placeholder={LANG('请输入邮箱地址')} />
+      <div className="reset-email-container">
+        <InputEmail label={LANG('新邮箱地址')} placeholder={LANG('请输入邮箱地址')} withBorder />
         <InputVerificationCode
           label={LANG('新邮箱验证码')}
           type={LOCAL_KEY.INPUT_REGISTER_EMAIL}
@@ -42,7 +43,7 @@ export default function ResetEmail() {
         <button
           className={clsx('pc-v2-btn', shouldDisableBtn ? 'disabled' : '')}
           onClick={handleNewEmail}
-          style={{ marginTop: '10px' }}
+          style={{ marginTop: '10px', padding: 0 }}
         >
           {LANG('下一步')}
         </button>

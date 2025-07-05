@@ -1,5 +1,8 @@
+import { Button } from '@/components/button';
+import { Size } from '@/components/constants';
 import { Loading } from '@/components/loading';
 import { AlertFunction } from '@/components/modal/alert-function';
+import Radio from '@/components/Radio';
 import { Switch } from '@/components/switch';
 import { DropdownSelect } from '@/components/trade-ui/common/dropdown';
 import { InfoHover } from '@/components/trade-ui/common/info-hover';
@@ -54,8 +57,9 @@ export const HeaderRight = ({
       );
 
     AlertFunction({
-      v2: true,
-      title: LANG('提示'),
+      v4: true,
+      title: LANG('一键全平'),
+      width: 480,
       onOk: async () => {
         Loading.start();
         try {
@@ -79,19 +83,28 @@ export const HeaderRight = ({
   };
 
   let hideSwitch = (
-    <div className={clsx('switch')}>
-      <Switch
+    <div className={clsx('header-action')}>
+
+      <Radio
+        label={LANG(hide ? '展示其他交易对' : '隐藏其他交易对')}
+        checked={hide}
+        width={16}
+        height={16}
+        onChange={checked => onChangeHide(checked)}
+      />
+
+      {/* <Switch
         aria-label={LANG('隐藏其他交易对')}
         checked={hide}
         bgType={2}
         onChange={(hide) => onChangeHide(hide)}
         size='small'
       />
-      <span className={clsx()}>{LANG('隐藏其他交易对')}</span>
+      <span className={clsx()}>{LANG('隐藏其他交易对')}</span> */}
     </div>
   );
   let showAllOrdersSwitch = (
-    <div className={clsx('switch')}>
+    <div className={clsx('header-action')}>
       <Switch
         aria-label={LANG('查看全部仓位')}
         checked={showAllOrders}
@@ -143,15 +156,17 @@ export const HeaderRight = ({
         isActive={() => false}
         trigger={['hover']}
       >
-        <SubButton className={clsx('cancel-all')}>{LANG('一键撤销')}</SubButton>
+        <Button type='brand' size={Size.SM} hover={false} outlined rounded>
+          {LANG('一键撤销')}
+        </Button>
       </DropdownSelect>
     );
   }
   if (tabIndex === 0 && positions.length) {
     closeAll = (
-      <SubButton className={clsx('cancel-all')} onClick={_closeAll}>
-        {LANG('一键平仓')}
-      </SubButton>
+      <Button type='brand' size={Size.SM} hover={false} outlined rounded onClick={_closeAll}>
+        {LANG('一键全平')}
+      </Button>
     );
   }
   return (
@@ -175,10 +190,10 @@ const { className, styles } = css.resolve`
     display: flex;
     flex-direction: row;
     align-items: center;
-    .switch {
+    gap: 24px;
+    .header-action {
       display: flex;
       align-items: center;
-      margin-right: 12px;
       span {
         margin-left: 5px;
         font-weight: 400;
@@ -188,13 +203,16 @@ const { className, styles } = css.resolve`
     }
     .cancel-all {
       cursor: pointer;
+      display: flex;
       height: 24px;
-      line-height: 24px;
-      white-space: nowrap;
-      border-radius: 5px;
-      padding: 0 10px;
-      text-align: center;
+      justify-content: center;
+      align-items: center;
+      border-radius: 24px;
+      background: var(--text_brand);
+      color: var(--text_white);
       font-size: 12px;
+      font-weight: 400;
+      margin:0 0 0 24px;
     }
   }
 `;

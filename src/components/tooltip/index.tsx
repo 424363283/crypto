@@ -11,7 +11,7 @@ type ProTooltipProps = {
 const ProTooltip = ({ className, title, children, ...props }: ProTooltipProps): JSX.Element | null => {
   return title ? (
     <>
-      <Tooltip overlayClassName={clsx('pro-tooltip', className)} className='tooltip-text' title={title} {...props}>
+      <Tooltip overlayClassName={clsx('pro-tooltip', className)} className='tooltip-text' title={title} arrow={false} {...props}>
         {children}
       </Tooltip>
       <style jsx>{styles}</style>
@@ -32,9 +32,12 @@ const styles = css`
       white-space: unset;
       font-weight: 400;
       padding: 16px;
-      background-color: var(--theme-background-color-2-3);
-      color: var(--theme-font-color-6);
+      background: var(--dropdown-select-bg-color) !important;
+      box-shadow: 0px 4px 16px 0px var(--dropdown-select-shadow-color) !important;
+      color: var(--text_3) !important;
       font-size: 12px;
+      line-height: 1.5;
+      border-radius: 16px;
     }
     :global(.ant-tooltip-arrow::before) {
       background: var(--theme-background-color-2-3);

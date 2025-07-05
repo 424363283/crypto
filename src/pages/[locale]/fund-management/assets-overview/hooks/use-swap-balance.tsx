@@ -50,10 +50,12 @@ const useBalance = ({ usdt }: { usdt: boolean } = { usdt: false }) => {
  */
 export const useMarginTotal = (usdt: boolean, balance: BalanceData, validatePositionMode?: boolean) => {
   if (usdt) {
-    return balance.accb - balance.frozen;
+    return balance.equity - balance.frozen;
+    // return balance.accb - balance.frozen;
   } else {
     if (!validatePositionMode) {
-      return balance.accb;
+      return balance.equity;
+      // return balance.accb;
     }
     const positions = Swap.Order.getPosition(usdt);
     const { getValue } = useRate();
@@ -190,6 +192,7 @@ export const useCalcSwapAssets = ({ isSwapU }: { isSwapU: boolean }) => {
       }
       crypto.margin = crypto.margin.toFixed(digit);
       crypto.canWithdrawAmount = account.canWithdrawAmount.toFixed(digit);
+      console.log('crypto.canWithdrawAmount',crypto.canWithdrawAmount)
       crypto.unrealisedPNL = formatNumber2Ceil(
         `${isSwapU ? calcWallet.allIncome : calcQuote.income}`,
         digit,

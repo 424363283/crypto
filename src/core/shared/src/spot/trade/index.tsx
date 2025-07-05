@@ -1,6 +1,7 @@
-import { getSpotAssetApi, postSpotOpenOrderApi } from '@/core/api';
+import { getSpotAssetApi, postSpotOpenOcoOrderApi, postSpotOpenOrderApi, postSpotOpenStopOrderApi } from '@/core/api';
+import { EVENT_NAME, EVENT_TRACK } from '@/core/sensorsdata';
 import { SideType, SpotOrderType, TRADE_TAB, TradeMap } from '@/core/shared';
-import { getPlatform, getUUID } from '@/core/utils';
+import { getEtfCryptoInfo, getPlatform, getUUID, isSpotEtf } from '@/core/utils';
 import { Account } from '../../account';
 import { Position } from '../position';
 import { LoadingType } from '../position/types';
@@ -23,7 +24,7 @@ export class Trade {
   // 获取现货账户余额
   public static async getBalance() {
     const res = await getSpotAssetApi();
-    if (res.code === 200) {
+    if (res?.code === 200) {
       const { data: spotList } = res;
       Trade.state.spotList = spotList;
 
@@ -50,16 +51,17 @@ export class Trade {
   }
 
   /**
-   * 按市价下单
+   * 限价、市价下单
    * @param side 买入还是卖出
    * @param type 市价还是限价
    * @param symbol 现货ID
    * @param price 价格
    * @param volume 数量
    */
-  public static async openOrderByMarketPrice(side: SideType, type: SpotOrderType, symbol: string, price: number, volume: number) {
+  public static async openOrder(side: SideType, type: SpotOrderType, symbol: string, price: number, volume: number, percent = 0) {
+    const identity = getUUID(16);
     const params = {
-      identity: getUUID(16),
+      identity,
       symbol,
       side,
       type,
@@ -67,8 +69,137 @@ export class Trade {
       volume,
       platform: getPlatform(),
     };
+
+    const isEtf = isSpotEtf(symbol);
+    const isMarket = type === 1;
+
+    let trackParams: any = {
+      order_id: identity,
+      trade_direction: side === 1 ? '买入' : '卖出',
+      tradepair_name: symbol.replace('_', '/'),
+      trade_mode: isMarket ? '市价' : '限价',
+      commission_price: String(isMarket ? 0 : price),
+      quantity: String(isMarket ? volume : 0),
+      trade_rate: percent + '%',
+      total_amount: String(isMarket ? volume : Number(price.mul(volume))),
+    };
+
+    if (isEtf) {
+      const { lever, isBuy } = getEtfCryptoInfo(symbol);
+      trackParams = {
+        ...trackParams,
+        lvts_type: `${lever}X ${isBuy ? 'Long' : 'Short'}`,
+      };
+    }
+
+    if (!isEtf) {
+      EVENT_TRACK(EVENT_NAME.SPOT_INFO_SUBMIT, trackParams);
+    }
     try {
       const result = await postSpotOpenOrderApi(params);
+      if (result.code == 200) {
+        // 下单成功,刷新余额
+        Trade.getBalance();
+        Position.fetchPositionList(LoadingType.Show);
+        isEtf && EVENT_TRACK(EVENT_NAME.LVTS_INFO_SUBMIT, trackParams);
+      }
+      return result;
+    } catch (e: any) {
+      return {
+        code: 500,
+        message: e.message,
+      };
+    }
+  }
+
+  /**
+   * 限价、市价止盈止损下单
+   * @param side 买入还是卖出
+   * @param type 市价还是限价
+   * @param symbol 现货ID
+   * @param triggerPrice 触发价
+   * @param price 价格
+   * @param volume 数量
+   */
+  public static async openStopOrder(side: SideType, type: SpotOrderType, symbol: string, triggerPrice: number, price: number, volume: number, percent: number) {
+    const identity = getUUID(16);
+    const params = {
+      identity,
+      symbol,
+      side,
+      type,
+      triggerPrice,
+      price,
+      volume,
+      platform: getPlatform(),
+    };
+
+    const isEtf = isSpotEtf(symbol);
+    const isMarket = type === 1;
+
+    let trackParams: any = {
+      order_id: identity,
+      trade_direction: side === 1 ? '买入' : '卖出',
+      tradepair_name: symbol.replace('_', '/'),
+      trade_mode: isMarket ? '市价止盈止损' : '限价止盈止损',
+      commission_price: String(isMarket ? 0 : price),
+      quantity: String(isMarket ? volume : 0),
+      trade_rate: percent + '%',
+      total_amount: String(isMarket ? volume : Number(price.mul(volume))),
+      trigger_price: String(triggerPrice),
+    };
+
+    if (isEtf) {
+      const { lever, isBuy } = getEtfCryptoInfo(symbol);
+      trackParams = {
+        ...trackParams,
+        lvts_type: `${lever}X ${isBuy ? 'Long' : 'Short'}`,
+      };
+    }
+
+    if (!isEtf) {
+      EVENT_TRACK(EVENT_NAME.SPOT_INFO_SUBMIT, trackParams);
+    }
+
+    try {
+      const result = await postSpotOpenStopOrderApi(params);
+      if (result.code == 200) {
+        // 下单成功,刷新余额
+        Trade.getBalance();
+        Position.fetchPositionList(LoadingType.Show);
+        isEtf && EVENT_TRACK(EVENT_NAME.LVTS_INFO_SUBMIT, trackParams);
+      }
+      return result;
+    } catch (e: any) {
+      return {
+        code: 500,
+        message: e.message,
+      };
+    }
+  }
+
+  /**
+   * OCO 下单
+   * @param side 买入还是卖出
+   * @param symbol 现货ID
+   * @param triggerPrice 触发价
+   * @param limitPrice 限价委托价格
+   * @param price 止盈止损价格
+   * @param volume 数量
+   */
+  public static async openOcoOrder(side: SideType, symbol: string, triggerPrice: number, limitPrice: number, price: number, volume: number) {
+    const params = {
+      identity: getUUID(16),
+      symbol,
+      side,
+      triggerPrice,
+      limitPrice,
+      price,
+      volume,
+      platform: getPlatform(),
+    };
+    try {
+      const result = await postSpotOpenOcoOrderApi(params);
       if (result.code == 200) {
         // 下单成功,刷新余额
         Trade.getBalance();
@@ -85,5 +216,9 @@ export class Trade {
   // 修改交易tab
   public static changeTradeTab(type: TRADE_TAB) {
     Trade.state.tradeTab = type;
+  }
+  // 修改交易tab
+  public static changeDownMenuValue(type: SpotOrderType) {
+    Trade.state.downMenuValue = type;
   }
 }

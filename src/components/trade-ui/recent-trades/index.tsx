@@ -3,7 +3,7 @@ import { LANG } from '@/core/i18n';
 import { SUBSCRIBE_TYPES, useWs } from '@/core/network';
 import { RecentTradeItem, Swap, TradeMap } from '@/core/shared';
 import { resso } from '@/core/store';
-import { clsx, isSpot, isSwapCoin, isSwapSLCoin, isSwapSLUsdt, isSwapUsdt } from '@/core/utils';
+import { clsx, isSpot, isSwapCoin, isSwapSLCoin, isSwapSLUsdt, isSwapUsdt, MediaInfo } from '@/core/utils';
 import { useEffect, useMemo, useState } from 'react';
 import { RecentItem } from './recent-item';
 
@@ -16,7 +16,7 @@ export const RecentTrades = () => {
   const online = useOnlineById(id);
   const { list } = store;
   const setList = (v: any) => (store.list = v);
-  useWs(SUBSCRIBE_TYPES.ws6001, (data) => setList([...data]));
+  useWs(SUBSCRIBE_TYPES.ws6001, data => setList([...data]));
   const [a, b] = (id as string)?.split('-') || [];
   const [quoteCoin, setQuoteCoin] = useState('');
   const [coin, setCoin] = useState('');
@@ -24,7 +24,7 @@ export const RecentTrades = () => {
 
   useEffect(() => {
     if (isSpot(id)) {
-      TradeMap.getSpotById(id).then((res) => {
+      TradeMap.getSpotById(id).then(res => {
         if (res) {
           setQuoteCoin(res?.quoteCoin || '');
           setCoin(res.coin);
@@ -42,15 +42,15 @@ export const RecentTrades = () => {
     return pathname.includes('swap') && isSmallDesktop;
   }, [pathname, isSmallDesktop, isTablet]);
 
-  const isSpotCoin = isSpot(id as string);
+  // const isSpotCoin = isSpot(id as string);
   return (
     <>
-      <div className='recent-trades'>
-        {isSpotCoin && (isSmallDesktop || isDesktop) && (
+      <div className="recent-trades">
+        {/* {isSpotCoin && (isSmallDesktop || isDesktop) && (
           <div className='recent-trades-title'>
             <span>{LANG('最近成交')}</span>
           </div>
-        )}
+        )} */}
         <div className={clsx('recent-trades-list-title', showSmall && 'small')}>
           {(isSwapUsdt(id as string) || isSwapSLUsdt(id as string)) && (
             <>
@@ -127,6 +127,13 @@ export const RecentTrades = () => {
           font-size: 12px;
           font-weight: 400;
           flex-shrink: 0;
+          @media ${MediaInfo.mobile} {
+            padding: 0;
+            padding-top: 1rem;
+            padding-bottom: 10px;
+            font-size: 10px;
+            color: var(--text_3);
+          }
 
           &.small {
             padding: 12px 0 6.5px;
@@ -137,15 +144,24 @@ export const RecentTrades = () => {
           > span:nth-child(1) {
             padding-left: 12px;
             text-align: left;
+            @media ${MediaInfo.mobile} {
+              padding-left: 1rem;
+            }
           }
           > span:nth-child(2) {
             padding-right: 12px;
             text-align: right;
+            @media ${MediaInfo.mobile} {
+              padding-right: 1rem;
+            }
           }
           > span:nth-child(3) {
             padding-right: 12px;
             text-align: right;
             text-wrap: nowrap;
+            @media ${MediaInfo.mobile} {
+              padding-right: 1rem;
+            }
           }
         }
         .recent-trades-content {

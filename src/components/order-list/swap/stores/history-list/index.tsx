@@ -5,8 +5,13 @@ import { resso } from '@/core/store';
 import { message } from '@/core/utils';
 import dayjs from 'dayjs';
 import { useCallback, useRef } from 'react';
+import { ORDER_TYPES, ORDER_TYPE_KEYS } from '../../media/desktop/components/pending-list/components/order-type-select';
+import { number } from 'echarts';
+import { WalletKey } from '@/core/shared/src/swap/modules/assets/constants';
 
 export const store: any = resso({
+  isInitialized: false,
+  totalData: [],
   data: [],
   page: 1,
   prevParams: { endDate: undefined, startDate: undefined },
@@ -15,16 +20,19 @@ export const store: any = resso({
   code: undefined,
   loading: false,
   isEnd: false,
+  orderType: ORDER_TYPES.LIMIT,
+  orderCounts: {}
 });
 
-export const useData = ({ isUsdtType, scrollToTop }: { isUsdtType: boolean; scrollToTop?: () => any }) => {
+export const useData = ({ isUsdtType, subWallet, scrollToTop }: { isUsdtType: boolean; subWallet?: WalletKey, scrollToTop?: () => any }) => {
   const _ = useRef({ prevParams: {} }).current;
 
   const onSubmit = useCallback(
-    (params = {}, more?: boolean) => {
+    async (params = {}, more?: boolean) => {
       const statePage = store.getSnapshot('page');
       const stateLoading = store.getSnapshot('loading');
       const stateIsEnd = store.getSnapshot('isEnd');
+      const orderType = store.getSnapshot('orderType');
 
       let page = more ? statePage + 1 : 1;
 
@@ -41,38 +49,46 @@ export const useData = ({ isUsdtType, scrollToTop }: { isUsdtType: boolean; scro
       startDate = startDate ? dayjs(startDate).toDate().getTime() : undefined;
       endDate = endDate ? dayjs(endDate).toDate().getTime() : undefined;
 
-      getSwapHistoryOrderApi(
-        {
-          endDate,
-          beginDate: startDate,
-          subWallet,
-          page,
-          size: size || 15,
-        },
-        isUsdtType
-      )
-        .then((r) => {
+      const queryParams: any = {
+        endDate,
+        beginDate: startDate,
+        subWallet,
+        page,
+        size: size || 15
+      };
+      let r = await getSwapHistoryOrderApi({ ...queryParams, orderType: ORDER_TYPE_KEYS[orderType] }, isUsdtType);
+      if (r.code === 200) {
+        const result = r.data;
+        const nextPage = result.currentPage;
+        const snapData = nextPage === 1 ? [] : store.getSnapshot('data');
+        console.log(...snapData);
+        const newData = [...(nextPage === 1 ? [] : store.getSnapshot('data')), ...result.pageData];
+        store.page = nextPage;
+        store.data = newData;
+        store.isEnd = newData.length === result.totalCount;
+        store.orderCounts[orderType] = result.totalCount;
+        if (nextPage === 1) {
+          scrollToTop?.();
+        }
+      } else {
+        message.error(r);
+      }
+
+      //请求其余tab对应列表的数据
+      for (let type of [ORDER_TYPES.LIMIT, ORDER_TYPES.SP_OR_SL]) {
+        if (type !== orderType && !store.orderCounts.hasOwnProperty(type)) {
+          const r = await getSwapHistoryOrderApi({ ...queryParams, orderType: ORDER_TYPE_KEYS[type], page: 1 }, isUsdtType);
           if (r.code === 200) {
             const result = r.data;
-            const nextPage = result.currentPage;
-            const newData = [...(nextPage === 1 ? [] : store.getSnapshot('data')), ...result.pageData];
-
-            if (nextPage === 1) {
-              scrollToTop?.();
-            }
-
-            store.page = nextPage;
-            store.data = newData;
-            store.isEnd = newData.length === result.totalCount;
+            store.orderCounts[type] = result.totalCount;
           } else {
             message.error(r);
           }
-          store.loading = false;
-        })
-        .catch((err) => {
-          message.error(err);
-          store.loading = false;
-        });
+        }
+      }
+
+      store.loading = false;
+
     },
     [isUsdtType, _, scrollToTop]
   );
@@ -87,6 +103,7 @@ export const useData = ({ isUsdtType, scrollToTop }: { isUsdtType: boolean; scro
     resetParams: () => (_.prevParams = {}),
     data: formatListData(formatData(store.type, store.status, store.data), store.code),
     loading: store.loading,
+    orderCounts: store.orderCounts
   };
 };
 

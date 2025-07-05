@@ -5,7 +5,7 @@ export const BlockUrl = ({ url = '--', onBlockUrlClick }: { url: string; onBlock
   return (
     <div onClick={onBlockUrlClick} className='block-url'>
       <span style={{ color: 'var(--skin-primary-color)' }}>{url}</span>
-      <CommonIcon name='common-query-icon-0' className='search-icon' size={16} enableSkin />
+      <CommonIcon name='common-link-icon' className='search-icon' size={13} enableSkin />
       <style jsx>{styles}</style>
     </div>
   );
@@ -15,7 +15,7 @@ const styles = css`
     display: flex;
     align-items: center;
     :global(.search-icon) {
-      margin-left: 10px;
+      margin-left: 8px;
       cursor: pointer;
     }
   }

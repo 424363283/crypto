@@ -27,7 +27,6 @@ export const PositionHistory = ({ active }: { active: boolean }) => {
         <ListView data={data} loading={!data.length && loading}>
           {(index) => {
             const item = data[index];
-
             return <HistoryItem key={index} data={item} onShare={onShare} />;
           }}
         </ListView>

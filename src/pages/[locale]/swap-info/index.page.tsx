@@ -7,7 +7,7 @@ import Exponent from './exponent';
 import ProtectionFund from './protection-fund';
 import RateHistory from './rate-history';
 import Rates from './rates';
-
+import { MediaInfo } from '@/core/utils';
 export const SwapInfo = ({ isSwapDemo }: { isSwapDemo?: boolean }) => {
   const { query }: any = useRouter();
   const { page } = query;
@@ -32,17 +32,34 @@ const styles = css`
   :global(.swap-info-content) {
     :global(.bottom-pagination) {
       padding: 15px 0px !important;
+        @media ${MediaInfo.mobile} {
+          padding: 12px 0px !important;
+          display: flex;
+          align-items: center;
+          justify-content: center!important;
+        }
     }
 
     :global(.common-table) {
       :global(tr) {
         border: none !important;
+      
+      }
+      :global(th) {
+        color: var(--text_3) !important;
+         font-family: "Lexend";;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 100%;
       }
       :global(tr),
       :global(th),
       :global(td) {
         background: var(--theme-background-color-3-2) !important;
-        color: var(--theme-font-color-1) !important;
+        @media ${MediaInfo.mobile} {
+           background: transparent!important;
+           padding: 12px 0!important;
+        }
         border-color: var(--theme-border-color-1) !important;
         &::before {
           display: none !important;

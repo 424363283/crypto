@@ -1,11 +1,16 @@
 import { ModalClose } from '@/components/mobile-modal';
-import { useTheme } from '@/core/hooks';
+import { useTheme, useResponsive } from '@/core/hooks';
 import { LANG } from '@/core/i18n';
 import { Lite } from '@/core/shared';
-import { Modal } from 'antd';
+import { MediaInfo } from '@/core/utils';
+import { Modal as AntModal } from 'antd';
 import css from 'styled-jsx/css';
 import Checkbox from '../input/checkbox';
 import PercentInput from '../input/percent-input';
+import Modal, { ModalFooter, ModalTitle } from '@/components/trade-ui/common/modal';
+import Radio from '@/components/Radio';
+import DeferCheckbox from '../defer-checkbox';
+import { BottomModal, MobileModal } from '@/components/mobile-modal';
 
 const Trade = Lite.Trade;
 
@@ -22,9 +27,18 @@ interface Props {
 }
 
 const TransactionSettingModal = ({ open, onClose }: Props) => {
-  const { defaultStopProfitRate, stopProfitRange, defaultStopLossRate, stopLossRange, closeConfirm, orderConfirm } =
-    Trade.state;
+  const {
+    defaultStopProfitRate,
+    stopProfitRange,
+    defaultStopLossRate,
+    stopLossRange,
+    closeConfirm,
+    orderConfirm,
+    defer,
+    deferPref
+  } = Trade.state;
   const { theme } = useTheme();
+  const { isMobile } = useResponsive();
   const getActive = (result: boolean) => {
     return result ? 'active' : '';
   };
@@ -39,10 +53,120 @@ const TransactionSettingModal = ({ open, onClose }: Props) => {
     onClose();
     Trade.resetTradeSetting();
   };
-
+  const content = (
+    <div className={`modal-content`}>
+      <div className="content">
+        <div className="tpsl-setting-item">
+          <div className="fake">
+            <div className={'row'}>
+              <span>{LANG('默认止盈比例')}</span>
+            </div>
+          </div>
+          <div className="fake percent-setting">
+            <PercentInput
+              value={defaultStopProfitRate.mul(100)}
+              onChange={val => Trade.changeDefaultStopProfitSetting(Number(val.div(100)))}
+              max={Number(stopProfitRange[stopProfitRange.length - 1]?.mul(100))}
+              min={Number((0.05).mul(100))}
+              className="pure-container"
+              theme={theme}
+            />
+            <ul>
+              {stopProfitRange.map(num => (
+                <li
+                  key={num}
+                  className={getActive(defaultStopProfitRate === num)}
+                  onClick={() => Trade.changeDefaultStopProfitSetting(num)}
+                >
+                  {num * 100}%
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <div className="tpsl-setting-item">
+          <div className="fake">
+            <div className={'row'}>
+              <span>{LANG('默认止损比例')}</span>
+            </div>
+          </div>
+          <div className="fake percent-setting">
+            <PercentInput
+              isNegative={false}
+              value={defaultStopLossRate.mul(100)}
+              onChange={val => Trade.changeDefaultStopLossSetting(Number(val.div(100)))}
+              max={Number((-0.05)?.mul(100))}
+              min={Number(stopLossRange[stopLossRange.length - 1]?.mul(100))}
+              className="pure-container"
+              theme={theme}
+            />
+            <ul>
+              {stopLossRange.map((num, index) => (
+                <li
+                  key={index}
+                  className={getActive(defaultStopLossRate === num)}
+                  onClick={() => Trade.changeDefaultStopLossSetting(num)}
+                >
+                  {num * 100}%
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        {defer && (
+          <DeferCheckbox style={{ fontSize: 14 }} checked={deferPref} onChange={Trade.changeDeferPrefSetting} />
+        )}
+        <div className="line" />
+        <div className="fake-mt">
+          <div className="row mt">
+            <Radio
+              checked={closeConfirm}
+              label={LANG('平仓确认')}
+              onChange={() => Trade.changeCloseConfirmSetting()}
+              size={14}
+              width={20}
+              height={20}
+            />
+            <Radio
+              checked={orderConfirm}
+              label={LANG('下单确认')}
+              onChange={() => Trade.changeOrderConfirmSetting()}
+              size={14}
+              width={20}
+              height={20}
+            />
+          </div>
+        </div>
+      </div>
+      <style jsx>{styles}</style>
+    </div>
+  );
+  if (isMobile) {
+    return (
+      <MobileModal visible={open} onClose={onClose} type="bottom">
+        <BottomModal title={LANG('交易设置')} confirmText="确认" onConfirm={_onSubmit}>
+          {content}
+        </BottomModal>
+      </MobileModal>
+    );
+  }
   return (
     <>
       <Modal
+        visible={open}
+        contentClassName={'common-modal-content'}
+        modalContentClassName={'common-modal-content-component'}
+        onClose={onClose}
+      >
+        <ModalTitle title={LANG('交易设置')} onClose={onCancel} />
+        {content}
+        <ModalFooter onConfirm={_onSubmit} />
+      </Modal>
+    </>
+  );
+  return (
+    <>
+      <AntModal
         title={LANG('交易设置')}
         open={open}
         onCancel={onCancel}
@@ -54,24 +178,25 @@ const TransactionSettingModal = ({ open, onClose }: Props) => {
         closeIcon={null}
         closable={false}
       >
-        <ModalClose className='close-icon' onClose={onClose} />
-        <div className='fake'>
+        <ModalClose className="close-icon" onClose={onCancel} />
+        <div className="fake">
           <div className={'row'}>
             <span>{LANG('默认止盈比例')}</span>
           </div>
         </div>
-        <div className='fake'>
+        <div className="fake">
           <PercentInput
             value={defaultStopProfitRate.mul(100)}
-            onChange={(val) => Trade.changeDefaultStopProfitSetting(Number(val.div(100)))}
+            onChange={val => Trade.changeDefaultStopProfitSetting(Number(val.div(100)))}
             max={Number(stopProfitRange[stopProfitRange.length - 1]?.mul(100))}
             min={Number((0.05).mul(100))}
+            className="pure-container"
             theme={theme}
           />
         </div>
-        <div className='fake'>
+        <div className="fake">
           <ul>
-            {stopProfitRange.slice(1).map((num) => (
+            {stopProfitRange.map(num => (
               <li
                 key={num}
                 className={getActive(defaultStopProfitRate === num)}
@@ -82,26 +207,27 @@ const TransactionSettingModal = ({ open, onClose }: Props) => {
             ))}
           </ul>
         </div>
-        <div className='fake'>
+        <div className="fake">
           <div className={'row'}>
             <span>{LANG('默认止损比例')}</span>
           </div>
         </div>
-        <div className='fake'>
+        <div className="fake">
           <PercentInput
             isNegative={false}
             value={defaultStopLossRate.mul(100)}
-            onChange={(val) => Trade.changeDefaultStopLossSetting(Number(val.div(100)))}
+            onChange={val => Trade.changeDefaultStopLossSetting(Number(val.div(100)))}
             max={Number((-0.05)?.mul(100))}
             min={Number(stopLossRange[stopLossRange.length - 1]?.mul(100))}
+            className="pure-container"
             theme={theme}
           />
         </div>
-        <div className='fake'>
+        <div className="fake">
           <ul>
-            {stopLossRange.slice(1).map((num) => (
+            {stopLossRange.map((num, index) => (
               <li
-                key={num}
+                key={index}
                 className={getActive(defaultStopLossRate === num)}
                 onClick={() => Trade.changeDefaultStopLossSetting(num)}
               >
@@ -110,8 +236,8 @@ const TransactionSettingModal = ({ open, onClose }: Props) => {
             ))}
           </ul>
         </div>
-        <div className='fake-mt'>
-          <div className='row mt'>
+        <div className="fake-mt">
+          <div className="row mt">
             <Checkbox
               active={closeConfirm}
               label={LANG('平仓确认')}
@@ -124,7 +250,7 @@ const TransactionSettingModal = ({ open, onClose }: Props) => {
             />
           </div>
         </div>
-      </Modal>
+      </AntModal>
       <style jsx>{styles}</style>
     </>
   );
@@ -132,9 +258,20 @@ const TransactionSettingModal = ({ open, onClose }: Props) => {
 
 export default TransactionSettingModal;
 const styles = css`
-  :global(.tradeSetting) {
-    font-weight: 600;
-    width: 400px !important;
+  .modal-content {
+    font-weight: 400;
+    @media ${MediaInfo.mobile} {
+      padding: 0 8px;
+    }
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 24px;
+      @media ${MediaInfo.mobile} {
+        gap: 1rem;
+      }
+    }
     :global(.close-icon) {
       cursor: pointer;
       position: absolute;
@@ -190,6 +327,22 @@ const styles = css`
         color: #333333;
       }
     }
+    .tpsl-setting-item {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 16px;
+      @media ${MediaInfo.mobile} {
+        gap: 8px;
+      }
+      .percent-setting {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        align-self: stretch;
+        gap: 8px;
+      }
+    }
     .fake {
       width: 100%;
       &:first-child {
@@ -200,27 +353,34 @@ const styles = css`
       .row {
         margin-top: 10px;
         span {
-          color: var(--theme-font-color-3);
+          color: var(--text_2);
         }
       }
       ul {
         display: flex;
         align-items: center;
-        margin-top: 15px;
-        margin-bottom: 30px;
+        align-self: stretch;
+        gap: 16px;
         padding: 0;
+        margin: 0;
         li {
-          user-select: none;
-          cursor: pointer;
-          flex: 1;
-          margin: 0 5px;
+          display: flex;
+          padding: 6px 8px;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
+          flex: 1 0 0;
+          border-radius: 4px;
+          background: var(--fill_3);
+          color: var(--text_2);
           text-align: center;
           font-size: 12px;
-          height: 25px;
-          line-height: 24px;
-          border-radius: 3px;
-          background: var(--theme-trade-tips-color);
-          color: var(--theme-font-color-2);
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+
+          user-select: none;
+          cursor: pointer;
           &.active {
             color: var(--skin-primary-color);
             border-color: var(--skin-primary-color);
@@ -231,6 +391,9 @@ const styles = css`
           &:last-child {
             margin-right: 0;
           }
+          @media ${MediaInfo.mobile} {
+            background: var(--fill_1);
+          }
         }
       }
     }
@@ -238,12 +401,8 @@ const styles = css`
       display: flex;
       width: 100%;
       align-items: center;
-      height: 45px;
-      line-height: 45px;
+      line-height: normal;
       &.mt {
-        margin-top: 10px;
-        height: 20px;
-        line-height: 19px;
         span {
           flex: 1;
           text-align: left;
@@ -281,10 +440,18 @@ const styles = css`
         }
       }
     }
-    .fake-mt {
-      width: 100%;
-      margin-top: 15px;
-      border-top: 1px solid var(--theme-trade-border-color-1);
+    .fake-mt .row.mt {
+      display: flex;
+      align-items: flex-start;
+      align-self: stretch;
+      gap: 24px;
+    }
+    .line {
+      height: 1px;
+      background: var(--fill_line_3);
+      @media ${MediaInfo.mobile} {
+        background: var(--fill_line_1);
+      }
     }
   }
 `;

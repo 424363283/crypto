@@ -22,23 +22,39 @@ export interface PollingOptions {
       this.timer = null;
     }
     private loop() {
-      this.timer = setTimeout(async () => {
-        await this.callback();
-        this.loop();
-      }, this.interval);
+      if(this.once) {
+        this.timer = setTimeout(async () => {
+          try{
+            await this.callback();
+
+          } catch(err) {
+            console.log(err);
+
+          } finally {
+            this.loop();
+          }
+        }, this.interval);
+      }
     }
     // 开启
     public async start(): Promise<void> {
       if (!this.once) {
         this.once = true;
-        await this.callback();
-        this.loop();
+        try {
+          await this.callback();
+
+        } catch(err) {
+          console.log(err);
+
+        } finally {
+          this.loop();
+        }
       }
     }
   
     public stop = (): void => {
+      this.once = false;
       if (this.timer) {
-        this.once = false;
         clearTimeout(this.timer);
         this.timer = null;
       }

@@ -1,0 +1,60 @@
+@use "sass:math";
+@import 'src/core/styles/src/new-mixins.scss';
+@import 'src/core/styles/src/new-variables.scss';
+
+@mixin nui-button-sizing($height, $padding, $font-size) {
+  @include nui-base-sizing($height, floor($padding), $font-size);
+}
+
+@mixin nui-button-style($text-color, $text-color-hover, $gradient, $gradient-hover, $border-color, $border-color-hover) {
+  color: $text-color;
+  background: $gradient;
+  border: solid 1px $border-color;
+  &.nui-outlined {
+    color: $border-color;
+    background: transparent;
+    border: solid 1px $border-color;
+  }
+  &:hover:not(.nui-nohover) {
+    color: $text-color-hover;
+    background: $gradient-hover;
+    border: solid 1px $border-color-hover;
+    text-decoration: none;
+  }
+}
+
+// class
+.common-button {
+  @include nui-button-sizing($nui-base-height, $nui-base-padding, $nui-font-size);
+  @include nui-button-style($nui-base-text-color,
+    $nui-base-text-color-hover,
+    $nui-base-gradient,
+    $nui-base-gradient-hover,
+    $nui-base-border-color,
+    $nui-base-border-color-hover );
+  border-radius:#{$nui-border-radius-1};
+
+  @each $size in $nui-sizes {
+    &.nui-#{$size} {
+      @include nui-button-sizing(map-get($nui-height-map, $size),
+        map-get($nui-padding-map, $size),
+        map-get($nui-font-size-map, $size))
+    }
+  }
+
+  &.nui-rounded {
+    border-radius: $nui-border-radius-rounded;
+  }
+}
+
+@each $intent in $nui-intents {
+  .common-button.nui-#{$intent} {
+    @include nui-button-style(map-get($nui-text-map, $intent),
+      map-get($nui-text-hover-map, $intent),
+      map-get($nui-gradient-map, $intent),
+      map-get($nui-gradient-hover-map, $intent),
+      map-get($nui-border-color-map, $intent),
+      map-get($nui-border-color-hover-map, $intent),
+    );
+  }
+}

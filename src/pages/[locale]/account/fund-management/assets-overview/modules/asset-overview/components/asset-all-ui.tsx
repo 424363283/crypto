@@ -1,4 +1,4 @@
-import { Desktop } from '@/components/responsive';
+import { Desktop, Mobile } from '@/components/responsive';
 import { MediaInfo } from '@/core/utils';
 import { memo } from 'react';
 import HeaderAssetCard from '../../../components/asset-card';
@@ -25,14 +25,14 @@ const AssetAllUi = () => {
       <AssetTableCard>
         <SpotTable />
       </AssetTableCard>
+      <Mobile>
+        <RecentTransactionCard />
+      </Mobile>
       <style jsx>{`
         .assets-top-card {
           display: flex;
-          height: 380px;
-          margin-bottom: 20px;
-          @media ${MediaInfo.mobile} {
-            margin-bottom: 10px;
-          }
+          height: 412px;
+          gap: 8px;
           @media ${MediaInfo.mobileOrTablet} {
             height: 100%;
           }
