@@ -1,0 +1,29 @@
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M29.8882 45.9089L27.2334 47.5984L29.2447 61.5967L37.4505 65.6192L48.9548 63.7688L57.4021 55.2412L50.0007 45.9089H29.8882Z" fill="white" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="bevel"/>
+<path d="M40.0035 46.922L31.3569 52.0151L40.0035 56.9634L48.4165 52.0784L40.0035 46.922Z" fill="#2B2F33" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="bevel"/>
+<path d="M49.9993 46.1521L62.7907 29.7404L55.7917 54.1166L49.9993 61.3571V46.1521Z" fill="white" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="bevel"/>
+<path d="M29.7274 46.1505L17.0164 29.417L22.0042 50.2535L29.7274 59.5856V46.1505Z" fill="white" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="bevel"/>
+<path d="M39.8626 15.7412L29.6934 46.0708H50.0727L39.8626 15.7412Z" fill="white" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="bevel"/>
+<path d="M39.8637 70.1259L19.2686 58.1389V52.5074L17.0964 29.4183L29.5661 58.1389L39.8637 42.0489V70.1259Z" fill="white" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="bevel"/>
+<path d="M39.8637 70.1259L19.2686 58.1389V52.5074L17.0964 29.4183L29.5661 58.1389L39.8637 42.0489V70.1259Z" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="bevel"/>
+<path d="M60.6171 52.2621L62.7893 29.6556L49.9977 58.4567L39.8562 41.7379V70.2171L60.6171 58.4567V52.2621Z" fill="white" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="bevel"/>
+<mask id="mask0_22_564" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="39" y="29" width="24" height="42">
+<path d="M60.6171 52.2621L62.7893 29.6556L49.9977 58.4567L39.8562 41.7379V70.2171L60.6171 58.4567V52.2621Z" fill="#619B93" stroke="black" stroke-width="0.40996" stroke-linejoin="bevel"/>
+</mask>
+<g mask="url(#mask0_22_564)">
+<path d="M60.7854 55.1216L39.9232 66.1575L38.457 70.7035H44.6044L61.8067 58.6155L60.7854 55.1216Z" fill="#2B2F33"/>
+</g>
+<path d="M60.6171 52.2621L62.7893 29.6556L49.9977 58.4567L39.8562 41.7379V70.2171L60.6171 58.4567V52.2621Z" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="bevel"/>
+<path d="M11.3135 33.073V26.3708L17.1461 29.74V36.424L11.3135 33.073Z" fill="#07828B" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="round"/>
+<path d="M22.9586 33.073V26.3708L17.1985 29.7037V36.4059L22.9586 33.073Z" fill="#2B2F33" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="round"/>
+<path d="M22.9426 26.3924L17.1461 23.0594L11.3135 26.3924L17.1461 29.7434L22.9426 26.3924Z" fill="white" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="round"/>
+<path d="M56.9653 33.073V26.3708L62.7979 29.74V36.424L56.9653 33.073Z" fill="#07828B" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="round"/>
+<path d="M68.6107 33.073V26.3708L62.8506 29.7037V36.4059L68.6107 33.073Z" fill="#2B2F33" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="round"/>
+<path d="M68.5944 26.3924L62.7979 23.0594L56.9653 26.3924L62.7979 29.7434L68.5944 26.3924Z" fill="white" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="round"/>
+<path d="M34.0334 46.1644V39.4623L39.866 42.8314V49.5154L34.0334 46.1644Z" fill="#07828B" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="round"/>
+<path d="M45.6786 46.1644V39.4623L39.9185 42.7953V49.4974L45.6786 46.1644Z" fill="#2B2F33" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="round"/>
+<path d="M45.6625 39.4839L39.866 36.151L34.0334 39.4839L39.866 42.835L45.6625 39.4839Z" fill="white" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="round"/>
+<path d="M34.0334 20.2305V13.5284L39.866 16.8976V23.5816L34.0334 20.2305Z" fill="#07828B" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="round"/>
+<path d="M45.6786 20.2305V13.5284L39.9185 16.8613V23.5634L45.6786 20.2305Z" fill="#2B2F33" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="round"/>
+<path d="M45.6625 13.5499L39.866 10.2169L34.0334 13.5499L39.866 16.9009L45.6625 13.5499Z" fill="white" stroke="#2B2F33" stroke-width="0.40996" stroke-linejoin="round"/>
+</svg>

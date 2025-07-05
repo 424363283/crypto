@@ -4,7 +4,7 @@ window.addEventListener('load', function () {
   if(isCrawler() || isMobile()) return;
   var script = document.createElement('script');
   script.id = 'ze-snippet';
-  script.src = '//static.zdassets.com/ekr/snippet.js?key=740f3a98-e96e-49d2-9d01-5cf40e979e5e';
+  script.src = '//static.zdassets.com/ekr/snippet.js?key=bf250843-c111-4410-9bf5-8deeb04c1af2';
   script.defer = true;
   document.body.appendChild(script);
   script.onload = function () {

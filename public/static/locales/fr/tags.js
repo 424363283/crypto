@@ -1,0 +1,1 @@
+var appLang = {"暂无数据":"No data"}
