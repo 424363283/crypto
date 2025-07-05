@@ -965,6 +965,7 @@ const OriginalKLine: ForwardRefRenderFunction<ChartRef, { containerId?: string }
             fixed: volumeDigit
           });
           widgetRef.current?.createCurrentEntrustLine({
+            side: position?.side,
             direction,
             directionColor,
             profitLoss: profitLoss,

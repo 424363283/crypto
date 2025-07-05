@@ -7,6 +7,7 @@
   "scripts": {
     "lint": "tsc --noEmit && eslint --cache '**/*.{ts,tsx}'",
     "test": "jest",
+    "windev": "set NODE_ENV=dev && set NEXT_PUBLIC_BUILD_TIME=$(git rev-parse --short HEAD)@$(date \"+%Y_%m_%d %H:%M:%S\") && next dev",
     "dev": " NODE_ENV=dev  NEXT_PUBLIC_BUILD_TIME=$(git rev-parse --short HEAD)@$(date \"+%Y_%m_%d %H:%M:%S\") next dev",
     "build": "NODE_ENV=production NEXT_PUBLIC_BUILD_TIME=$(git rev-parse --short HEAD)@$(date \"+%Y_%m_%d %H:%M:%S\") next build",
     "bundle": "NODE_ENV=production NEXT_PUBLIC_BUILD_TIME=$(git rev-parse --short HEAD)@$(date \"+%Y_%m_%d %H:%M:%S\") next build",

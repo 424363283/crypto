@@ -1018,8 +1018,8 @@ export default class Widget {
   createCurrentEntrustLine(position: any) {
     const key = `${position.price}`;
     const count = this._currentEntrustLineCountMap[key] ?? 0;
+    const side = position.side
     const theme = darkTheme
-
     this._chart?.createOverlay({
       name: 'currentEntrustLine',
       points: [{ value: position.price }],
@@ -1057,9 +1057,9 @@ export default class Widget {
         // tooltipColor: position.tooltipColor,
         // backgroundColor: position.backgroundColor,
         directionColor: theme['entrustLineOverlay.directionColor'],
-        directionBackgroundColor: theme['entrustLineOverlay.directionLongBackgroundColor'],
-        priceColor: theme['entrustLineOverlay.priceLongColor'],
-        priceBackgroundColor: theme['entrustLineOverlay.priceLongBackgroundColor'],
+        directionBackgroundColor: side === '1' ? theme['entrustLineOverlay.directionLongBackgroundColor'] : theme['entrustLineOverlay.directionShortBackgroundColor'],
+        priceColor: side === '1' ? theme['entrustLineOverlay.priceLongColor'] : theme['entrustLineOverlay.priceShortColor'],
+        priceBackgroundColor: side === '1' ? theme['entrustLineOverlay.priceLongBackgroundColor'] : theme['entrustLineOverlay.priceShortBackgroundColor'],
         volumeColor: theme['entrustLineOverlay.volumeColor'],
         volumeBackgroundColor: theme['entrustLineOverlay.volumeBackgroundColor'],
         tipColor: theme['global.tipColor'],
