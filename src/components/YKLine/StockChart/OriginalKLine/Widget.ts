@@ -1018,20 +1018,59 @@ export default class Widget {
   createCurrentEntrustLine(position: any) {
     const key = `${position.price}`;
     const count = this._currentEntrustLineCountMap[key] ?? 0;
+    const theme = darkTheme
+
     this._chart?.createOverlay({
       name: 'currentEntrustLine',
       points: [{ value: position.price }],
       extendData: {
         ...position,
         closeTooltip: '',
-        reverseTooltip: ''
+        reverseTooltip: '',
+        entrustOverlay: {
+          directionFigure: {
+            option: null,
+            styles: {}
+          },
+          closeBtnFigure: {
+            option: null,
+            styles: {}
+          },
+          entrustPriceFigure: {
+            option: null,
+            styles: {}
+          },
+          entrustVolumeFigure: {
+            option: null,
+            styles: {}
+          },
+          lineFigure: {
+            option: null,
+            styles: {}
+          },
+        }
       },
       styles: {
         cursor: 'grab',
-        directionColor: position.directionColor,
-        profitLossColor: position.profitLossColor,
-        tooltipColor: position.tooltipColor,
-        backgroundColor: position.backgroundColor,
+        // directionColor: position.directionColor,
+        // profitLossColor: position.profitLossColor,
+        // tooltipColor: position.tooltipColor,
+        // backgroundColor: position.backgroundColor,
+        directionColor: theme['entrustLineOverlay.directionColor'],
+        directionBackgroundColor: theme['entrustLineOverlay.directionLongBackgroundColor'],
+        priceColor: theme['entrustLineOverlay.priceLongColor'],
+        priceBackgroundColor: theme['entrustLineOverlay.priceLongBackgroundColor'],
+        volumeColor: theme['entrustLineOverlay.volumeColor'],
+        volumeBackgroundColor: theme['entrustLineOverlay.volumeBackgroundColor'],
+        tipColor: theme['global.tipColor'],
+        tipBackgroundColor: theme['global.tipBackgroundColor'],
+        tipBorderColor: theme['global.tipBorderColor'],
+        operationColor: theme['global.operationColor'],
+        operationBackgroundColor: theme['global.operationBackgroundColor'],
+        lineColor: theme['entrustLineOverlay.lineColor'],
+        yAxisMarkColor: theme['entrustLineOverlay.yAxisMarkColor'],
+        yAxisMarkBorderColor: theme['entrustLineOverlay.yAxisMarkBorderColor'],
+        yAxisMarkBackgroundColor: theme['entrustLineOverlay.yAxisMarkBackgroundColor'],
         offsetLeft: 2 + count * 40
       },
       onClick: event => {

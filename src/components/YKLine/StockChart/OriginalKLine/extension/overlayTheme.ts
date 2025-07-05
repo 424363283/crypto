@@ -73,6 +73,28 @@ export const darkTheme = {
   'positionTPSLOverlay.stopLossYAxisMarkColor': '#F0BA30',
   'positionTPSLOverlay.stopLossYAxisMarkBorderColor': '#F0BA30',
   'positionTPSLOverlay.stopLossYAxisMarkBackgroundColor': '#121212',
+
+  // 委托覆盖物 ---------------------------------------
+  // 委托方向
+  'entrustLineOverlay.directionColor': '#FFFFFF',
+  'entrustLineOverlay.directionLongBackgroundColor': '#2AB26C',
+  'entrustLineOverlay.directionShortBackgroundColor': '#EF454A',
+  // 价格
+  'entrustLineOverlay.priceLongColor': '#2AB26C',
+  'entrustLineOverlay.priceLongBackgroundColor': 'rgba(42, 178, 108, 0.10)',
+  'entrustLineOverlay.priceShortColor': '#EF454A',
+  'entrustLineOverlay.priceShortBackgroundColor': 'rgba(239, 69, 74, 0.10)',
+  // 价格
+  'entrustLineOverlay.volumeColor': '#FFFFFF',
+  'entrustLineOverlay.volumeBackgroundColor': '#121212',
+
+  // 线
+  'entrustLineOverlay.lineColor': '#399BA2',
+
+   // Y轴价格标记
+  'entrustLineOverlay.yAxisMarkColor': '#FFFFFF',
+  'entrustLineOverlay.yAxisMarkBorderColor': '#399BA2',
+  'entrustLineOverlay.yAxisMarkBackgroundColor': '#399BA2',
 }
 
 export const lightTheme = {
@@ -150,4 +172,26 @@ export const lightTheme = {
   'positionTPSLOverlay.stopLossYAxisMarkColor': '#F0BA30',
   'positionTPSLOverlay.stopLossYAxisMarkBorderColor': '#F0BA30',
   'positionTPSLOverlay.stopLossYAxisMarkBackgroundColor': '#121212',
+
+  // 委托覆盖物 ---------------------------------------
+  // 委托方向
+  'entrustLineOverlay.directionColor': '#FFFFFF',
+  'entrustLineOverlay.directionLongBackgroundColor': '#2AB26C',
+  'entrustLineOverlay.directionShortBackgroundColor': '#EF454A',
+  // 价格
+  'entrustLineOverlay.priceLongColor': '#2AB26C',
+  'entrustLineOverlay.priceLongBackgroundColor': 'rgba(42, 178, 108, 0.10)',
+  'entrustLineOverlay.priceShortColor': '#EF454A',
+  'entrustLineOverlay.priceShortBackgroundColor': 'rgba(239, 69, 74, 0.10)',
+  // 价格
+  'entrustLineOverlay.volumeColor': '#FFFFFF',
+  'entrustLineOverlay.volumeBackgroundColor': '#121212',
+
+  // 线
+  'entrustLineOverlay.lineColor': '#399BA2',
+
+   // Y轴价格标记
+  'entrustLineOverlay.yAxisMarkColor': '#FFFFFF',
+  'entrustLineOverlay.yAxisMarkBorderColor': '#399BA2',
+  'entrustLineOverlay.yAxisMarkBackgroundColor': '#399BA2',
 }
