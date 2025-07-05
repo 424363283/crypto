@@ -70,6 +70,7 @@ const positionTPTLLine: OverlayTemplate = {
     const expectProfitLossBackgroundColor = overlay.styles?.expectProfitLossBackgroundColor
     const expectProfitLossColor = overlay.styles?.expectProfitLossColor
     // 平仓颜色
+    const closeText = '\ue901';
     const closeColor = overlay.styles?.closeColor
     const closeBackgroundColor= overlay.styles?.closeBackgroundColor
     // tip颜色
@@ -123,24 +124,39 @@ const positionTPTLLine: OverlayTemplate = {
         x: 0,
         y: y,
         baseline: 'middle',
-        text: '×'
+        text: closeText
       },
       styles: {
-        style: 'fill',
-        color: '#B0B0B0',
-        size: 14,
-        family: 'Lexend',
+        // 样式，可选项`fill`，`stroke`，`stroke_fill`
+        style: 'stroke_fill',
+        // 颜色
+        color: closeColor,
+        // 尺寸
+        size: 16,
+        // 字体
+        family: 'cryptofont',
+        // 粗细
         weight: 'normal',
-        paddingLeft: 4,
-        paddingRight: 4,
-        paddingTop: 2,
-        paddingBottom: 2,
+        // 左内边距
+        paddingLeft: 1,
+        // 右内边距
+        paddingRight: 1,
+        // 上内边距
+        paddingTop: 1,
+        // 下内边距
+        paddingBottom: 1,
+        // 边框样式
         borderStyle: 'solid',
-        borderColor: 'transparent',
+        // 边框颜色
+        borderColor: closeBackgroundColor,
+        // 边框尺寸
         borderSize: 0,
-        borderRadius: 4,
-        backgroundColor: 'rgba(0,0,0,0.6)',
-        cursor: 'pointer'
+        // 边框虚线参数
+        borderDashedValue: [2, 2],
+        // 边框圆角值
+        borderRadius: 0,
+        // 背景色
+        backgroundColor: closeBackgroundColor
       },
     };
     const closePositionBtnWidth =
